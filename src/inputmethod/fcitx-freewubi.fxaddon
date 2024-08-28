@@ -1,0 +1,8 @@
+[FcitxAddon]
+Name=fcitx-freewubi
+Prefix=freewubi
+Include0="freewubi.h"
+Function0=
+Function1=
+Function2=
+Self.Type=Fcitxfreewubi*

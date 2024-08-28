@@ -1,0 +1,84 @@
+QWidget
+{
+    color: rgb(56, 56, 56);
+}
+QWidget:!enabled
+{
+    color: rgba(56, 56, 56, 128);
+}
+
+#labelCommon,
+#labelAdvance,
+#labelOthers,
+#labelUi,
+#labelCandidateWinUi,
+#labelCandidateWinOption,
+#labelShortcutKey,
+#labelCustomSkey,
+#labelCustom,
+#labelEasy,
+#labelCnEn,
+#labelTwo,
+#labelCustomKeyChar,
+#labelPrompt_1,
+#labelCustomKeyMark,
+#labelPrompt_2,
+#labelVersionInfo
+{
+    color: rgb(0, 0, 0);
+}
+
+
+#labelAutoEnPrompt,
+#labelAutoMarkPrompt
+{
+    color: rgba(56, 56, 56, 128);
+}
+
+#labelVersionNum
+{
+    color: rgba(56, 56, 56, 128);
+}
+
+#listWidget
+{
+    color: rgb(56, 56, 56);
+    background-color: rgb(245, 247, 248);
+}
+#listWidget::item
+{
+    border: none;
+}
+#listWidget::item:selected
+{
+    color: rgb(0, 0, 0);
+    background-color: #C4DDF6;
+}
+
+#stackedWidget
+{
+    background-color: rgb(255, 255, 255);
+}
+
+QComboBox::selected
+{
+    background-color:#C4DDF6;
+    color: rgb(56, 56, 56);
+}
+
+QCheckBox::indicator
+{
+    width: 18px;
+    height: 18px;
+}
+
+QCheckBox::indicator:unchecked
+{
+    image: url(:/image/setting/unchecked.png);
+}
+
+QCheckBox::indicator:checked
+{
+    image: url(:/image/setting/checked.png);
+}
+

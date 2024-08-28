@@ -1,0 +1,752 @@
+#include "lexicontoolwin.h"
+#include "ui_lexicontoolwin.h"
+#include "commdefine.h"
+#include "settings.h"
+#include "../../tools/freewbConversionTool.h"
+
+
+//设置窗口样式表
+#define QSS_FILE    ":/qss/lexiconwin.qss"
+
+#define QSS_BORDER_ACTIVE "color: rgb(255, 255, 255);background-color: rgb(10, 120, 203);"
+#define QSS_BORDER_DEACTIVE "color: rgb(0, 0, 0);background-color: rgb(200, 200, 200);"
+
+#define QSS_BTN_CLOSE0 "border-image: url(:/image/setting/close0.png);"
+#define QSS_BTN_CLOSE1 "border-image: url(:/image/setting/close1.png);"
+#define QSS_BTN_CLOSE2 "border-image: url(:/image/setting/close2.png);"
+
+
+#define CUR_USED_WUBI_TABLE     INSTALL_DIR + "/data/mb/" + Settings::get_cur_used_lexicon() + "/freeime.mb"
+#define CUR_USED_PINYIN_TABLE   INSTALL_DIR + "/data/mb/" + Settings::get_cur_used_lexicon() + "/attach.mb"
+
+LexiconWorker::LexiconWorker( QObject *parent ) : QObject ( parent )
+{
+    qRegisterMetaType<LexiconToolOp>( "LexiconToolOp" );
+}
+
+LexiconWorker::~LexiconWorker()
+{
+}
+
+void LexiconWorker::set_op_param( LexiconToolOp opType, const QString &srcFile, const QString &destFile )
+{
+    #ifdef DEBUG
+    qDebug() << opType << srcFile << destFile;
+    #endif
+    m_opType = opType;
+    m_srcFile = srcFile;
+    m_destFile = destFile;
+}
+
+
+void LexiconWorker::slot_start_work()
+{
+    m_count = 0;
+    if ( m_opType == LTO_DUMP_SYS_TABLE || m_opType == LTO_DUMP_PINYIN_TABLE )
+    {
+        if ( mb2txt( m_srcFile.toUtf8().data(), m_destFile.toUtf8().data(), &m_count ) )
+        {
+            emit signal_process_updated( m_opType, 1, m_count );
+        }
+        else
+        {
+            emit signal_process_updated( m_opType, -1, m_count );
+        }
+    }
+    else if ( m_opType == LTO_GEN_SYS_TABLE ||  m_opType == LTO_GEN_PINYIN_TABLE )
+    {
+        if ( txt2mb( m_srcFile.toUtf8().data(), m_destFile.toUtf8().data(), &m_count ) )
+        {
+            emit signal_process_updated( m_opType, 1, m_count );
+        }
+        else
+        {
+            emit signal_process_updated( m_opType, -1, m_count );
+        }
+    }
+    else if ( m_opType == LTO_MARK_RARE_CHAR )
+    {
+
+    }
+    else if ( m_opType == LTO_MARK_THINK_WORD )
+    {
+
+    }
+    else if ( m_opType == LTO_OPTIMIZE_TABLE )
+    {
+
+    }
+}
+
+
+
+
+LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::LexiconToolWin)
+{
+    ui->setupUi(this);
+    setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint);
+
+    setWindowIcon( QIcon(":/image/setting/logo.png") );
+    setWindowTitle( "极点词库工具箱" );
+
+    m_mouseIsPressed = false;
+    m_mouseLastPosition = QPoint();
+
+    QDesktopWidget *d = QApplication::desktop();
+    m_defaultPopPosition = QPoint( (d->width() - size().width())/2, (d->height() - size().height())/2 );
+    move( m_defaultPopPosition );
+
+    installEventFilter( this );
+    ui->btnClose->installEventFilter( this );
+
+
+    m_lexiconThread = new QThread( this );
+    m_lexiconWorker = new LexiconWorker();
+    m_lexiconWorker->moveToThread( m_lexiconThread );
+    connect( m_lexiconThread, &QThread::started, m_lexiconWorker, &LexiconWorker::slot_start_work );
+    connect( m_lexiconThread, &QThread::finished, this, &LexiconToolWin::slot_worker_thread_finished );
+    connect( m_lexiconWorker, &LexiconWorker::signal_process_updated, this, &LexiconToolWin::slot_process_updated );
+
+    m_msgBox = new QMessageBox( this );
+    m_msgBox->setWindowFlag( Qt::FramelessWindowHint );
+    m_msgBox->setIcon( QMessageBox::NoIcon );
+
+    m_tmpSysTable =  QString(qgetenv("HOME")) + "/freeime.mb";
+    m_tmpPinyinTable =  QString(qgetenv("HOME")) + "/attach.mb";
+
+    // 载入窗口全局UI样式表
+    QFile qssFile( QSS_FILE );
+    if ( !qssFile.open(QFile::ReadOnly) )
+    {
+        qWarning() << "open qss file failed!";
+    }
+    else
+    {
+        this->setStyleSheet( qssFile.readAll() );
+        qssFile.close();
+    }
+
+    ui->btnMarkRareWord->hide();
+    ui->btnMarkThinkWord->hide();
+    ui->btnOptimize->hide();
+}
+
+LexiconToolWin::~LexiconToolWin()
+{
+    delete ui;
+    if ( m_lexiconWorker )
+    {
+        #ifdef DEBUG
+        qDebug() << "delete m_lexiconWorker!";
+        #endif
+        delete m_lexiconWorker;
+    }
+}
+
+void LexiconToolWin::open_win()
+{
+    show();
+}
+
+void LexiconToolWin::mousePressEvent( QMouseEvent *event )
+{
+    if( event->button() == Qt::LeftButton )
+    {
+        m_mouseIsPressed = true;
+        m_mouseLastPosition = event->globalPos();
+    }
+
+    QWidget::mousePressEvent( event );
+}
+
+void LexiconToolWin::mouseReleaseEvent( QMouseEvent *event )
+{
+    if( event->button() == Qt::LeftButton )
+    {
+        m_mouseIsPressed = false;
+    }
+
+    QWidget::mouseReleaseEvent( event );
+}
+
+void LexiconToolWin::mouseMoveEvent( QMouseEvent *event )
+{
+    if( m_mouseIsPressed )
+     {
+        QPoint mouseCurrPosition = event->globalPos();
+        move( pos() + mouseCurrPosition - m_mouseLastPosition );
+        m_mouseLastPosition = mouseCurrPosition;
+    }
+
+    QWidget::mouseMoveEvent( event );
+}
+
+bool LexiconToolWin::eventFilter( QObject *obj, QEvent *event )
+{
+    bool isProcessed = false;
+    if ( event->type() == QEvent::WindowActivate )
+    {
+        ui->labelLexiconTool->setStyleSheet( QSS_BORDER_ACTIVE );
+        ui->btnClose->setStyleSheet( QSS_BTN_CLOSE1 );
+    }
+    else if ( event->type() == QEvent::WindowDeactivate )
+    {
+        ui->labelLexiconTool->setStyleSheet( QSS_BORDER_DEACTIVE );
+        ui->btnClose->setStyleSheet( QSS_BTN_CLOSE0 );
+    }
+    else if ( event->type() == QEvent::Enter && obj == ui->btnClose )
+    {
+        ui->btnClose->setStyleSheet( QSS_BTN_CLOSE2 );
+    }
+    else if ( event->type() == QEvent::Leave && obj == ui->btnClose )
+    {
+        if ( isActiveWindow() )
+        {
+            ui->btnClose->setStyleSheet( QSS_BTN_CLOSE1 );
+        }
+        else
+        {
+            ui->btnClose->setStyleSheet( QSS_BTN_CLOSE0 );
+        }
+    }
+
+    if ( isProcessed == false )
+    {
+        return QWidget::eventFilter( obj, event );
+    }
+
+    return isProcessed;
+}
+
+void LexiconToolWin::lexicon_thread_quit()
+{
+    if ( m_lexiconThread )
+    {
+        if ( m_lexiconThread->isRunning() )
+        {
+            m_lexiconThread->quit();
+            m_lexiconThread->wait();
+        }
+    }
+}
+
+void LexiconToolWin::slot_process_updated( LexiconToolOp opType, int opStatus, int count )
+{
+    //qDebug() << opType << opStatus << count;
+    if ( opStatus == 0 )//
+    {
+        m_msgBox->setText( QString("数目：") + QString::number(count) );
+    }
+    else if ( opStatus == 1 )
+    {
+        lexicon_thread_quit();
+        if ( opType == LTO_DUMP_SYS_TABLE || opType == LTO_DUMP_PINYIN_TABLE )
+        {
+            m_msgBox->setText( QString("词库导出完成！数目：%1").arg(count) );
+            m_msgBox->button( QMessageBox::Cancel )->setEnabled( false );
+            m_msgBox->button( QMessageBox::Ok )->setEnabled( true );
+        }
+        else if ( opType == LTO_GEN_SYS_TABLE || opType == LTO_GEN_PINYIN_TABLE )
+        {
+            m_msgBox->setStandardButtons( QMessageBox::Yes | QMessageBox::No );
+            m_msgBox->button( QMessageBox::Yes )->setText( "是(&Y)" );
+            m_msgBox->button( QMessageBox::No )->setText( "否(&N)" );
+            m_msgBox->setText( "词库生成成功，是否替换当前使用词库？" );
+        }
+        else if ( opType == LTO_MARK_RARE_CHAR || opType == LTO_MARK_THINK_WORD )
+        {
+            m_msgBox->setText( QString("词库标记完成！数目：%1").arg(count) );
+            m_msgBox->button( QMessageBox::Cancel )->setEnabled( false );
+            m_msgBox->button( QMessageBox::Ok )->setEnabled( true );
+        }
+        else if ( opType == LTO_OPTIMIZE_TABLE )
+        {
+            m_msgBox->setText( "词库优化完成！" );
+            m_msgBox->button( QMessageBox::Cancel )->setEnabled( false );
+            m_msgBox->button( QMessageBox::Ok )->setEnabled( true );
+        }
+    }
+    else if ( opStatus == -1 )
+    {
+        lexicon_thread_quit();
+        m_msgBox->setText( "文件打开失败或格式错误！" );
+        m_msgBox->button( QMessageBox::Cancel )->setEnabled( false );
+        m_msgBox->button( QMessageBox::Ok )->setEnabled( true );
+    }
+}
+
+void LexiconToolWin::slot_worker_thread_finished()
+{
+    //qDebug() << "thread quit ok!";
+}
+
+void LexiconToolWin::on_btnClose_clicked()
+{
+    close();
+    move( m_defaultPopPosition );
+}
+
+void LexiconToolWin::on_btnHelp_clicked()
+{
+    QString helpInfo = "\n"
+    "一、系统词库\n"
+    "①导出：将词库以纯文本格式导出，供用户编辑、修改。\n"
+    "②生成词库：根据用户提供的纯文本文件生成极点的五笔\n"
+    "    词库。这个文本文件的格式为：编码+英文空格+候选\n"
+    "    项，如果有重码需要在同一行以英文空格分隔），整\n"
+    "    个文件按编码顺序排列：\n"
+    "    a 工 其\n"
+    "    aa 式\n"
+    "    aaaa 工 恭恭敬敬\n"
+    "    ......\n"
+//    "③标记生僻字：根据字频标注生僻字，供生成词库时使用。\n"
+//    "    有关生僻字见极点自带帮助文档。\n"
+//    "④标记联想词：根据用户的文件将这些词组标记为联想词，\n"
+//    "    其文件格式同“生成词库”。\n"
+//    "⑤优化：清理无用信息，减少词库大小。\n"
+    "\n"
+    "二、拼音词库\n"
+    "①导出：将词库以纯文本格式导出，供用户编辑、修改。\n"
+    "②生成词库：同“系统词库”中的生成词库，只是这个生成的\n"
+    "    是拼音词库。\n"
+    "\n"
+    "三、用户词组\n"
+    "①导出：将词库中所有的用户词组以纯文本格式导出，供用\n"
+    "    户编辑、修改。\n"
+    "②批量删词：根据用户提供的文本文件从词库中删去这些词\n"
+    "    ，其文件格式同“生成词库”。\n"
+    "③批量加词：与“批量删词”类似，用户批量添加词组，文件\n"
+    "    格式同“生成词库”。\n\n";
+
+    QMessageBox *msgBox = new QMessageBox( this );
+    msgBox->setWindowFlag( Qt::FramelessWindowHint );
+    msgBox->setIcon( QMessageBox::Information );
+    msgBox->setText( helpInfo );
+    msgBox->setStandardButtons( QMessageBox::Ok );
+    msgBox->button( QMessageBox::Ok )->setIcon( QIcon() );
+    msgBox->button( QMessageBox::Ok )->setText( "确认(&OK)" );
+    msgBox->setDefaultButton( QMessageBox::Ok );
+    msgBox->exec();
+    delete msgBox;
+}
+
+void LexiconToolWin::on_btnDumpSysLexicon_clicked()
+{
+    QString fileName = QFileDialog::getSaveFileName( this, "生成TXT文件", QString(qgetenv("HOME")) + "/freeime.txt" );
+    if ( !fileName.isEmpty() )
+    {
+        m_lexiconWorker->set_op_param( LTO_DUMP_SYS_TABLE, fileName, CUR_USED_WUBI_TABLE );
+        m_lexiconThread->start();
+
+        m_msgBox->setText("正在导出词库......" );
+        m_msgBox->setStandardButtons( QMessageBox::Ok | QMessageBox::Cancel );
+        m_msgBox->button( QMessageBox::Cancel )->setEnabled( true );
+        m_msgBox->button( QMessageBox::Ok )->setEnabled( false );
+        m_msgBox->button( QMessageBox::Cancel )->setText( "取消(&C)" );
+        m_msgBox->button( QMessageBox::Ok )->setText( "确定(&O)" );
+        int ret = m_msgBox->exec();
+        if ( ret == QMessageBox::Cancel )
+        {
+            lexicon_thread_quit();
+        }
+    }
+}
+
+void LexiconToolWin::on_btnMakeSysLexicon_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName( this, "选择TXT文件", QString(qgetenv("HOME")) );
+    if ( !fileName.isEmpty() )
+    {
+        m_lexiconWorker->set_op_param( LTO_GEN_SYS_TABLE, fileName, m_tmpSysTable );
+        m_lexiconThread->start();
+
+        m_msgBox->setText( "正在生成词库......" );
+        m_msgBox->setStandardButtons( QMessageBox::Cancel );
+        m_msgBox->button( QMessageBox::Cancel )->setText( "取消(&C)" );
+        int ret = m_msgBox->exec();
+        if ( ret == QMessageBox::Cancel )
+        {
+            lexicon_thread_quit();
+        }
+        else if ( ret == QMessageBox::Yes )
+        {
+            QString cmd = QString( "cp %1 %2" ).arg( m_tmpSysTable ).arg( CUR_USED_WUBI_TABLE );
+            system( cmd.toUtf8().data() );
+
+            Settings::save_ime_table_changed_flg_to_file( 1 );
+            emit signal_ime_table_changed();
+        }
+        else if ( ret == QMessageBox::No )
+        {
+            QString cmd;
+            if ( g_desktopType == DT_MATE )//银河麒麟系统
+            {
+                cmd = QString( "caja %1 > /dev/null 2>&1 &" ).arg( QString(qgetenv("HOME")) );
+            }
+            else if ( g_desktopType == DT_UKUI )//优麒麟系统
+            {
+                cmd = QString( "peony %1 > /dev/null 2>&1 &" ).arg( QString(qgetenv("HOME")) );
+            }
+            else if ( g_desktopType == DT_DEEPIN )//深度系统
+            {
+                cmd = QString( "pcmanfm %1 > /dev/null 2>&1 &" ).arg( QString(qgetenv("HOME")) );
+            }
+            else if ( g_desktopType == DT_UBUNTU ) //Ubuntu
+            {
+                cmd = QString( "nautilus -s %1 > /dev/null 2>&1 &" ).arg( m_tmpSysTable );
+            }
+            else
+            {
+                cmd = QString( "xdg-open %1 > /dev/null 2>&1 &" ).arg( m_tmpSysTable );
+            }
+            system( cmd.toUtf8().data() );
+        }
+    }
+}
+
+void LexiconToolWin::on_btnMarkRareWord_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName( this, "选择TXT文件", QString(qgetenv("HOME")) );
+    if ( !fileName.isEmpty() )
+    {
+        m_lexiconWorker->set_op_param( LTO_MARK_RARE_CHAR, fileName, CUR_USED_WUBI_TABLE );
+        m_lexiconThread->start();
+
+        m_msgBox->setText( "正在标记......" );
+        m_msgBox->setStandardButtons( QMessageBox::Ok | QMessageBox::Cancel );
+        m_msgBox->button( QMessageBox::Cancel )->setEnabled( true );
+        m_msgBox->button( QMessageBox::Ok )->setEnabled( false );
+        m_msgBox->button( QMessageBox::Cancel )->setText( "取消(&C)" );
+        m_msgBox->button( QMessageBox::Ok )->setText( "确定(&O)" );
+        int ret = m_msgBox->exec();
+        if ( ret == QMessageBox::Cancel )
+        {
+            lexicon_thread_quit();
+        }
+        else if ( ret == QMessageBox::Ok )
+        {
+//            Settings::save_ime_table_changed_flg_to_file( 1 );
+//            emit signal_ime_table_changed();
+        }
+    }
+}
+
+void LexiconToolWin::on_btnMarkThinkWord_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName( this, "选择TXT文件", QString(qgetenv("HOME")) );
+    if ( !fileName.isEmpty() )
+    {
+        m_lexiconWorker->set_op_param( LTO_MARK_THINK_WORD, fileName, CUR_USED_WUBI_TABLE );
+        m_lexiconThread->start();
+
+        m_msgBox->setText( "正在标记......" );
+        m_msgBox->setStandardButtons( QMessageBox::Ok | QMessageBox::Cancel );
+        m_msgBox->button( QMessageBox::Cancel )->setEnabled( true );
+        m_msgBox->button( QMessageBox::Ok )->setEnabled( false );
+        m_msgBox->button( QMessageBox::Cancel )->setText( "取消(&C)" );
+        m_msgBox->button( QMessageBox::Ok )->setText( "确定(&O)" );
+        int ret = m_msgBox->exec();
+        if ( ret == QMessageBox::Cancel )
+        {
+            lexicon_thread_quit();
+        }
+        else if ( ret == QMessageBox::Ok )
+        {
+//            Settings::save_ime_table_changed_flg_to_file( 1 );
+//            emit signal_ime_table_changed();
+        }
+    }
+}
+
+void LexiconToolWin::on_btnOptimize_clicked()
+{
+    m_lexiconWorker->set_op_param( LTO_OPTIMIZE_TABLE, CUR_USED_WUBI_TABLE, "" );
+    m_lexiconThread->start();
+
+    m_msgBox->setText( "正在优化......" );
+    m_msgBox->setStandardButtons( QMessageBox::Ok | QMessageBox::Cancel );
+    m_msgBox->button( QMessageBox::Cancel )->setEnabled( true );
+    m_msgBox->button( QMessageBox::Ok )->setEnabled( false );
+    m_msgBox->button( QMessageBox::Cancel )->setText( "取消(&C)" );
+    m_msgBox->button( QMessageBox::Ok )->setText( "确定(&O)" );
+    int ret = m_msgBox->exec();
+    if ( ret == QMessageBox::Cancel )
+    {
+        lexicon_thread_quit();
+    }
+}
+
+void LexiconToolWin::on_btnDumpPinyinLexicon_clicked()
+{
+    QString fileName = QFileDialog::getSaveFileName( this, "生成TXT文件", QString(qgetenv("HOME")) + "/attach.txt" );
+    if ( !fileName.isEmpty() )
+    {
+        m_lexiconWorker->set_op_param( LTO_DUMP_PINYIN_TABLE, fileName, CUR_USED_PINYIN_TABLE );
+        m_lexiconThread->start();
+
+        m_msgBox->setText( "正在导出词库......" );
+        m_msgBox->setStandardButtons( QMessageBox::Ok | QMessageBox::Cancel );
+        m_msgBox->button( QMessageBox::Cancel )->setEnabled( true );
+        m_msgBox->button( QMessageBox::Ok )->setEnabled( false );
+        m_msgBox->button( QMessageBox::Cancel )->setText( "取消(&C)" );
+        m_msgBox->button( QMessageBox::Ok )->setText( "确定(&O)" );
+        int ret = m_msgBox->exec();
+        if ( ret == QMessageBox::Cancel )
+        {
+            lexicon_thread_quit();
+        }
+    }
+}
+
+void LexiconToolWin::on_btnMakePinyinLexicon_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName( this, "选择TXT文件", QString(qgetenv("HOME")) );
+    if ( !fileName.isEmpty() )
+    {
+        m_lexiconWorker->set_op_param( LTO_GEN_PINYIN_TABLE, fileName, m_tmpPinyinTable );
+        m_lexiconThread->start();
+
+        m_msgBox->setText( "正在生成词库......" );
+        m_msgBox->setStandardButtons( QMessageBox::Cancel );
+        m_msgBox->button( QMessageBox::Cancel )->setText( "取消(&C)" );
+        int ret = m_msgBox->exec();
+        if ( ret == QMessageBox::Cancel )
+        {
+            lexicon_thread_quit();
+        }
+        else if ( ret == QMessageBox::Yes )
+        {
+            QString cmd = QString( "cp %1 %2" ).arg( m_tmpPinyinTable ).arg( CUR_USED_PINYIN_TABLE );
+            system( cmd.toUtf8().data() );
+
+            Settings::save_ime_table_changed_flg_to_file( 1 );
+            emit signal_ime_table_changed();
+        }
+        else if ( ret == QMessageBox::No )
+        {
+            QString cmd;
+            if ( g_desktopType == DT_MATE )//银河麒麟系统
+            {
+                cmd = QString( "caja %1 > /dev/null 2>&1 &" ).arg( QString(qgetenv("HOME")) );
+            }
+            else if ( g_desktopType == DT_UKUI )
+            {
+                cmd = QString( "peony %1 > /dev/null 2>&1 &" ).arg( QString(qgetenv("HOME")) );
+            }
+            else if ( g_desktopType == DT_DEEPIN )//深度系统
+            {
+                cmd = QString( "pcmanfm %1 > /dev/null 2>&1 &" ).arg( QString(qgetenv("HOME")) );
+            }
+            else if ( g_desktopType == DT_UBUNTU )//Ubuntu
+            {
+                cmd = QString( "nautilus -s %1 > /dev/null 2>&1 &" ).arg( m_tmpPinyinTable );
+            }
+            else
+            {
+                cmd = QString( "xdg-open %1 > /dev/null 2>&1 &" ).arg( m_tmpPinyinTable );
+            }
+            system( cmd.toUtf8().data() );
+        }
+    }
+}
+
+void LexiconToolWin::on_btnDumpUserLexicon_clicked()
+{
+    QStringList args;
+    args << INSTALL_DIR + "/data/user_word.txt" << QString(qgetenv("HOME"));
+    QProcess::execute( "cp", args );
+
+    QMessageBox *msgBox = new QMessageBox( this );
+    msgBox->setWindowFlag( Qt::FramelessWindowHint );
+    msgBox->setIcon( QMessageBox::Question );
+    msgBox->setText( QString("用户词库已导出至：%1/user_word.txt，是否查看？").arg(QString(qgetenv("HOME"))) );
+    msgBox->setStandardButtons( QMessageBox::Yes | QMessageBox::No );
+    msgBox->button( QMessageBox::Yes )->setIcon( QIcon() );
+    msgBox->button( QMessageBox::Yes )->setText( "是(&Y)" );
+    msgBox->button( QMessageBox::No )->setIcon( QIcon() );
+    msgBox->button( QMessageBox::No )->setText( "否(&N)" );
+    msgBox->setDefaultButton( QMessageBox::Yes );
+    int ret = msgBox->exec();
+    delete msgBox;
+
+    if ( ret == QMessageBox::Yes )
+    {
+        char cmd[128] = {0};
+        if ( g_desktopType == DT_MATE )//麒麟系统
+        {
+            sprintf( cmd, "caja ~/user_word.txt > /dev/null 2>&1 &" );
+        }
+        else if ( g_desktopType == DT_UKUI )//
+        {
+            sprintf( cmd, "peony ~/user_word.txt > /dev/null 2>&1 &" );
+        }
+        else if ( g_desktopType == DT_DEEPIN )//深度系统
+        {
+            sprintf( cmd, "gedit ~/user_word.txt > /dev/null 2>&1 &" );
+        }
+        else if ( g_desktopType == DT_UBUNTU ) // Ubuntu
+        {
+            sprintf( cmd, "nautilus -s ~/user_word.txt > /dev/null 2>&1 &" );
+        }
+        else
+        {
+            sprintf( cmd, "xdg-open ~/user_word.txt > /dev/null 2>&1 &" );
+        }
+        system( cmd );
+    }
+}
+
+void LexiconToolWin::on_btnBatchDel_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName( this, "选择文件", qgetenv("HOME"), "Text files (*.txt);;" );
+    add_del_user_word_from_file( 0, fileName );
+}
+
+void LexiconToolWin::on_btnBatchAdd_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName( this, "选择文件", qgetenv("HOME"), "Text files (*.txt);;" );
+    add_del_user_word_from_file( 1, fileName );
+}
+
+// op: 0 - 删除  1 - 增加
+void LexiconToolWin::add_del_user_word_from_file( int op, const QString &fileName )
+{
+    int count = 0;
+
+    QFile selectFile( fileName );
+    if ( !fileName.isEmpty() && selectFile.size() < 1048576*2 )//1048576=1MB
+    {
+        if ( !selectFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+        {
+            qWarning() << selectFile.fileName() << " open failed!";
+            return;
+        }
+        QTextStream selectFileStream( &selectFile );
+        selectFileStream.setCodec( "UTF-8" );
+        QStringList opWordLines = selectFileStream.readAll().split("\n");
+        selectFile.close();
+
+        if ( opWordLines.size() )
+        {
+            QFile userWordFile(QString(INSTALL_DIR) + "/data/user_word.txt");
+            QTextStream userWordStream( &userWordFile );
+            if ( !userWordFile.open(QIODevice::ReadWrite | QIODevice::Text) )
+            {
+                qWarning() << userWordFile.fileName() << " open failed!";
+                return;
+            }
+            QStringList userWordList = userWordStream.readAll().split( '\n' );
+
+            foreach( QString line, opWordLines )
+            {
+                QString str, code;
+                QStringList tempList, valueList;
+
+                line = line.trimmed();
+                if ( line.startsWith('#') ) continue;
+
+                if ( line.contains('=') )
+                {
+                    tempList = line.split( '=' );
+                    if ( tempList.length() == 2 )
+                    {
+                        code = tempList.at( 0 );
+                        code = code.trimmed();
+                        valueList = tempList.at( 1 ).split( ' ', QString::SkipEmptyParts );
+                    }
+                }
+                else if ( line.contains(' ') )
+                {
+                    tempList = line.split( ' ', QString::SkipEmptyParts );
+                    if ( tempList.length() > 1 )
+                    {
+                        code = tempList.takeAt( 0 );
+                        valueList = tempList;
+                    }
+                }
+                else
+                {
+                    continue;
+                }
+
+
+                if ( code.isEmpty() ) continue;
+                int invalidFlg = 0;
+                foreach ( QChar ch, code )
+                {
+                    if ( ch < 'a' || ch > 'z')
+                    {
+                        invalidFlg = 1;
+                        break;
+                    }
+                }
+                if ( invalidFlg ) continue;
+
+
+                foreach ( QString value, valueList )
+                {
+                    str = code + "=" + value;
+                    if ( !str.isEmpty() )
+                    {
+                        //删词
+                        if ( !op )
+                        {
+                            int pos = userWordList.indexOf(str);
+                            if (  pos >= 0 )
+                            {
+                                userWordList.removeAt( pos );
+                                count++;
+                            }
+                        }
+                        //加词
+                        else
+                        {
+                            userWordList << str;
+                            count++;
+                        }
+                    }
+                }
+            }
+
+            if ( op )//加词
+            {
+                userWordList.removeFirst();
+                userWordList.removeDuplicates();
+                userWordList.sort();
+                userWordList.insert( 0, "[UserWord]" );
+            }
+
+            if ( count )
+            {
+                userWordFile.resize( 0 );
+                foreach( QString str, userWordList )
+                {
+                    if ( !str.isEmpty() )
+                    {
+                        userWordStream << str + "\n";
+                    }
+                }
+                userWordStream.flush();
+            }
+
+            userWordFile.close();
+        }
+
+        QMessageBox *msgBox = new QMessageBox( this );
+        msgBox->setWindowFlag( Qt::FramelessWindowHint );
+        msgBox->setIcon( QMessageBox::Information );
+        msgBox->setText( QString("成功%1用户词组数目：%2").arg(op?"增加":"删除").arg(count) );
+        msgBox->setStandardButtons( QMessageBox::Ok );
+        msgBox->button( QMessageBox::Ok )->setIcon( QIcon() );
+        msgBox->button( QMessageBox::Ok )->setText( "确认(&OK)" );
+        msgBox->setDefaultButton( QMessageBox::Ok );
+        msgBox->exec();
+        delete msgBox;
+
+        if ( count )
+        {
+            Settings::save_userWord_change_flg_to_file( 1 );
+            emit signal_user_word_file_changed();
+        }
+    }
+}

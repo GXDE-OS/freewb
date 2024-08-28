@@ -1,0 +1,502 @@
+<html>
+  <head>
+	  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>极点五笔帮助文档</title>
+		<link href="toc/style/github-bf51422f4bb36427d391e4b75a1daa083c2d840e.css" media="all" rel="stylesheet" type="text/css"/>
+		<link href="toc/style/github2-d731afd4f624c99a4b19ad69f3083cd6d02b81d5.css" media="all" rel="stylesheet" type="text/css"/>
+		<link href="toc/css/zTreeStyle/zTreeStyle.css" media="all" rel="stylesheet" type="text/css"/>
+	  <style>
+		pre {
+		    counter-reset: line-numbering;
+		    border: solid 1px #d9d9d9;
+		    border-radius: 0;
+		    background: #fff;
+		    padding: 0;
+		    line-height: 23px;
+		    margin-bottom: 30px;
+		    white-space: pre;
+		    overflow-x: auto;
+		    word-break: inherit;
+		    word-wrap: inherit;
+		}
+
+		pre a::before {
+		  content: counter(line-numbering);
+		  counter-increment: line-numbering;
+		  padding-right: 1em; /* space after numbers */
+		  width: 25px;
+		  text-align: right;
+		  opacity: 0.7;
+		  display: inline-block;
+		  color: #aaa;
+		  background: #eee;
+		  margin-right: 16px;
+		  padding: 2px 10px;
+		  font-size: 13px;
+		  -webkit-touch-callout: none;
+		  -webkit-user-select: none;
+		  -khtml-user-select: none;
+		  -moz-user-select: none;
+		  -ms-user-select: none;
+		  user-select: none;
+		}
+
+		pre a:first-of-type::before {
+		  padding-top: 10px;
+		}
+
+		pre a:last-of-type::before {
+		  padding-bottom: 10px;
+		}
+
+		pre a:only-of-type::before {
+		  padding: 10px;
+		}
+
+		.highlight { background-color: #ffffcc } /* RIGHT */
+		</style>
+  </head>
+  <body>
+	  <div>
+				<div style='width:25%;'>
+						<ul id="tree" class="ztree" style='width:100%'>
+
+						</ul>
+				</div>
+        <div id='readme' style='width:70%;margin-left:20%;'>
+          	<article class='markdown-body'>
+            	<h1 id="-">极点五笔</h1>
+<h2 id="-">简介</h2>
+<hr>
+<p>『极点五笔』是一款以五笔为主的中文输入法软件，并提供了拼音辅助输入功能。</p>
+<ul>
+<li>支持五笔、拼音混输模式，且几乎不影响盲打。</li>
+<li>支持打简出繁及简/繁体非对称转换。</li>
+<li>支持字词编码及其解释的在线查询。</li>
+<li>支持在线造词、删词，手动、自动调序。</li>
+<li>创新的常用字与非常用字方式，完美解决输得快与输得全之间的矛盾。</li>
+<li>... ...</li>
+</ul>
+<h4 id="-">运行环境</h4>
+<hr>
+<p>Ubuntu 18.04</p>
+<h4 id="-">安装方法</h4>
+<hr>
+<p>有一部分系统默认输入法框架是ibus,比如ubuntu 16.04和ubuntu 19.04。在使用这些系统之前需要安装并配置fcitx。</p>
+<p>首先需要安装fcitx。<br><code>&gt; sudo apt install fcitx-bin</code><br>之后需要打开language support。</p>
+<p><img src="https://oscimg.oschina.net/oscnet/b247c78666b6aa8eaeff356569fb999bb19.jpg" alt=""></p>
+<p>设置输入法架构为fcitx。</p>
+<p><img src="https://oscimg.oschina.net/oscnet/7180b55a5211e470fec90510e9de4a5a48a.jpg" alt=""></p>
+<p>然后重启电脑完成fcitx的安装。</p>
+
+<p>下载极点五笔deb包，然后用dpkg命令安装。<br><code>&gt; sudo dpkg -i freewb.deb</code><br>安装完成后重启电脑<br>   <code>&gt; reboot</code><br>     来使输入法生效。 </p>
+<p><strong>手动添加输入法方法</strong>        </p>
+<p>有些时候会遇到无法自动添加输入法的情况。这个时候就需要手动添加输入法。打开fcitx configuration。</p>
+<p><img src="https://oscimg.oschina.net/oscnet/9296cef7d55a77f200045faeeecf12aad1a.jpg" alt=""></p>
+<p>点击左下角的"+"图标,取消Only Show Current Language,搜索freewb,如果用deb包安装完会出现Freewb选项,选中点击ok即可。</p>
+<p><img src="https://oscimg.oschina.net/oscnet/c530b1855e973b10d52944605d2e665683c.jpg" alt=""></p>
+<p>Ubuntu16.04有时候会出现重启电脑之后已经手动添加的输入法消失的情况，这个时候需要安装一下chinese语言包。</p>
+<p>打开Language Support。</p>
+<p><img src="https://oscimg.oschina.net/oscnet/b247c78666b6aa8eaeff356569fb999bb19.jpg" alt=""></p>
+<p>然后选择Install/Remove Languages，找到chinese，点击Apply即可。</p>
+<p><img src="https://oscimg.oschina.net/oscnet/27cea094bb1d7977a213dccb01ee29668bd.jpg" alt=""></p>
+<h4 id="-">卸载</h4>
+<hr>
+
+<p>通过命令行删除。 <code>&gt; sudo dpkg -r freewb</code> </p>
+<p> 删除完成后重启电脑可完成安全卸载。</p>
+
+</ol>
+<h2 id="-">界面简介</h2>
+<hr>
+<h4 id="-">按钮说明</h4>
+<hr>
+<p>极点状态栏允许全屏拖动，您可以拖放到任意自已喜欢的位置上（拖动完成后、它会记住这个位置，再次启动时仍会使用这个设置）。</p>
+<p>『极点五笔』提供了多套皮肤供选择，下图简要说明状态栏上的状态指示符及操作方法。 </p>
+<p><img src="https://oscimg.oschina.net/oscnet/64b028a59afcae6c46a9dca9e590e177360.jpg" alt=""></p>
+<p><strong>说明</strong>：</p>
+<ul>
+<li>极点五笔支持换肤，故指示符位置、形式可能与上述说明不尽相同（鼠标浏览按钮时会显示说明） </li>
+<li>状态栏可以，快捷键为：Ctrl+← （此为开关键，在显示与隐藏之间切换）</li>
+<li><strong>鼠标右键点击极点的状态栏会弹出“状态栏菜单”（说明见下面）</strong>: </li>
+</ul>
+<h4 id="-">菜单介绍</h4>
+<hr>
+<p><img src="https://oscimg.oschina.net/oscnet/db2200bb6787eb05d81202416bf9b7758f5.jpg" alt=""></p>
+<p><img src="https://oscimg.oschina.net/oscnet/cf3335d50a109a9c4062c43690436bb769f.jpg" alt=""></p>
+<h3 id="-">特色功能</h3>
+<hr>
+<p><strong>智能词组</strong>        </p>
+<p>这是极点五笔中相当有用的一个功能。对于词库中没有的词：比如你的名字，第一次输入时用单字方式输入，之后就可以按词组的方式来录入了。极点关闭时，这些词组自动消失，不会增加重码(也可设置为实时保存到词库中)。</p>
+<hr>
+<p><strong>混输模式</strong></p>
+<p>如果你的五笔还不是很熟，你可以将极点设为“五笔拼音”输入模式：遇到不会拆分的字、词时，可以直接用拼音来输入并反查其五笔编码。
+方法：用鼠标点击极点状态栏，直到文字变成“五笔拼音”。<img src="https://oscimg.oschina.net/oscnet/3cb5f821a5729e91b62e6b914e05ec27f13.jpg" alt=""></p>
+<hr>
+<p><strong>造词</strong></p>
+<p>在输入过程中，遇到词库中没有的词条时（可以是字、词、标点、符号，甚至空格、回车等），可随时添加。
+用极点输入要造词条的内容，之后点击状态栏上的在线造词钮图标或按Ctrl + = 键，再按提示操作即可(也可以先将要造的词复制到剪切板，之后按<strong>Ctrl + Alt + =</strong> 来添加)。</p>
+<hr>
+<p><strong>删词</strong></p>
+<ol>
+<li>Del+序号 删除候选框中的重码词条。</li>
+<li>Ctrl + -  删除刚刚输出上屏的词条，这时会弹出确认窗口，回车删除、Esc取消操作。</li>
+</ol>
+<hr>
+<p><strong>调整词序</strong></p>
+<p>重码时，可按 Ctrl + 序号 将候选栏中相应词条调整到重码首位。</p>
+<hr>
+<p><strong>反查编码</strong></p>
+<ol>
+<li>用拼音 打全单字编码后，候选项后面显示五笔编码</li>
+<li>录入单字/词条后，按 Ctrl + / 反编查码</li>
+<li>将屏幕上已存在的字复制到剪切板后，按 Ctrl + Alt + / 。</li>
+<li>将鼠标划过候选项，极点会弹出此项的释义、拼音提示窗 。</li>
+</ol>
+<hr>
+<p><strong>特殊编码</strong></p>
+<p>date  - 输入系统当前日期，如： 二〇一九年六月十日 / 2019年6月10日<br>time  - 输入系统当前时间，如： 23时29分 / 二十三时二十九分<br>week  - 输入系统当前星期，如： 星期一  </p>
+<hr>
+<p><strong>笔画输入</strong></p>
+<p>如果某个字你既不会拆分，也不知道拼音，这时你可以使用极点的笔画辅助输入功能。按一下&quot;`&quot;键（通常是Esc的下方），之后再输入“/”<br>再顺序输入汉字的笔画。五笔笔画的代码分别为：  横=h  竖=s  撇=p  捺=n  勾=g<br>例如，“中”字完整编码为&quot;`/sghs&quot;。<br>注：此功能只有使用极点自带词库才有效。</p>
+<hr>
+<p><strong>输出繁体字</strong></p>
+<p>Ctrl + J 转换简体/繁体输出。<br>切换繁体输出时，可以用简体字的编码输出对应的繁体字，如打“x”输出为“經”。  </p>
+<p>说明：繁体输出在打词组时支持非对称转换</p>
+<h3 id="-">数字符号</h3>
+<hr>
+<p>系列符号编码取符号名称的拼音首码。录入时先按 ZZ 键，再输入系列符号的编码，如：圆数(ys) -&gt; <strong>zzys</strong>  </p>
+<table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>编码</strong></th>
+<th><strong>系列符号</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>圆圈字数[圆数]</td>
+<td>zzys</td>
+<td>①②③④⑤⑥⑦⑧⑨⑩</td>
+</tr>
+<tr>
+<td>括号字数[括数]</td>
+<td>zzks</td>
+<td>⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽⑾⑿⒀⒁⒂⒃⒄⒅⒆⒇  </td>
+</tr>
+<tr>
+<td>数字点[数点]</td>
+<td>zzds</td>
+<td>⒈⒉⒊⒋⒌⒍⒎⒏⒐⒑⒒⒓⒔⒕⒖⒗⒘⒙⒚⒛  </td>
+</tr>
+<tr>
+<td>中文数字[中数]</td>
+<td>zzzs</td>
+<td>㈠㈡㈢㈣㈤㈥㈦㈧㈨㈩  </td>
+</tr>
+<tr>
+<td>单位符号[单位]</td>
+<td>zzdw</td>
+<td>㎎ ㎏ ㎜ ㎝ ㎞ ㎡ ㏄ ㏎ ㏑ ㏒ ㏕  </td>
+</tr>
+<tr>
+<td>拼音符号[拼音]</td>
+<td>zzpy</td>
+<td>āáǎà ōóǒò êēéěè īíǐì ūúǔù ǖǘǚǜü  </td>
+</tr>
+<tr>
+<td>拼音a</td>
+<td>zzpya</td>
+<td>ā á ǎ à  </td>
+</tr>
+<tr>
+<td>拼音o</td>
+<td>zzpyo</td>
+<td>ō ó ǒ ò   </td>
+</tr>
+<tr>
+<td>拼音e</td>
+<td>zzpye</td>
+<td>ē é ě è ê  </td>
+</tr>
+<tr>
+<td>拼音i</td>
+<td>zzpyi</td>
+<td>ī í ǐ ì  </td>
+</tr>
+<tr>
+<td>拼音u</td>
+<td>zzpyu</td>
+<td>ū ú ǔ ù  </td>
+</tr>
+<tr>
+<td>拼音v</td>
+<td>zzpyv</td>
+<td>ǖ ǘ ǚ ǜ ü  </td>
+</tr>
+<tr>
+<td>货币符号[货币]</td>
+<td>zzhb</td>
+<td>＄ ￠ ￡ ￥ ¤   </td>
+</tr>
+<tr>
+<td>方向箭头[箭头]</td>
+<td>zzjt</td>
+<td>← ↑ → ↓ ↖ ↗ ↘ ↙  </td>
+</tr>
+<tr>
+<td>标点符号[标点]</td>
+<td>zzbd</td>
+<td>。，、；：？！…—·．ˉˇ¨‘’“”々～‖∶＂＇｀｜〔〕〈〉《》「」『』〖〗【】（）［］｛｝  </td>
+</tr>
+<tr>
+<td>注音符号[注音]</td>
+<td>zzzy</td>
+<td>ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄧㄨㄩㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦ     </td>
+</tr>
+<tr>
+<td>数学符号[数学]</td>
+<td>zzsx</td>
+<td>＋－＜＝＞±×÷∈∏∑∕√∝∞∟∠∣∥∧∨∩∪∫∮∴∵∶∷∽≈≌≒≠≡≤≥≦≧≮≯⊕⊙⊥⊿   </td>
+</tr>
+<tr>
+<td>特殊符号[特殊]</td>
+<td>zzts</td>
+<td>№°‰♂♀§℃☆★○●◎◇◆□■△▲※〓＃＆＠＼＾＿￣   </td>
+</tr>
+<tr>
+<td>偏旁部首[偏旁]</td>
+<td>zzpp</td>
+<td>勹灬冫艹屮辶刂匚阝廾丨虍彐卩钅冂冖宀疒肀丿攵凵犭亻彡饣礻扌氵纟亠囗忄讠衤廴尢夂丶丬   </td>
+</tr>
+<tr>
+<td>大写罗马[大罗]</td>
+<td>zzdl</td>
+<td>Ⅰ Ⅱ Ⅲ Ⅳ Ⅴ Ⅵ Ⅶ Ⅷ Ⅸ Ⅹ Ⅺ Ⅻ   </td>
+</tr>
+<tr>
+<td>小写罗马[小罗]</td>
+<td>zzxl</td>
+<td>ⅰ ⅱ ⅲ ⅳ ⅴ ⅵ ⅶ ⅷ ⅸ ⅹ   </td>
+</tr>
+<tr>
+<td>大写希腊[大希]</td>
+<td>zzdx</td>
+<td>ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ   </td>
+</tr>
+<tr>
+<td>小写希腊[小希]</td>
+<td>zzxx</td>
+<td>αβγδεζηθικλμνξοπρστυφχψω   </td>
+</tr>
+<tr>
+<td>大写俄文[大俄]</td>
+<td>zzde</td>
+<td>АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЁ   </td>
+</tr>
+<tr>
+<td>小写俄文[小俄]</td>
+<td>zzxe</td>
+<td>абвгдежзийклмнопрстуфхцчшщъыьэюяёю   </td>
+</tr>
+<tr>
+<td>日文平假名[日文]</td>
+<td>zzpj</td>
+<td>ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをん゛゜ゝゞ   </td>
+</tr>
+<tr>
+<td>日文片假名[日文片]</td>
+<td>zzjp</td>
+<td>ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶーヽヾ    </td>
+</tr>
+</tbody>
+</table>
+<h3 id="-">快捷键</h3>
+<hr>
+<table>
+<thead>
+<tr>
+	<th><strong>功能</strong></th>
+	<th><strong>操作键</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td><strong>查询汉字释义及拼音</strong></td>
+	<td>Ctrl + /      (查刚上屏汉字项）<br/>   Ctrl + Alt + /  （查剪切板中的汉字）</td>
+</tr>
+<tr>
+	<td><strong>取消上屏项</strong></td>
+	<td>Ctrl + Backspace  [*]  (取消刚刚上屏的候选项)</td>
+</tr>
+<tr>
+	<td><strong>标点自动配对输出</strong></td>
+	<td>Ctrl + Del  [*]</td>
+</tr>
+<tr>
+	<td><strong>显/隐状态栏</strong></td>
+	<td>Ctrl + ←  [*]</td>
+</tr>
+<tr>
+	<td><strong>重码选择</strong></td>
+	<td>1、 按 数字键 选择项上屏 <br/> 2、 按 空格 键，第一重码项上屏（也可设为第二重码上屏）<br/>3、 左、右 Shift 选第二，三重码上屏 [*]  <br> 4、  ； ’ 键选第二、三重码项上屏  [*]  <br/> 5、  ， 。 键选第二、三重码项上屏 [*]</td>
+</tr>
+<tr>
+	<td><strong>重复输入</strong></td>
+	<td>Z + 空格  输出刚刚录入过的字词</td>
+</tr>
+<tr>
+	<td><strong>候选窗翻页</strong></td>
+	<td>1、  - / =    （前翻/后翻）<br/> 2、  PageUp / PageDown  （前翻/后翻) <br/> 3、  Tab / Shift+Tab  （后翻/前翻） [*]  <br/> 4、  ， / 。  （前翻/后翻） [*]</td>
+</tr>
+<tr>
+	<td><strong>快捷英文</strong></td>
+	<td>在中文状态下按 分号键 （ ； ）进入快捷英文状态 [*] ，直接键入字母，键入完毕回车即是英文上屏，并自动转回中文状态。</td>
+</tr>
+<tr>
+	<td><strong>中/英文切换</strong></td>
+	<td>左Ctrl 、 右Ctrl 、 左Shift 、 右Shift   [*]</td>
+</tr>
+<tr>
+	<td><strong>中/英文标点切换</strong></td>
+	<td>Ctrl + 。</td>
+</tr>
+<tr>
+	<td><strong>全/半角字字符</strong></td>
+	<td>Shift + 空格</td>
+</tr>
+<tr>
+	<td><strong>简/繁输出切换</strong></td>
+	<td>Ctrl + J           （简体输出 / 繁体输出）</td>
+</tr>
+</tbody>
+</table>
+<p>注： [*]号表示该项允许用户在设置界面根据自已习惯进行设置  </p>
+<h3 id="-">软键盘</h3>
+<hr>
+<p>『极点五笔』输入法提供14种软键盘。可以用鼠标单击状态栏上的‘软键盘’按钮打开用户上次使用的软键盘；或在状态栏/候选窗单击鼠标右键，通过快捷菜单打开/切换/关闭软键盘，亦可在软键盘上弹出快捷菜单切换软键盘。   </p>
+<ul>
+<li>相关快捷键：<br>Esc          - 关闭软键盘。    Ctrl + Esc - 打开/切换软键盘。       </li>
+</ul>
+<p>PC键盘<br><img src="https://oscimg.oschina.net/oscnet/fa604dbdbd1362a46983f035aee8f791f0c.jpg" alt=""></p>
+<h2 id="-">其他说明</h2>
+<hr>
+<p><strong>常用字与非常用字</strong>  </p>
+<p>极点Unicode版（以下简称极U）中，引入了一个非常重要的概念：常用字词和非常用字词。下面我们以一个具体例子来说明这一概念。我们在汉字录入时常遇到“1.增加　2.啬”这样的重码字词，其中的“啬”字大多数人几乎用不到，但又不能删--万一用时怎么办？这样就形成了一个“死重码”。为了解决这类问题极U中引入了“常用字词”与“非常用字词”这一概念。
+　　  </p>
+<p>常用与非常用概念的标准很简单：你在工作中经常用的就是常用，少用的就是非常用。那么在极U中如何应用这一概念呢？如上例中的“1.增加　2.啬”，当其出现在汉字候选窗中时，我们按下Ctrl+Shift+2”（Ctrl+Shift是固定按键，2是“啬”的序号）便可将“啬”字设为非常用字，这样在正常录入时它便不会出现了，而“增加”这个常用词就可以直接上屏了，从而达到减少重码，提高录入效率的目的。</p>
+<hr>
+<p><strong>辅助输入</strong>  </p>
+<p>上面我们说了将字或词改为非常用的方法，那么当需要录入这些字时，我们怎么办呢？很简单，按一下“`”（Esc下排的键，这个键也可以输入编码之后再按）之后输入五笔编码就可以了。如上面的“啬”，输入“`fulk”即可录入。   </p>
+<p>有人说了，系统内置的某个非常用字我经常用到，怎么办？这个也很简单，首先让这个字出现在汉字候选窗里，之后按“Ctrl+Shift+此字的序号”就可以了。也就是说这个“Ctrl+Shift+序号”是开关键，可将字词在常用与非常用之间进行转换。   </p>
+<p>辅助输入功能除了录入非常用字外，还有一个更重要的功能：拼音输入(<strong>在“五笔拼音”输入状态下无效——因为可以直接输入拼音</strong>)当你遇到不会拆分的字、词时，可以按“`”键，之后即可拼音方式来录入字或词。字词的编码规则如下：单、双字用全拼输入，三字以的词以各字的首字母来输入。如“斤斤计较”，你输入“`jjjj”便可以输入此词。</p>
+<h3 id="-">极点变量</h3>
+<hr>
+<p>极点词组内容不但可以包含汉字、字符、标点，甚至可以包括空格、回车换行，同时还支持下面的变量。<br>比如，我们造了一个&quot;$y年$m月$d日$20$h时$mi分$0s秒&quot;的词组，其编码为now，当你输入编码now后，输出的内容会是类似下面这样的：<br>2008年6月24日 20时45分06秒　（<strong>其中的变量已被其所代表的内容替换</strong>）</p>
+<p><img src="https://oscimg.oschina.net/oscnet/a2e78e6504a8b132198ba305ba4a2c3d5fe.jpg" alt=""></p>
+<p>注：<br>①“中文数字”、“大写金额”和“任意日期”功能中，如果临时英文键换成其他键，则“；”也要换为相应键<br>②上面三个功能都是：空格选第一项，分号选第二项，单引号选第三项</p>
+<h3 id="-">快捷命令</h3>
+<hr>
+<p>为了避免极点快捷键与应用程序快捷键冲突（如极点的查询快捷键Ctrl+?与word的软键盘命令冲突，造成极点查询功能失效），极点内置了一批快捷命令。<br>当你按“；”进入临时英文状态后，输入如下内容会执行对应功能：(注：要使用此功能，必须到系统设置::键盘及快捷键设定临时英文键)</p>
+<table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>命令说明</strong> </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dos.</td>
+<td>进入极点目录  </td>
+</tr>
+<tr>
+<td>aa.</td>
+<td>在线加词 </td>
+</tr>
+<tr>
+<td>dd.</td>
+<td>在线删词                                          </td>
+</tr>
+<tr>
+<td>ss.</td>
+<td>切换词组的常用与非常用 </td>
+</tr>
+<tr>
+<td>jj.</td>
+<td>切换简入繁出状态</td>
+</tr>
+<tr>
+<td>ff.</td>
+<td>查询最后录入或复制的内容  </td>
+</tr>
+<tr>
+<td>hh.</td>
+<td>显/隐状态栏  </td>
+</tr>
+<tr>
+<td>cc.</td>
+<td>显/隐候选窗 </td>
+</tr>
+<tr>
+<td>kk.</td>
+<td>打开软键盘</td>
+</tr>
+<tr>
+<td>mm.</td>
+<td>切换字符集</td>
+</tr>
+<tr>
+<td>oo.</td>
+<td>进入高级设置</td>
+</tr>
+<tr>
+<td>uu.</td>
+<td>编辑用户码表</td>
+</tr>
+<tr>
+<td>uw.</td>
+<td>编辑五笔码表</td>
+</tr>
+<tr>
+<td>up.</td>
+<td>编辑拼音码表</td>
+</tr>
+<tr>
+<td>v v.</td>
+<td>显示极点版本信息</td>
+</tr>
+<tr>
+<td>qq.</td>
+<td>编辑快捷码表</td>
+</tr>
+<tr>
+<td>tt.</td>
+<td>切换重码上屏校对模式                                           </td>
+</tr>
+</tbody>
+</table>
+<p><strong>注意：上面的命令都是由2个字母加一个英文句号“.”组成的。</strong></p>
+
+          	</article>
+        </div>
+		</div>
+  </body>
+</html>
+<script type="text/javascript" src="toc/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="toc/js/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript" src="toc/js/ztree_toc.js"></script>
+<script type="text/javascript" src="toc_conf.js"></script>
+
+<SCRIPT type="text/javascript" >
+<!--
+$(document).ready(function(){
+    var css_conf = eval(markdown_panel_style);
+    $('#readme').css(css_conf)
+    
+    var conf = eval(jquery_ztree_toc_opts);
+		$('#tree').ztree_toc(conf);
+});
+//-->
+</SCRIPT>

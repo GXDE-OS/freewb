@@ -1,0 +1,24 @@
+{
+    "files.associations": {
+        "istream": "cpp",
+        "iosfwd": "cpp",
+        "freewubi.h": "c",
+        "*.tcc": "cpp",
+        "streambuf": "cpp",
+        "string": "cpp",
+        "freedict.h": "c",
+        "memory_resource": "cpp",
+        "string_view": "cpp",
+        "sstream": "cpp",
+        "array": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp",
+        "list": "cpp",
+        "config.h": "c",
+        "freewubi-internal.h": "c"
+    },
+    "inline-bookmarks.view.showVisibleFilesOnly": true,
+    "editor.minimap.enabled": false,
+    "terminal.integrated.allowChords": false,
+    "cmake.configureOnOpen": true
+}

@@ -1,0 +1,1113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Keyboard</class>
+ <widget class="QWidget" name="Keyboard">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>388</width>
+    <height>162</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>388</width>
+     <height>162</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#frame
+{
+	border-image: url(:/image/keyboard/vk.png);
+}
+</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="KeyButton" name="btnBackQuote">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>6</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnChar1">
+    <property name="geometry">
+     <rect>
+      <x>34</x>
+      <y>6</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnChar2">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>6</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnChar3">
+    <property name="geometry">
+     <rect>
+      <x>86</x>
+      <y>6</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnChar4">
+    <property name="geometry">
+     <rect>
+      <x>111</x>
+      <y>6</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnChar5">
+    <property name="geometry">
+     <rect>
+      <x>137</x>
+      <y>6</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnChar6">
+    <property name="geometry">
+     <rect>
+      <x>163</x>
+      <y>6</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnChar7">
+    <property name="geometry">
+     <rect>
+      <x>189</x>
+      <y>6</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnChar8">
+    <property name="geometry">
+     <rect>
+      <x>214</x>
+      <y>6</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnChar9">
+    <property name="geometry">
+     <rect>
+      <x>239</x>
+      <y>6</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnChar0">
+    <property name="geometry">
+     <rect>
+      <x>265</x>
+      <y>6</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnSub">
+    <property name="geometry">
+     <rect>
+      <x>291</x>
+      <y>6</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnAdd">
+    <property name="geometry">
+     <rect>
+      <x>317</x>
+      <y>6</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharQ">
+    <property name="geometry">
+     <rect>
+      <x>46</x>
+      <y>37</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharW">
+    <property name="geometry">
+     <rect>
+      <x>71</x>
+      <y>37</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharE">
+    <property name="geometry">
+     <rect>
+      <x>97</x>
+      <y>37</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharR">
+    <property name="geometry">
+     <rect>
+      <x>123</x>
+      <y>37</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharT">
+    <property name="geometry">
+     <rect>
+      <x>149</x>
+      <y>37</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharY">
+    <property name="geometry">
+     <rect>
+      <x>175</x>
+      <y>37</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharU">
+    <property name="geometry">
+     <rect>
+      <x>201</x>
+      <y>37</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharI">
+    <property name="geometry">
+     <rect>
+      <x>226</x>
+      <y>37</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharO">
+    <property name="geometry">
+     <rect>
+      <x>252</x>
+      <y>37</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharP">
+    <property name="geometry">
+     <rect>
+      <x>278</x>
+      <y>37</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnLeftBracket">
+    <property name="geometry">
+     <rect>
+      <x>304</x>
+      <y>37</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnRightBracket">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>37</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnBackSlash">
+    <property name="geometry">
+     <rect>
+      <x>355</x>
+      <y>37</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharA">
+    <property name="geometry">
+     <rect>
+      <x>51</x>
+      <y>68</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharS">
+    <property name="geometry">
+     <rect>
+      <x>76</x>
+      <y>68</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharD">
+    <property name="geometry">
+     <rect>
+      <x>102</x>
+      <y>68</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharF">
+    <property name="geometry">
+     <rect>
+      <x>128</x>
+      <y>68</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharG">
+    <property name="geometry">
+     <rect>
+      <x>153</x>
+      <y>68</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharH">
+    <property name="geometry">
+     <rect>
+      <x>179</x>
+      <y>68</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharJ">
+    <property name="geometry">
+     <rect>
+      <x>205</x>
+      <y>68</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharK">
+    <property name="geometry">
+     <rect>
+      <x>231</x>
+      <y>68</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharL">
+    <property name="geometry">
+     <rect>
+      <x>257</x>
+      <y>68</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnSemicolon">
+    <property name="geometry">
+     <rect>
+      <x>283</x>
+      <y>68</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnQuote">
+    <property name="geometry">
+     <rect>
+      <x>309</x>
+      <y>68</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharZ">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>99</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharX">
+    <property name="geometry">
+     <rect>
+      <x>96</x>
+      <y>99</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharC">
+    <property name="geometry">
+     <rect>
+      <x>121</x>
+      <y>99</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharV">
+    <property name="geometry">
+     <rect>
+      <x>148</x>
+      <y>99</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharB">
+    <property name="geometry">
+     <rect>
+      <x>174</x>
+      <y>99</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharN">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>99</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCharM">
+    <property name="geometry">
+     <rect>
+      <x>226</x>
+      <y>99</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnComma">
+    <property name="geometry">
+     <rect>
+      <x>252</x>
+      <y>99</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnPeriod">
+    <property name="geometry">
+     <rect>
+      <x>277</x>
+      <y>99</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnSlash">
+    <property name="geometry">
+     <rect>
+      <x>303</x>
+      <y>99</y>
+      <width>24</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnShift">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>99</y>
+      <width>59</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnCaps">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>68</y>
+      <width>40</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnTab">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>37</y>
+      <width>35</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnBacksapce">
+    <property name="geometry">
+     <rect>
+      <x>344</x>
+      <y>6</y>
+      <width>35</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnEnter">
+    <property name="geometry">
+     <rect>
+      <x>335</x>
+      <y>68</y>
+      <width>45</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnInsert">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>130</y>
+      <width>36</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnDel">
+    <property name="geometry">
+     <rect>
+      <x>69</x>
+      <y>130</y>
+      <width>41</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnSpace">
+    <property name="geometry">
+     <rect>
+      <x>112</x>
+      <y>130</y>
+      <width>182</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="KeyButton" name="btnEsc">
+    <property name="geometry">
+     <rect>
+      <x>338</x>
+      <y>130</y>
+      <width>41</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KeyButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">keybutton.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

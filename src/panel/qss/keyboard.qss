@@ -1,0 +1,16 @@
+#frame
+{
+    border-image: url(:/image/keyboard/keyboard.png);
+}
+
+
+QPushButton
+{
+    border-image: url(:/image/transparent.png);
+}
+
+
+QPushButton:pressed
+{
+    background-color: rgba(21, 151, 242, 180);
+}

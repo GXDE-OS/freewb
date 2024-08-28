@@ -1,0 +1,21 @@
+[Desktop Entry]
+Name=Freewb
+GenericName=Freewb Input Method
+Comment=Freewb Input Method
+Keywords=ime;imf;input;
+Exec=Freewb poweron %U
+Icon=fcitx-freewubi
+Terminal=false
+Type=Application
+NoDisplay=true
+Categories=System;Utility;
+StartupNotify=false
+X-GNOME-Autostart-Phase=Applications
+X-GNOME-Autostart-Notify=false
+X-GNOME-Autostart-Delay=2
+X-KDE-autostart-phase=1
+X-KDE-autostart-after=panel
+X-MATE-Autostart-Phase=Applications
+X-MATE-Autostart-Delay=2
+X-MATE-Autostart-Notify=false
+Name[en_US]=fcitx-freewb-panel.desktop

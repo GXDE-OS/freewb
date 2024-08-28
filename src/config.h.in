@@ -1,0 +1,7 @@
+#ifndef _CONFIG_H_
+#define _CONFIG_H_
+
+#define INTERNAL_VERSION 3
+#define VERSION "1.2.6"
+#define OPENCC_LIBRARY_FILENAME "/usr/local/lib/libopencc.so"
+#endif //_CONFIG_H_
