@@ -4,6 +4,17 @@
 cmake_minimum_required(VERSION 2.6)
 
 project(fcitx-freewubi)
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(OS_TYPE "Linux")
+    message(STATUS "Detected operating system is : ${OS_TYPE}")
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    set(OS_TYPE "Windows")
+    message(STATUS "Detected operating system is : ${OS_TYPE}")
+else()
+    message(STATUS "Unknown operating system.")
+endif()
+
 include(FindPkgConfig)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 find_package(Fcitx 4.2.7 REQUIRED)
