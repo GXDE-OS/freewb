@@ -18,9 +18,6 @@ endif()
 include(FindPkgConfig)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 find_package(Fcitx 4.2.7 REQUIRED)
-
-set(QT_PATH,"/opt/qt5.12.3/aarch64")
-
 find_package(Libintl REQUIRED)
 find_package(Libiconv REQUIRED)
 find_package(DBus1 REQUIRED)
@@ -60,104 +57,12 @@ message(STATUS "fcitx install prefix dir is:" ${FCITX4_PREFIX})
 # set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--as-needed ${CMAKE_MODULE_LINKER_FLAGS}")
 add_definitions("-DLOCALEDIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\"")
 
-install( DIRECTORY ${PROJECT_SOURCE_DIR}/help 
+install( DIRECTORY ${PROJECT_SOURCE_DIR}/help
          DESTINATION /usr/share/freewb )
 
-install( DIRECTORY ${PROJECT_SOURCE_DIR}/lib 
+install( DIRECTORY ${PROJECT_SOURCE_DIR}/lib
          DESTINATION /usr/share/freewb )
 
-install( DIRECTORY ${QT_PATH}/plugins/platforms
-         DESTINATION /usr/share/freewb/plugins )
-
-install( DIRECTORY ${QT_PATH}/plugins/platforminputcontexts
-         DESTINATION /usr/share/freewb/plugins )
-
-install( FILES ${QT_PATH}/lib/libicudata.so
-	 DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libicudata.so.56
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libicudata.so.56.1
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libicui18n.so
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libicui18n.so.56
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libicui18n.so.56.1
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libicuuc.so
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libicuuc.so.56
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libicuuc.so.56.1
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5Core.so
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5Core.so.5
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5Core.so.5.12
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5Core.so.5.12.3
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5DBus.so
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5DBus.so.5
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5DBus.so.5.12
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5DBus.so.5.12.3
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5Gui.so
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5Gui.so.5
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5Gui.so.5.12
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5Gui.so.5.12.3
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5Widgets.so
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5Widgets.so.5
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5Widgets.so.5.12
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5Widgets.so.5.12.3
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5XcbQpa.so
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5XcbQpa.so.5
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5XcbQpa.so.5.12
-         DESTINATION /usr/share/freewb/lib )
-
-install( FILES ${QT_PATH}/lib/libQt5XcbQpa.so.5.12.3
-         DESTINATION /usr/share/freewb/lib )
  
 configure_file(config.h.in config.h
   IMMEDIATE @ONLY)
