@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC   -shared  -o fcitx-freewubi.so CMakeFiles/fcitx-freewubi.dir/freewubi-config.c.o CMakeFiles/fcitx-freewubi.dir/freewubi.c.o CMakeFiles/fcitx-freewubi.dir/freedict.c.o CMakeFiles/fcitx-freewubi.dir/freespecial.c.o CMakeFiles/fcitx-freewubi.dir/freeinterface.c.o CMakeFiles/fcitx-freewubi.dir/virtual_keyboard.c.o /usr/lib/aarch64-linux-gnu/libdbus-1.so 

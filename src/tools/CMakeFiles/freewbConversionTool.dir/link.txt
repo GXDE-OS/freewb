@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC   -shared -Wl,-soname,libfreewbConversionTool.so.1 -o ../../lib/libfreewbConversionTool.so.1.0 CMakeFiles/freewbConversionTool.dir/freewbConversionTool.c.o -lfcitx-config -lfcitx-utils 
