@@ -5,7 +5,7 @@
 
 DictQuery::DictQuery( QObject *parent ) : QObject( parent )
 {
-    m_dictFile = INSTALL_DIR + "/data/dict/极点汉语词典.db";
+    m_dictFile = INSTALL_DIR + "/data/dict/freeime_chinese_dict.db";
 
     init_wbpy_table();
 }
