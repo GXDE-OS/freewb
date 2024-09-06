@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$1"=="UOS" ]; then
+if [ "$1" = "UOS" ]; then
 	export LD_LIBRARY_PATH=/opt/apps/org.freewb.freeime/files/lib
 	export QT_PLUGIN_PATH=/opt/apps/org.freewb.freeime/files/plugins
 
