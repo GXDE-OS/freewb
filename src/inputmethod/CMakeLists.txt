@@ -1,4 +1,6 @@
 # Source files
+
+include_directories(${CMAKE_SOURCE_DIR}/include)
 set(fcitx_freewubi_sources
   freewubi-config.c
   freewubi.c

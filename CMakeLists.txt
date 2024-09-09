@@ -48,7 +48,7 @@ install( DIRECTORY ${PROJECT_SOURCE_DIR}/lib
          DESTINATION /usr/share/freewb )
 
  
-configure_file(config.h.in config.h
+configure_file(config.h.in ${CMAKE_SOURCE_DIR}/include/config.h
   IMMEDIATE @ONLY)
 
 # The po dir (and targets, if any) should be added before any other translate

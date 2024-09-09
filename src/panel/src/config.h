@@ -3,7 +3,7 @@
 
 
 #ifdef BUILD_IN_CAMKE
-#include "../../../build/config.h"
+#include "../../../include/config.h"
 #else
 #define VERSION "test"
 #endif
