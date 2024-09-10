@@ -43,10 +43,6 @@ add_definitions("-DLOCALEDIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\"")
 
 install( DIRECTORY ${PROJECT_SOURCE_DIR}/help
          DESTINATION /usr/share/freewb )
-
-install( DIRECTORY ${PROJECT_SOURCE_DIR}/lib
-         DESTINATION /usr/share/freewb )
-
  
 configure_file(config.h.in ${CMAKE_SOURCE_DIR}/include/config.h
   IMMEDIATE @ONLY)

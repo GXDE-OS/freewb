@@ -36,13 +36,7 @@ include_directories(
 
 
 #链接外部动态库
-if ( "$ENV{DESKTOP_SESSION}" STREQUAL "mate" )
-set( EXTERN_LIBS -ldl -lX11 -lXext -lpthread ${PROJECT_SOURCE_DIR}/../../lib/libfreewbConversionTool.so /usr/lib/aarch64-linux-gnu/libXtst.so.6.1.0 ) #银河麒麟系统
-else()
-set( EXTERN_LIBS -ldl -lX11 -lXtst -lXext -lpthread ${PROJECT_SOURCE_DIR}/../../lib/libfreewbConversionTool.so ) #Ubuntu以及其他Linux
-endif()
-
-
+set( EXTERN_LIBS -ldl -lX11 -lXtst -lXext -lpthread freewbConversionTool )
 
 #编译
 add_executable( ${PROJECT_NAME} ${SRC_FILES} ${UI_FILES} ${QRC_FILES} )
