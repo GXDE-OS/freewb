@@ -1,20 +1,6 @@
 project( Freewb )
 cmake_minimum_required( VERSION 3.1.0 )
 
-
-#产生配置头文件config.h供源代码编译的时候包含
-#configure_file( ${PROJECT_SOURCE_DIR}/config.h.in 
-#                ${PROJECT_SOURCE_DIR}/src/config.h )
-
-#编译发布版本
-set( CMAKE_BUILD_TYPE Release ) #Debug or Release
-set( QT_PATH "/opt/qt5.12.3/aarch64" CACHE PATH "qt5 cmake dir")
-
-set( QT_VERSION 5.12.3)
-set( CMAKE_PREFIX_PATH ${QT_PATH})
-#set( CMAKE_INSTALL_RPATH "/usr/share/freewb/lib")
-#set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-
 #CMAKE编译标志
 add_definitions( -DBUILD_IN_CAMKE )
 
@@ -70,9 +56,6 @@ target_link_libraries( ${PROJECT_NAME}
                         ${Qt5DBus_LIBRARIES}
                         ${EXTERN_LIBS} )
 
-#可执行文件输出目录
-#set( EXECUTABLE_OUTPUT_PATH /usr/bin )
-
 #安装路径
 set( INSTALL_ROOT_DIR /usr/share/freewb )
 #安装可执行文件
@@ -93,7 +76,4 @@ install( DIRECTORY ${PROJECT_SOURCE_DIR}/data
          DESTINATION ${INSTALL_ROOT_DIR} )
 install( DIRECTORY ${PROJECT_SOURCE_DIR}/config 
          DESTINATION ${INSTALL_ROOT_DIR} )
-
-#查看变量值
-#message( ${Xtst_FOUND} ) 
 

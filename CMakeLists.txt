@@ -24,18 +24,6 @@ find_package(DBus1 REQUIRED)
 # This will add a uninstall target. Comment out this line if other cmake packages
 # you are using already provides such target (e.g. KDE).
 
-option(ENABLE_DBUS "Enable DBus Support" ON)
-set(_ENABLE_DBUS 1)
-# option(ENABLE_OPENCC "Enable OpenCC for Chinese Transform" ON)
-# option(FORCE_OPENCC
-#   "Enable opencc even if the library is not found at compile time" Off)
-# if(ENABLE_OPENCC)
-#      find_package(OpenCC REQUIRED)
-#      if(NOT (OPENCC_FOUND OR FORCE_OPENCC))
-#    	    set(ENABLE_OPENCC Off)
-#      endif()
-# endif()
-
 _fcitx_add_uninstall_target()
 include_directories(${FCITX4_FCITX_INCLUDE_DIRS})
 include_directories(${FCITX4_FCITX_CONFIG_INCLUDE_DIRS})
@@ -48,13 +36,9 @@ include_directories("${PROJECT_BINARY_DIR}/src")
 include_directories(${DBus1_INCLUDE_DIRS})
   
 link_directories(${DBus1_LIBRARY_DIRS})
-#include_directories(${PROJECT_SOURCE_DIR}/src/)
+
 message(STATUS "fcitx install prefix dir is:" ${FCITX4_PREFIX})
-#message(STATUS "dbus include dir is:" ${DBUS_INCLUDE_DIRS})
-# set(CMAKE_C_FLAGS "-Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -fvisibility=hidden ${CMAKE_C_FLAGS}")
-# set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -fvisibility=hidden ${CMAKE_CXX_FLAGS}")
-# set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--as-needed ${CMAKE_SHARED_LINKER_FLAGS}")
-# set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--as-needed ${CMAKE_MODULE_LINKER_FLAGS}")
+
 add_definitions("-DLOCALEDIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\"")
 
 install( DIRECTORY ${PROJECT_SOURCE_DIR}/help
@@ -72,4 +56,3 @@ configure_file(config.h.in config.h
 add_subdirectory(po)
 add_subdirectory(src)
 add_subdirectory(data)
-#add_subdirectory(config)
