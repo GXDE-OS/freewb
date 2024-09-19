@@ -2785,24 +2785,7 @@ void *FcitxfreewubiCreate(FcitxInstance *instance)
         iface,
         10,
         "zh_CN");
-    //     FcitxInstanceRegisterIM(
-    //         freewubi->owner,
-    //         freewubi,
-    //         "freewb",
-    //         _("Freewb"),
-    //         "freewubi",
-    //         FreewubiInit,
-    //         FreewubiResetStatus,
-    //         DoFreeWubiIntput,
-    //         FreeWubiGetCandWords,
-    //         FreeWubiPhraseTips,
-    //         SaveFreeWubiIM,
-    //         FreewubiReLoadConfig,
-    //         FreeWubiKeyBlocker,
-    //         1,
-    //         "zh_CN"
-    //     );
-    //     FcitxInstanceSwitchIMByName(instance,"sogoupinyin");
+
     reloadFreewb(freewubi);
     return freewubi;
 }
