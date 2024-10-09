@@ -210,6 +210,7 @@ boolean isFreewbRuning()
         return true;
     }
 
+    close(fd);
     return false;
 }
 
@@ -260,6 +261,7 @@ void run_freewb_panel()
         return;
     }
 
+    close(fd);
     system(panelBin);
 }
 
