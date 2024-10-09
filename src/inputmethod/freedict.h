@@ -7,7 +7,7 @@
 #include "fcitx-utils/memory.h"
 #include "fcitx/candidate.h"
 #include <ctype.h>
-#define MAX_CODE_LENGTH  50
+#define MAX_CODE_LENGTH 50
 #define PHRASE_MAX_LENGTH 128
 #define TABLE_AUTO_SAVE_AFTER 1024
 #define AUTO_PHRASE_COUNT 10000
@@ -21,68 +21,87 @@
 struct _Fcitxfreewubi;
 struct _TableDict;
 
-typedef struct {
-    unsigned char   iFlag;  // 1 --> 正序   0 --> 逆序
-    unsigned char   iWhich; //第几个字
-    unsigned char   iIndex; //第几个编码
+typedef struct
+{
+    unsigned char iFlag;  // 1 --> 正序   0 --> 逆序
+    unsigned char iWhich; // 第几个字
+    unsigned char iIndex; // 第几个编码
 } RULE_RULE;
 
-typedef struct {
-    unsigned char   iWords; //多少个字
-    unsigned char   iFlag;  //1 --> 大于等于iWords  0 --> 等于iWords
-    RULE_RULE      *rule;
+typedef struct
+{
+    unsigned char iWords; // 多少个字
+    unsigned char iFlag;  // 1 --> 大于等于iWords  0 --> 等于iWords
+    RULE_RULE *rule;
 } RULE;
 
-typedef struct _RECORD {
-    char           *strCode;
-    char           *strHZ;
+typedef struct _RECORD
+{
+    char *strCode;
+    char *strHZ;
     struct _RECORD *next;
     struct _RECORD *prev;
-    int8_t          type;
+    int8_t type;
     struct _TableDict *owner;
 } RECORD;
 
-typedef struct _AUTOPHRASE {
-    char           *strHZ;
-    char           *strCode;
-    char            iSelected;
-    struct _AUTOPHRASE *next;   //构造一个单向链表
+typedef struct _AUTOPHRASE
+{
+    char *strHZ;
+    char *strCode;
+    char iSelected;
+    struct _AUTOPHRASE *next; // 构造一个单向链表
 } AUTOPHRASE;
-typedef struct _QUCIK_TABLE{
+
+typedef struct _QUCIK_TABLE
+{
     unsigned char key;
-    char value[UTF8_MAX_LENGTH*128];
+    char value[UTF8_MAX_LENGTH * 128];
     struct _QUCIK_TABLE *next;
-}QUCIK_TABLE;
+} QUCIK_TABLE;
+
 /* 根据键码生成一个简单的索引，指向该键码起始的第一个记录 */
-typedef struct {
-    RECORD         *record;
-    char            cCode;
+typedef struct
+{
+    RECORD *record;
+    char cCode;
 } RECORD_INDEX;
 
-typedef struct {
+typedef struct
+{
     char strHZ[UTF8_MAX_LENGTH + 1];
 } SINGLE_HZ;
-typedef struct{
-    SINGLE_HZ recordHZ[4]; //上屏的单字
-    int recordIndex;//记录上屏的单字个数    当上屏不是单字时清零
-}AUTORECORD;
-typedef struct _AUTO_ENG{
+
+typedef struct
+{
+    SINGLE_HZ recordHZ[4]; // 上屏的单字
+    int recordIndex;       // 记录上屏的单字个数    当上屏不是单字时清零
+} AUTORECORD;
+
+typedef struct _AUTO_ENG
+{
     char value[10];
     struct _AUTO_ENG *next;
-}AUTO_ENG;
-typedef enum {
+} AUTO_ENG;
+
+typedef enum
+{
     CM_NONE,
     CM_ALT,
     CM_CTRL,
     CM_SHIFT,
     _CM_COUNT
 } ChooseModifier;
-typedef enum{
-    FREE_WUBI ,
+
+typedef enum
+{
+    FREE_WUBI,
     FREE_WBPY,
     FREE_PINYIN
 } TableType;
-typedef struct _TableDict{
+
+typedef struct _TableDict
+{
     char tableName[30];
     char tableInfo[100];
     char tableCreateTime[20];
@@ -92,70 +111,71 @@ typedef struct _TableDict{
     char strStraightUPKeys[10];
     char cWildChar;
     TableType tableType;
-    char* strInputCode;
-    RECORD_INDEX* recordIndex;
+    char *strInputCode;
+    RECORD_INDEX *recordIndex;
     unsigned char iCodeLength;
-    unsigned char   bRule;
-    RULE* rule;
+    unsigned char bRule;
+    RULE *rule;
     uint32_t iRecordCount;
-    RECORD* tableSingleHZ[SINGLE_HZ_COUNT];
-    RECORD* s2tSignleHZ[SINGLE_HZ_COUNT];
+    RECORD *tableSingleHZ[SINGLE_HZ_COUNT];
+    RECORD *s2tSignleHZ[SINGLE_HZ_COUNT];
     unsigned int iTableIndex;
-    RECORD* currentRecord;
-    RECORD* recordHead;
-    RECORD* s2tRecordHead;
-    RECORD* s2tCurrentRecord;
+    RECORD *currentRecord;
+    RECORD *recordHead;
+    RECORD *s2tRecordHead;
+    RECORD *s2tCurrentRecord;
     int iTableChanged;
     int iHZLastInputCount;
-    SINGLE_HZ hzLastInput[PHRASE_MAX_LENGTH]; //Records last HZ input
-//     RECORD* promptCode[256];
-    FcitxMemoryPool* pool;
+    SINGLE_HZ hzLastInput[PHRASE_MAX_LENGTH]; // Records last HZ input
+    //     RECORD* promptCode[256];
+    FcitxMemoryPool *pool;
 } TableDict;
 
-typedef struct {
-    FcitxGenericConfig   config;
+typedef struct
+{
+    FcitxGenericConfig config;
 
-    struct _Fcitxfreewubi* owner;
+    struct _Fcitxfreewubi *owner;
 
-    //zyp add 
-    TableType   tableType;
-    TableDict*  WubiDict;
-    TableDict*  PinyinDict;
-    AUTOPHRASE*     autoPhrase;//智能词组
-    AUTOPHRASE*     currentPhrase;//当前词组    
-    AUTOPHRASE*     insertPoint;//智能词组插入点
-    AUTORECORD*     autoRecord;//智能词组记录的汉字
-    
-    QUCIK_TABLE*     quickTable;//快速码表
-    AUTO_ENG *      autoEng;//自动转英文字符串
+    // zyp add
+    TableType tableType;
+    TableDict *WubiDict;
+    TableDict *PinyinDict;
+    AUTOPHRASE *autoPhrase;    // 智能词组
+    AUTOPHRASE *currentPhrase; // 当前词组
+    AUTOPHRASE *insertPoint;   // 智能词组插入点
+    AUTORECORD *autoRecord;    // 智能词组记录的汉字
+
+    QUCIK_TABLE *quickTable; // 快速码表
+    AUTO_ENG *autoEng;       // 自动转英文字符串
 } TableMetaData;
 
-boolean LoadTableDict(TableMetaData* tableMetaData);
-void SaveTableDict(TableMetaData* tableMetaData);
-void FreeTableDict(TableMetaData* tableMetaData);
-boolean LoadUsrDict(TableMetaData* tableMetaData);
-boolean LoadS2tDict(TableMetaData* tableMetaData);//普通简体繁体转换表
-boolean LoadS2tManyDict(TableMetaData* tableMetaData);//一对多简体繁体转换表
-boolean LoadS2tPhraseDict(TableMetaData* tableMetaData);//特殊词组简体繁体转换表
-boolean TableCalPhraseCode(TableDict* tableDict, char* strHZ,char* strCode);
-int TableCompareCode(const char* strUser, const char* strDict, boolean exactMatch);
-int TableFindFirstMatchCode(TableMetaData* tableMetaData, const char* strCodeInput, boolean exactMatch, boolean cacheCurrentRecord);
-RECORD  *TableFindPhrase(const TableDict* tableDict, const char *strHZ);
-RECORD *TableFindPhraseByCode(const TableDict* tableDict,const char* strCode ,const char *strHZ);
-boolean IsInputKey(const TableMetaData* tableMetaData, int iKey);
-boolean IsUncommonKey(const TableMetaData* tableMetaData, int iKey,int state);
+boolean LoadTableDict(TableMetaData *tableMetaData);
+void SaveTableDict(TableMetaData *tableMetaData);
+void FreeTableDict(TableMetaData *tableMetaData);
+boolean LoadUsrDict(TableMetaData *tableMetaData);
+boolean LoadS2tDict(TableMetaData *tableMetaData);       // 普通简体繁体转换表
+boolean LoadS2tManyDict(TableMetaData *tableMetaData);   // 一对多简体繁体转换表
+boolean LoadS2tPhraseDict(TableMetaData *tableMetaData); // 特殊词组简体繁体转换表
+boolean TableCalPhraseCode(TableDict *tableDict, char *strHZ, char *strCode);
+int TableCompareCode(const char *strUser, const char *strDict, boolean exactMatch);
+int TableFindFirstMatchCode(TableMetaData *tableMetaData, const char *strCodeInput, boolean exactMatch, boolean cacheCurrentRecord);
+RECORD *TableFindPhrase(const TableDict *tableDict, const char *strHZ);
+RECORD *TableFindPhraseByCode(const TableDict *tableDict, const char *strCode, const char *strHZ);
+boolean IsInputKey(const TableMetaData *tableMetaData, int iKey);
+boolean IsUncommonKey(const TableMetaData *tableMetaData, int iKey, int state);
 unsigned int CalHZIndex(char *strHZ);
-char* getFreewbPath();
-void adjustOrder(TableMetaData* tableMetaData,TableDict* dict,char* wordText, char* wordCode);
-boolean LoadQuickTable(TableMetaData* tableMetaData);
-void freeQucikTable(TableMetaData* tableMetaData);
-QUCIK_TABLE *findQuickPharse(TableMetaData* tableMetaData,FcitxKeySym sym);
+char *getFreewbPath();
+void adjustOrder(TableMetaData *tableMetaData, TableDict *dict, char *wordText, char *wordCode);
+boolean LoadQuickTable(TableMetaData *tableMetaData);
+void freeQucikTable(TableMetaData *tableMetaData);
+QUCIK_TABLE *findQuickPharse(TableMetaData *tableMetaData, FcitxKeySym sym);
 
-boolean LoadAutoEng(TableMetaData* tableMetaData);
-void freeAutoEng(TableMetaData* tableMetaData);
-boolean isAutoEngStr(TableMetaData* tableMetaData,char *str);
+boolean LoadAutoEng(TableMetaData *tableMetaData);
+void freeAutoEng(TableMetaData *tableMetaData);
+boolean isAutoEngStr(TableMetaData *tableMetaData, char *str);
 
-char *s2tConvers(TableMetaData* tableMetaData,const char *simpel);
+char *s2tConvers(TableMetaData *tableMetaData, const char *simpel);
 CONFIG_BINDING_DECLARE(TableMetaData);
 
 #endif
