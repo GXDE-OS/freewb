@@ -174,46 +174,42 @@ void freeGetOption(Fcitxfreewubi *fwb)
 
 boolean isFreewbRuning()
 {
-
     char lock_file[] = "/tmp/fcitx-freewb.pid";
     struct flock fl;
     int fd;
-    if (access(lock_file, F_OK) != -1)
-    {
-        fd = open(lock_file, O_RDWR);
-        if (fd < 0)
-        {
-            printf("can not open %s :%s\n", lock_file, strerror(errno));
-            fflush(stdout);
-        }
-        else
-        {
-            fl.l_type = F_WRLCK;
-            fl.l_start = 0;
-            fl.l_whence = SEEK_SET;
-            fl.l_len = 0;
-
-            if (fcntl(fd, F_GETLK, &fl) < 0)
-            {
-                printf("can not get lock status: %s :%s\n", lock_file, strerror(errno));
-                fflush(stdout);
-            }
-            else
-            {
-                if (fl.l_type == F_WRLCK)
-                {
-                    fflush(stdout);
-                    return true;
-                }
-            }
-        }
-    }
-    else
+    if (access(lock_file, F_OK) == -1)
     {
         printf("%s isn't exist!\n", lock_file);
         fflush(stdout);
         return false;
     }
+
+    fd = open(lock_file, O_RDWR);
+    if (fd < 0)
+    {
+        printf("can not open %s :%s\n", lock_file, strerror(errno));
+        fflush(stdout);
+        return false;
+    }
+
+    fl.l_type = F_WRLCK;
+    fl.l_start = 0;
+    fl.l_whence = SEEK_SET;
+    fl.l_len = 0;
+
+    if (fcntl(fd, F_GETLK, &fl) < 0)
+    {
+        printf("can not get lock status: %s :%s\n", lock_file, strerror(errno));
+        fflush(stdout);
+        return false;
+    }
+
+    if (fl.l_type == F_WRLCK)
+    {
+        fflush(stdout);
+        return true;
+    }
+
     return false;
 }
 
