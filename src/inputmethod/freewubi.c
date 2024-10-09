@@ -217,10 +217,10 @@ boolean isFreewbRuning()
     return false;
 }
 
-void run_freewb_pannel()
+void run_freewb_panel()
 {
     // #ifdef DEBUG
-    //     FcitxLog(INFO,_("run_freewb_pannel"));
+    //     FcitxLog(INFO,_("run_freewb_panel"));
     // #endif
 
     char panelBin[512] = {0};
@@ -280,7 +280,7 @@ boolean FreewubiInit(void *arg)
 {
     Fcitxfreewubi *fwb = (Fcitxfreewubi *)arg;
     freeGetOption(fwb);
-    run_freewb_pannel(); // 防止面板没有启动
+    run_freewb_panel(); // 防止面板没有启动
     if (!fwb->table)
     {
         fwb->table = fcitx_utils_new(TableMetaData);
@@ -2759,7 +2759,7 @@ void *FcitxfreewubiCreate(FcitxInstance *instance)
             return NULL;
         }
     }
-    run_freewb_pannel();
+    run_freewb_panel();
     //    sleep(5);
     InternalInit(freewubi);
 
