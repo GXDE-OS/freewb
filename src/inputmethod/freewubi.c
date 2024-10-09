@@ -219,12 +219,8 @@ boolean isFreewbRuning()
 
 void run_freewb_panel()
 {
-    // #ifdef DEBUG
-    //     FcitxLog(INFO,_("run_freewb_panel"));
-    // #endif
-
     char panelBin[512] = {0};
-//#define UOS_SYSTEM
+
 #ifdef UOS_SYSTEM
     strcpy(panelBin, "/opt/apps/org.freewb.freeime/files/bin/freewb.sh");
 #else
@@ -271,7 +267,6 @@ void run_freewb_panel()
         fflush(stdout);
     }
 
-    // printf( "The freewb panel doesn't seem to be running, now try to execute: [%s]\n", panelBin );
     fflush(stdout);
     system(panelBin);
 }
