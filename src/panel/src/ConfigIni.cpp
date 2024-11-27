@@ -40,8 +40,9 @@ void ConfigIni::loadConfigFile()
     {
        line=trim(line);
 
-       if(line.length()<3)
-        continue;
+       if (line.length()<3) {
+            continue;
+       }
 
         ConfigIniEntry entry;
         //comment
@@ -49,7 +50,7 @@ void ConfigIni::loadConfigFile()
         {
              //#key=value
             pos = line.find_first_of('=');
-            if( pos==-1) //not found = ,it's a bad line
+            if ( pos == std::string::npos) //not found = ,it's a bad line
             {
                 entry.index = "";
                 entry.name = "";
@@ -78,7 +79,7 @@ void ConfigIni::loadConfigFile()
         if(line[0]=='[')
         {
             pos = line.find_first_of(']');
-            if(pos == -1) //not found ], it's a bad line
+            if (pos == std::string::npos) //not found ], it's a bad line
                 continue;
             section = line.substr(1,pos-1);
             entry.type = SECTION;
@@ -91,7 +92,7 @@ void ConfigIni::loadConfigFile()
         
         //key = value
         pos = line.find_first_of('=');
-        if( pos==-1) //not found = ,it's a bad line
+        if ( pos == std::string::npos) //not found = ,it's a bad line
             continue;
 
         key = line.substr(0,pos);
@@ -167,7 +168,6 @@ void ConfigIni::setStringValueWithIndex(const char *index, const char* name, con
 
     vector<ConfigIniEntry>::iterator it=datas.begin();
     bool findIndex=false;
-    bool findName=false;
     for(; it!=datas.end(); it++)
     {
         if(it->type==COMMONT)
@@ -224,7 +224,6 @@ const char* ConfigIni::getStringValue(const char* index, const char *name,char *
 {
     vector<ConfigIniEntry>::iterator it=datas.begin();
     bool findIndex=false;
-    bool findName=false;
     for(; it!=datas.end(); it++)
     {
         if(it->type==COMMONT)
