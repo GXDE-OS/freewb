@@ -9,6 +9,8 @@ set(fcitx_freewubi_sources
   freespecial.c
   freeinterface.c
   virtual_keyboard.c
+  panelproxy.c
+  inputstate.c
   )
 set(fcitx_freewubi_headers
     ini.h
@@ -20,6 +22,8 @@ set(fcitx_freewubi_headers
     freespecial.h
     freeinterface.h
     virtual_keyboard.h
+    panelproxy.h
+    inputstate.h
     )
 
 set(ENABLE_FREEWUBI TRUE)
