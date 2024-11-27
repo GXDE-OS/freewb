@@ -2,12 +2,9 @@
 #include "commdefine.h"
 #include <QDebug>
 
+#include "../../ipc/ipc.h"
+
 #define DEBUG
-
-
-#define DBUS_HOST_SERVICE_NAME     "com.freewb.www"//自定义
-#define DBUS_HOST_OBJECT_PATH      "/"//自定义
-#define DBUS_HOST_CONNECT_NAME     "host_dbus"//自定义
 
 MainProgram::MainProgram( QObject *parent ) : QObject( parent )
 {
@@ -35,7 +32,6 @@ MainProgram::MainProgram( QObject *parent ) : QObject( parent )
     m_textEditWin = new TextEditWin;
     m_dictQueryWin = new DictQueryWin;
     m_backupDialog = new BackupDialog;
-
 
     //创建本地DBUS通信服务
     create_host_dbus_service();
@@ -238,11 +234,11 @@ MainProgram::~MainProgram()
     if ( m_backupDialog )
         delete m_backupDialog;
 
-    if ( QDBusConnection( DBUS_HOST_CONNECT_NAME ).isConnected() )
+    if ( QDBusConnection( FREEWUBI_SETTINGS_BUSNAME ).isConnected() )
     {
-        QDBusConnection( DBUS_HOST_CONNECT_NAME ).unregisterObject( DBUS_HOST_OBJECT_PATH );
-        QDBusConnection( DBUS_HOST_CONNECT_NAME ).unregisterService( DBUS_HOST_SERVICE_NAME );
-        QDBusConnection::disconnectFromBus( DBUS_HOST_CONNECT_NAME );
+        QDBusConnection( FREEWUBI_SETTINGS_BUSNAME ).unregisterObject( FREEWUBI_SETTINGS_OBJECTPATH );
+        QDBusConnection( FREEWUBI_SETTINGS_BUSNAME ).unregisterService( FREEWUBI_SETTINGS_SERVICENAME );
+        QDBusConnection::disconnectFromBus( FREEWUBI_SETTINGS_BUSNAME );
     }
 }
 
@@ -266,17 +262,16 @@ bool MainProgram::fcitx_service_is_running()
 void MainProgram::create_host_dbus_service()
 {
     //注册本地ＤＢＵＳ服务与对象
-    if ( !QDBusConnection::connectToBus( QDBusConnection::SessionBus, DBUS_HOST_CONNECT_NAME )
-         .registerService( DBUS_HOST_SERVICE_NAME ) )
+    if ( !QDBusConnection::connectToBus( QDBusConnection::SessionBus, FREEWUBI_SETTINGS_BUSNAME )
+         .registerService( FREEWUBI_SETTINGS_SERVICENAME ) )
     {
         qWarning() << "create host service failed!";
         return;
     }
 
-    QDBusConnection::connectToBus( QDBusConnection::SessionBus, DBUS_HOST_CONNECT_NAME )
-            .registerObject( DBUS_HOST_OBJECT_PATH, this, QDBusConnection::ExportAllSlots );
+    QDBusConnection::connectToBus( QDBusConnection::SessionBus, FREEWUBI_SETTINGS_BUSNAME )
+            .registerObject( FREEWUBI_SETTINGS_OBJECTPATH, this, QDBusConnection::ExportAllSlots );
 }
-
 
 void MainProgram::slot_create_freewb_panel()
 {

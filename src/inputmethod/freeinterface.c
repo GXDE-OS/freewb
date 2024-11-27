@@ -1,8 +1,10 @@
 #include "freeinterface.h"
 
+#include "ipc/ipc.h"
+
 static DBusMessage* createSettingsMethodCallMessage(const char* methodName) {
-    return dbus_message_new_method_call("com.freewb.www",
-        "/", "com.freewb.host", methodName);
+    return dbus_message_new_method_call(FREEWUBI_SETTINGS_SERVICENAME,
+        FREEWUBI_SETTINGS_OBJECTPATH, FREEWUBI_SETTINGS_INTERFACE, methodName);
 }
 
 void FreeWubiServiceAddUsrParseDirect(DBusConnection* conn,char* wordText, char* wordCode){
@@ -271,10 +273,7 @@ void FreeWubiServiceSwitchImState(DBusConnection* conn,int imState) {
     DBusMessage* msg;
     DBusMessageIter args;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                        "/",
-                                        "com.freewb.host",
-                                        "slot_dbus_switch_freewb");
+    msg = createSettingsMethodCallMessage("slot_dbus_switch_freewb");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;

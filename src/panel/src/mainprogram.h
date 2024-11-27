@@ -43,13 +43,14 @@
 class MainProgram : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "com.freewb.host")
+    Q_CLASSINFO("D-Bus Interface", FREEWUBI_SETTINGS_INTERFACE)
 
 public:
     MainProgram( QObject *parent = nullptr );
     ~MainProgram();
 
     void create_host_dbus_service();
+
 
 public slots://提供给外部进程调用的DBUS方法接口
     QString slot_dbus_test( const QString &text ); //测试使用
