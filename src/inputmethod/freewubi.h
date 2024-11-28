@@ -20,8 +20,5 @@
 
 #ifndef _FCITX_FREEWUBI_H_
 #define _FCITX_FREEWUBI_H_
-#include "fcitx-config/fcitx-config.h"
-
-void freeWbConfigBindSync(FcitxGenericConfig *config);
 
 #endif

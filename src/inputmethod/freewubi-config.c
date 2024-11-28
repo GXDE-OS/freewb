@@ -17,13 +17,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
-#include <libintl.h>
-#include "fcitx-utils/log.h"
-#include "fcitx/fcitx.h"
-#include "fcitx-config/fcitx-config.h"
-#include "freewubi-internal.h"
-#include "freedict.h"
-#include "freewubi.h"
 #include "freewubi-config.h"
 
 CONFIG_BINDING_BEGIN(FcitxfreewubiConfig)
