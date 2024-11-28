@@ -21,8 +21,6 @@
 #ifndef _FCITX_FREEWUBI_INTERNAL_H_
 #define _FCITX_FREEWUBI_INTERNAL_H_
 
-#include <dbus/dbus.h>
-
 #include <fcitx/instance.h>
 
 #include "freedict.h"
@@ -80,7 +78,6 @@ extern "C"
         FcitxfreewubiConfig config;
         FcitxInstance *owner;
         TableMetaData *table; /* 码表 */
-        DBusConnection *conn;
         RECORD *pLastCommitRecord;
         char strTableRemindSource[PHRASE_MAX_LENGTH * UTF8_MAX_LENGTH + 1];
         boolean bIsTableDelPhrase;
@@ -106,8 +103,6 @@ extern "C"
     boolean LoadFreeWubiGlobalInfo(Fcitxfreewubi *fwb);
     boolean reloadFreewb(Fcitxfreewubi *fwb);
     void sortCandwords(UT_array *arry1, UT_array *arry2, UT_array *result);
-    boolean freeDbusInit(Fcitxfreewubi *fwb);
-    DBusConnection *getFreeDbusConn(Fcitxfreewubi *fwb);
     int TableCreateAutoPhrase(Fcitxfreewubi *fwb, int iCount);
     void freeAutoPhrase(TableMetaData *tableMetaData);
     CONFIG_BINDING_DECLARE(FcitxfreewubiConfig);

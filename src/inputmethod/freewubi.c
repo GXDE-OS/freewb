@@ -2793,31 +2793,7 @@ void sortCandwords(UT_array *arry1, UT_array *arry2, UT_array *result)
         pcand2 = (TABLECANDWORD **)utarray_next(arry2, pcand2);
     }
 }
-boolean freeDbusInit(Fcitxfreewubi *fwb)
-{
-#ifdef DEBUG
-    FcitxLog(INFO, _("freeDbusInit"));
-#endif
-    if (fwb->conn)
-        fwb->conn = NULL;
-    DBusError err;
-    dbus_error_init(&err);
-    fwb->conn = dbus_bus_get(DBUS_BUS_SESSION, &err);
-    if (dbus_error_is_set(&err))
-    {
-        FcitxLog(INFO, _("DBusError:%s"), err.message);
-        dbus_error_free(&err);
-    }
 
-    return fwb->conn != NULL;
-}
-inline DBusConnection *getFreeDbusConn(Fcitxfreewubi *fwb)
-{
-    // #ifdef DEBUG
-    //     FcitxLog(INFO,_("DBusConnection"));
-    // #endif
-    return fwb->conn;
-}
 void InternalInit(Fcitxfreewubi *freewubi)
 {
 
