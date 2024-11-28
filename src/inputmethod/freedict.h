@@ -5,8 +5,7 @@
 
 #include <dbus/dbus.h>
 
-#include "fcitx-utils/memory.h"
-#include "fcitx/candidate.h"
+#include <fcitx-utils/memory.h>
 
 #include "freewubi-config.h"
 

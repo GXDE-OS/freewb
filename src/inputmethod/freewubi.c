@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <fcitx/ime.h>
+#include <fcitx/candidate.h>
 #include <fcitx-config/fcitx-config.h>
 #include <fcitx-config/xdg.h>
 #include <fcitx-utils/log.h>
