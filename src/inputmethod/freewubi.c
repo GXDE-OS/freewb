@@ -1620,20 +1620,6 @@ INPUT_RETURN_VALUE TableGetRemindCandWords(TableMetaData *table)
         return IRV_CLEAN;
     }
 }
-INPUT_RETURN_VALUE TableGetRemindCandWord(void *arg, TABLECANDWORD *tableCandWord)
-{
-    TableMetaData *table = (TableMetaData *)arg;
-    Fcitxfreewubi *fwb = table->owner;
-    FcitxInstance *instance = fwb->owner;
-    FcitxInputState *input = FcitxInstanceGetInputState(instance);
-
-    //     tableCandWord->candWord.record->iHit++;
-    strcpy(fwb->strTableRemindSource, tableCandWord->candWord.record->strHZ + strlen(fwb->strTableRemindSource));
-    TableGetRemindCandWords(table);
-
-    strcpy(FcitxInputStateGetOutputString(input), fwb->strTableRemindSource);
-    return IRV_COMMIT_STRING_REMIND;
-}
 #endif
 /*
  * 第二个参数表示是否进入联想模式，实现自动上屏功能时，不能使用联想模式

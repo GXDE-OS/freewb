@@ -3,55 +3,7 @@
 #include "freewubi-internal.h"
 #include "freedict.h"
 #include <dbus/dbus.h>
-char* dbusTest(Fcitxfreewubi *fwb,char* text)
-{
-    DBusConnection *conn = getFreeDbusConn(fwb);
-    DBusMessage* msg;
-    DBusMessageIter args;
-    DBusPendingCall *pending = NULL;
- 
-    char* result = NULL;
-    // create a signal and check for errors
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_test"); // name of the signal
-    if (NULL == msg) {
-        return NULL;
-    }
-    dbus_message_iter_init_append(msg,&args);
-    dbus_message_append_args(msg, DBUS_TYPE_STRING, &text, DBUS_TYPE_INVALID);
-    if (!dbus_connection_send_with_reply(conn, msg, &pending,-1)) {
-        FcitxLog(INFO, "Out Of Memory!");
-    }
-    
-    if(!pending){
-        FcitxLog(INFO, "connec erro!");
-        dbus_message_unref(msg);
-    }
-    dbus_connection_flush(conn);
-    dbus_message_unref(msg);
-    
-    dbus_pending_call_block(pending);
-    msg = dbus_pending_call_steal_reply(pending);
-    if(!msg)
-        FcitxLog(INFO, "msg erro!");
-    dbus_pending_call_unref(pending);
-    
-    if(!dbus_message_iter_init(msg,&args)){
-        FcitxLog(INFO, "init erro!");
-        return NULL;
-    }
-    if(DBUS_TYPE_STRING!=dbus_message_iter_get_arg_type(&args)){
-        FcitxLog(INFO, "type erro!");
-        return NULL;
-    }
-    dbus_message_iter_get_basic(&args,&result);
 
-    // free the message
-    dbus_message_unref(msg);
-    return result;
-}
 void addUsrParseDirect(Fcitxfreewubi *fwb,char* wordText, char* wordCode){
     DBusConnection *conn = getFreeDbusConn(fwb);
     DBusMessage* msg;

@@ -1,18 +1,9 @@
 
-#include "config.h"
-
-#include <stdio.h>
-#include <limits.h>
-#include <libintl.h>
-#include <unistd.h>
-#include "fcitx/fcitx.h"
-#include "fcitx-utils/log.h"
-#include "fcitx-config/xdg.h"
-#include "fcitx-utils/utf8.h"
 #include "freedict.h"
-#include "freewubi-internal.h"
+
 #include "freeinterface.h"
 #include "utf8_in_gb18030.h"
+
 #define WUBI_TEMP_FILE "wubi_XXXXXX"
 #define PINYIN_TEMP_FILE "pinyin_XXXXXX"
 #define USER_TEMP_FILE "user_XXXXXX"

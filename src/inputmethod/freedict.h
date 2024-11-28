@@ -1,12 +1,11 @@
 #ifndef FREEDICT_H
 #define FREEDICT_H
 
-#include "fcitx-utils/utf8.h"
-#include "fcitx-config/fcitx-config.h"
-#include "fcitx-config/hotkey.h"
+#include <ctype.h>
+
 #include "fcitx-utils/memory.h"
 #include "fcitx/candidate.h"
-#include <ctype.h>
+
 #define MAX_CODE_LENGTH 50
 #define PHRASE_MAX_LENGTH 128
 #define TABLE_AUTO_SAVE_AFTER 1024
