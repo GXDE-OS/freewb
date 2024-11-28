@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef _FCITX_FREEWUBI - CONFIG_H_
-#define _FCITX_FREEWUBI -CONFIG_H_
+#ifndef _FCITX_FREEWUBI_CONFIG_H_
+#define _FCITX_FREEWUBI_CONFIG_H_
 int FreewbHotkeyGetKeyList(const char *strKey);
 char *FreewbHotKeyGetKeyChar(int sym);
 #endif

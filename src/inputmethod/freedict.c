@@ -1411,7 +1411,7 @@ boolean LoadAutoEng(TableMetaData* tableMetaData){
         AUTO_ENG *autoEng = tableMetaData->autoEng;
         while(*data == ' ' || *data == '\t')
             data++;
-        char *data2 = data;
+        const char *data2 = data;
         int i=0;
         while(*data && *data!='\n'){
             if(*data == ' ' || *data == '\t'){

@@ -1,6 +1,8 @@
 #ifndef _FREE_INTERFACE_H
 #define _FREE_INTERFACE_H
 
+#include "freewubi-internal.h"
+
 char *dbusTest(Fcitxfreewubi *fwb, char *text);
 void addUsrParse(Fcitxfreewubi *fwb, int flg, char *wordText, char *wordCode);
 void addUsrParseDirect(Fcitxfreewubi *fwb, char *wordText, char *wordCode);

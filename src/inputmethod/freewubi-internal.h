@@ -21,6 +21,8 @@
 #ifndef _FCITX_FREEWUBI_INTERNAL_H_
 #define _FCITX_FREEWUBI_INTERNAL_H_
 
+#include <libintl.h>
+
 #include "freewubi.h"
 #include <fcitx/instance.h>
 #include <dbus/dbus.h>

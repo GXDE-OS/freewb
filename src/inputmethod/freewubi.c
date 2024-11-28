@@ -82,6 +82,8 @@ static void *FcitxfreewubiCreate(FcitxInstance *instance);
 static void FcitxfreewubiDestroy(void *arg);
 static INPUT_RETURN_VALUE FreeWubiGetCandWord(void *arg, FcitxCandidateWord *candWord);
 static INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg);
+static boolean TableCheckNoMatch(TableMetaData *table, const char *code);
+static int TableFindPhraseByCodeNum(const TableDict *tableDict, const char *strCode, boolean gbk);
 static INPUT_RETURN_VALUE DoFreeWubiReleaseIntput(void *arg, FcitxKeySym sym, unsigned int state);
 static void FcitxfreewubiClose(void *arg, FcitxIMCloseEventType);
 static FcitxHotkey FreewbCTRL_ENTER[2];
