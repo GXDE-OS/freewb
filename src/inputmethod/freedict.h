@@ -3,8 +3,12 @@
 
 #include <ctype.h>
 
+#include <dbus/dbus.h>
+
 #include "fcitx-utils/memory.h"
 #include "fcitx/candidate.h"
+
+#include "freewubi-config.h"
 
 #define MAX_CODE_LENGTH 50
 #define PHRASE_MAX_LENGTH 128
@@ -17,7 +21,6 @@
 #define RECORDTYPE_CONSTRUCT 0x2
 #define RECORDTYPE_UNCOMMON 0x3
 #define RECORDTYPE_S2T 0x4
-struct _Fcitxfreewubi;
 struct _TableDict;
 
 typedef struct
@@ -134,7 +137,7 @@ typedef struct
 {
     FcitxGenericConfig config;
 
-    struct _Fcitxfreewubi *owner;
+    FcitxfreewubiConfig* freeWubiConfig;
 
     // zyp add
     TableType tableType;
@@ -165,12 +168,12 @@ boolean IsInputKey(const TableMetaData *tableMetaData, int iKey);
 boolean IsUncommonKey(const TableMetaData *tableMetaData, int iKey, int state);
 unsigned int CalHZIndex(char *strHZ);
 char *getFreewbPath();
-void adjustOrder(TableMetaData *tableMetaData, TableDict *dict, char *wordText, char *wordCode);
+void adjustOrder(DBusConnection* conn, TableMetaData *tableMetaData, TableDict *dict, char *wordText, char *wordCode);
 boolean LoadQuickTable(TableMetaData *tableMetaData);
 void freeQucikTable(TableMetaData *tableMetaData);
 QUCIK_TABLE *findQuickPharse(TableMetaData *tableMetaData, FcitxKeySym sym);
 
-boolean LoadAutoEng(TableMetaData *tableMetaData);
+boolean LoadAutoEng(TableMetaData *tableMetaData, const char* strAutoEng);
 void freeAutoEng(TableMetaData *tableMetaData);
 boolean isAutoEngStr(TableMetaData *tableMetaData, char *str);
 

@@ -74,7 +74,8 @@ extern "C"
         CANDWORD candWord;
     } TABLECANDWORD;
 
-    typedef struct _Fcitxfreewubi
+
+    typedef struct
     {
         FcitxfreewubiConfig config;
         FcitxInstance *owner;
@@ -107,7 +108,7 @@ extern "C"
     void sortCandwords(UT_array *arry1, UT_array *arry2, UT_array *result);
     boolean freeDbusInit(Fcitxfreewubi *fwb);
     DBusConnection *getFreeDbusConn(Fcitxfreewubi *fwb);
-    int TableCreateAutoPhrase(TableMetaData *tableMetaData, int iCount);
+    int TableCreateAutoPhrase(Fcitxfreewubi *fwb, int iCount);
     void freeAutoPhrase(TableMetaData *tableMetaData);
     CONFIG_BINDING_DECLARE(FcitxfreewubiConfig);
 

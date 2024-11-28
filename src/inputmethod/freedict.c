@@ -214,11 +214,11 @@ boolean LoadTableDict(TableMetaData* tableMetaData)
     //读入码表
     char *tablepath;
     char *path = getFreewbPath();
-    fcitx_utils_alloc_cat_str(tablepath, path, "/data/mb/",tableMetaData->owner->config.WubiPath);
+    fcitx_utils_alloc_cat_str(tablepath, path, "/data/mb/",tableMetaData->freeWubiConfig->WubiPath);
      
     fpWubiDict = fopen(tablepath, "r");
     free(tablepath);
-    fcitx_utils_alloc_cat_str(tablepath, path, "/data/mb/",tableMetaData->owner->config.PinyinPath);
+    fcitx_utils_alloc_cat_str(tablepath, path, "/data/mb/",tableMetaData->freeWubiConfig->PinyinPath);
     fpPinyinDict = fopen(tablepath, "r");
     free(tablepath);
     free(path);
@@ -250,7 +250,7 @@ boolean LoadUsrDict(TableMetaData* tableMetaData){
     char *path = getFreewbPath();
     FILE *fpUsrDict = NULL;
     if(FREE_WUBI==tableMetaData->tableType || FREE_WBPY==tableMetaData->tableType){
-        fcitx_utils_alloc_cat_str(tablepath, path, "/data/",tableMetaData->owner->config.usrPath);
+        fcitx_utils_alloc_cat_str(tablepath, path, "/data/",tableMetaData->freeWubiConfig->usrPath);
         fpUsrDict = fopen(tablepath, "r");
         free(path);
         free(tablepath);
@@ -832,11 +832,11 @@ void SaveDict(TableMetaData *tableMetaData,TableDict *tableDict){
         char* pstr;
         if(FREE_WUBI == tableDict->tableType)
         {
-            fcitx_utils_alloc_cat_str(pstr, path, "/data/mb/",tableMetaData->owner->config.WubiPath);
+            fcitx_utils_alloc_cat_str(pstr, path, "/data/mb/",tableMetaData->freeWubiConfig->WubiPath);
         }
         else
         {
-            fcitx_utils_alloc_cat_str(pstr, path, "/data/mb/",tableMetaData->owner->config.PinyinPath);
+            fcitx_utils_alloc_cat_str(pstr, path, "/data/mb/",tableMetaData->freeWubiConfig->PinyinPath);
         }
         if (access(pstr, 0)) unlink(pstr);
         rename(tempfile, pstr);
@@ -1133,7 +1133,7 @@ int TableFindFirstMatchCode(TableMetaData* tableMetaData, const char* strCodeInp
     TableDict      *WubiDict,*PinyinDict;
     int findMatch = -1;
     boolean isTempPinyin = false;
-    if(tableMetaData->owner->config.unCommonKey[0].sym == strCodeInput[0]){
+    if(tableMetaData->freeWubiConfig->unCommonKey[0].sym == strCodeInput[0]){
         strCodeInput++;
         if(tableMetaData->tableType==FREE_WUBI)
             isTempPinyin = true;
@@ -1226,7 +1226,7 @@ boolean IsInputKey(const TableMetaData* tableMetaData, int iKey)
 }
 boolean IsUncommonKey(const TableMetaData* tableMetaData, int iKey,int state)
 {
-    int p= tableMetaData->owner->config.unCommonKey[0].sym;
+    int p= tableMetaData->freeWubiConfig->unCommonKey[0].sym;
     if(p==iKey && state==FcitxKeyState_None)
         return true;
     return false;
@@ -1270,7 +1270,7 @@ unsigned int CalHZIndex(char *strHZ)
     return idx;
 }
 
-void adjustOrder(TableMetaData* tableMetaData,TableDict* dict,char* wordText, char* wordCode){  
+void adjustOrder(DBusConnection* conn, TableMetaData* tableMetaData,TableDict* dict,char* wordText, char* wordCode){  
     int i=0;
     boolean findRepeat = false;
     if(!dict->recordHead)
@@ -1328,7 +1328,7 @@ void adjustOrder(TableMetaData* tableMetaData,TableDict* dict,char* wordText, ch
     dict->iTableChanged = 1;
     dict->iRecordCount++;
     if(!findRepeat)
-        addUsrParseDirect(tableMetaData->owner,wordText,wordCode);
+        addUsrParseDirect(conn, wordText, wordCode);
     SaveTableDict(tableMetaData);
 }
 boolean LoadQuickTable(TableMetaData* tableMetaData){
@@ -1394,11 +1394,10 @@ void freeQucikTable(TableMetaData* tableMetaData){
     }
     tableMetaData->quickTable->next = NULL;
 }
-boolean LoadAutoEng(TableMetaData* tableMetaData){
-    Fcitxfreewubi *fwb = tableMetaData->owner;
+boolean LoadAutoEng(TableMetaData* tableMetaData, const char* strAutoEng){
     freeAutoEng(tableMetaData);
-    if(fwb->config.strAutoEng){
-        char *data = fwb->config.strAutoEng;
+    if(strAutoEng){
+        const char *data = strAutoEng;
         AUTO_ENG *autoEng = tableMetaData->autoEng;
         while(*data == ' ' || *data == '\t')
             data++;
