@@ -26,88 +26,72 @@
 #include "freedict.h"
 #include "freewubi-config.h"
 
-#ifdef __cplusplus
-extern "C"
+typedef enum
 {
-#endif
+    IM_INTO_FREEWB,
+    IM_TO_ENGLISH,
+    IM_CLOSE_FREEWB
+} IMState;
 
-    typedef enum
-    {
-        IM_INTO_FREEWB,
-        IM_TO_ENGLISH,
-        IM_CLOSE_FREEWB
-    } IMState;
+typedef enum
+{
+    SOUND_LETTER,
+    SOUND_ENTER,
+    SOUND_BACK,
+    SOUND_RECODE,
+    SOUND_SAPCE,
+    SOUND_EMPTY,
+    SOUND_NUM
+} SoundType;
 
-    typedef enum
-    {
-        SOUND_LETTER,
-        SOUND_ENTER,
-        SOUND_BACK,
-        SOUND_RECODE,
-        SOUND_SAPCE,
-        SOUND_EMPTY,
-        SOUND_NUM
-    } SoundType;
+typedef enum
+{
+    CT_NORMAL = 0,
+    CT_AUTOPHRASE,
+    CT_REMIND,
+    CT_QUICK,
+    CT_REPEATE
+} CANDTYPE;
 
-    typedef enum
-    {
-        CT_NORMAL = 0,
-        CT_AUTOPHRASE,
-        CT_REMIND,
-        CT_QUICK,
-        CT_REPEATE
-    } CANDTYPE;
+typedef struct
+{
+    AUTOPHRASE *autoPhrase;
+    QUCIK_TABLE *qucikPhrase;
+    RECORD *record;
+    RECORD *simpelRecord;
+} CANDWORD;
 
-    typedef struct
-    {
-        AUTOPHRASE *autoPhrase;
-        QUCIK_TABLE *qucikPhrase;
-        RECORD *record;
-        RECORD *simpelRecord;
-    } CANDWORD;
+typedef struct
+{
+    CANDTYPE flag; // 指示该候选字/词是自动组的词还是正常的字/词
+    CANDWORD candWord;
+} TABLECANDWORD;
 
-    typedef struct
-    {
-        CANDTYPE flag; // 指示该候选字/词是自动组的词还是正常的字/词
-        CANDWORD candWord;
-    } TABLECANDWORD;
+typedef struct _Fcitxfreewubi
+{
+    FcitxfreewubiConfig config;
+    FcitxInstance *owner;
+    TableMetaData *table; /* 码表 */
+    RECORD *pLastCommitRecord;
+    char strTableRemindSource[PHRASE_MAX_LENGTH * UTF8_MAX_LENGTH + 1];
+    boolean bIsTableDelPhrase;
+    boolean bIsTableAdjustOrder;
+    boolean bIsTableAddPhrase;
+    boolean bIsTableAddPhraseByClip;
+    boolean bIsTempEnglish;
+    boolean bIsAutoEnglish; // 英文状态
+    char iTableNewPhraseHZCount;
+    boolean bHasQuickDelete; // 是否快删过了
+    boolean bUseWidePunc;
+    boolean bUseFullWidthChar;
+    boolean bisDelNumber;
+    FcitxHotkey hkTableAddPhraseByClip[HOT_KEY_COUNT];
+    FcitxHotkey hkReverseCheckByClip[2]; // 反查码表和拼音及注释
+    boolean bNeedMoveCur;
+    //     boolean         bFirstMoveCur;//先上屏還是先移动光标
 
+    boolean bNotFirstStart; // 是否是第一次启动极点五笔
+    //    boolean bSwichImSeccess; //上一个状态是否创建成功kde服务
+} Fcitxfreewubi;
 
-    typedef struct
-    {
-        FcitxfreewubiConfig config;
-        FcitxInstance *owner;
-        TableMetaData *table; /* 码表 */
-        RECORD *pLastCommitRecord;
-        char strTableRemindSource[PHRASE_MAX_LENGTH * UTF8_MAX_LENGTH + 1];
-        boolean bIsTableDelPhrase;
-        boolean bIsTableAdjustOrder;
-        boolean bIsTableAddPhrase;
-        boolean bIsTableAddPhraseByClip;
-        boolean bIsTempEnglish;
-        boolean bIsAutoEnglish; // 英文状态
-        char iTableNewPhraseHZCount;
-        boolean bHasQuickDelete; // 是否快删过了
-        boolean bUseWidePunc;
-        boolean bUseFullWidthChar;
-        boolean bisDelNumber;
-        FcitxHotkey hkTableAddPhraseByClip[HOT_KEY_COUNT];
-        FcitxHotkey hkReverseCheckByClip[2]; // 反查码表和拼音及注释
-        boolean bNeedMoveCur;
-        //     boolean         bFirstMoveCur;//先上屏還是先移动光标
-
-        boolean bNotFirstStart; // 是否是第一次启动极点五笔
-        //    boolean bSwichImSeccess; //上一个状态是否创建成功kde服务
-    } Fcitxfreewubi;
-
-    boolean LoadFreeWubiGlobalInfo(Fcitxfreewubi *fwb);
-    boolean reloadFreewb(Fcitxfreewubi *fwb);
-    void sortCandwords(UT_array *arry1, UT_array *arry2, UT_array *result);
-    int TableCreateAutoPhrase(Fcitxfreewubi *fwb, int iCount);
-    void freeAutoPhrase(TableMetaData *tableMetaData);
-    CONFIG_BINDING_DECLARE(FcitxfreewubiConfig);
-
-#ifdef __cplusplus
-}
-#endif
 #endif
