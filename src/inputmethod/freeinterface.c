@@ -1,6 +1,6 @@
 #include "freeinterface.h"
 
-void addUsrParseDirect(DBusConnection* conn,char* wordText, char* wordCode){
+void FreeWubiServiceAddUsrParseDirect(DBusConnection* conn,char* wordText, char* wordCode){
     DBusMessage* msg;
     DBusMessageIter args; 
     int flg=1;
@@ -31,7 +31,7 @@ void addUsrParseDirect(DBusConnection* conn,char* wordText, char* wordCode){
     dbus_message_unref(msg);    
 }
 
-void addUsrParse(DBusConnection* conn, TableMetaData* table, int flg,char* wordText, char* wordCode) {
+void FreeWubiServiceAddUsrParse(DBusConnection* conn, TableMetaData* table, int flg,char* wordText, char* wordCode) {
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
@@ -104,7 +104,7 @@ void addUsrParse(DBusConnection* conn, TableMetaData* table, int flg,char* wordT
     }
 }
 
-void deleteUsrParse(DBusConnection* conn, TableMetaData* table, int flg,char* wordText, char* wordCode) {
+void FreeWubiServiceDeleteUsrParse(DBusConnection* conn, TableMetaData* table, int flg,char* wordText, char* wordCode) {
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
@@ -172,7 +172,7 @@ void deleteUsrParse(DBusConnection* conn, TableMetaData* table, int flg,char* wo
     }    
 }
 
-void resetUerWordFlag(DBusConnection* conn) {
+void FreeWubiServiceResetUerWordFlag(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -191,7 +191,7 @@ void resetUerWordFlag(DBusConnection* conn) {
     
 }
 
-void resetQuickTableFlag(DBusConnection* conn) {
+void FreeWubiServiceResetQuickTableFlag(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -210,7 +210,7 @@ void resetQuickTableFlag(DBusConnection* conn) {
     
 }
 
-void resetTableFlag(DBusConnection* conn) {
+void FreeWubiServiceResetTableFlag(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -229,7 +229,7 @@ void resetTableFlag(DBusConnection* conn) {
     
 }
 
-void exitFreewbPanel(DBusConnection* conn) {
+void FreeWubiServiceExitFreewbPanel(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -247,7 +247,7 @@ void exitFreewbPanel(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void dictQuery(DBusConnection* conn,char* wordText) {
+void FreeWubiServiceDictQuery(DBusConnection* conn,char* wordText) {
     DBusMessage* msg;
     DBusMessageIter args;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
@@ -268,7 +268,7 @@ void dictQuery(DBusConnection* conn,char* wordText) {
     dbus_message_unref(msg);     
 }
 
-void switchFreeIm(DBusConnection* conn,int imState) {
+void FreeWubiServiceSwitchFreeIm(DBusConnection* conn,int imState) {
     DBusMessage* msg;
     DBusMessageIter args;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
@@ -289,7 +289,7 @@ void switchFreeIm(DBusConnection* conn,int imState) {
     dbus_message_unref(msg);       
 }
 
-void switchImState(DBusConnection* conn,int imState) {
+void FreeWubiServiceSwitchImState(DBusConnection* conn,int imState) {
     DBusMessage* msg;
     DBusMessageIter args;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
@@ -312,7 +312,7 @@ void switchImState(DBusConnection* conn,int imState) {
     return;
 }
 
-void switchToolbarState(DBusConnection* conn) {
+void FreeWubiServiceSwitchToolbarState(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -330,7 +330,7 @@ void switchToolbarState(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void switchCapState(DBusConnection* conn) {
+void FreeWubiServiceSwitchCapState(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -348,7 +348,7 @@ void switchCapState(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void switchCandiwinState(DBusConnection* conn) {
+void FreeWubiServiceSwitchCandiwinState(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -366,7 +366,7 @@ void switchCandiwinState(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void switchSkin(DBusConnection* conn) {
+void FreeWubiServiceSwitchSkin(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -384,7 +384,7 @@ void switchSkin(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void switchVk(DBusConnection* conn,int flg) {
+void FreeWubiServiceSwitchVk(DBusConnection* conn,int flg) {
     DBusMessage* msg;
     DBusMessageIter args;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
@@ -405,7 +405,7 @@ void switchVk(DBusConnection* conn,int flg) {
     dbus_message_unref(msg);    
 }
 
-void switchCharSet(DBusConnection* conn) {
+void FreeWubiServiceSwitchCharSet(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -423,7 +423,7 @@ void switchCharSet(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void switchUncommon(DBusConnection* conn,char *wordText, int flg ){
+void FreeWubiServiceSwitchUncommon(DBusConnection* conn,char *wordText, int flg ){
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
@@ -452,7 +452,7 @@ void switchUncommon(DBusConnection* conn,char *wordText, int flg ){
     dbus_message_unref(msg);
 }
 
-void switchSmartPunc(DBusConnection* conn,int flg) {
+void FreeWubiServiceSwitchSmartPunc(DBusConnection* conn,int flg) {
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
@@ -480,7 +480,7 @@ void switchSmartPunc(DBusConnection* conn,int flg) {
     dbus_message_unref(msg);    
 }
 
-void switchRecodeProof(DBusConnection* conn,int flg) {
+void FreeWubiServiceSwitchRecodeProof(DBusConnection* conn,int flg) {
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
@@ -508,7 +508,7 @@ void switchRecodeProof(DBusConnection* conn,int flg) {
     dbus_message_unref(msg);
 }
 
-void switchChttrans(DBusConnection* conn,int flg) {
+void FreeWubiServiceSwitchChttrans(DBusConnection* conn,int flg) {
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
@@ -536,7 +536,7 @@ void switchChttrans(DBusConnection* conn,int flg) {
     dbus_message_unref(msg);    
 }
 
-void openSysConf(DBusConnection* conn) {
+void FreeWubiServiceOpenSysConf(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -554,7 +554,7 @@ void openSysConf(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void showVersion(DBusConnection* conn) {
+void FreeWubiServiceShowVersion(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -572,7 +572,7 @@ void showVersion(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void openProfessionalConf(DBusConnection* conn) {
+void FreeWubiServiceOpenProfessionalConf(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -590,7 +590,7 @@ void openProfessionalConf(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void modQuickTable(DBusConnection* conn) {
+void FreeWubiServiceModQuickTable(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -608,7 +608,7 @@ void modQuickTable(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void modUserTable(DBusConnection* conn) {
+void FreeWubiServiceModUserTable(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -626,7 +626,7 @@ void modUserTable(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void modWubiTable(DBusConnection* conn) {
+void FreeWubiServiceModWubiTable(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -644,7 +644,7 @@ void modWubiTable(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void modPinyinTable(DBusConnection* conn) {
+void FreeWubiServiceModPinyinTable(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -662,7 +662,7 @@ void modPinyinTable(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void openConfDir(DBusConnection* conn) {
+void FreeWubiServiceOpenConfDir(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -680,7 +680,7 @@ void openConfDir(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void closeVkBoard(DBusConnection* conn) {
+void FreeWubiServiceCloseVkBoard(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -698,7 +698,7 @@ void closeVkBoard(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void switchTable(DBusConnection* conn) {
+void FreeWubiServiceSwitchTable(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = dbus_message_new_method_call("com.freewb.www",
@@ -716,7 +716,7 @@ void switchTable(DBusConnection* conn) {
     dbus_message_unref(msg);     
 }
 
-void setCharWidth(DBusConnection* conn ,int charWidth, int PuncMode ) {
+void FreeWubiServiceSetCharWidth(DBusConnection* conn ,int charWidth, int PuncMode ) {
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
@@ -745,7 +745,7 @@ void setCharWidth(DBusConnection* conn ,int charWidth, int PuncMode ) {
     dbus_message_unref(msg);
 }
 
-int createFreewbPanel(DBusConnection* conn) {
+int FreeWubiServiceCreateFreewbPanel(DBusConnection* conn) {
     DBusMessage* msg;
     DBusMessageIter args;
     DBusPendingCall *pending = NULL;
@@ -792,7 +792,7 @@ int createFreewbPanel(DBusConnection* conn) {
     
 }
 
-char* getClipboard(DBusConnection* conn){
+char* FreeWubiServiceGetClipboard(DBusConnection* conn){
     DBusMessage* msg;
     DBusMessageIter args;
     DBusPendingCall *pending = NULL;

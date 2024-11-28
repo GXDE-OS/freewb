@@ -1328,7 +1328,7 @@ void adjustOrder(DBusConnection* conn, TableMetaData* tableMetaData,TableDict* d
     dict->iTableChanged = 1;
     dict->iRecordCount++;
     if(!findRepeat)
-        addUsrParseDirect(conn, wordText, wordCode);
+        FreeWubiServiceAddUsrParseDirect(conn, wordText, wordCode);
     SaveTableDict(tableMetaData);
 }
 boolean LoadQuickTable(TableMetaData* tableMetaData){
