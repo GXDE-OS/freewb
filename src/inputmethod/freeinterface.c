@@ -1,14 +1,16 @@
 #include "freeinterface.h"
 
+static DBusMessage* createSettingsMethodCallMessage(const char* methodName) {
+    return dbus_message_new_method_call("com.freewb.www",
+        "/", "com.freewb.host", methodName);
+}
+
 void FreeWubiServiceAddUsrParseDirect(DBusConnection* conn,char* wordText, char* wordCode){
     DBusMessage* msg;
     DBusMessageIter args; 
     int flg=1;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_generate_usr_word"); // name of the signal/method
+    msg = createSettingsMethodCallMessage("slot_dbus_generate_usr_word");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -35,10 +37,7 @@ void FreeWubiServiceAddUsrParse(DBusConnection* conn, TableMetaData* table, int 
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_generate_usr_word"); // name of the signal/method
+    msg = createSettingsMethodCallMessage("slot_dbus_generate_usr_word");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -108,10 +107,7 @@ void FreeWubiServiceDeleteUsrParse(DBusConnection* conn, TableMetaData* table, i
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_delete_usr_word"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_delete_usr_word");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -175,10 +171,7 @@ void FreeWubiServiceDeleteUsrParse(DBusConnection* conn, TableMetaData* table, i
 void FreeWubiServiceResetUerWordFlag(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_usr_word_load_ok"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_usr_word_load_ok");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -194,10 +187,7 @@ void FreeWubiServiceResetUerWordFlag(DBusConnection* conn) {
 void FreeWubiServiceResetQuickTableFlag(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_quick_table_load_ok"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_quick_table_load_ok");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -213,10 +203,7 @@ void FreeWubiServiceResetQuickTableFlag(DBusConnection* conn) {
 void FreeWubiServiceResetTableFlag(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_ime_table_load_ok"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_ime_table_load_ok");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -232,10 +219,7 @@ void FreeWubiServiceResetTableFlag(DBusConnection* conn) {
 void FreeWubiServiceExitFreewbPanel(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                       "slot_dbus_panel_exit"); // name of the signal
+    msg = createSettingsMethodCallMessage( "slot_dbus_panel_exit");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -251,10 +235,7 @@ void FreeWubiServiceDictQuery(DBusConnection* conn,char* wordText) {
     DBusMessage* msg;
     DBusMessageIter args;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_dict_query"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_dict_query");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -272,10 +253,7 @@ void FreeWubiServiceSwitchFreeIm(DBusConnection* conn,int imState) {
     DBusMessage* msg;
     DBusMessageIter args;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_switch_internal_input_method"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_switch_internal_input_method");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -296,7 +274,7 @@ void FreeWubiServiceSwitchImState(DBusConnection* conn,int imState) {
     msg = dbus_message_new_method_call("com.freewb.www",
                                         "/",
                                         "com.freewb.host",
-                                        "slot_dbus_switch_freewb"); // name of the signal
+                                        "slot_dbus_switch_freewb");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -315,10 +293,7 @@ void FreeWubiServiceSwitchImState(DBusConnection* conn,int imState) {
 void FreeWubiServiceSwitchToolbarState(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_switch_toolbar_hide_flg"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_switch_toolbar_hide_flg");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -333,10 +308,7 @@ void FreeWubiServiceSwitchToolbarState(DBusConnection* conn) {
 void FreeWubiServiceSwitchCapState(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_switch_caps_state"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_switch_caps_state");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -351,10 +323,7 @@ void FreeWubiServiceSwitchCapState(DBusConnection* conn) {
 void FreeWubiServiceSwitchCandiwinState(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_switch_candiwin_hide_flg"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_switch_candiwin_hide_flg");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -369,10 +338,7 @@ void FreeWubiServiceSwitchCandiwinState(DBusConnection* conn) {
 void FreeWubiServiceSwitchSkin(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_switch_skin"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_switch_skin");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -388,10 +354,7 @@ void FreeWubiServiceSwitchVk(DBusConnection* conn,int flg) {
     DBusMessage* msg;
     DBusMessageIter args;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_switch_vk"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_switch_vk");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -408,10 +371,7 @@ void FreeWubiServiceSwitchVk(DBusConnection* conn,int flg) {
 void FreeWubiServiceSwitchCharSet(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_switch_char_set"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_switch_char_set");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -427,10 +387,7 @@ void FreeWubiServiceSwitchUncommon(DBusConnection* conn,char *wordText, int flg 
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_word_freq_switch_ok"); // name of the signal/method
+    msg = createSettingsMethodCallMessage("slot_dbus_word_freq_switch_ok");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -456,10 +413,7 @@ void FreeWubiServiceSwitchSmartPunc(DBusConnection* conn,int flg) {
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_set_mark_auto_pairs_flg"); // name of the signal/method
+    msg = createSettingsMethodCallMessage("slot_dbus_set_mark_auto_pairs_flg");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -484,10 +438,7 @@ void FreeWubiServiceSwitchRecodeProof(DBusConnection* conn,int flg) {
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_set_recode_calib_flg"); // name of the signal/method
+    msg = createSettingsMethodCallMessage("slot_dbus_set_recode_calib_flg");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -512,10 +463,7 @@ void FreeWubiServiceSwitchChttrans(DBusConnection* conn,int flg) {
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_switch_simp_or_trad"); // name of the signal/method
+    msg = createSettingsMethodCallMessage("slot_dbus_switch_simp_or_trad");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -539,10 +487,7 @@ void FreeWubiServiceSwitchChttrans(DBusConnection* conn,int flg) {
 void FreeWubiServiceOpenSysConf(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_open_ui_setting"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_open_ui_setting");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -557,10 +502,7 @@ void FreeWubiServiceOpenSysConf(DBusConnection* conn) {
 void FreeWubiServiceShowVersion(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_show_version_info"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_show_version_info");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -575,10 +517,7 @@ void FreeWubiServiceShowVersion(DBusConnection* conn) {
 void FreeWubiServiceOpenProfessionalConf(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_open_advanced_setting"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_open_advanced_setting");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -593,10 +532,7 @@ void FreeWubiServiceOpenProfessionalConf(DBusConnection* conn) {
 void FreeWubiServiceModQuickTable(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_edit_quick_table"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_edit_quick_table");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -611,10 +547,7 @@ void FreeWubiServiceModQuickTable(DBusConnection* conn) {
 void FreeWubiServiceModUserTable(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_edit_usr_table"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_edit_usr_table");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -629,10 +562,7 @@ void FreeWubiServiceModUserTable(DBusConnection* conn) {
 void FreeWubiServiceModWubiTable(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_edit_wubi_table"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_edit_wubi_table");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -647,10 +577,7 @@ void FreeWubiServiceModWubiTable(DBusConnection* conn) {
 void FreeWubiServiceModPinyinTable(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_edit_pinyin_table"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_edit_pinyin_table");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -665,10 +592,7 @@ void FreeWubiServiceModPinyinTable(DBusConnection* conn) {
 void FreeWubiServiceOpenConfDir(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_open_freewb_dir"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_open_freewb_dir");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -683,10 +607,7 @@ void FreeWubiServiceOpenConfDir(DBusConnection* conn) {
 void FreeWubiServiceCloseVkBoard(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_close_vk"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_close_vk");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -701,10 +622,7 @@ void FreeWubiServiceCloseVkBoard(DBusConnection* conn) {
 void FreeWubiServiceSwitchTable(DBusConnection* conn) {
     DBusMessage* msg;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_switch_lexicon"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_switch_lexicon");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -720,10 +638,7 @@ void FreeWubiServiceSetCharWidth(DBusConnection* conn ,int charWidth, int PuncMo
     DBusMessage* msg;
     DBusMessageIter args; 
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_set_charWidth_and_markMode"); // name of the signal/method
+    msg = createSettingsMethodCallMessage("slot_dbus_set_charWidth_and_markMode");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return;
@@ -749,10 +664,7 @@ int FreeWubiServiceCreateFreewbPanel(DBusConnection* conn) {
     DBusMessage* msg;
     DBusMessageIter args;
     DBusPendingCall *pending = NULL;
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_create_freewb_panel"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_create_freewb_panel");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return 0;
@@ -796,10 +708,7 @@ char* FreeWubiServiceGetClipboard(DBusConnection* conn){
     DBusMessage* msg;
     DBusMessageIter args;
     DBusPendingCall *pending = NULL;
-    msg = dbus_message_new_method_call("com.freewb.www",
-                                       "/",
-                                       "com.freewb.host",
-                                      "slot_dbus_get_clipboard_text"); // name of the signal
+    msg = createSettingsMethodCallMessage("slot_dbus_get_clipboard_text");
     if (NULL == msg) {
         FcitxLog(DEBUG, "set msg erro!");
         return 0;
