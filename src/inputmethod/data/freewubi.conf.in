@@ -1,7 +1,7 @@
 [InputMethod]
 UniqueName=freewb
 Name=Freewb
-Name[zh_CN]=极点五笔
+Name[zh_CN]=极点五笔输入法
 IconName=freewubi
 Priority=10
 LangCode=zh_CN
