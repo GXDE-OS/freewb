@@ -216,11 +216,7 @@ void run_freewb_panel()
 {
     char panelBin[512] = {0};
 
-#ifdef UOS_SYSTEM
-    strcpy(panelBin, "/opt/apps/org.freewb.freeime/files/bin/freewb.sh");
-#else
     strcpy(panelBin, "/usr/bin/freewb.sh");
-#endif
 
     system(panelBin);
 }
