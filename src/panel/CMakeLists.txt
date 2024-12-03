@@ -57,8 +57,6 @@ install( TARGETS ${PROJECT_NAME} DESTINATION /usr/bin )
 #安装相关依赖目录
 install( FILES ${PROJECT_SOURCE_DIR}/fcitx-freewb-panel.desktop 
          DESTINATION /etc/xdg/autostart )
-install( FILES ${PROJECT_SOURCE_DIR}/72freewb 
-         DESTINATION /etc/X11/Xsession.d )
 install( FILES ${PROJECT_SOURCE_DIR}/freewb.sh 
          DESTINATION /usr/bin
          PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ  GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE )
