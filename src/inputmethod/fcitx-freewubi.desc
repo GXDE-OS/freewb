@@ -1,264 +1,132 @@
-[重要提醒/info]
-Description=注：打开极点后，按ctrl+,(逗号)设置极点，【不要在此设置】
+[基本设置/codeRemind]
+Description=编码提示
 Type=Boolean
-DefaultValue=true
+DefaultValue=True
 
-[Common/codeRemind]
-Description=codeRemind
+[基本设置/autoAdjustFreq]
+Description=启用自动调序
 Type=Boolean
-DefaultValue=true
+DefaultValue=False
 
-[Common/smartMark]
-Description=bUseSmartPunc
+[基本设置/wordThink]
+Description=启用词组联想
 Type=Boolean
-DefaultValue=true
+DefaultValue=False
 
-[Common/autoAdjustFreq]
-Description=autoAdjustFreq
+[基本设置/remindExistWord]
+Description=已有词组提示
 Type=Boolean
-DefaultValue=false
+DefaultValue=False
 
-[Common/wordThink]
-Description=wordThink
+[基本设置/alertWhenEmptyCode]
+Description=空重码提醒
 Type=Boolean
-DefaultValue=false
+DefaultValue=False
 
-[Common/spaceFullWhenCharHalf]
-Description=spaceFullWhenCharHalf
+[基本设置/enterClear]
+Description=回车清空编码
 Type=Boolean
-DefaultValue=false
+DefaultValue=True
 
-[Common/remindExistWord]
-Description=remindExistWord
+
+[基本设置/shiftCommitChar]
 Type=Boolean
-DefaultValue=false
+DefaultValue=False
+Description=shift+字母上屏
 
-[Common/alertWhenEmptyCode]
-Description=alertWhenEmptyCode or recode
-Type=Boolean
-DefaultValue=false
 
-[Advanced/autoWordGroupOpt]
-Type=Integer
-DefaultValue=0
-Description=autoWordGroupOpt
-
-[Advanced/inputStatistic]
-Type=Boolean
-DefaultValue=false
-Description=inputStatistic
-
-[Advanced/recodeCalib]
-Type=Boolean
-DefaultValue=false
-Description=recode proofreading
-
-[Advanced/shiftCommitChar]
-Type=Boolean
-DefaultValue=false
-Description=shiftCommitChar
-
-[Advanced/typeEffect]
-Type=Boolean
-DefaultValue=false
-Description=typeEffect
-
-[CandidateWinOptions/prevPageKey]
-Description=Alternative Prev Page Key
-Type=Hotkey
-DefaultValue=KEY_DASH
-
-[CandidateWinOptions/nextPageKey]
-Description=Alternative Next Page Key
-Type=Hotkey
-DefaultValue=KEY_EQUAL
-
-[CandidateWinOptions/secondRecodeKey]
-Description=secondRecodeKey
-Type=Hotkey
-DefaultValue=KEY_SEMICOLON
-
-[CandidateWinOptions/thirdRecodeKey]
-Description=thirdRecodeKey
-Type=Hotkey
-DefaultValue=KEY_QUOTE
-
-[CandidateWinUi/candiWordCount]
-Description=Candidate Word Number
-Type=Integer
-DefaultValue=5
-Min=1
-Max=10
-
-[ShortcutKey/onlineAddWord]
+[快捷键/onlineAddWord]
 Type=Hotkey
 DefaultValue=CTRL+KEY_EQUAL
-Description=Add Phrase
+Description=在线造词
 
-[ShortcutKey/onlineDelWord]
+[快捷键/onlineDelWord]
 Type=Hotkey
-DefaultValue=CTRL_7
-Description=Delete Phrase
+DefaultValue=CTRL+KEY_DASH
+Description=在线删词
 
-[ShortcutKey/CommitKey]
-Description=Commit key for select first candidate
-Type=Hotkey
-DefaultValue=KEY_SPACE
-
-[ShortcutKey/switchInputMode]
-Description=Switch
-Type=Hotkey
-DefaultValue=CTRL+KEY_BACK_SLASH
-
-[ShortcutKey/switchChttrans]
-Description=switchChttrans
-Type=Hotkey
-DefaultValue=CTRL+KEY_J
-
-[ShortcutKey/backFindCode]
-Description=Reverse check code table
+[快捷键/backFindCode]
+Description=在线查询
 Type=Hotkey
 DefaultValue=CTRL+KEY_SLASH
 
-[ShortcutKey/showHideCandiWin]
-Description=showHideCandiWin
-Type=Hotkey
-DefaultValue=CTRL+KEY_RIGHT
-
-[ShortcutKey/showHideToolbar]
-Description=showHideToolbar
-Type=Hotkey
-DefaultValue=CTRL+KEY_LEFT
-
-[ShortcutKey/markAutoPair]
-Description=markAutoPair
-Type=Hotkey
-DefaultValue=CTRL+KEY_DEL
-
-[ShortcutKey/setup]
-Description=setup
+[快捷键/setupOption]
+Description=打开系统设置
 Type=Hotkey
 DefaultValue=CTRL+KEY_COMMA
 
-[ShortcutKey/switchVKb]
-Description=switchVKb
+[快捷键/switchInputMode]
+Description=切换输入模式
 Type=Hotkey
-DefaultValue=SHIFT+KEY_ESC
+DefaultValue=CTRL+KEY_BACK_SLASH
 
-[ShortcutKey/switchSkin]
-Description=switchSkin
+[快捷键/switchChttrans]
+Description=切换简繁模式
 Type=Hotkey
-DefaultValue=CTRL+KEY_NONE
+DefaultValue=CTRL+KEY_J
 
-[ShortcutKey/tempPinyin]
-Description=UnCommonKey
-Type=Integer
-DefaultValue=96
-
-[ShortcutKey/tempEnglish]
-Description=tempEnglish
-Type=Integer
+[快捷键/tempPinyin]
+Description=临时拼音键
+Type=Hotkey
 DefaultValue=0
 
-[ShortcutKey/shortcutInput]
-Description=shortcutInput
-Type=Integer
+[快捷键/tempEnglish]
+Description=临时英文键
+Type=Hotkey
+DefaultValue=KEY_SEMICOLON
+
+[快捷键/shortcutInput]
+Description=快捷输入键
+Type=Hotkey
 DefaultValue=0
 
-[ShortcutKey/switchCharSet]
-Description=switchCharSet
+[快捷键/switchCharSet]
+Description=切换字符集
 Type=Hotkey
 DefaultValue=CTRL+KEY_M
 
-[ShortcutKey/switchLexicon]
-Description=switchLexicon
+[快捷键/switchVKb]
+Description=切换软键盘
 Type=Hotkey
-DefaultValue=CTRL+KEY_QUOTE
+DefaultValue=SHIFT+KEY_ESC
 
-[ShortcutKey/disableAllShortcutKey]
-Description=disableAllShortcutKey
-Type=Boolean
-DefaultValue=false
-
-[ShortcutKey/quickDelScreenItem]
-Description=Quick  Delete
+[快捷键/quickDelScreenItem]
+Description=快删上屏内容
 Type=Hotkey
 DefaultValue=CTRL+KEY_BACKSPACE
 
-[Others/autoToEnStr]
-Type=String
-DefaultValue=www. ftp: http mail. bbs. 
-Description=autoToEnStr
 
-[Others/autoToHalfMarkFlg]
+[候选项/secondRecodeKey]
+Description=第二候选项
+Type=Hotkey
+DefaultValue=;
+
+[候选项/thirdRecodeKey]
+Description=第三候选项
+Type=Hotkey
+DefaultValue='
+
+[候选项/candiWordCount]
+Description=候选项数
+Type=Integer
+DefaultValue=3
+Min=1
+Max=10
+
+[候选项/nextPageKey]
+Description=向后翻页键
+Type=Hotkey
+DefaultValue==
+
+[候选项/prevPageKey]
+Description=向前翻页键
+Type=Hotkey
+DefaultValue=-
+
+[候选项/useFreewbFont]
+Description=使用极点自带字库
 Type=Boolean
-DefaultValue=false
-Description=autoToHalfMarkFlg
-
-[Misc/userWordFlg]
-Description=if userword is changed
-Type=Integer
-DefaultValue=0
-
-[Misc/inputMode]
-Description=im type
-Type=Integer
-DefaultValue=1
-
-[Misc/imeTableChanged]
-Description=imeTableChanged
-Type=Integer
-DefaultValue=0
-
-[Misc/quickTableFlg]
-Description=quickTableFlg
-Type=Integer
-DefaultValue=0
-
-[Misc/currentCharset]
-Description=charSet
-Type=Integer
-DefaultValue=0
-
-[Misc/enterClear]
-Description=enterClear
-Type=Boolean
-DefaultValue=true
-
-[Misc/vkMode]
-Description=vkMode
-Type=Integer
-DefaultValue=-1
-
-[Misc/simpTradFlg]
-Description=simpTradFlg
-Type=Integer
-DefaultValue=0
-
-[CoustomChar/valueList]
-Description=CoustomChar
-Type=String
-DefaultValue=  
-
-[CoustomMark/valueList]
-Description=CoustomMark
-Type=String
-DefaultValue= 
-
-[Misc/wubiTable]
-Description=Code Table File
-Type=File
-DefaultValue=default/freeime.mb
-
-[Misc/pinyinTable]
-Description=Code Table File
-Type=File
-DefaultValue=default/attach.mb
-
-[ConfigTable/UsrFile]
-Description=Code Table File
-Type=File
-DefaultValue=user_word.txt
+DefaultValue=False
 
 [DescriptionFile]
 LocaleDomain=fcitx
