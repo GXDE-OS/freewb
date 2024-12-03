@@ -3,7 +3,6 @@ Description=注：打开极点后，按ctrl+,(逗号)设置极点，【不要在
 Type=Boolean
 DefaultValue=true
 
-
 [Common/codeRemind]
 Description=codeRemind
 Type=Boolean
