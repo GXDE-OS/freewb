@@ -813,12 +813,16 @@ puts("8888888");
             else if (FcitxHotkeyIsHotKey(sym, state, fwb->config.hkSecondRecode) && FcitxCandidateWordGetByIndex(candList, 1))
             {
                 fwb->bIsTempEnglish = false;
-                return FcitxCandidateWordChooseByIndex(candList, 1);
+                FcitxCandidateWordChooseByIndex(candList, 1);
+                FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), output_str);
+                return IRV_CLEAN;
             }
             else if (FcitxHotkeyIsHotKey(sym, state, fwb->config.hkThirdRecode) && FcitxCandidateWordGetByIndex(candList, 2))
             {
                 fwb->bIsTempEnglish = false;
-                return FcitxCandidateWordChooseByIndex(candList, 2);
+                FcitxCandidateWordChooseByIndex(candList, 2);
+                FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), output_str);
+                return IRV_CLEAN;
             }
             else if (FcitxHotkeyIsHotKey(sym, state, FCITX_ENTER))
             {
@@ -1462,7 +1466,9 @@ puts("8888888");
             { // 分别选第二候选项
                 if (FcitxCandidateWordGetByIndex(candList, 1))
                 {
-                    return FcitxCandidateWordChooseByIndex(candList, 1);
+                    FcitxCandidateWordChooseByIndex(candList, 1);
+                    FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), output_str);
+                    return IRV_CLEAN;
                 }
                 else
                     retVal = IRV_TO_PROCESS;
@@ -1471,7 +1477,9 @@ puts("8888888");
             { // 单引号选第三候选项
                 if (FcitxCandidateWordGetByIndex(candList, 2))
                 {
-                    return FcitxCandidateWordChooseByIndex(candList, 2);
+                    FcitxCandidateWordChooseByIndex(candList, 2);
+                    FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), output_str);
+                    return IRV_CLEAN;
                 }
                 else
                     retVal = IRV_TO_PROCESS;
