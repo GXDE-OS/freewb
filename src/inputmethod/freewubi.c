@@ -527,14 +527,12 @@ puts("8888888");
         }
         if (FcitxHotkeyIsHotKeySimple(sym, state))
         {
-            size_t raw_size = FcitxInputStateGetRawInputBufferSize(input);
-            strCodeInput[raw_size] = (char)sym;
-            raw_size++;
-            strCodeInput[raw_size] = '\0';
-            FcitxInputStateSetRawInputBufferSize(input, raw_size);
-            FreeWubiPanelProxyShowInputWindow();
+            const QUCIK_TABLE* table = findQuickPharse(fwb->table, sym);
+            if (table != NULL) {
+                FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), table->value);
+            }
 
-            return IRV_DO_NOTHING;
+            return IRV_CLEAN;
         }
     }
 
