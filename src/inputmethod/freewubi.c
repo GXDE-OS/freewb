@@ -511,7 +511,7 @@ puts("8888888");
         raw_size++;
         strCodeInput[raw_size] = '\0';
         FcitxInputStateSetRawInputBufferSize(input, raw_size);
-
+        FreeWubiGetCandWords(arg);
         FreeWubiPanelProxyShowInputWindow();
 
         return IRV_DO_NOTHING;
@@ -779,6 +779,7 @@ puts("8888888");
             raw_size++;
             strCodeInput[raw_size] = '\0';
             FcitxInputStateSetRawInputBufferSize(input, raw_size);
+            FreeWubiGetCandWords(arg);
             FreeWubiPanelProxyShowInputWindow();
 
             return IRV_DO_NOTHING;
