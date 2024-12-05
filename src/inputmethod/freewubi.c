@@ -1478,8 +1478,12 @@ puts("8888888");
             }
             else if (FcitxHotkeyIsHotKey(sym, state, fwb->config.hkAlternativeNextPage))
             {
-                if (FcitxCandidateWordHasNext(candList))
-                    return IRV_TO_PROCESS;
+                if (FcitxCandidateWordHasNext(candList)) {
+                    FcitxCandidateWordGoNextPage(candList);
+                    FreeWubiPanelProxyShowInputWindow();
+
+                    return IRV_DO_NOTHING;
+                }
 
                 //+2024-2-7
                 if (FcitxCandidateWordGetCurrentWindowSize(candList) > 0) //|| FcitxInputStateGetRawInputBuffer(input))
@@ -1493,8 +1497,12 @@ puts("8888888");
             //+2024-2-7
             else if (FcitxHotkeyIsHotKey(sym, state, fwb->config.hkAlternativePrevPage))
             {
-                if (FcitxCandidateWordHasPrev(candList))
-                    return IRV_TO_PROCESS;
+                if (FcitxCandidateWordHasPrev(candList)) {
+                    FcitxCandidateWordGoPrevPage(candList);
+                    FreeWubiPanelProxyShowInputWindow();
+                    return IRV_DO_NOTHING;
+                }
+
                 if (FcitxCandidateWordGetCurrentWindowSize(candList) > 0) //|| FcitxInputStateGetRawInputBuffer(input))
                 {                                                         //+2024-2-18
                     playSound(SOUND_EMPTY);
