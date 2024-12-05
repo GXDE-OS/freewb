@@ -798,6 +798,7 @@ puts("8888888");
                 FcitxInputStateSetRawInputBufferSize(input, FcitxInputStateGetRawInputBufferSize(input) - 1);
                 strCodeInput[FcitxInputStateGetRawInputBufferSize(input)] = '\0';
                 if (FcitxInputStateGetRawInputBufferSize(input)) {
+                    FreeWubiGetCandWords(arg);
                     FreeWubiPanelProxyShowInputWindow();
                     return IRV_DO_NOTHING;
                 }
@@ -853,6 +854,7 @@ puts("8888888");
                 raw_size++;
                 strCodeInput[raw_size] = '\0';
                 FcitxInputStateSetRawInputBufferSize(input, raw_size);
+                FreeWubiGetCandWords(arg);
                 FreeWubiPanelProxyShowInputWindow();
                 retVal = IRV_DO_NOTHING;
             }
