@@ -2004,7 +2004,7 @@ INPUT_RETURN_VALUE TableGetQuickCandWords(Fcitxfreewubi *fwb)
     FcitxInputState *input = FreeWubiGetInputState();
     FcitxCandidateWordList *candList = FreeWubiInputStateGetCandidateList(input);
     int retVal = IRV_DISPLAY_CANDWORDS;
-    char output_str[10];
+    char output_str[10] = { '\0' };
     int puncNumber = -1;
     FcitxInstanceCleanInputWindowUp(instance);
     FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetPreedit(input), MSG_INPUT, FcitxInputStateGetRawInputBuffer(input));
