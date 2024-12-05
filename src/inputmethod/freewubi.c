@@ -810,7 +810,9 @@ puts("8888888");
                 if (fwb->config.bInputVoice)
                     playSound(SOUND_SAPCE);
                 fwb->bIsTempEnglish = false;
-                return FcitxCandidateWordChooseByIndex(candList, 0);
+                FcitxCandidateWordChooseByIndex(candList, 0);
+                FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), output_str);
+                return IRV_CLEAN;
             }
             else if (FcitxHotkeyIsHotKey(sym, state, fwb->config.hkSecondRecode) && FcitxCandidateWordGetByIndex(candList, 1))
             {
