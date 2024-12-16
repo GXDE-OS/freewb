@@ -3,8 +3,6 @@
 #include "commdefine.h"
 #include "settings.h"
 
-#define VERSION "2.0.1"
-
 //设置窗口样式表
 #define QSS_FILE ":/qss/settingwin.qss"
 
@@ -39,6 +37,7 @@
 "<br/>&nbsp;&nbsp;&nbsp;&nbsp;自己的输入法"\
 "<br/>－感谢鹏城实验室自主可控方向对项目开发提供的大力支持"\
 "<br/>－感谢北弓智能的开发人员为项目付出的努力"\
+"<br/>－感谢openKylin InputMethod SIG的开发支持"\
 "<br/>－感谢银河麒麟操作系统团队的技术支持</font></body></html>"
 
 
@@ -109,21 +108,11 @@ void SettingWin::init_window_appearance()
     setWindowTitle( "极点设置" );
     //setFont(Settings::get_candidate_text_font());
 
-    ui->labelVersionNum->setText( QString("v%1_build%2 %3")
-                                  .arg(VERSION)
+    ui->labelVersionNum->setText( QString("v3.0  %1 %2")
                                   .arg(g_buildDate.toString("yyyy-MM-dd"))
                                   .arg(g_buildTime.toString("hh:mm:ss")) );
-
-    if ( g_cpuType == CT_X86 )
-    {
-        ui->labelVersion->setText( "极点五笔Linux版" );
-        ui->labelCopyright2->setText( VERSION_X86 );
-    }
-    else
-    {
-        ui->labelVersion->setText( "极点五笔银河麒麟版" );
-        ui->labelCopyright2->setText( VERSION_ARM );  
-    }
+    ui->labelVersion->setText( "极点五笔麒麟版" );
+    ui->labelCopyright2->setText( VERSION_X86 );
 
     // 载入窗口全局UI样式表
     QFile qssFile( QSS_FILE );
