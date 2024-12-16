@@ -22,7 +22,6 @@ MainProgram::MainProgram( QObject *parent ) : QObject( parent )
     m_kimAgent = new KimAgent( this );//创建与fcitx通信的代理对象
 
     m_virtualKeyboard = new Keyboard;
-    m_sysTrayMenu = new SysTrayMenu;
     m_toolbar = new ToolbarWin;
     m_inputWin = new InputWin;
     m_contextmenu = new ContextMenu;
@@ -59,10 +58,6 @@ MainProgram::MainProgram( QObject *parent ) : QObject( parent )
     //m_kimAgent --> m_toolbar
     connect( m_kimAgent, &KimAgent::signal_UpdateProperty, m_toolbar, &ToolbarWin::slot_kim_UpdateProperty );
     connect( m_kimAgent, &KimAgent::signal_RegisterProperties, m_toolbar, &ToolbarWin::slot_kim_RegisterProperties );
-    //m_kimAgent --> m_sysTrayMenu
-    connect( m_kimAgent, &KimAgent::signal_UpdateProperty, m_sysTrayMenu, &SysTrayMenu::slot_kim_UpdateProperty );
-    connect( m_kimAgent, &KimAgent::signal_RegisterProperties, m_sysTrayMenu, &SysTrayMenu::slot_kim_RegisterProperties );
-    connect( m_kimAgent, &KimAgent::signal_ExecMenu, m_sysTrayMenu, &SysTrayMenu::slot_kim_ExecMenu );
 
     //输入面板发送的信号
     //m_inputWin --> m_kimAgent
@@ -85,8 +80,7 @@ MainProgram::MainProgram( QObject *parent ) : QObject( parent )
     connect( m_toolbar, &ToolbarWin::signal_fcitx_switch_mark, m_kimAgent, &KimAgent::TriggerProperty );
     connect( m_toolbar, &ToolbarWin::signal_switch_char_font, m_kimAgent, &KimAgent::ReloadConfig );
     connect( m_toolbar, &ToolbarWin::signal_switch_char_set, m_kimAgent, &KimAgent::ReloadConfig );
-    //m_toolbar --> m_sysTrayMenu
-    connect( m_toolbar, &ToolbarWin::signal_char_font_changed, m_sysTrayMenu, &SysTrayMenu::slot_update_char_font_ico );
+
     //m_toolbar --> m_settingWin
     connect( m_toolbar, &ToolbarWin::signal_open_setting_win, m_settingWin, &SettingWin::slot_open_win );
     //m_toolbar --> m_contextmenu
@@ -102,10 +96,6 @@ MainProgram::MainProgram( QObject *parent ) : QObject( parent )
     //m_toolbar --> m_dictQueryWin
     connect( m_toolbar, &ToolbarWin::signal_open_dict_query_win, m_dictQueryWin, &DictQueryWin::slot_open_win );
 
-    //虚拟键盘发出的信号
-    //m_virtualKeyboard --> m_sysTrayMenu
-    connect( m_virtualKeyboard, &Keyboard::signal_vk_mode_changed, m_sysTrayMenu, &SysTrayMenu::slot_vk_mode_changed );
-    connect( m_virtualKeyboard, &Keyboard::signal_vk_mode_changed, m_toolbar, &ToolbarWin::slot_vk_mode_changed );
     //m_virtualKeyboard --> m_kimAgent
     connect( m_virtualKeyboard, &Keyboard::signal_vk_flg_changed, m_kimAgent, &KimAgent::ReloadConfig );
     //m_virtualKeyboard --> m_toolbar
@@ -139,30 +129,6 @@ MainProgram::MainProgram( QObject *parent ) : QObject( parent )
     //m_x11EventMonitor --> m_virtualKeyboard
     connect( m_x11EventMonitor, &X11EventMonitor::signal_key_clicked, m_virtualKeyboard, &Keyboard::slot_key_clicked );
 
-    //系统托盘菜单发送的信号
-    //m_sysTrayMenu --> this
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_create_freewb_panel, this, &MainProgram::slot_create_freewb_panel );
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_delete_freewb_panel, this, &MainProgram::slot_delete_freewb_panel );
-    //m_sysTrayMenu --> m_kimAgent
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_fcitx_switch_inputmethod_1, m_kimAgent, &KimAgent::ReloadConfig );
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_fcitx_switch_inputmethod, m_kimAgent, &KimAgent::TriggerProperty );
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_fcitx_switch_char_font, m_kimAgent, &KimAgent::TriggerProperty );
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_fcitx_switch_char_width, m_kimAgent, &KimAgent::TriggerProperty );
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_fcitx_switch_mark, m_kimAgent, &KimAgent::TriggerProperty );
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_fcitx_reload_config, m_kimAgent, &KimAgent::ReloadConfig );
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_fcitx_config, m_kimAgent, &KimAgent::Configure );
-    //m_sysTrayMenu --> m_toolbar
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_load_skin, m_toolbar, &ToolbarWin::slot_load_skin );
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_switch_char_font, m_toolbar, &ToolbarWin::slot_switch_char_font_mode );
-    //m_sysTrayMenu --> m_virtualKeyboard
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_vk_toggle, m_virtualKeyboard, &Keyboard::slot_toggle_win );
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_open_vk, m_virtualKeyboard, &Keyboard::slot_open_win );
-    //m_sysTrayMenu --> m_inputWin
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_load_skin, m_inputWin, &InputWin::slot_load_skin );
-    //m_sysTrayMenu --> m_settingWin
-    connect( m_sysTrayMenu, &SysTrayMenu::signal_open_setting_win, m_settingWin, &SettingWin::slot_open_win );
-
-
     //造词对话框发送的信号
     //m_usrGenWordDialog --> m_kimAgent
     connect( m_usrGenWordDialog, &UsrGenWordDialog::signal_user_word_changed, m_kimAgent, &KimAgent::ReloadConfig );
@@ -179,8 +145,6 @@ MainProgram::MainProgram( QObject *parent ) : QObject( parent )
     connect( m_textEditWin, &TextEditWin::signal_setting_file_changed, m_virtualKeyboard, &Keyboard::slot_load_setting_data );
     //m_textEditWin --> m_inputWin
     connect( m_textEditWin, &TextEditWin::signal_setting_file_changed, m_inputWin, &InputWin::slot_load_setting_data );
-    //m_textEditWin --> m_sysTrayMenu
-    connect( m_textEditWin, &TextEditWin::signal_setting_file_changed, m_sysTrayMenu, &SysTrayMenu::slot_load_setting_data );
     //m_textEditWin --> m_usrGenWordDialog
     connect( m_textEditWin, &TextEditWin::signal_userWord_file_saved, m_usrGenWordDialog, &UsrGenWordDialog::slot_userWord_file_saved );
 
@@ -204,8 +168,6 @@ MainProgram::MainProgram( QObject *parent ) : QObject( parent )
     connect( &g_settings, &Settings::signal_setting_data_changed_to_local, m_virtualKeyboard, &Keyboard::slot_load_setting_data );
     //g_settings --> m_inputWin
     connect( &g_settings, &Settings::signal_setting_data_changed_to_local, m_inputWin, &InputWin::slot_load_setting_data );
-    //g_settings --> m_sysTrayMenu
-    connect( &g_settings, &Settings::signal_setting_data_changed_to_local, m_sysTrayMenu, &SysTrayMenu::slot_load_setting_data );
 }
 
 
@@ -223,8 +185,6 @@ MainProgram::~MainProgram()
         delete m_settingWin;
     if ( m_lexicontoolWin )
         delete m_lexicontoolWin;
-    if ( m_sysTrayMenu )
-        delete m_sysTrayMenu;
     if ( m_usrGenWordDialog )
         delete m_usrGenWordDialog;
     if ( m_textEditWin )
@@ -283,7 +243,6 @@ void MainProgram::slot_create_freewb_panel()
     {
         m_toolbar->show();
     }
-    m_sysTrayMenu->show();
 }
 
 void MainProgram::slot_delete_freewb_panel()
@@ -291,7 +250,6 @@ void MainProgram::slot_delete_freewb_panel()
     m_kimAgent->delete_fcitx_panel();
     m_toolbar->hide();
     m_inputWin->hide();
-    m_sysTrayMenu->hide();
 }
 
 
@@ -313,7 +271,6 @@ void MainProgram::slot_dbus_switch_freewb( int flag )
             m_toolbar->show();
             //Settings::save_simpTradSwitchEnable_to_fcitx_config_file( false );
             //m_kimAgent->ReloadConfig();//ReloadConfig信号必须在建立kimpanel面板之后发送
-            //m_sysTrayMenu->show();//x86版本不显示系统托盘，因为只要显示就无法隐藏了，是Qt的bug？
         }
     }
     else if ( flag == 1 || (flag == 2 && !SysTrayMenu::is_extern_im()) ) //退出极点五笔
@@ -325,7 +282,6 @@ void MainProgram::slot_dbus_switch_freewb( int flag )
         Settings::save_simpTradSwitchEnable_to_fcitx_config_file( true );
         m_kimAgent->ReloadConfig();//ReloadConfig信号必须在删除kimpanel面板之前发送
         m_kimAgent->delete_fcitx_panel();
-        //m_sysTrayMenu->hide();
         m_toolbar->hide();
         m_inputWin->hide();
     }
@@ -368,8 +324,6 @@ void MainProgram::slot_dbus_switch_internal_input_method( int im )
 
     ToolbarWin::set_input_mode( static_cast<InputMode>(im) );
     m_toolbar->slot_update_input_mode_ico();
-    if( g_cpuType==CT_ARM) //+ 2023-11-7
-    m_sysTrayMenu->slot_update_input_mode_ico();//x86版本不显示系统托盘，因为只要显示就无法隐藏了，是Qt的bug？
 }
 
 //输入法面板程序退出
@@ -467,7 +421,6 @@ void MainProgram::slot_dbus_switch_char_set()
 void MainProgram::slot_dbus_switch_simp_or_trad( int tradFlg )
 {
     m_toolbar->switch_char_font_mode( static_cast<CharFontMode>(tradFlg) );
-    m_sysTrayMenu->slot_update_char_font_ico( static_cast<CharFontMode>(tradFlg) );
 }
 
 //切换大小写状态
@@ -586,8 +539,6 @@ void MainProgram::slot_dbus_set_charWidth_and_markMode( int charWidth, int markM
     m_toolbar->update_char_width_mode_ico( static_cast<CharWidthMode>(charWidth) );
     m_toolbar->update_mark_mode_ico( static_cast<MarkMode>(markMode) );
 
-    m_sysTrayMenu->update_char_width_mode_ico( static_cast<CharWidthMode>(charWidth) );
-    m_sysTrayMenu->update_mark_mode_ico( static_cast<MarkMode>(markMode) );
     */
 }
 
