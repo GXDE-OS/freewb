@@ -104,7 +104,9 @@ static int digitalNumberTrans(FcitxKeySym sym);
 static void playSound(SoundType sType);
 
 static boolean reloadFreewb(Fcitxfreewubi *fwb);
-
+static void Fcitx4IMOnChanged(void *arg);
+static boolean tray_menu_handler_empty(void *arg);
+static void freewb_settings_handler(void *arg);
 // #define DEBUG
 
 void FreeWubiInstanceCommitString(FcitxInstance* instance, FcitxInputContext* ic, const char* str) {
@@ -2802,6 +2804,8 @@ static void *FcitxFreeWubiCreate(FcitxInstance *instance)
     run_freewb_panel();
     //    sleep(5);
     InternalInit(freewubi);
+    FcitxIMEventHook imhook = {Fcitx4IMOnChanged, freewubi};
+    FcitxInstanceRegisterIMChangedHook(freewubi->owner, imhook);
 
     FcitxIMIFace iface;
     memset(&iface, 0, sizeof(FcitxIMIFace));
@@ -2826,8 +2830,54 @@ static void *FcitxFreeWubiCreate(FcitxInstance *instance)
         10,
         "zh_CN");
 
+    FcitxUIRegisterStatus(freewubi->owner, freewubi->owner, _("属性设置"), _("属性设置"), _("属性设置"), freewb_settings_handler, tray_menu_handler_empty);
+
     reloadFreewb(freewubi);
     return freewubi;
+}
+
+static void freewb_settings_handler(void *arg)
+{
+    FcitxInstance *instance = (FcitxInstance *)arg;
+    DBusConnection *conn = FcitxDBusGetConnection(instance);
+    if (conn == NULL)
+    {
+        return;
+    }
+
+    FreeWubiServiceOpenSysConf(conn);
+}
+
+static boolean tray_menu_handler_empty(void *arg)
+{
+    return false;
+}
+
+static void Fcitx4IMOnChanged(void *arg)
+{
+    FcitxLog(INFO, "func : %s line :%d", __FUNCTION__, __LINE__);
+    Fcitxfreewubi *freewubi = (Fcitxfreewubi *)arg;
+    FcitxInputContext *ic = FcitxInstanceGetCurrentIC(freewubi->owner);
+    if (ic == NULL)
+    {
+        return;
+    }
+
+    FcitxIM * im = FcitxInstanceGetCurrentIM(freewubi->owner);
+    if (im == NULL)
+    {
+        return;
+    }
+
+    const char *im_name = im->uniqueName;
+    if (strncmp(im_name, "freewb", sizeof("freewb")) == 0)
+    {
+        FcitxUISetStatusVisable(freewubi->owner, _("属性设置"), true);
+    }
+    else
+    {
+        FcitxUISetStatusVisable(freewubi->owner, _("属性设置"), false);
+    }
 }
 
 static void FcitxFreeWubiDestroy(void *arg)
