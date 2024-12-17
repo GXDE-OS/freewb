@@ -235,10 +235,8 @@ static boolean FreeWubiInit(void *arg)
         LoadTableDict(fwb->table);
         fwb->table->tableType = FREE_WUBI;
     }
-    // if(fwb->bNotFirstStart)//如有此句会造成首次输入前状态栏不显示
-    {
-        FreeWubiServiceSwitchImState(FcitxDBusGetConnection(fwb->owner), IM_INTO_FREEWB);
-    }
+
+    FreeWubiServiceSwitchImState(FcitxDBusGetConnection(fwb->owner), IM_INTO_FREEWB);
 
     char FileName[256];
     // sprintf(FileName,"%s/.config/fcitx/conf/fcitx-freewubi.config",getenv("HOME"));
@@ -2872,10 +2870,12 @@ static void Fcitx4IMOnChanged(void *arg)
     const char *im_name = im->uniqueName;
     if (strncmp(im_name, "freewb", sizeof("freewb")) == 0)
     {
+        FreeWubiServiceSwitchImState(FcitxDBusGetConnection(freewubi->owner), IM_INTO_FREEWB);
         FcitxUISetStatusVisable(freewubi->owner, _("属性设置"), true);
     }
     else
     {
+        FreeWubiServiceSwitchImState(FcitxDBusGetConnection(freewubi->owner), IM_CLOSE_FREEWB);
         FcitxUISetStatusVisable(freewubi->owner, _("属性设置"), false);
     }
 }
