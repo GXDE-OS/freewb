@@ -683,6 +683,9 @@ puts("8888888");
                     candCount = TableFindPhraseByCodeNum(table->WubiDict, strCodeInput, fwb->config.bIsGBK);
                 }
 
+                if (retVal == IRV_CLEAN) {
+                    return IRV_CLEAN;
+                }
 
                 // FreeWubiPanelProxyShowInputWindow();
 
@@ -2505,8 +2508,7 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
             }
         }
 
-        if ((retVal & IRV_FLAG_PENDING_COMMIT_STRING)
-            && FcitxCandidateWordGetListSize(candList) == 1) {
+        if (retVal & IRV_FLAG_PENDING_COMMIT_STRING) {
             FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), FcitxInputStateGetOutputString(input));
             FreeWubiResetInputState(FreeWubiGetInputState());
 
