@@ -2505,8 +2505,10 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
             }
         }
 
-        if (retVal & IRV_FLAG_PENDING_COMMIT_STRING) {
+        if ((retVal & IRV_FLAG_PENDING_COMMIT_STRING)
+            && FcitxCandidateWordGetListSize(candList) == 1) {
             FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), FcitxInputStateGetOutputString(input));
+            FreeWubiResetInputState(FreeWubiGetInputState());
 
             return IRV_CLEAN;
         }
