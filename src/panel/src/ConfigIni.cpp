@@ -162,6 +162,12 @@ void ConfigIni::setStringValueWithIndex(const char *index, const char* name, con
     entry.type = NODE;
     if(datas.size() == 0) 
     {
+        entry.type = SECTION;
+        entry.name="";
+        datas.push_back(entry);
+
+        entry.type = NODE;
+        entry.name=name;
         datas.push_back(entry);
         return;
     }
