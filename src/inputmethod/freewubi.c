@@ -1620,7 +1620,15 @@ puts("8888888");
 
     if (fwb->bIsTableDelPhrase || fwb->bIsTableAdjustOrder)
         FcitxInputStateSetShowCursor(input, false);
-    else if (!FcitxInputStateGetIsInRemind(input))
+    else if (state == FcitxKey_None && sym == FcitxKey_comma && FcitxCandidateWordGetCurrentWindowSize(candList) > 1 && fwb->config.hkAlternativePrevPage[0].sym != FcitxKey_comma 
+            && fwb->config.hkAlternativeNextPage[0].sym != FcitxKey_comma)
+    {
+        FcitxCandidateWordChooseByIndex(candList, 0);
+        FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), output_str);
+        FreeWubiResetInputState(FreeWubiGetInputState());
+        FreeWubiPanelProxyCloseInputWindow();
+    }
+    else if (!FcitxInputStateGetIsInRemind(input) && sym != FcitxKey_comma)
     {
         FcitxInputStateSetShowCursor(input, true);
         FcitxInputStateSetCursorPos(input, strlen(FcitxInputStateGetRawInputBuffer(input)));
