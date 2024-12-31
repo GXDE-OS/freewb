@@ -350,6 +350,11 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
     // printf("key:%d=%d\n",sym ,fwb->config.hkAlternativeNextPage[0].sym);
     //printf("state:%d\n",state);
     // printf("hotkey:%d\n",FcitxHotkeyIsHotKey(sym, state, fwb->config.hkAlternativeNextPage));
+    if (sym == FcitxKey_Escape)
+    {
+        FreeWubiPanelProxyCloseInputWindow();
+        return IRV_CLEAN;
+    }
 
     if (strlen(strCodeInput) == 0 && sym == FcitxKey_Escape && state == FcitxKeyState_None && !fwb->bIsTableAddPhrase && !fwb->bIsTableDelPhrase && !fwb->bIsTempEnglish)
     {
