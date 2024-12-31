@@ -2845,6 +2845,8 @@ static void *FcitxFreeWubiCreate(FcitxInstance *instance)
         10,
         "zh_CN");
 
+    boolean flags = true;
+    FcitxInstanceSetContext(freewubi->owner, CONTEXT_DISABLE_QUICKPHRASE, &flags);
     FcitxUIRegisterStatus(freewubi->owner, freewubi->owner, _("属性设置"), _("属性设置"), _("属性设置"), freewb_settings_handler, tray_menu_handler_empty);
 
     reloadFreewb(freewubi);
