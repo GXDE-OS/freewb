@@ -119,7 +119,7 @@ void freeGetOption(Fcitxfreewubi *fwb)
     char *path = getFreewbPath();
     char *inifile;
     fcitx_utils_alloc_cat_str(inifile, path, "/config/", "config.ini");
-
+    FcitxLog(INFO, "func : %s line : %d ini filename: %s ", __FUNCTION__, __LINE__, inifile);
     INI *ini = fileToIni(inifile);
 
     fwb->config.bUseSmartPunc = GetIniKeyBool(ini, "Common", "smartMark");
@@ -242,6 +242,7 @@ static boolean FreeWubiInit(void *arg)
     // sprintf(FileName,"%s/.config/fcitx/conf/fcitx-freewubi.config",getenv("HOME"));
     sprintf(FileName, "%s/.local/freewb/config/config.ini", getenv("HOME"));
     // puts(FileName);
+    FcitxLog(INFO, "func : %s line : %d ini filename: %s ", __FUNCTION__, __LINE__, FileName);
 
     INI *ini = fileToIni(FileName);
     int i = GetIniKeyInt(ini, "Misc", "inputMode", 1);
@@ -2974,6 +2975,7 @@ static boolean LoadFreeWubiGlobalInfo(Fcitxfreewubi *fwb)
     char *ptr, key[128];
     char inifile[256];
     sprintf(inifile, "%s/.config/fcitx/conf/fcitx-freewubi.config", getenv("HOME"));
+    FcitxLog(INFO, "func : %s line : %d ini filename: %s ", __FUNCTION__, __LINE__, inifile);
     INI *ini = fileToIni(inifile);
 
     strcpy(key, GetIniKeyString(ini, "快捷键", "setupOption", "CTRL_KEYCOMMA"));
