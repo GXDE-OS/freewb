@@ -148,15 +148,6 @@ static bool app_is_running()
     return false;
 }
 
-
-
-bool sogou_panel_is_running()
-{
-    return false;
-}
-
-
-
 static QFile logFile;
 static QTextStream logStream;
 static QMutex logMutex;
@@ -214,7 +205,10 @@ int main( int argc, char *argv[] )
 #ifdef BUILD_IN_CAMKE
     run_as_daemon();//将程序初始化为后台守护进程
 #endif
-    if ( app_is_running() ) exit(1);
+    if (app_is_running())
+    {
+        exit(1);
+    }
 
     qSetMessagePattern( "[%{time hh:mm:ss zzz}](%{function}): %{message}" );
 #ifdef BUILD_IN_CAMKE
@@ -233,48 +227,14 @@ int main( int argc, char *argv[] )
     g_cpuType = get_cpu_type();
     g_desktopType = get_desktop_type();
 
-    QApplication app( argc, argv );
-    app.setQuitOnLastWindowClosed( false );
-    if ( g_desktopType == DT_MATE || g_desktopType == DT_UKUI || g_desktopType == DT_DEEPIN )
-    {
-        app.setApplicationName( "极点五笔" );
-    }
-    else
-    {
-        app.setApplicationName( "Freewb" );
-    }
+    QApplication app(argc, argv);
+    app.setQuitOnLastWindowClosed(false);
+    app.setApplicationName("Freewb");
 
     Settings::init_const_data_member();
     Settings::load_all_setting_data_from_file();
 
-    // if(Settings::useFreewbFont())
-    // {
-    //     puts("using freewb fonts...");
-    //     QString fntFilePath = "/usr/share/freewb/lib/fonts/NotoSansCJK-Regular.ttc";
-    //     int id = QFontDatabase::addApplicationFont(fntFilePath);
-    //     // 获取字体名称
-    //     QStringList fonts = QFontDatabase::applicationFontFamilies(id);
-    //     QFont font;
-    //     if (!fonts.isEmpty())
-    //     {
-    //         font.setFamily(fonts.first());
-    //         font.setPixelSize(12);
-    //         QApplication::setFont(font);
-    //     }
-    // }
     MainProgram w;
 
     return app.exec();
 }
-
-
-
-
-
-
-
-
-
-
-
-
