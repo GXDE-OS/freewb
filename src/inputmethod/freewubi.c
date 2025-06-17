@@ -229,8 +229,6 @@ static boolean FreeWubiInit(void *arg)
         fwb->table->tableType = FREE_WUBI;
     }
 
-    FreeWubiServiceSwitchImState(FcitxDBusGetConnection(fwb->owner), IM_INTO_FREEWB);
-
     char FileName[256];
     // sprintf(FileName,"%s/.config/fcitx/conf/fcitx-freewubi.config",getenv("HOME"));
     sprintf(FileName, "%s/.local/freewb/config/config.ini", getenv("HOME"));
@@ -2780,11 +2778,6 @@ static void FreeWubiReloadConfig(void *arg)
     FcitxIM *cr_im = FcitxInstanceGetCurrentIM(fwb->owner);
     // printf("ccccccccccccccc   current im :%s\n",cr_im->uniqueName );
     reloadFreewb(fwb);
-
-    if (strcmp(cr_im->uniqueName, "freewb") == 0)
-        FreeWubiServiceSwitchImState(FcitxDBusGetConnection(fwb->owner), IM_INTO_FREEWB);
-    else
-        FreeWubiServiceSwitchImState(FcitxDBusGetConnection(fwb->owner), IM_CLOSE_FREEWB);
 }
 
 static void *FcitxFreeWubiCreate(FcitxInstance *instance)
