@@ -93,9 +93,6 @@ protected slots:
     void slot_create_freewb_panel();
     void slot_delete_freewb_panel();
 
-protected:
-    bool fcitx_service_is_running();
-
 private:
     X11EventMonitor *m_x11EventMonitor;//X11系统事件监视器
 
@@ -114,8 +111,4 @@ private:
     BackupDialog *m_backupDialog;//用户词库与设置备份/恢复窗口
 };
 
-
-
-
 #endif
-

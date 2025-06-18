@@ -8,14 +8,6 @@
 
 MainProgram::MainProgram( QObject *parent ) : QObject( parent )
 {
-//    if ( !fcitx_service_is_running() )
-//    {
-//        qWarning() << "fcitx service isn't running, Freewb quit!";
-//        QCoreApplication::instance()->quit();
-//    }
-
-    //puts("极点后台程序启动.....");
-
     m_x11EventMonitor = new X11EventMonitor( this );
     m_x11EventMonitor->start();
 
@@ -201,23 +193,6 @@ MainProgram::~MainProgram()
         QDBusConnection::disconnectFromBus( FREEWUBI_SETTINGS_BUSNAME );
     }
 }
-
-bool MainProgram::fcitx_service_is_running()
-{
-    QDBusMessage msg = QDBusMessage::createMethodCall( "org.fcitx.Fcitx",
-                                                       "/inputmethod",
-                                                       "org.fcitx.Fcitx.InputMethod",
-                                                       "GetCurrentState" );
-
-    QDBusMessage rep = QDBusConnection::sessionBus().call( msg );
-    if ( rep.type() == QDBusMessage::ReplyMessage )
-    {
-        return true;
-    }
-
-    return false;
-}
-
 
 void MainProgram::create_host_dbus_service()
 {
