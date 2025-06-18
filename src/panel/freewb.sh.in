@@ -4,19 +4,19 @@ mkdir $HOME/.local/freewb -p
 fi
 
 if [ ! -d $HOME/.local/freewb/config ];then
-cp /usr/share/freewb/config $HOME/.local/freewb/ -r
+cp @CMAKE_INSTALL_PREFIX@/share/freewb/config $HOME/.local/freewb/ -r
 fi
 
 if [ ! -d $HOME/.local/freewb/data ];then
-cp /usr/share/freewb/data $HOME/.local/freewb/ -r
+cp @CMAKE_INSTALL_PREFIX@/share/freewb/data $HOME/.local/freewb/ -r
 fi
 
 if [ ! -d $HOME/.local/freewb/skin ];then
-cp /usr/share/freewb/skin $HOME/.local/freewb/ -r
+cp @CMAKE_INSTALL_PREFIX@/share/freewb/skin $HOME/.local/freewb/ -r
 fi
 
 if [ ! -d $HOME/.local/freewb/help ]; then
-cp /usr/share/freewb/help $HOME/.local/freewb/ -r
+cp @CMAKE_INSTALL_PREFIX@/share/freewb/help $HOME/.local/freewb/ -r
 fi
 
 if [ "$1" != "poweron" ]; then
