@@ -262,16 +262,12 @@ QString MainProgram::slot_dbus_test( const QString &text )
 
 void MainProgram::slot_dbus_switch_freewb( int flag )
 {
-
+    qDebug() << "func : " << __FUNCTION__ << ",line : " << __LINE__ << ",flag : " << flag;
     if ( flag == 0 && SysTrayMenu::is_extern_im() ) //极点五笔
     {
-        if ( !m_kimAgent->create_fcitx_panel() ) //只有面板创建成功才认为是完全切换到了极点五笔输入法
-        {
-            SysTrayMenu::set_extern_im( false );
-            m_toolbar->show();
-            //Settings::save_simpTradSwitchEnable_to_fcitx_config_file( false );
-            //m_kimAgent->ReloadConfig();//ReloadConfig信号必须在建立kimpanel面板之后发送
-        }
+        m_kimAgent->create_fcitx_panel();
+        SysTrayMenu::set_extern_im(false);
+        m_toolbar->show();
     }
     else if ( flag == 1 || (flag == 2 && !SysTrayMenu::is_extern_im()) ) //退出极点五笔
     {
@@ -329,10 +325,7 @@ void MainProgram::slot_dbus_switch_internal_input_method( int im )
 //输入法面板程序退出
 void MainProgram::slot_dbus_panel_exit()
 {
-    #ifdef DEBUG
     qDebug() << "Freewb quit!";
-    #endif
-    QCoreApplication::instance()->quit();
 }
 
 //字典查询
@@ -633,4 +626,3 @@ void MainProgram::slot_dbus_set_recode_calib_flg( int flg )//切换重码上屏�
 }
 
 /*****************************************************************************************************/
-
