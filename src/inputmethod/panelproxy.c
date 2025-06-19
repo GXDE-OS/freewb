@@ -789,6 +789,14 @@ DBusHandlerResult FreeWubiPanelProxyDBusFilter(DBusConnection* connection, DBusM
         FcitxLog(DEBUG, "ReloadConfig");
         FcitxInstanceReloadConfig(instance);
         return DBUS_HANDLER_RESULT_HANDLED;
+    } else if (dbus_message_is_signal(msg, FREEWUBI_PANEL_INTERFACE, "SwitchFullWidth")) {
+        FcitxLog(DEBUG, "SwitchFullWidth");
+        FcitxUIUpdateStatus(instance, "fullwidth");
+        return DBUS_HANDLER_RESULT_HANDLED;
+    } else if (dbus_message_is_signal(msg, FREEWUBI_PANEL_INTERFACE, "SwitchPunctuation")) {
+        FcitxLog(DEBUG, "SwitchPunctuation");
+        FcitxUIUpdateStatus(instance, "punc");
+        return DBUS_HANDLER_RESULT_HANDLED;
     }
 
     return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;

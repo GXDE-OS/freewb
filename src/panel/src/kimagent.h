@@ -47,6 +47,8 @@ Q_SIGNALS:
     void ReloadConfig();
     void SelectCandidate( int index );
     void TriggerProperty( const QString &key );
+    void SwitchPunctuation();
+    void SwitchFullWidth();
 
     //以下信号是接收到fcitx对应的信号后转发出去的程序内部信号
     void signal_Enable( bool );

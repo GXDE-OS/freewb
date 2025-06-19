@@ -1084,7 +1084,7 @@ void ToolbarWin::on_btnCharWidth_clicked()
     }
     update_char_width_mode_ico(s_charWidthMode);
     //slot_update_char_width_mode_ico();
-    //emit signal_fcitx_switch_char_width( "/Fcitx/fullwidth" );
+    emit signal_fcitx_switch_char_width( "/Fcitx/fullwidth" );
 }
 
 void ToolbarWin::update_char_width_mode_ico( CharWidthMode charWidth )
@@ -1117,7 +1117,7 @@ void ToolbarWin::on_btnMark_clicked()
     }
 
     update_mark_mode_ico(s_markMode);
-    //emit signal_fcitx_switch_mark( "/Fcitx/punc" );
+    emit signal_fcitx_switch_mark( "/Fcitx/punc" );
 }
 
 void ToolbarWin::update_mark_mode_ico( MarkMode markMode )

@@ -68,8 +68,10 @@ MainProgram::MainProgram( QObject *parent ) : QObject( parent )
     connect( m_toolbar, &ToolbarWin::signal_fcitx_switch_inputmethod_1, m_kimAgent, &KimAgent::ReloadConfig );
     connect( m_toolbar, &ToolbarWin::signal_fcitx_switch_inputmethod, m_kimAgent, &KimAgent::TriggerProperty );
     connect( m_toolbar, &ToolbarWin::signal_fcitx_switch_char_font, m_kimAgent, &KimAgent::TriggerProperty );
-    connect( m_toolbar, &ToolbarWin::signal_fcitx_switch_char_width, m_kimAgent, &KimAgent::TriggerProperty );
-    connect( m_toolbar, &ToolbarWin::signal_fcitx_switch_mark, m_kimAgent, &KimAgent::TriggerProperty );
+
+    connect( m_toolbar, &ToolbarWin::signal_fcitx_switch_char_width, m_kimAgent,  &KimAgent::SwitchFullWidth );
+
+    connect( m_toolbar, &ToolbarWin::signal_fcitx_switch_mark, m_kimAgent, &KimAgent::SwitchPunctuation );
     connect( m_toolbar, &ToolbarWin::signal_switch_char_font, m_kimAgent, &KimAgent::ReloadConfig );
     connect( m_toolbar, &ToolbarWin::signal_switch_char_set, m_kimAgent, &KimAgent::ReloadConfig );
 
