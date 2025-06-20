@@ -1584,6 +1584,7 @@ puts("8888888");
                             strCodeInput[1] = '\0';
                             FcitxInputStateSetRawInputBufferSize(input, 1);
                             FreeWubiResetInputState(FreeWubiGetInputState());
+                            FreeWubiPanelProxyCloseInputWindow();
                             return IRV_DO_NOTHING;
                         }
                     }
