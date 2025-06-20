@@ -2796,6 +2796,8 @@ static void *FcitxFreeWubiCreate(FcitxInstance *instance)
         FcitxLog(INFO,"freewb is not running,will exec sh to start freewb.");
         run_freewb_panel();
     }
+    run_freewb_panel();
+
     FreeWubiPanelProxyInitializeInstance(instance);
     FreeWubiPanelProxyOnTriggerOn();
 
