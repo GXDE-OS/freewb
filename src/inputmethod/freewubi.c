@@ -177,37 +177,6 @@ void freeGetOption(Fcitxfreewubi *fwb)
     free(inifile);
 }
 
-static boolean isFreeWubiRunning()
-{
-    char lock_file[] = "/tmp/fcitx-freewb.pid";
-    struct flock fl = {
-        .l_type = F_WRLCK,
-        .l_whence = SEEK_SET,
-        .l_start = 0,
-        .l_len = 0
-    };
-
-    int fd;
-    fd = open(lock_file, O_RDWR);
-    if (fd < 0)
-    {
-        fprintf(stderr,"can not open %s :%s\n", lock_file, strerror(errno));
-        return false;
-    }
-
-    boolean is_running = false;
-    if (fcntl(fd, F_GETLK, &fl) < 0) {
-        fprintf(stderr, "Lock check failed for %s: %s\n", lock_file, strerror(errno));
-    } else if (fl.l_type == F_UNLCK) {
-        is_running = false;
-    } else {
-        is_running = true;
-    }
-
-    close(fd);
-    return is_running;
-}
-
 void run_freewb_panel()
 {
     char panelBin[512] = {0};
@@ -2790,12 +2759,6 @@ static void *FcitxFreeWubiCreate(FcitxInstance *instance)
 
     bindtextdomain("fcitx-freewubi", LOCALEDIR);
 
-    if (isFreeWubiRunning()) {
-        FcitxLog(INFO,"freewb is running...");
-    } else {
-        FcitxLog(INFO,"freewb is not running,will exec sh to start freewb.");
-        run_freewb_panel();
-    }
     run_freewb_panel();
 
     FreeWubiPanelProxyInitializeInstance(instance);
