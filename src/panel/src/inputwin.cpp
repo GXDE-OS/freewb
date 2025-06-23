@@ -971,14 +971,7 @@ qDebug()<< "快捷键捕捉……………";
 
     if ( oti == OTI_LOGO )
     {
-        if ( g_cpuType == CT_X86 )
-        {
-            tips = "【极点五笔Linux版】";
-        }
-        else
-        {
-            tips = "【极点五笔银河麒麟版】";
-        }
+        tips = "【极点五笔银河麒麟版】";
     }
     else if ( oti == OTI_MOUSE_MENU )
     {
@@ -1253,14 +1246,7 @@ qDebug()<< "快捷键捕捉……………";
 
     if ( tips.isEmpty() )
     {
-        if ( g_cpuType == CT_X86 )
-        {
-            tips = "【极点五笔Linux版】";
-        }
-        else
-        {
-            tips = "【极点五笔银河麒麟版】";
-        }
+        tips = "【极点五笔银河麒麟版】";
     }
     ui->labelPrompt->setText( tips );
 }
