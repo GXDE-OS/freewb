@@ -225,7 +225,6 @@ static boolean FreeWubiInit(void *arg)
     free(ini);
     ini = NULL;
 
-    FreeWubiServiceSwitchFreeIm(FcitxDBusGetConnection(fwb->owner), fwb->table->tableType);
     fwb->bIsAutoEnglish = false;
     return true;
 }
