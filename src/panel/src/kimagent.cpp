@@ -6,10 +6,14 @@
 
 KimAgent::KimAgent( QObject *parent ) : QObject( parent )
 {
+    create_fcitx_panel();
 }
 
 
-KimAgent::~KimAgent() = default;
+KimAgent::~KimAgent()
+{
+    delete_fcitx_panel();
+}
 
 
 int KimAgent::create_fcitx_panel()

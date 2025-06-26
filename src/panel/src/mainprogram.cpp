@@ -49,7 +49,7 @@ MainProgram::MainProgram( QObject *parent ) : QObject( parent )
     connect( m_kimAgent, &KimAgent::signal_ExecMenu, m_inputWin, &InputWin::slot_kim_ExecMenu );
     //m_kimAgent --> m_toolbar
     connect( m_kimAgent, &KimAgent::signal_UpdateProperty, m_toolbar, &ToolbarWin::slot_kim_UpdateProperty );
-    connect( m_kimAgent, &KimAgent::signal_RegisterProperties, m_toolbar, &ToolbarWin::slot_kim_RegisterProperties );
+    connect( m_kimAgent, &KimAgent::signal_RegisterProperties,  m_toolbar, &ToolbarWin::slot_kim_RegisterProperties );
 
     //输入面板发送的信号
     //m_inputWin --> m_kimAgent
@@ -212,10 +212,6 @@ void MainProgram::create_host_dbus_service()
 
 void MainProgram::slot_create_freewb_panel()
 {
-#ifdef DEBUG
-    puts("show tool-bar 00000000000000\n");
-#endif
-    m_kimAgent->create_fcitx_panel();
     if ( !Settings::get_hide_toolbar_flg() )
     {
         m_toolbar->show();
@@ -224,7 +220,6 @@ void MainProgram::slot_create_freewb_panel()
 
 void MainProgram::slot_delete_freewb_panel()
 {
-    m_kimAgent->delete_fcitx_panel();
     m_toolbar->hide();
     m_inputWin->hide();
 }
@@ -242,7 +237,6 @@ void MainProgram::slot_dbus_switch_freewb( int flag )
     qDebug() << "func : " << __FUNCTION__ << ",line : " << __LINE__ << ",flag : " << flag;
     if ( flag == 0 && SysTrayMenu::is_extern_im() ) //极点五笔
     {
-        m_kimAgent->create_fcitx_panel();
         SysTrayMenu::set_extern_im(false);
         m_toolbar->show();
     }
@@ -254,7 +248,6 @@ void MainProgram::slot_dbus_switch_freewb( int flag )
         SysTrayMenu::set_extern_im( true );
         Settings::save_simpTradSwitchEnable_to_fcitx_config_file( true );
         m_kimAgent->ReloadConfig();//ReloadConfig信号必须在删除kimpanel面板之前发送
-        m_kimAgent->delete_fcitx_panel();
         m_toolbar->hide();
         m_inputWin->hide();
     }
