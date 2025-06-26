@@ -303,6 +303,7 @@ void MainProgram::slot_dbus_switch_internal_input_method( int im )
 void MainProgram::slot_dbus_panel_exit()
 {
     qDebug() << "Freewb quit!";
+    slot_delete_freewb_panel();
 }
 
 //字典查询
