@@ -1020,7 +1020,6 @@ void ToolbarWin::fcitx_charWidth_updated( const QString &param )
     }
 
     slot_update_char_width_mode_ico();
-    //emit signal_btn_charWidth_clicked();//通知输入面板同步更新字符宽度模式
 }
 
 
@@ -1083,7 +1082,7 @@ void ToolbarWin::on_btnCharWidth_clicked()
         Sound::play_sound( SOUND_LETTER );
     }
     update_char_width_mode_ico(s_charWidthMode);
-    //slot_update_char_width_mode_ico();
+    emit signal_btn_charWidth_clicked();//通知输入面板同步更新字符宽度模式
     emit signal_fcitx_switch_char_width( "/Fcitx/fullwidth" );
 }
 
@@ -1105,18 +1104,13 @@ void ToolbarWin::update_char_width_mode_ico( CharWidthMode charWidth )
 
 void ToolbarWin::on_btnMark_clicked()
 {
-//    if ( get_input_mode() == IM_ENGLISH )
-//    {
-//        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
-//        return;
-//    }
-
     if ( Settings::get_ui_audio_effect_flg() )
     {
         Sound::play_sound( SOUND_LETTER );
     }
 
     update_mark_mode_ico(s_markMode);
+    emit signal_btn_mark_clicked();
     emit signal_fcitx_switch_mark( "/Fcitx/punc" );
 }
 
