@@ -664,7 +664,7 @@ void FreeWubiPanelProxyShowInputWindow()
                 text[nTexts] = strdup("");
             }
         }
-        // FcitxLog(DEBUG, "Labels %d, Texts %d, CMB:%s", nLabels, nTexts, cmb);
+        FcitxLog(DEBUG, "Labels %d, Texts %d, CMB:%s", nLabels, nTexts, cmb);
         if (nTexts == 0) {
             FreeWubiPanelProxyShowLookupTable(false);
         } else {
