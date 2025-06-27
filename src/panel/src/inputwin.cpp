@@ -848,6 +848,7 @@ void InputWin::set_candidate_text( int idx, const QString &label, const QString 
 {
     Q_ASSERT( idx < MAX_CANDIDATE_WORD_COUNT );
 
+    qDebug() << "label : " << label << ",wordText : " << wordText << ",promptText : " << promptText;
     CandidateItem *item = nullptr;
 
     if ( m_displayMode == CWDM_ONE_ROW )
