@@ -1261,7 +1261,9 @@ puts("8888888");
                     adjustOrder(FcitxDBusGetConnection(fwb->owner), table, table->WubiDict, tableCandWord->candWord.autoPhrase->strHZ, strCodeInput);
                 }
 
-                return FreeWubiGetCandWords(fwb);
+                FreeWubiGetCandWords(fwb);
+                FreeWubiPanelProxyShowInputWindow();
+                return IRV_DO_NOTHING;
             } // adjust order
         }
         else if (state == FcitxKeyState_Ctrl && digitalNumberTrans(sym) <= 10 && !fwb->bIsTempEnglish)
