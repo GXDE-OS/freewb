@@ -315,6 +315,14 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
         return IRV_DO_NOTHING;
     }
 
+    // 如该配置文件中禁用了所有的快捷键,那证明所有的快捷键都交给fcitx进行处理或者不出里
+    // 此时极点五笔输入法不再处理任何快捷键信息
+    // 如果是快捷键的话,那state一定是等于FcitxKeyState_None的
+    if ((state != FcitxKeyState_None && fwb->config.bDisableHk))
+    {
+        return IRV_FLAG_FORWARD_KEY;
+    }
+
     if (fwb->bisDelNumber)
     {
         if (state == FcitxKeyState_None && sym >= '0' && sym <= '9')
@@ -451,11 +459,6 @@ puts("8888888");
         }
     }
 
-    //if ((state==FcitxKeyState_Ctrl && sym==32) || (state != FcitxKeyState_None && fwb->config.bDisableHk))
-    if ((state != FcitxKeyState_None && fwb->config.bDisableHk))
-    {
-        return IRV_FLAG_FORWARD_KEY;
-    }
     if (FcitxHotkeyIsHotKey(sym, state, fwb->config.hkSwitchFreeim))
     {
         table->tableType = (table->tableType + 1) % 3;
