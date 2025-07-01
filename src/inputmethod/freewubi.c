@@ -335,8 +335,12 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                     fwb->bIsTableDelPhrase = false;
                     FcitxInputStateSetIsDoInputOnly(input, false);
                     if (recTemp)
+                    {
                         FreeWubiServiceDeleteUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 1, recTemp->strHZ, recTemp->strCode);
-                    return FreeWubiGetCandWords(fwb);
+                    }
+                    FreeWubiGetCandWords(fwb);
+                    FreeWubiPanelProxyShowInputWindow();
+                    return IRV_DO_NOTHING;
                 }
             }
         }
