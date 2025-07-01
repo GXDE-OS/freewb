@@ -195,22 +195,28 @@ char* matchTime(char* str){
 }
 int isPuncKey(FcitxKeySym sym)
 {
-    if(sym == '<'){
+    if(sym == '<')
+    {
         return Key_Angle_bracket;
     }
-    else if(sym == '\''){
+    else if(sym == '\'')
+    {
         return Key_Point_number;
     }
-    else if(sym == '\"'){  
+    else if(sym == '\"')
+    {
         return Key_quotation_marks;
     }
-    else if(sym == '{' ){  
+    else if(sym == '{' )
+    {
         return Key_big_parantheses;
     }
-    else if(sym == '[' ){  
+    else if(sym == '[' )
+    {
         return Key_Bracket;
     }
-    else if(sym == '(' ){      
+    else if(sym == '(' )
+    {
         return Key_Parentheses;
     }
     else

@@ -500,7 +500,10 @@ puts("8888888");
     }
 
     if (state == FcitxKeyState_None)
+    {
         puncNumber = isPuncKey(sym);
+    }
+
     if (!fwb->bIsTempEnglish && -1 != puncNumber && fwb->config.bUseSmartPunc &&
         !(FcitxCandidateWordPageCount(candList) && FcitxHotkeyIsHotKey(sym, state, fwb->config.hkThirdRecode)))
     {
