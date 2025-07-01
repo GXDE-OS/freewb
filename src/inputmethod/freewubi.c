@@ -281,6 +281,7 @@ int TableFindPhraseByCodeNumAndStr(const TableDict *tableDict, const char *strCo
 
 static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned int state)
 {
+    FcitxLog(INFO,"func : %s, line : %d,sym : %d, state : %d",__FUNCTION__, __LINE__, sym, state);
     Fcitxfreewubi *fwb = (Fcitxfreewubi *)arg;
 
     TableMetaData *table = fwb->table;
