@@ -282,16 +282,6 @@ int TableFindPhraseByCodeNumAndStr(const TableDict *tableDict, const char *strCo
 static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned int state)
 {
     Fcitxfreewubi *fwb = (Fcitxfreewubi *)arg;
-    if (!fwb->bNotFirstStart)
-    { // 如果是第一次启动
-// fwb->bSwichImSeccess =
-// FreeWubiServiceSwitchImState(FcitxDBusGetConnection(fwb->owner), IM_INTO_FREEWB);
-#ifdef DEBUG
-        FcitxLog(INFO, "第一次启动");
-#endif
-        fwb->bNotFirstStart = true;
-    }
-//printf("sym=%d state=%d\n",sym,state);
 
     TableMetaData *table = fwb->table;
     INPUT_RETURN_VALUE retVal;
@@ -3036,8 +3026,6 @@ static void InternalInit(Fcitxfreewubi *freewubi)
     }
     freewubi->bNeedMoveCur = false;
     freewubi->pLastCommitRecord = NULL;
-    freewubi->bNotFirstStart = false;
-    //    freewubi->bSwichImSeccess = false;
 }
 
 boolean reloadFreewb(Fcitxfreewubi *fwb)
