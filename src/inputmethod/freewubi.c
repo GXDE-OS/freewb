@@ -325,7 +325,10 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 index = 9;
             }
             if (index < 0 || index > FcitxCandidateWordGetCurrentWindowSize(candList) - 1)
-                return IRV_DO_NOTHING;
+            {
+                //超出范围的index按键被极点五笔引擎接收,候选次窗口依旧正常显示
+                return IRV_DISPLAY_CANDWORDS;
+            }
             else
             {
                 TABLECANDWORD *tableCandWord = FcitxCandidateWordGetByIndex(candList, index)->priv;
