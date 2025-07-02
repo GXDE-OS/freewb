@@ -196,21 +196,19 @@ static void FreeWubiPanelProxyServiceExistCallback(DBusPendingCall *call, void *
 
 static FreeWubiPanelProxy* freeWubiPanel = NULL;
 void FreeWubiPanelProxyInitializeInstance(FcitxInstance* instance) {
-    if (freeWubiPanel != NULL) {
-        FreeWubiPanelProxyDestroyInstance();
-    }
-
     freeWubiPanel = fcitx_utils_malloc0(sizeof(FreeWubiPanelProxy));
 
     freeWubiPanel->lastCursor = -2;
     freeWubiPanel->iCursorPos = 0;
     freeWubiPanel->owner = instance;
+    freeWubiPanel->messageUp = FcitxMessagesNew();
+    freeWubiPanel->messageDown = FcitxMessagesNew();
     freeWubiPanel->conn = FcitxDBusGetConnection(instance);
-
     if (freeWubiPanel->conn == NULL) {
-        // FcitxLog(ERROR, "DBus Not initialized");
+        FcitxLog(ERROR, "DBus Not initialized");
         return;
     }
+
     DBusError err;
     dbus_error_init(&err);
     dbus_bus_add_match(freeWubiPanel->conn,
@@ -218,7 +216,7 @@ void FreeWubiPanelProxyInitializeInstance(FcitxInstance* instance) {
                         &err);
     dbus_connection_flush(freeWubiPanel->conn);
     if (dbus_error_is_set(&err)) {
-        // FcitxLog(ERROR, "Match Error (%s)", err.message);
+        FcitxLog(ERROR, "Match Error (%s)", err.message);
         return;
     }
 
@@ -229,16 +227,13 @@ void FreeWubiPanelProxyInitializeInstance(FcitxInstance* instance) {
     }
 
     if (!dbus_connection_add_filter(freeWubiPanel->conn, FreeWubiPanelProxyDBusFilter, freeWubiPanel, NULL)) {
-        // FcitxLog(ERROR, "No memory");
+        FcitxLog(ERROR, "No memory");
         return;
     }
 
     DBusObjectPathVTable vtable = {NULL, &FreeWubiPanelProxyDBusEventHandler, NULL, NULL, NULL, NULL };
 
     dbus_connection_register_object_path(freeWubiPanel->conn, FREEWUBI_INPUTMETHOD_OBJECTPATH, &vtable, freeWubiPanel);
-
-    freeWubiPanel->messageUp = FcitxMessagesNew();
-    freeWubiPanel->messageDown = FcitxMessagesNew();
 
     const char* freeWubiPanelServiceName = FREEWUBI_PANEL_SERVICENAME;
     DBusMessage* message = dbus_message_new_method_call(DBUS_SERVICE_DBUS, DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS, "NameHasOwner");
@@ -255,9 +250,8 @@ void FreeWubiPanelProxyInitializeInstance(FcitxInstance* instance) {
                                         NULL);
         dbus_pending_call_unref(call);
     }
-    dbus_connection_flush(freeWubiPanel->conn);
-    dbus_message_unref(message);
 
+    dbus_message_unref(message);
     dbus_error_free(&err);
 }
 
