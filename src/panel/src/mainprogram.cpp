@@ -496,14 +496,15 @@ void MainProgram::slot_dbus_ime_table_load_ok()
 
 void MainProgram::slot_dbus_set_charWidth_and_markMode( int charWidth, int markMode )
 {
+    if(charWidth)
+    {
+        m_toolbar->update_char_width_mode_ico(static_cast<CharWidthMode>(0));
+    }
 
-    if(charWidth) m_toolbar->update_char_width_mode_ico(static_cast<CharWidthMode>(0));
-    if(markMode) m_toolbar->update_mark_mode_ico(static_cast<MarkMode>(0));
-    /*
-    m_toolbar->update_char_width_mode_ico( static_cast<CharWidthMode>(charWidth) );
-    m_toolbar->update_mark_mode_ico( static_cast<MarkMode>(markMode) );
-
-    */
+    if(markMode)
+    {
+        m_toolbar->update_mark_mode_ico(static_cast<MarkMode>(0));
+    }
 }
 
 
