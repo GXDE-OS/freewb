@@ -2533,6 +2533,7 @@ static void FreeWubiSave(void *arg)
 
 static INPUT_RETURN_VALUE FreeWubiKeyBlocker(void *arg, FcitxKeySym sym, unsigned int state)
 {
+    FcitxLog(INFO, "FreeWubiKeyBlocker");
     Fcitxfreewubi *fwb = (Fcitxfreewubi *)arg;
     TableMetaData *table = fwb->table;
 
@@ -2554,9 +2555,12 @@ static INPUT_RETURN_VALUE FreeWubiKeyBlocker(void *arg, FcitxKeySym sym, unsigne
             INPUT_RETURN_VALUE ret = FreeWubiGetCandWord(fwb, candWord);
             if (!(ret & IRV_FLAG_PENDING_COMMIT_STRING))
                 break;
-            FreeWubiInstanceCommitString(
-                instance, FcitxInstanceGetCurrentIC(instance),
-                FcitxInputStateGetOutputString(input));
+            if (sym >= '1' && sym <= '9')
+            {
+                int index = sym - '0';
+                FcitxCandidateWordChooseByIndex(cand_list, index);
+                FreeWubiPanelProxyCloseInputWindow();
+            }
         }
         FcitxInputStateSetRawInputBufferSize(input, 0);
         FcitxInputStateGetRawInputBuffer(input)[0] = '\0';
