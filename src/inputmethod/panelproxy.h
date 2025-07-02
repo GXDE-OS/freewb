@@ -10,5 +10,6 @@ void FreeWubiPanelProxyShowInputWindow();
 void FreeWubiPanelProxyCloseInputWindow();
 void FreeWubiPanelProxyOnTriggerOn();
 void FreeWubiPanelProxyOnTriggerOff();
+void FreeWubiPanelProxyRegisterAllStatus();
 
 #endif

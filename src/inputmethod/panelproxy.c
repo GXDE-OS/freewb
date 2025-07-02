@@ -106,7 +106,6 @@ static void FreeWubiPanelProxyUpdatePreeditCaret(int position);
 static void FreeWubiPanelProxyEnable(boolean toEnable);
 static void FreeWubiPanelProxyRegisterProperties(char *props[], int n);
 static void FreeWubiPanelProxyUpdateProperty(char *prop);
-static void FreeWubiPanelProxyRegisterAllStatus();
 static void FreeWubiPanelProxySetIMStatus();
 static DBusHandlerResult FreeWubiPanelProxyDBusEventHandler(DBusConnection *connection, DBusMessage *message, void *user_data);
 static DBusHandlerResult FreeWubiPanelProxyDBusFilter(DBusConnection *connection, DBusMessage *message, void *user_data);
@@ -208,66 +207,58 @@ void FreeWubiPanelProxyInitializeInstance(FcitxInstance* instance) {
     freeWubiPanel->owner = instance;
     freeWubiPanel->conn = FcitxDBusGetConnection(instance);
 
+    if (freeWubiPanel->conn == NULL) {
+        // FcitxLog(ERROR, "DBus Not initialized");
+        return;
+    }
     DBusError err;
     dbus_error_init(&err);
-    do {
-        if (freeWubiPanel->conn == NULL) {
-            // FcitxLog(ERROR, "DBus Not initialized");
-            break;
-        }
-
-        dbus_bus_add_match(freeWubiPanel->conn,
-                           "type='signal',sender='"FREEWUBI_PANEL_SERVICENAME"',interface='"FREEWUBI_PANEL_INTERFACE"'",
-                           &err);
-        dbus_connection_flush(freeWubiPanel->conn);
-        if (dbus_error_is_set(&err)) {
-            // FcitxLog(ERROR, "Match Error (%s)", err.message);
-            break;
-        }
-
-        int id = FcitxDBusWatchName(instance, FREEWUBI_PANEL_SERVICENAME, freeWubiPanel,
-                                    FreeWubiPanelProxyOwnerChanged, NULL, NULL);
-        if (id == 0) {
-            break;
-        }
-
-        if (!dbus_connection_add_filter(freeWubiPanel->conn, FreeWubiPanelProxyDBusFilter, freeWubiPanel, NULL)) {
-            // FcitxLog(ERROR, "No memory");
-            break;
-        }
-
-        DBusObjectPathVTable vtable = {NULL, &FreeWubiPanelProxyDBusEventHandler, NULL, NULL, NULL, NULL };
-
-        dbus_connection_register_object_path(freeWubiPanel->conn, FREEWUBI_INPUTMETHOD_OBJECTPATH, &vtable, freeWubiPanel);
-
-        freeWubiPanel->messageUp = FcitxMessagesNew();
-        freeWubiPanel->messageDown = FcitxMessagesNew();
-
-        const char* freeWubiPanelServiceName = FREEWUBI_PANEL_SERVICENAME;
-        DBusMessage* message = dbus_message_new_method_call(DBUS_SERVICE_DBUS, DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS, "NameHasOwner");
-        dbus_message_append_args(message, DBUS_TYPE_STRING, &freeWubiPanelServiceName, DBUS_TYPE_INVALID);
-
-        DBusPendingCall *call = NULL;
-        dbus_bool_t reply =
-            dbus_connection_send_with_reply(freeWubiPanel->conn, message,
-                                            &call, DBUS_TIMEOUT_USE_DEFAULT);
-        if (reply == TRUE) {
-            dbus_pending_call_set_notify(call,
-                                         FreeWubiPanelProxyServiceExistCallback,
-                                         freeWubiPanel,
-                                         NULL);
-            dbus_pending_call_unref(call);
-        }
-        dbus_connection_flush(freeWubiPanel->conn);
-        dbus_message_unref(message);
-
-        FreeWubiPanelProxyRegisterAllStatus();
-        dbus_error_free(&err);
+    dbus_bus_add_match(freeWubiPanel->conn,
+                        "type='signal',sender='"FREEWUBI_PANEL_SERVICENAME"',interface='"FREEWUBI_PANEL_INTERFACE"'",
+                        &err);
+    dbus_connection_flush(freeWubiPanel->conn);
+    if (dbus_error_is_set(&err)) {
+        // FcitxLog(ERROR, "Match Error (%s)", err.message);
         return;
-    } while (0);
+    }
+
+    int id = FcitxDBusWatchName(instance, FREEWUBI_PANEL_SERVICENAME, freeWubiPanel,
+                                FreeWubiPanelProxyOwnerChanged, NULL, NULL);
+    if (id == 0) {
+        return;
+    }
+
+    if (!dbus_connection_add_filter(freeWubiPanel->conn, FreeWubiPanelProxyDBusFilter, freeWubiPanel, NULL)) {
+        // FcitxLog(ERROR, "No memory");
+        return;
+    }
+
+    DBusObjectPathVTable vtable = {NULL, &FreeWubiPanelProxyDBusEventHandler, NULL, NULL, NULL, NULL };
+
+    dbus_connection_register_object_path(freeWubiPanel->conn, FREEWUBI_INPUTMETHOD_OBJECTPATH, &vtable, freeWubiPanel);
+
+    freeWubiPanel->messageUp = FcitxMessagesNew();
+    freeWubiPanel->messageDown = FcitxMessagesNew();
+
+    const char* freeWubiPanelServiceName = FREEWUBI_PANEL_SERVICENAME;
+    DBusMessage* message = dbus_message_new_method_call(DBUS_SERVICE_DBUS, DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS, "NameHasOwner");
+    dbus_message_append_args(message, DBUS_TYPE_STRING, &freeWubiPanelServiceName, DBUS_TYPE_INVALID);
+
+    DBusPendingCall *call = NULL;
+    dbus_bool_t reply =
+        dbus_connection_send_with_reply(freeWubiPanel->conn, message,
+                                        &call, DBUS_TIMEOUT_USE_DEFAULT);
+    if (reply == TRUE) {
+        dbus_pending_call_set_notify(call,
+                                        FreeWubiPanelProxyServiceExistCallback,
+                                        freeWubiPanel,
+                                        NULL);
+        dbus_pending_call_unref(call);
+    }
+    dbus_connection_flush(freeWubiPanel->conn);
+    dbus_message_unref(message);
 
     dbus_error_free(&err);
-    free(freeWubiPanel);
 }
 
 
@@ -752,11 +743,12 @@ DBusHandlerResult FreeWubiPanelProxyDBusFilter(DBusConnection* connection, DBusM
     FcitxInputState* input = FreeWubiGetInputState();
     int int0;
     const char* s0 = NULL;
-    if (dbus_message_is_signal(msg, FREEWUBI_PANEL_INTERFACE, "PanelCreated2")) {
-        FreeWubiPanelProxyReset();
-        FreeWubiPanelProxyRegisterAllStatus();
-        return DBUS_HANDLER_RESULT_HANDLED;
-    } else if (dbus_message_is_signal(msg, FREEWUBI_PANEL_INTERFACE, "SelectCandidate")) {
+    // if (dbus_message_is_signal(msg, FREEWUBI_PANEL_INTERFACE, "PanelCreated2")) {
+    //     FreeWubiPanelProxyReset();
+    //     FreeWubiPanelProxyRegisterAllStatus();
+    //     return DBUS_HANDLER_RESULT_HANDLED;
+    // } else 
+    if (dbus_message_is_signal(msg, FREEWUBI_PANEL_INTERFACE, "SelectCandidate")) {
         DBusError error;
         dbus_error_init(&error);
         if (dbus_message_get_args(msg, &error, DBUS_TYPE_INT32, &int0 , DBUS_TYPE_INVALID)) {

@@ -519,7 +519,7 @@ puts("8888888");
         FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), output_str);
         FreeWubiResetInputState(FreeWubiGetInputState());
         fwb->bNeedMoveCur = true;
-        //         FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_Left, FcitxKeyState_None);
+        // FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_Left, FcitxKeyState_None);
         return IRV_CLEAN;
     } // 成对标点
 
@@ -2840,6 +2840,7 @@ static void Fcitx4IMOnChanged(void *arg)
         FcitxLog(INFO,"should activate freewb.");
         FreeWubiServiceSwitchImState(FcitxDBusGetConnection(freewubi->owner), IM_INTO_FREEWB);
         FcitxUISetStatusVisable(freewubi->owner, _("属性设置"), true);
+        FreeWubiPanelProxyRegisterAllStatus();
     }
     else
     {
