@@ -237,14 +237,13 @@ void MainProgram::slot_dbus_switch_freewb( int flag )
     qDebug() << "func : " << __FUNCTION__ << ",line : " << __LINE__ << ",flag : " << flag;
     if ( flag == 0 && SysTrayMenu::is_extern_im() ) //极点五笔
     {
+        qDebug() << "func : " << __FUNCTION__ << ",line : " << __LINE__ << ", show freewb ui";
         SysTrayMenu::set_extern_im(false);
         m_toolbar->show();
     }
     else if ( flag == 1 || (flag == 2 && !SysTrayMenu::is_extern_im()) ) //退出极点五笔
     {
-        #ifdef DEBUG
-        qDebug()<<"退出极点五笔\n";
-        #endif
+        qDebug() << "func : " << __FUNCTION__ << ",line : " << __LINE__ << ", hide freewb ui";
         SysTrayMenu::set_extern_im( true );
         Settings::save_simpTradSwitchEnable_to_fcitx_config_file( true );
         m_kimAgent->ReloadConfig();//ReloadConfig信号必须在删除kimpanel面板之前发送
