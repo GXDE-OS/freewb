@@ -1437,8 +1437,7 @@ void InputWin::slot_kim_ShowLookupTable( bool enable )
 {
     if ( enable )
     {
-        if ( isHidden() && !m_hideCandiWin &&
-             !SysTrayMenu::is_extern_im() )
+        if ( isHidden() && !m_hideCandiWin )
         {
             show();
         }
