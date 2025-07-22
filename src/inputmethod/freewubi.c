@@ -1597,6 +1597,14 @@ puts("8888888");
         FreeWubiResetInputState(FreeWubiGetInputState());
         FreeWubiPanelProxyCloseInputWindow();
     }
+    else if (state == FcitxKey_None && sym == FcitxKey_period && FcitxCandidateWordGetCurrentWindowSize(candList) > 1 && fwb->config.hkAlternativePrevPage[0].sym != FcitxKey_period 
+            && fwb->config.hkAlternativeNextPage[0].sym != FcitxKey_period)
+    {
+        FcitxCandidateWordChooseByIndex(candList, 0);
+        FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), output_str);
+        FreeWubiResetInputState(FreeWubiGetInputState());
+        FreeWubiPanelProxyCloseInputWindow();
+    }
     else if (!FcitxInputStateGetIsInRemind(input) && sym != FcitxKey_comma)
     {
         FcitxInputStateSetShowCursor(input, true);
