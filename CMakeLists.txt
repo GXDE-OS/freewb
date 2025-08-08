@@ -3,7 +3,7 @@
 # to your addon's real name.
 cmake_minimum_required(VERSION 2.6)
 
-project(fcitx-freewubi)
+project(freewb)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(OS_TYPE "Linux")
