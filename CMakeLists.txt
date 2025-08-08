@@ -44,9 +44,6 @@ if(ENABLE_SUPPORT_FCITX4)
 endif()
 
 add_definitions("-DLOCALEDIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\"")
-
-install( DIRECTORY ${PROJECT_SOURCE_DIR}/help
-         DESTINATION /usr/share/freewb )
  
 configure_file(config.h.in ${CMAKE_SOURCE_DIR}/include/config.h
   IMMEDIATE @ONLY)
@@ -56,3 +53,4 @@ configure_file(config.h.in ${CMAKE_SOURCE_DIR}/include/config.h
 add_subdirectory(po)
 add_subdirectory(src)
 add_subdirectory(data)
+add_subdirectory(help)
