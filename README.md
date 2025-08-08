@@ -16,9 +16,9 @@ sudo apt --fix-broken install
 ```
 ### 2. 编译源码
 ```bash
-git clone https://gitee.com/openkylin/freewb-deb.git
+git clone https://gitee.com/openkylin/freewb.git
 
-cd freewb-deb
+cd freewb
 mkdir build && cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu
 make
@@ -27,7 +27,7 @@ sudo make install
 
 ### 3. fcitx添加极点五笔输入法
 任务栏右键输入法图标选择配置，添加极点五笔输入法
-![Screenshot of Fcitx Configuration](./assets/kylin-fcitx-configtool.png)
+![Screenshot of Fcitx Configuration](./assets/kylin-fcitx-configtool-freewb.png)
 
 ### 4. 重新启动fcitx
 ```
