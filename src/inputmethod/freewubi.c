@@ -177,39 +177,35 @@ void freeGetOption(Fcitxfreewubi *fwb)
     free(inifile);
 }
 
-static boolean isFreewbRuning()
+static boolean isFreeWubiRunning()
 {
     char lock_file[] = "/tmp/fcitx-freewb.pid";
-    struct flock fl;
+    struct flock fl = {
+        .l_type = F_WRLCK,
+        .l_whence = SEEK_SET,
+        .l_start = 0,
+        .l_len = 0
+    };
+
     int fd;
     fd = open(lock_file, O_RDWR);
     if (fd < 0)
     {
-        printf("can not open %s :%s\n", lock_file, strerror(errno));
-        fflush(stdout);
+        fprintf(stderr,"can not open %s :%s\n", lock_file, strerror(errno));
         return false;
     }
 
-    fl.l_type = F_WRLCK;
-    fl.l_start = 0;
-    fl.l_whence = SEEK_SET;
-    fl.l_len = 0;
-
-    if (fcntl(fd, F_GETLK, &fl) < 0)
-    {
-        printf("can not get lock status: %s :%s\n", lock_file, strerror(errno));
-        fflush(stdout);
-        return false;
-    }
-
-    if (fl.l_type == F_WRLCK)
-    {
-        fflush(stdout);
-        return true;
+    boolean is_running = false;
+    if (fcntl(fd, F_GETLK, &fl) < 0) {
+        fprintf(stderr, "Lock check failed for %s: %s\n", lock_file, strerror(errno));
+    } else if (fl.l_type == F_UNLCK) {
+        is_running = false;
+    } else {
+        is_running = true;
     }
 
     close(fd);
-    return false;
+    return is_running;
 }
 
 void run_freewb_panel()
@@ -2801,7 +2797,7 @@ static void *FcitxFreeWubiCreate(FcitxInstance *instance)
 
     bindtextdomain("fcitx-freewubi", LOCALEDIR);
 
-    if (isFreewbRuning()) {
+    if (isFreeWubiRunning()) {
         FcitxLog(INFO,"freewb is running...");
     } else {
         FcitxLog(INFO,"freewb is not running,will exec sh to start freewb.");
@@ -2881,11 +2877,13 @@ static void Fcitx4IMOnChanged(void *arg)
     const char *im_name = im->uniqueName;
     if (strncmp(im_name, "freewb", sizeof("freewb")) == 0)
     {
+        FcitxLog(INFO,"should activate freewb.");
         FreeWubiServiceSwitchImState(FcitxDBusGetConnection(freewubi->owner), IM_INTO_FREEWB);
         FcitxUISetStatusVisable(freewubi->owner, _("属性设置"), true);
     }
     else
     {
+        FcitxLog(INFO,"should deactivate freewb.");
         FreeWubiServiceSwitchImState(FcitxDBusGetConnection(freewubi->owner), IM_CLOSE_FREEWB);
         FcitxUISetStatusVisable(freewubi->owner, _("属性设置"), false);
     }
