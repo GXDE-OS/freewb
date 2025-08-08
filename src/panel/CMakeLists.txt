@@ -50,22 +50,14 @@ target_link_libraries( ${PROJECT_NAME}
                         ${Qt5DBus_LIBRARIES}
                         ${EXTERN_LIBS} )
 
-#安装路径
-set( INSTALL_ROOT_DIR /usr/share/freewb )
 #安装可执行文件
-install( TARGETS ${PROJECT_NAME} DESTINATION /usr/bin )
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
 #安装相关依赖目录
-install( FILES ${PROJECT_SOURCE_DIR}/fcitx-freewb-panel.desktop 
-         DESTINATION /etc/xdg/autostart )
-install( FILES ${PROJECT_SOURCE_DIR}/freewb.sh 
-         DESTINATION /usr/bin
+install(FILES ${PROJECT_SOURCE_DIR}/fcitx-freewb-panel.desktop DESTINATION /etc/xdg/autostart )
+install(FILES ${PROJECT_SOURCE_DIR}/freewb.sh DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
          PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ  GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE )
-install( DIRECTORY ${PROJECT_SOURCE_DIR}/skin 
-         DESTINATION ${INSTALL_ROOT_DIR} )
-install( DIRECTORY ${PROJECT_SOURCE_DIR}/sound 
-         DESTINATION ${INSTALL_ROOT_DIR} )
-install( DIRECTORY ${PROJECT_SOURCE_DIR}/data 
-         DESTINATION ${INSTALL_ROOT_DIR} )
-install( DIRECTORY ${PROJECT_SOURCE_DIR}/config 
-         DESTINATION ${INSTALL_ROOT_DIR} )
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/skin DESTINATION ${CMAKE_INSTALL_PREFIX}/share/freewb)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/sound DESTINATION ${CMAKE_INSTALL_PREFIX}/share/freewb)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION ${CMAKE_INSTALL_PREFIX}/share/freewb)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/config DESTINATION ${CMAKE_INSTALL_PREFIX}/share/freewb)
 
