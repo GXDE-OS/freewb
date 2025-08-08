@@ -221,7 +221,6 @@ static boolean FreeWubiInit(void *arg)
 {
     Fcitxfreewubi *fwb = (Fcitxfreewubi *)arg;
     freeGetOption(fwb);
-    run_freewb_panel(); // 防止面板没有启动
     if (!fwb->table)
     {
         fwb->table = fcitx_utils_new(TableMetaData);
