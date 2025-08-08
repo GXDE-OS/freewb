@@ -275,7 +275,7 @@ void FreeWubiPanelProxyOwnerChanged(void* user_data, void* arg, const char* serv
     /* old die and no new one */
     if (strcmp(serviceName, FREEWUBI_PANEL_SERVICENAME) == 0) {
         if (strlen(oldName) > 0 && strlen(newName) == 0) {
-            FcitxLog(ERROR, "The FreeWubi UI service is unavailable!");
+            FcitxLog(ERROR, "The FreeWubi UI service is unavailable! old name is :%s, new name is :%s", oldName, newName);
         }
     }
 }
