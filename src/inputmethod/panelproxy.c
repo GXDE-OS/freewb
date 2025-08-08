@@ -180,7 +180,6 @@ static void SetIMIcon(FcitxInstance* instance, char** prop)
 
 typedef struct {
     FcitxInstance* owner;
-    FcitxAddon* addon;
     DBusConnection* conn;
     int iOffsetY;
     int iOffsetX;
@@ -204,7 +203,6 @@ void FreeWubiPanelProxyInitializeInstance(FcitxInstance* instance) {
 
     freeWubiPanel = fcitx_utils_malloc0(sizeof(FreeWubiPanelProxy));
 
-    freeWubiPanel->addon = FcitxAddonsGetAddonByName(FcitxInstanceGetAddons(instance), "fcitx-freeWubiPanel-ui");
     freeWubiPanel->lastCursor = -2;
     freeWubiPanel->iCursorPos = 0;
     freeWubiPanel->owner = instance;
