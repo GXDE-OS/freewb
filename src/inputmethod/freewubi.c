@@ -1589,7 +1589,7 @@ puts("8888888");
 
     if (fwb->bIsTableDelPhrase || fwb->bIsTableAdjustOrder)
         FcitxInputStateSetShowCursor(input, false);
-    else if (state == FcitxKey_None && sym == FcitxKey_comma && FcitxCandidateWordGetCurrentWindowSize(candList) > 1 && fwb->config.hkAlternativePrevPage[0].sym != FcitxKey_comma 
+    else if (state == FcitxKey_None && sym == FcitxKey_comma && FcitxCandidateWordGetCurrentWindowSize(candList) >= 1 && fwb->config.hkAlternativePrevPage[0].sym != FcitxKey_comma 
             && fwb->config.hkAlternativeNextPage[0].sym != FcitxKey_comma)
     {
         FcitxCandidateWordChooseByIndex(candList, 0);
@@ -1597,7 +1597,7 @@ puts("8888888");
         FreeWubiResetInputState(FreeWubiGetInputState());
         FreeWubiPanelProxyCloseInputWindow();
     }
-    else if (state == FcitxKey_None && sym == FcitxKey_period && FcitxCandidateWordGetCurrentWindowSize(candList) > 1 && fwb->config.hkAlternativePrevPage[0].sym != FcitxKey_period 
+    else if (state == FcitxKey_None && sym == FcitxKey_period && FcitxCandidateWordGetCurrentWindowSize(candList) >= 1 && fwb->config.hkAlternativePrevPage[0].sym != FcitxKey_period 
             && fwb->config.hkAlternativeNextPage[0].sym != FcitxKey_period)
     {
         FcitxCandidateWordChooseByIndex(candList, 0);
