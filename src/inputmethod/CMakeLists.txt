@@ -36,7 +36,7 @@ endif()
 fcitx_add_addon_full(freewubi DESC ${table_noinstall}
   SOURCES ${fcitx_freewubi_sources}
   EXTRA_PO ${fcitx_freewubi_headers}
-  IM_CONFIG data/freewubi.conf
+  IM_CONFIG freewubi.conf
   LINK_LIBS ${LIBINTL_LIBRARIES}
   ${LIBINTL_LIBRARIES}
   ${DBus1_LIBRARIES})
