@@ -3,6 +3,8 @@
 #include "commdefine.h"
 #include "settings.h"
 
+#include <QDateTime>
+
 //设置窗口样式表
 #define QSS_FILE ":/qss/settingwin.qss"
 
@@ -98,17 +100,14 @@ SettingWin::~SettingWin()
 
 void SettingWin::init_window_appearance()
 {
-    QDate g_buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace( "  ", " 0" ), "MMM dd yyyy");
-    QTime g_buildTime = QTime::fromString( __TIME__ );
+    const QString buildDateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
     setWindowFlags(Qt::WindowStaysOnTopHint|Qt::Tool);
   
     setWindowIcon( QIcon(":/image/setting/logo.png") );
     setWindowTitle( "极点设置" );
     //setFont(Settings::get_candidate_text_font());
 
-    ui->labelVersionNum->setText( QString("v3.0  %1 %2")
-                                  .arg(g_buildDate.toString("yyyy-MM-dd"))
-                                  .arg(g_buildTime.toString("hh:mm:ss")) );
+    ui->labelVersionNum->setText( QString("v3.0  %1").arg(buildDateTime));
     ui->labelVersion->setText( "极点五笔麒麟版" );
     ui->labelCopyright2->setText( VERSION_X86 );
 
