@@ -2803,22 +2803,15 @@ static void *FcitxFreeWubiCreate(FcitxInstance *instance)
 
     bindtextdomain("fcitx-freewubi", LOCALEDIR);
 
+    if (isFreewbRuning()) {
+        FcitxLog(INFO,"freewb is running...");
+    } else {
+        FcitxLog(INFO,"freewb is not running,will exec sh to start freewb.");
+        run_freewb_panel();
+    }
     FreeWubiPanelProxyInitializeInstance(instance);
     FreeWubiPanelProxyOnTriggerOn();
 
-    int times = 0;
-    while (isFreewbRuning())
-    {
-        FreeWubiServiceExitFreewbPanel(FcitxDBusGetConnection(freewubi->owner));
-        sleep(1);
-        if (times++ > 5)
-        {
-            FcitxLog(ERROR, _("can not exit pannel,please kill panel manually!(may execute 'killall FreeWB')"));
-            return NULL;
-        }
-    }
-    run_freewb_panel();
-    //    sleep(5);
     InternalInit(freewubi);
     FcitxIMEventHook imhook = {Fcitx4IMOnChanged, freewubi};
     FcitxInstanceRegisterIMChangedHook(freewubi->owner, imhook);
