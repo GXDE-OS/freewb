@@ -41,10 +41,6 @@
 "<br/>－感谢银河麒麟操作系统团队的技术支持</font></body></html>"
 
 
-static QDate g_buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace( "  ", " 0" ), "MMM dd yyyy");
-static QTime g_buildTime = QTime::fromString( __TIME__ );
-
-
 SettingWin::SettingWin(QWidget *parent) : QWidget(parent), ui(new Ui::SettingWin)
 {
     ui->setupUi(this);
@@ -102,6 +98,8 @@ SettingWin::~SettingWin()
 
 void SettingWin::init_window_appearance()
 {
+    QDate g_buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace( "  ", " 0" ), "MMM dd yyyy");
+    QTime g_buildTime = QTime::fromString( __TIME__ );
     setWindowFlags(Qt::WindowStaysOnTopHint|Qt::Tool);
   
     setWindowIcon( QIcon(":/image/setting/logo.png") );
