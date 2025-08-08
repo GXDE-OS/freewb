@@ -54,11 +54,9 @@
 #include "panelproxy.h"
 #include "inputstate.h"
 
-#define MAX_TABLE_INPUT 50
 
 #define SOUND_FILE_PATH "/usr/share/freewb/sound"
-#define UBUNTU_KQLIN "ukui"
-#define DEEPIN ""
+
 static const char *soundData[SOUND_NUM] =
     {
         "letter.wav", // SOUND_LETTER
