@@ -1,5 +1,6 @@
 #include "freewbConversionTool.h"
 
+#if defined(__LINUX__) && defined(__FCITX4__)
 #include "../inputmethod/freedict.h"
 #define CHECK_OPTION(str, x) (strstr((str), strConst[x]) == (str))
 
@@ -171,7 +172,8 @@ int txt2mb(char *txtPath, char *mbPath, int *HZcount)
     }
     if (bRule)
     {
-        char *strRules[3] = {"e2=p11+p12+p21+p22", "e3=p11+p21+p31+p32", "a4=p11+p21+p31+n11"};
+        static const char *const strRules[3] = {"e2=p11+p12+p21+p22", "e3=p11+p21+p31+p32", "a4=p11+p21+p31+n11"};
+        char ruleLine[128];
         int iCodeLength = 4;
         int iTemp = 0;
         rule = (RULE *)malloc(sizeof(RULE) * (iCodeLength - 1));
@@ -180,7 +182,9 @@ int txt2mb(char *txtPath, char *mbPath, int *HZcount)
         {
 
             rule[iTemp].rule = (RULE_RULE *)malloc(sizeof(RULE_RULE) * iCodeLength);
-            buf = strRules[iTemp];
+            strncpy(ruleLine, strRules[iTemp], sizeof(ruleLine) - 1);
+            ruleLine[sizeof(ruleLine) - 1] = '\0';
+            buf = ruleLine;
             i = strlen(buf) - 1;
 
             while ((i >= 0) && (buf[i] == ' ' || buf[i] == '\n' || buf[i] == '\r'))
@@ -603,7 +607,7 @@ int mb2txt(char *txtPath, char *mbPath, int *HZcount)
             free(strCode);
             strCode = NULL;
         }
-        strCode = malloc(sizeof(int8_t) * iTemp);
+        strCode = (char *)malloc(sizeof(int8_t) * iTemp);
         size = fread(strCode, sizeof(int8_t), iTemp, fpMB);
         CHECK_LOAD_TABLE_ERROR(iTemp);
         recTemp = (RECORD *)fcitx_utils_malloc0(sizeof(RECORD));
@@ -617,7 +621,7 @@ int mb2txt(char *txtPath, char *mbPath, int *HZcount)
             free(strHZ);
             strHZ = NULL;
         }
-        strHZ = malloc(sizeof(int8_t) * iTemp);
+        strHZ = (char *)malloc(sizeof(int8_t) * iTemp);
         size = fread(strHZ, sizeof(int8_t), iTemp, fpMB);
         CHECK_LOAD_TABLE_ERROR(iTemp);
 
@@ -730,3 +734,16 @@ int mb2txt(char *txtPath, char *mbPath, int *HZcount)
     fclose(fpMB);
     return 1;
 }
+
+#else
+int mb2txt(char *mbPath, char *txtPath, int *HZcount)
+{
+    return 0;
+}
+
+int txt2mb(char *txtPath, char *mbPath, int *HZcount)
+{
+    return 0;
+}
+
+#endif
