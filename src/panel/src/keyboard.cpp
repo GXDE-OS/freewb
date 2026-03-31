@@ -1,13 +1,18 @@
 #include "keyboard.h"
 
-#include <X11/XKBlib.h>
-
 #include "commdefine.h"
-#include "fakekey/fakekey.h"
 #include "keybutton.h"
 #include "settings.h"
 #include "sound.h"
 #include "ui_keyboard.h"
+
+/*
+ * X11 头文件会定义 Status、Data、index、min、max 等宏，若先于 Qt 包含会破坏
+ * QtCore（例如 qtextstream.h 要求不能在已定义 Status 之后再被包含）。
+ */
+#include <X11/XKBlib.h>
+
+#include "fakekey/fakekey.h"
 
 #define QSS_FILE ":/qss/keyboard.qss"
 #define QSS_CAPS_SHIFT_FLG "background-color: rgba(21, 151, 242, 180)"
@@ -29,7 +34,6 @@ static void init_virtual_keyboard_x11()
     {
         if ((g_x11Dpy = XOpenDisplay(nullptr)) == nullptr)
         {
-            qWarning("failed to open x11 display!");
             return;
         }
 
@@ -37,7 +41,6 @@ static void init_virtual_keyboard_x11()
         {
             if ((g_fk = fakekey_init(g_x11Dpy)) == nullptr)
             {
-                qWarning("failed to init fakekey!");
                 return;
             }
         }
@@ -108,7 +111,6 @@ Keyboard::Keyboard(VirtualKeyboardMode mode, QWidget *parent) : QWidget(parent),
     QFile qssFile(QSS_FILE);
     if (!qssFile.open(QFile::ReadOnly))
     {
-        qWarning() << "open qss file failed!";
     }
     else
     {
@@ -1243,8 +1245,6 @@ void Keyboard::handle_fixed_keyboard_input_clicked(int keyIdx)
     {
         report_key_event_to_x11(value, KEY_EVT_CLICKED);
     }
-
-    // qDebug() << keyIdx << value;
 }
 
 // 处理用户自定义按键字符输入
@@ -1276,8 +1276,6 @@ void Keyboard::handle_userChar_keyboard_input_clicked(int keyIdx)
     {
         report_key_event_to_x11(stdKeyValue, KEY_EVT_CLICKED);
     }
-
-    // qDebug() << keyIdx << stdKeyValue;
 }
 
 void Keyboard::slot_load_setting_data()
