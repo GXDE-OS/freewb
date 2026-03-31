@@ -6,10 +6,8 @@
 ** 　　　托盘菜单．
 ****************************************************************************************/
 
-
 #ifndef SYSTRAYMENU_H
 #define SYSTRAYMENU_H
-
 
 class SysTrayMenu
 {
@@ -20,7 +18,7 @@ public:
 public:
     static bool s_externImFlg;
     static bool is_extern_im();
-    static void set_extern_im( bool flg );
+    static void set_extern_im(bool flg);
 };
 
 #endif

@@ -21,10 +21,9 @@
 #ifndef _FCITX_FREEWUBI_CONFIG_H_
 #define _FCITX_FREEWUBI_CONFIG_H_
 
-#include <libintl.h>
-
 #include <fcitx-config/fcitx-config.h>
 #include <fcitx/ime.h>
+#include <libintl.h>
 
 #define _(x) dgettext("fcitx-freewubi", x)
 

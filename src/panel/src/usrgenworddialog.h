@@ -6,18 +6,18 @@
 **      ，该类设计目的为被MainProgram类所包含实例化，在用户进行自定义造词操作时弹出对话框。
 ******************************************************************************×*********/
 
-
 #ifndef USRGENWORDDIALOG_H
 #define USRGENWORDDIALOG_H
 
-#include <QDialog>
 #include <QDebug>
-#include <QRegExpValidator>
-#include <QMouseEvent>
 #include <QDesktopWidget>
+#include <QDialog>
+#include <QMouseEvent>
+#include <QRegExpValidator>
 #include <QSettings>
 
-namespace Ui {
+namespace Ui
+{
 class UsrGenWordDialog;
 }
 
@@ -33,21 +33,21 @@ signals:
     void signal_user_word_changed();
 
 public slots:
-    void slot_show_dialog( const QString &wordText, const QString &wordCode );
+    void slot_show_dialog(const QString &wordText, const QString &wordCode);
     void slot_userWord_file_saved();
 
 public:
-    void add_user_word( const QString &wordText, const QString &wordCode );
-    void delete_user_word( const QString &wordText, const QString &wordCode );
+    void add_user_word(const QString &wordText, const QString &wordCode);
+    void delete_user_word(const QString &wordText, const QString &wordCode);
 
 protected:
     void init_user_word_file();
 
-    //重载函数，用于窗口拖动
-    void mousePressEvent( QMouseEvent *event );
-    void mouseReleaseEvent( QMouseEvent *event );
-    void mouseMoveEvent( QMouseEvent *event );
-    bool eventFilter( QObject *obj, QEvent *event );
+    // 重载函数，用于窗口拖动
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event);
 
 private slots:
     void on_btnOk_clicked();
@@ -56,8 +56,8 @@ private slots:
 private:
     Ui::UsrGenWordDialog *ui;
 
-    //用于窗口拖动计算
-    bool  m_mouseIsPressed;
+    // 用于窗口拖动计算
+    bool m_mouseIsPressed;
     QPoint m_mouseLastPosition;
     QPoint m_defaultPopPosition;
 

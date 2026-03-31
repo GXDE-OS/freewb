@@ -9,11 +9,11 @@
 #ifndef TEXTFINDDIALOG_H
 #define TEXTFINDDIALOG_H
 
-#include <QDialog>
 #include <QDebug>
+#include <QDialog>
 
-
-namespace Ui {
+namespace Ui
+{
 class TextFindDialog;
 }
 
@@ -22,14 +22,14 @@ class TextFindDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit TextFindDialog( QWidget *parent = nullptr );
+    explicit TextFindDialog(QWidget *parent = nullptr);
     ~TextFindDialog();
 
 signals:
-    void signal_find_text( const QString &text, bool prevFlg, bool caseSensitiveFlg, bool wholeWordMatchFlg );
+    void signal_find_text(const QString &text, bool prevFlg, bool caseSensitiveFlg, bool wholeWordMatchFlg);
 
 public:
-    void set_find_text( const QString &text );
+    void set_find_text(const QString &text);
 
 private slots:
     void on_btnNext_clicked();
@@ -37,7 +37,6 @@ private slots:
 
 private:
     Ui::TextFindDialog *ui;
-
 };
 
 #endif

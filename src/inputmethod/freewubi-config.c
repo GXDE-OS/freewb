@@ -28,7 +28,6 @@ CONFIG_BINDING_REGISTER("基本设置", "alertWhenEmptyCode", bRecodeVoice)
 CONFIG_BINDING_REGISTER("基本设置", "enterClear", bEnterClear)
 CONFIG_BINDING_REGISTER("基本设置", "shiftCommitChar", bShiftCommit)
 
-
 CONFIG_BINDING_REGISTER("快捷键", "tempPinyin", unCommonKey)
 CONFIG_BINDING_REGISTER("快捷键", "tempEnglish", tempEnglishKey)
 CONFIG_BINDING_REGISTER("快捷键", "shortcutInput", QuickInputKey)
@@ -59,9 +58,8 @@ CONFIG_BINDING_REGISTER("候选项", "prevPageKey", hkAlternativePrevPage)
 CONFIG_BINDING_REGISTER("候选项", "nextPageKey", hkAlternativeNextPage)
 CONFIG_BINDING_END()
 
-
 typedef FcitxConfigSyncResult (*FreewbConfigOptionFunc)(FcitxConfigOption *, FcitxConfigSync);
-static void FreewbConfigSyncValue(FcitxGenericConfig* config, FcitxConfigGroup* group, FcitxConfigOption *option, FcitxConfigSync sync);
+static void FreewbConfigSyncValue(FcitxGenericConfig *config, FcitxConfigGroup *group, FcitxConfigOption *option, FcitxConfigSync sync);
 static FcitxConfigSyncResult FreewbConfigOptionInteger(FcitxConfigOption *option, FcitxConfigSync sync);
 static FcitxConfigSyncResult FreewbConfigOptionBoolean(FcitxConfigOption *option, FcitxConfigSync sync);
 static FcitxConfigSyncResult FreewbConfigOptionEnum(FcitxConfigOption *option, FcitxConfigSync sync);
@@ -69,12 +67,13 @@ static FcitxConfigSyncResult FreewbConfigOptionString(FcitxConfigOption *option,
 static FcitxConfigSyncResult FreewbConfigOptionHotkey(FcitxConfigOption *option, FcitxConfigSync sync);
 static FcitxConfigSyncResult FreewbConfigOptionChar(FcitxConfigOption *option, FcitxConfigSync sync);
 
-static void FreewbHotkeySetKey(const char *str, FcitxHotkey * hotkey);
-static boolean FreewbHotkeyParseKey(const char *strKey, FcitxKeySym* sym, unsigned int* state);
+static void FreewbHotkeySetKey(const char *str, FcitxHotkey *hotkey);
+static boolean FreewbHotkeyParseKey(const char *strKey, FcitxKeySym *sym, unsigned int *state);
 //    sstatic int FreewbHotkeyGetKeyList(const char *strKey);
 
 #define FreewbConfigOptionFile FreewbConfigOptionString
-void freeWbConfigBindSync(FcitxGenericConfig* config)
+
+void freeWbConfigBindSync(FcitxGenericConfig *config)
 {
     FcitxConfigFile *cfile = config->configFile;
     FcitxConfigFileDesc *cdesc = NULL;
@@ -84,24 +83,27 @@ void freeWbConfigBindSync(FcitxGenericConfig* config)
 
     cdesc = cfile->fileDesc;
 
-    HASH_FOREACH(groupdesc, cdesc->groupsDesc, FcitxConfigGroupDesc) {
+    HASH_FOREACH(groupdesc, cdesc->groupsDesc, FcitxConfigGroupDesc)
+    {
         FcitxConfigGroup *group = NULL;
         HASH_FIND_STR(cfile->groups, groupdesc->groupName, group);
 
-        HASH_FOREACH(optiondesc, groupdesc->optionsDesc, FcitxConfigOptionDesc) {
+        HASH_FOREACH(optiondesc, groupdesc->optionsDesc, FcitxConfigOptionDesc)
+        {
             FcitxConfigOption *option = NULL;
 
             if (group)
             {
                 HASH_FIND_STR(group->options, optiondesc->optionName, option);
-            }  
+            }
             FreewbConfigSyncValue(config, group, option, Raw2Value);
 
-//printf("%s:%s=%s\n",groupdesc->groupName,optiondesc->optionName,option->rawValue);
+            // printf("%s:%s=%s\n",groupdesc->groupName,optiondesc->optionName,option->rawValue);
         }
     }
 }
-void FreewbConfigSyncValue(FcitxGenericConfig* config, FcitxConfigGroup* group, FcitxConfigOption *option, FcitxConfigSync sync)
+
+void FreewbConfigSyncValue(FcitxGenericConfig *config, FcitxConfigGroup *group, FcitxConfigOption *option, FcitxConfigSync sync)
 {
     FcitxConfigOptionDesc *codesc = option->optionDesc;
 
@@ -116,10 +118,11 @@ void FreewbConfigSyncValue(FcitxGenericConfig* config, FcitxConfigGroup* group, 
             option->filter(config, group, option, option->value.untype, sync, option->filterArg);
         }
 
-    switch (codesc->type) {
+    switch (codesc->type)
+    {
 
     case T_Integer:
-    //puts("int====");
+        // puts("int====");
         f = FreewbConfigOptionInteger;
         break;
 
@@ -129,17 +132,17 @@ void FreewbConfigSyncValue(FcitxGenericConfig* config, FcitxConfigGroup* group, 
     case T_Boolean:
 
         f = FreewbConfigOptionBoolean;
-    //puts("bool====");
+        // puts("bool====");
         break;
 
     case T_Enum:
-    //puts("enum===");
+        // puts("enum===");
 
         f = FreewbConfigOptionEnum;
         break;
 
     case T_String:
-    //puts("string===");
+        // puts("string===");
 
         f = FreewbConfigOptionString;
         break;
@@ -148,7 +151,7 @@ void FreewbConfigSyncValue(FcitxGenericConfig* config, FcitxConfigGroup* group, 
         break;
 
     case T_Hotkey:
-    //puts("hotkey====");
+        // puts("hotkey====");
 
         f = FreewbConfigOptionHotkey;
         break;
@@ -161,7 +164,7 @@ void FreewbConfigSyncValue(FcitxGenericConfig* config, FcitxConfigGroup* group, 
         break;
 
     case T_Char:
-    //puts("char===");
+        // puts("char===");
 
         f = FreewbConfigOptionChar;
         break;
@@ -172,16 +175,19 @@ void FreewbConfigSyncValue(FcitxGenericConfig* config, FcitxConfigGroup* group, 
     if (f)
         r = f(option, sync);
 
-    if (r == SyncInvalid) {
-        if (codesc->rawDefaultValue) {
-            FcitxLog(WARNING, _("Option %s is Invalid, Use Default Value %s"),
-                     option->optionName, codesc->rawDefaultValue);
+    if (r == SyncInvalid)
+    {
+        if (codesc->rawDefaultValue)
+        {
+            FcitxLog(WARNING, _("Option %s is Invalid, Use Default Value %s"), option->optionName, codesc->rawDefaultValue);
             fcitx_utils_free(option->rawValue);
             option->rawValue = strdup(codesc->rawDefaultValue);
 
             if (sync == Raw2Value)
                 f(option, sync);
-        } else {
+        }
+        else
+        {
             FcitxLog(ERROR, _("Option %s is Invalid."), option->optionName);
         }
     }
@@ -190,14 +196,17 @@ void FreewbConfigSyncValue(FcitxGenericConfig* config, FcitxConfigGroup* group, 
         if (option->filter)
             option->filter(config, group, option, option->value.untype, sync, option->filterArg);
 }
+
 FcitxConfigSyncResult FreewbConfigOptionInteger(FcitxConfigOption *option, FcitxConfigSync sync)
 {
     if (!option->value.integer)
         return SyncNoBinding;
 
-    switch (sync) {
+    switch (sync)
+    {
 
-    case Raw2Value: {
+    case Raw2Value:
+    {
         int value = atoi(option->rawValue);
         if (value > option->optionDesc2->constrain.integerConstrain.max || value < option->optionDesc2->constrain.integerConstrain.min)
             return SyncInvalid;
@@ -228,7 +237,8 @@ FcitxConfigSyncResult FreewbConfigOptionBoolean(FcitxConfigOption *option, Fcitx
     if (!option->value.boolvalue)
         return SyncNoBinding;
 
-    switch (sync) {
+    switch (sync)
+    {
 
     case Raw2Value:
 
@@ -261,16 +271,19 @@ FcitxConfigSyncResult FreewbConfigOptionEnum(FcitxConfigOption *option, FcitxCon
 
     FcitxConfigOptionDesc *codesc = option->optionDesc;
 
-    FcitxConfigEnum* cenum = &codesc->configEnum;
+    FcitxConfigEnum *cenum = &codesc->configEnum;
 
     int i = 0;
 
-    switch (sync) {
+    switch (sync)
+    {
 
     case Raw2Value:
 
-        for (i = 0; i < cenum->enumCount; i++) {
-            if (strcmp(cenum->enumDesc[i], option->rawValue) == 0) {
+        for (i = 0; i < cenum->enumCount; i++)
+        {
+            if (strcmp(cenum->enumDesc[i], option->rawValue) == 0)
+            {
                 *option->value.enumerate = i;
                 return SyncSuccess;
             }
@@ -299,19 +312,18 @@ FcitxConfigSyncResult FreewbConfigOptionString(FcitxConfigOption *option, FcitxC
     if (!option->value.string)
         return SyncNoBinding;
 
-    switch (sync) {
+    switch (sync)
+    {
 
     case Raw2Value:
-        if (option->optionDesc2->constrain.stringConstrain.maxLength
-            && strlen(option->rawValue) > option->optionDesc2->constrain.stringConstrain.maxLength)
+        if (option->optionDesc2->constrain.stringConstrain.maxLength && strlen(option->rawValue) > option->optionDesc2->constrain.stringConstrain.maxLength)
             return SyncInvalid;
         fcitx_utils_string_swap(option->value.string, option->rawValue);
 
         return SyncSuccess;
 
     case Value2Raw:
-        if (option->optionDesc2->constrain.stringConstrain.maxLength
-            && strlen(*option->value.string) > option->optionDesc2->constrain.stringConstrain.maxLength)
+        if (option->optionDesc2->constrain.stringConstrain.maxLength && strlen(*option->value.string) > option->optionDesc2->constrain.stringConstrain.maxLength)
             return SyncInvalid;
         fcitx_utils_string_swap(&option->rawValue, *option->value.string);
 
@@ -325,22 +337,26 @@ FcitxConfigSyncResult FreewbConfigOptionString(FcitxConfigOption *option, FcitxC
 
     return SyncInvalid;
 }
+
 FcitxConfigSyncResult FreewbConfigOptionHotkey(FcitxConfigOption *option, FcitxConfigSync sync)
 {
     /* we assume all hotkey can have 2 candidate key */
     if (!option->value.hotkey)
         return SyncNoBinding;
 
-    switch (sync) {
+    switch (sync)
+    {
 
     case Raw2Value:
 
-        if (option->value.hotkey[0].desc) {
+        if (option->value.hotkey[0].desc)
+        {
             free(option->value.hotkey[0].desc);
             option->value.hotkey[0].desc = NULL;
         }
 
-        if (option->value.hotkey[1].desc) {
+        if (option->value.hotkey[1].desc)
+        {
             free(option->value.hotkey[1].desc);
             option->value.hotkey[1].desc = NULL;
         }
@@ -354,13 +370,16 @@ FcitxConfigSyncResult FreewbConfigOptionHotkey(FcitxConfigOption *option, FcitxC
         if (option->rawValue)
             free(option->rawValue);
 
-        if (option->value.hotkey[1].desc) {
-            fcitx_utils_alloc_cat_str(option->rawValue,
-                                      option->value.hotkey[0].desc,
-                                      " ", option->value.hotkey[1].desc);
-        } else if (option->value.hotkey[0].desc) {
+        if (option->value.hotkey[1].desc)
+        {
+            fcitx_utils_alloc_cat_str(option->rawValue, option->value.hotkey[0].desc, " ", option->value.hotkey[1].desc);
+        }
+        else if (option->value.hotkey[0].desc)
+        {
             option->rawValue = strdup(option->value.hotkey[0].desc);
-        } else {
+        }
+        else
+        {
             option->rawValue = strdup("");
         }
         return SyncSuccess;
@@ -372,12 +391,14 @@ FcitxConfigSyncResult FreewbConfigOptionHotkey(FcitxConfigOption *option, FcitxC
 
     return SyncInvalid;
 }
+
 FcitxConfigSyncResult FreewbConfigOptionChar(FcitxConfigOption *option, FcitxConfigSync sync)
 {
     if (!option->value.chr)
         return SyncNoBinding;
 
-    switch (sync) {
+    switch (sync)
+    {
     case Raw2Value:
         *option->value.chr = *option->rawValue;
         return SyncSuccess;
@@ -394,21 +415,22 @@ FcitxConfigSyncResult FreewbConfigOptionChar(FcitxConfigOption *option, FcitxCon
 
     return SyncInvalid;
 }
-void FreewbHotkeySetKey(const char *str, FcitxHotkey * hotkey)
+
+void FreewbHotkeySetKey(const char *str, FcitxHotkey *hotkey)
 {
-    char           *p;
-    char           *strKey;
-    int             i = 0, j = 0, k;
+    char *p;
+    char *strKey;
+    int i = 0, j = 0, k;
 
-    char* strKeys = fcitx_utils_trim(str);
-    if(NULL==strKeys)
+    char *strKeys = fcitx_utils_trim(str);
+    if (NULL == strKeys)
     {
-
     }
 
     p = strKeys;
 
-    for (k = 0; k < 2; k++) {
+    for (k = 0; k < 2; k++)
+    {
         FcitxKeySym sym;
         unsigned int state;
         i = 0;
@@ -419,11 +441,12 @@ void FreewbHotkeySetKey(const char *str, FcitxHotkey * hotkey)
         strKey = strndup(p, i);
 
         strKey[i] = '\0';
-        if (FreewbHotkeyParseKey(strKey, &sym, &state)) {
+        if (FreewbHotkeyParseKey(strKey, &sym, &state))
+        {
             hotkey[j].sym = sym;
             hotkey[j].state = state;
             hotkey[j].desc = fcitx_utils_trim(strKey);
-            j ++;
+            j++;
         }
 
         free(strKey);
@@ -434,7 +457,8 @@ void FreewbHotkeySetKey(const char *str, FcitxHotkey * hotkey)
         p = &p[i + 1];
     }
 
-    for (; j < 2; j++) {
+    for (; j < 2; j++)
+    {
         hotkey[j].sym = 0;
         hotkey[j].state = 0;
         hotkey[j].desc = NULL;
@@ -442,28 +466,33 @@ void FreewbHotkeySetKey(const char *str, FcitxHotkey * hotkey)
 
     free(strKeys);
 }
-boolean FreewbHotkeyParseKey(const char *strKey, FcitxKeySym* sym, unsigned int* state)
+
+boolean FreewbHotkeyParseKey(const char *strKey, FcitxKeySym *sym, unsigned int *state)
 {
-    const char      *p;
-    int             iKey;
-    int             iKeyState = 0;
+    const char *p;
+    int iKey;
+    int iKeyState = 0;
     p = strKey;
-    if (strcasestr(p, "CTRL+")) {
+    if (strcasestr(p, "CTRL+"))
+    {
         iKeyState |= FcitxKeyState_Ctrl;
         p += strlen("CTRL+");
     }
 
-    if (strcasestr(p, "ALT+")) {
+    if (strcasestr(p, "ALT+"))
+    {
         iKeyState |= FcitxKeyState_Alt;
         p += strlen("ALT+");
     }
 
-    if (strcasestr(strKey, "SHIFT+")) {
+    if (strcasestr(strKey, "SHIFT+"))
+    {
         iKeyState |= FcitxKeyState_Shift;
         p += strlen("SHIFT+");
     }
 
-    if (strcasestr(strKey, "SUPER+")) {
+    if (strcasestr(strKey, "SUPER+"))
+    {
         iKeyState |= FcitxKeyState_Super;
         p += strlen("SUPER+");
     }
@@ -479,140 +508,141 @@ boolean FreewbHotkeyParseKey(const char *strKey, FcitxKeySym* sym, unsigned int*
 
     return true;
 }
-typedef struct _KEY_LIST {
+
+typedef struct _KEY_LIST
+{
     /**
      * string name for the key in fcitx
      **/
-    char         *strKey;
+    char *strKey;
     /**
      * the keyval for the key.
      **/
-    FcitxKeySym  code;
+    FcitxKeySym code;
 } KEY_LIST;
-KEY_LIST    freewbKeyList[] = {
-    {"KEY_F1",FcitxKey_F1},
-    {"KEY_F2",FcitxKey_F2},
-    {"KEY_F3",FcitxKey_F3},
-    {"KEY_F4",FcitxKey_F4},
-    {"KEY_F5",FcitxKey_F5},
-    {"KEY_F6",FcitxKey_F6},
-    {"KEY_F7",FcitxKey_F7},
-    {"KEY_F8",FcitxKey_F8},
-    {"KEY_F9",FcitxKey_F9},
-    {"KEY_F10",FcitxKey_F10},
-    {"KEY_F11",FcitxKey_F11},
-    {"KEY_F12",FcitxKey_F12},
-    {"KEY_A",FcitxKey_A},
-    {"KEY_B",FcitxKey_B},
-    {"KEY_C",FcitxKey_C},
-    {"KEY_D",FcitxKey_D},
-    {"KEY_E",FcitxKey_E},
-    {"KEY_F",FcitxKey_F},
-    {"KEY_G",FcitxKey_G},
-    {"KEY_H",FcitxKey_H},
-    {"KEY_I",FcitxKey_I},
-    {"KEY_J",FcitxKey_J},
-    {"KEY_K",FcitxKey_K},
-    {"KEY_L",FcitxKey_L},
-    {"KEY_M",FcitxKey_M},
-    {"KEY_N",FcitxKey_N},
-    {"KEY_O",FcitxKey_O},
-    {"KEY_P",FcitxKey_P},
-    {"KEY_Q",FcitxKey_Q},
-    {"KEY_R",FcitxKey_R},
-    {"KEY_S",FcitxKey_S},
-    {"KEY_T",FcitxKey_T},
-    {"KEY_U",FcitxKey_U},
-    {"KEY_V",FcitxKey_V},
-    {"KEY_W",FcitxKey_W},
-    {"KEY_X",FcitxKey_X},
-    {"KEY_Y",FcitxKey_Y},
-    {"KEY_Z",FcitxKey_Z},
-    {"KEY_HOME",FcitxKey_Home},
-    {"KEY_END",FcitxKey_End},
-    {"KEY_UP",FcitxKey_Up},
-    {"KEY_DOWN",FcitxKey_Down},
-    {"KEY_LEFT",FcitxKey_Left},
-    {"KEY_RIGHT",FcitxKey_Right},
-    {"KEY_BACKQUOTE",FcitxKey_grave},
-    {"KEY_DASH",FcitxKey_minus},
-    {"KEY_EQUAL",FcitxKey_equal},
-    {"KEY_LEFT_BRACKET",FcitxKey_bracketleft},
-    {"KEY_RIGHT_BRACKET",FcitxKey_bracketright},
-    {"KEY_BACK_SLASH",FcitxKey_backslash},
-    {"KEY_SEMICOLON",FcitxKey_semicolon},
-    {"KEY_QUOTE",FcitxKey_apostrophe},
-    {"KEY_COMMA",FcitxKey_comma},
-    {"KEY_PERIOD",FcitxKey_period},
-    {"KEY_SLASH",FcitxKey_slash},
 
-    {"`",FcitxKey_grave},
-    {"-",FcitxKey_minus},
-    {"=",FcitxKey_equal},
-    {"[",FcitxKey_bracketleft},
-    {"]",FcitxKey_bracketright},
-    {"\\",FcitxKey_backslash},
-    {";",FcitxKey_semicolon},
-    {"'",FcitxKey_apostrophe},
-    {",",FcitxKey_comma},
-    {".",FcitxKey_period},
-    {"/",FcitxKey_slash},
-    {"A",FcitxKey_A},
-    {"B",FcitxKey_B},
-    {"C",FcitxKey_C},
-    {"D",FcitxKey_D},
-    {"E",FcitxKey_E},
-    {"F",FcitxKey_F},
-    {"G",FcitxKey_G},
-    {"H",FcitxKey_H},
-    {"I",FcitxKey_I},
-    {"J",FcitxKey_J},
-    {"K",FcitxKey_K},
-    {"L",FcitxKey_L},
-    {"M",FcitxKey_M},
-    {"N",FcitxKey_N},
-    {"O",FcitxKey_O},
-    {"P",FcitxKey_P},
-    {"Q",FcitxKey_Q},
-    {"R",FcitxKey_R},
-    {"S",FcitxKey_S},
-    {"T",FcitxKey_T},
-    {"U",FcitxKey_U},
-    {"V",FcitxKey_V},
-    {"W",FcitxKey_W},
-    {"X",FcitxKey_X},
-    {"Y",FcitxKey_Y},
-    {"Z",FcitxKey_Z},
-    {"KEY_BACKSPACE",FcitxKey_BackSpace},
-    {"KEY_TAB",FcitxKey_Tab},
-    {"KEY_CAPS",FcitxKey_Caps_Lock},
-    {"KEY_ENTER",FcitxKey_Return},
-    {"KEY_INSERT",FcitxKey_Insert},
-    {"KEY_DEL",FcitxKey_Delete},
-    {"KEY_SPACE",FcitxKey_space},
-    {"KEY_ESC",FcitxKey_Escape},
-    {"KEY_LEFT_SHIFT",FcitxKey_Shift_L},
-    {"KEY_RIGHT_SHIFT",FcitxKey_Shift_R},
-    {"KEY_LEFT_CTRL",FcitxKey_Control_L},
-    {"KEY_RIGHT_CTRL",FcitxKey_Control_R},
-    {"KEY_PAGE_UP",FcitxKey_Page_Up},
-    {"KEY_PAGE_DWON",FcitxKey_Page_Down},    
-    
-    
-    {"KEY_NONEs",FcitxKey_None},
-    {"\0",0}
-};
+KEY_LIST freewbKeyList[] = {{"KEY_F1", FcitxKey_F1},
+                            {"KEY_F2", FcitxKey_F2},
+                            {"KEY_F3", FcitxKey_F3},
+                            {"KEY_F4", FcitxKey_F4},
+                            {"KEY_F5", FcitxKey_F5},
+                            {"KEY_F6", FcitxKey_F6},
+                            {"KEY_F7", FcitxKey_F7},
+                            {"KEY_F8", FcitxKey_F8},
+                            {"KEY_F9", FcitxKey_F9},
+                            {"KEY_F10", FcitxKey_F10},
+                            {"KEY_F11", FcitxKey_F11},
+                            {"KEY_F12", FcitxKey_F12},
+                            {"KEY_A", FcitxKey_A},
+                            {"KEY_B", FcitxKey_B},
+                            {"KEY_C", FcitxKey_C},
+                            {"KEY_D", FcitxKey_D},
+                            {"KEY_E", FcitxKey_E},
+                            {"KEY_F", FcitxKey_F},
+                            {"KEY_G", FcitxKey_G},
+                            {"KEY_H", FcitxKey_H},
+                            {"KEY_I", FcitxKey_I},
+                            {"KEY_J", FcitxKey_J},
+                            {"KEY_K", FcitxKey_K},
+                            {"KEY_L", FcitxKey_L},
+                            {"KEY_M", FcitxKey_M},
+                            {"KEY_N", FcitxKey_N},
+                            {"KEY_O", FcitxKey_O},
+                            {"KEY_P", FcitxKey_P},
+                            {"KEY_Q", FcitxKey_Q},
+                            {"KEY_R", FcitxKey_R},
+                            {"KEY_S", FcitxKey_S},
+                            {"KEY_T", FcitxKey_T},
+                            {"KEY_U", FcitxKey_U},
+                            {"KEY_V", FcitxKey_V},
+                            {"KEY_W", FcitxKey_W},
+                            {"KEY_X", FcitxKey_X},
+                            {"KEY_Y", FcitxKey_Y},
+                            {"KEY_Z", FcitxKey_Z},
+                            {"KEY_HOME", FcitxKey_Home},
+                            {"KEY_END", FcitxKey_End},
+                            {"KEY_UP", FcitxKey_Up},
+                            {"KEY_DOWN", FcitxKey_Down},
+                            {"KEY_LEFT", FcitxKey_Left},
+                            {"KEY_RIGHT", FcitxKey_Right},
+                            {"KEY_BACKQUOTE", FcitxKey_grave},
+                            {"KEY_DASH", FcitxKey_minus},
+                            {"KEY_EQUAL", FcitxKey_equal},
+                            {"KEY_LEFT_BRACKET", FcitxKey_bracketleft},
+                            {"KEY_RIGHT_BRACKET", FcitxKey_bracketright},
+                            {"KEY_BACK_SLASH", FcitxKey_backslash},
+                            {"KEY_SEMICOLON", FcitxKey_semicolon},
+                            {"KEY_QUOTE", FcitxKey_apostrophe},
+                            {"KEY_COMMA", FcitxKey_comma},
+                            {"KEY_PERIOD", FcitxKey_period},
+                            {"KEY_SLASH", FcitxKey_slash},
+
+                            {"`", FcitxKey_grave},
+                            {"-", FcitxKey_minus},
+                            {"=", FcitxKey_equal},
+                            {"[", FcitxKey_bracketleft},
+                            {"]", FcitxKey_bracketright},
+                            {"\\", FcitxKey_backslash},
+                            {";", FcitxKey_semicolon},
+                            {"'", FcitxKey_apostrophe},
+                            {",", FcitxKey_comma},
+                            {".", FcitxKey_period},
+                            {"/", FcitxKey_slash},
+                            {"A", FcitxKey_A},
+                            {"B", FcitxKey_B},
+                            {"C", FcitxKey_C},
+                            {"D", FcitxKey_D},
+                            {"E", FcitxKey_E},
+                            {"F", FcitxKey_F},
+                            {"G", FcitxKey_G},
+                            {"H", FcitxKey_H},
+                            {"I", FcitxKey_I},
+                            {"J", FcitxKey_J},
+                            {"K", FcitxKey_K},
+                            {"L", FcitxKey_L},
+                            {"M", FcitxKey_M},
+                            {"N", FcitxKey_N},
+                            {"O", FcitxKey_O},
+                            {"P", FcitxKey_P},
+                            {"Q", FcitxKey_Q},
+                            {"R", FcitxKey_R},
+                            {"S", FcitxKey_S},
+                            {"T", FcitxKey_T},
+                            {"U", FcitxKey_U},
+                            {"V", FcitxKey_V},
+                            {"W", FcitxKey_W},
+                            {"X", FcitxKey_X},
+                            {"Y", FcitxKey_Y},
+                            {"Z", FcitxKey_Z},
+                            {"KEY_BACKSPACE", FcitxKey_BackSpace},
+                            {"KEY_TAB", FcitxKey_Tab},
+                            {"KEY_CAPS", FcitxKey_Caps_Lock},
+                            {"KEY_ENTER", FcitxKey_Return},
+                            {"KEY_INSERT", FcitxKey_Insert},
+                            {"KEY_DEL", FcitxKey_Delete},
+                            {"KEY_SPACE", FcitxKey_space},
+                            {"KEY_ESC", FcitxKey_Escape},
+                            {"KEY_LEFT_SHIFT", FcitxKey_Shift_L},
+                            {"KEY_RIGHT_SHIFT", FcitxKey_Shift_R},
+                            {"KEY_LEFT_CTRL", FcitxKey_Control_L},
+                            {"KEY_RIGHT_CTRL", FcitxKey_Control_R},
+                            {"KEY_PAGE_UP", FcitxKey_Page_Up},
+                            {"KEY_PAGE_DWON", FcitxKey_Page_Down},
+
+                            {"KEY_NONEs", FcitxKey_None},
+                            {"\0", 0}};
 
 int FreewbHotkeyGetKeyList(const char *strKey)
 {
-    int             i;
+    int i;
 
     i = 0;
-    for (;;) {
+    for (;;)
+    {
         if (!freewbKeyList[i].code)
             break;
 
-        if (0==strcasecmp(strKey, freewbKeyList[i].strKey))
+        if (0 == strcasecmp(strKey, freewbKeyList[i].strKey))
             return freewbKeyList[i].code;
         i++;
     }
@@ -625,14 +655,15 @@ int FreewbHotkeyGetKeyList(const char *strKey)
 
 char *FreewbHotkeyGetKeyChar(int sym)
 {
-    int             i;
+    int i;
 
     i = 0;
-    for (;;) {
+    for (;;)
+    {
         if (!freewbKeyList[i].code)
             break;
 
-        if (freewbKeyList[i].code==sym)
+        if (freewbKeyList[i].code == sym)
             return freewbKeyList[i].strKey;
         i++;
     }

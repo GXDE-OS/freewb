@@ -27,7 +27,6 @@
 
 #include "fakekey.h"
 
-
 #define N_MODIFIER_INDEXES (Mod5MapIndex + 1)
 
 typedef unsigned int FkChar32;
@@ -35,38 +34,34 @@ typedef unsigned int FkChar32;
 struct FakeKey
 {
     Display *xdpy;
-    int      min_keycode, max_keycode;
-    int      n_keysyms_per_keycode;
-    KeySym  *keysyms;
-    int      held_keycode;
-    int      held_state_flags;
-    KeyCode  modifier_table[N_MODIFIER_INDEXES];
-    int      shift_mod_index, alt_mod_index, meta_mod_index;
+    int min_keycode, max_keycode;
+    int n_keysyms_per_keycode;
+    KeySym *keysyms;
+    int held_keycode;
+    int held_state_flags;
+    KeyCode modifier_table[N_MODIFIER_INDEXES];
+    int shift_mod_index, alt_mod_index, meta_mod_index;
 };
 
-
-/* utf8_to_ucs4() Borrowed from fontconfig 
+/* utf8_to_ucs4() Borrowed from fontconfig
  *
  * Converts the next Unicode char from src into dst and returns the
  * number of bytes containing the char. src nust be at least len bytes
  * long.
  */
-static int 
-utf8_to_ucs4 (const unsigned char *src_orig,
-              FkChar32	          *dst,
-              int	           len)
+static int utf8_to_ucs4(const unsigned char *src_orig, FkChar32 *dst, int len)
 {
     const unsigned char *src = src_orig;
-    unsigned char 	 s;
-    int		         extra;
-    FkChar32	     result;
+    unsigned char s;
+    int extra;
+    FkChar32 result;
 
     if (len == 0)
         return 0;
-    
+
     s = *src++;
     len--;
-    
+
     if (!(s & 0x80))
     {
         result = s;
@@ -96,7 +91,7 @@ utf8_to_ucs4 (const unsigned char *src_orig,
         result = s & 0x03;
         extra = 4;
     }
-    else if ( ! (s & 0x02))
+    else if (!(s & 0x02))
     {
         result = s & 0x01;
         extra = 5;
@@ -107,7 +102,7 @@ utf8_to_ucs4 (const unsigned char *src_orig,
     }
     if (extra > len)
         return -1;
-    
+
     while (extra--)
     {
         result <<= 6;
@@ -122,17 +117,17 @@ utf8_to_ucs4 (const unsigned char *src_orig,
     return (int)(src - src_orig);
 }
 
-FakeKey*
-fakekey_init(Display *xdpy)
+FakeKey *fakekey_init(Display *xdpy)
 {
-    FakeKey         *fk = NULL;
-    int              event, error, major, minor;
+    FakeKey *fk = NULL;
+    int event, error, major, minor;
     XModifierKeymap *modifiers;
-    int              mod_index;
-    int              mod_key;
-    KeyCode         *kp;
+    int mod_index;
+    int mod_key;
+    KeyCode *kp;
 
-    if (xdpy == NULL) return NULL;
+    if (xdpy == NULL)
+        return NULL;
 
     if (!XTestQueryExtension(xdpy, &event, &error, &major, &minor))
     {
@@ -140,7 +135,7 @@ fakekey_init(Display *xdpy)
     }
 
     fk = malloc(sizeof(FakeKey));
-    memset(fk,0,sizeof(FakeKey));
+    memset(fk, 0, sizeof(FakeKey));
 
     fk->xdpy = xdpy;
 
@@ -151,18 +146,14 @@ fakekey_init(Display *xdpy)
     /* Get the mapping  */
 
     /* TODO: Below needs to be kept in sync with anything else
-   *       that may change the keyboard mapping.
-   *
-   *   case MappingNotify:
-   *    XRefreshKeyboardMapping(&ev.xmapping);
-   *
-   */
+     *       that may change the keyboard mapping.
+     *
+     *   case MappingNotify:
+     *    XRefreshKeyboardMapping(&ev.xmapping);
+     *
+     */
 
-    fk->keysyms = XGetKeyboardMapping(fk->xdpy,
-                                      (unsigned char)fk->min_keycode,
-                                      fk->max_keycode - fk->min_keycode + 1,
-                                      &fk->n_keysyms_per_keycode);
-
+    fk->keysyms = XGetKeyboardMapping(fk->xdpy, (unsigned char)fk->min_keycode, fk->max_keycode - fk->min_keycode + 1, &fk->n_keysyms_per_keycode);
 
     modifiers = XGetModifierMapping(fk->xdpy);
 
@@ -188,13 +179,12 @@ fakekey_init(Display *xdpy)
     {
         if (fk->modifier_table[mod_index])
         {
-            KeySym ks = XKeycodeToKeysym(fk->xdpy,
-                                         fk->modifier_table[mod_index], 0);
+            KeySym ks = XKeycodeToKeysym(fk->xdpy, fk->modifier_table[mod_index], 0);
 
             /*
-       *  Note: ControlMapIndex is already defined by xlib
-       *        ShiftMapIndex
-       */
+             *  Note: ControlMapIndex is already defined by xlib
+             *        ShiftMapIndex
+             */
 
             switch (ks)
             {
@@ -222,38 +212,27 @@ fakekey_init(Display *xdpy)
     return fk;
 }
 
-int
-fakekey_reload_keysyms(FakeKey *fk)
+int fakekey_reload_keysyms(FakeKey *fk)
 {
     if (fk->keysyms)
         XFree(fk->keysyms);
 
-    fk->keysyms = XGetKeyboardMapping(fk->xdpy,
-                                      (unsigned char)fk->min_keycode,
-                                      fk->max_keycode - fk->min_keycode + 1,
-                                      &fk->n_keysyms_per_keycode);
+    fk->keysyms = XGetKeyboardMapping(fk->xdpy, (unsigned char)fk->min_keycode, fk->max_keycode - fk->min_keycode + 1, &fk->n_keysyms_per_keycode);
     return 1;
 }
 
-int 
-fakekey_send_keyevent(FakeKey *fk, 
-                      KeyCode  keycode,
-                      Bool     is_press,
-                      int      flags)
+int fakekey_send_keyevent(FakeKey *fk, KeyCode keycode, Bool is_press, int flags)
 {
     if (flags)
     {
         if (flags & FAKEKEYMOD_SHIFT)
-            XTestFakeKeyEvent(fk->xdpy, fk->modifier_table[ShiftMapIndex],
-                              is_press, CurrentTime);
+            XTestFakeKeyEvent(fk->xdpy, fk->modifier_table[ShiftMapIndex], is_press, CurrentTime);
 
         if (flags & FAKEKEYMOD_CONTROL)
-            XTestFakeKeyEvent(fk->xdpy, fk->modifier_table[ControlMapIndex],
-                              is_press, CurrentTime);
+            XTestFakeKeyEvent(fk->xdpy, fk->modifier_table[ControlMapIndex], is_press, CurrentTime);
 
         if (flags & FAKEKEYMOD_ALT)
-            XTestFakeKeyEvent(fk->xdpy, fk->modifier_table[fk->alt_mod_index],
-                    is_press, CurrentTime);
+            XTestFakeKeyEvent(fk->xdpy, fk->modifier_table[fk->alt_mod_index], is_press, CurrentTime);
 
         XSync(fk->xdpy, False);
     }
@@ -265,26 +244,23 @@ fakekey_send_keyevent(FakeKey *fk,
     return 1;
 }
 
-int
-fakekey_press_keysym(FakeKey *fk, 
-                     KeySym   keysym,
-                     int      flags)
+int fakekey_press_keysym(FakeKey *fk, KeySym keysym, int flags)
 {
     static int modifiedkey;
-    KeyCode    code = 0;
+    KeyCode code = 0;
 
     if ((code = XKeysymToKeycode(fk->xdpy, keysym)) != 0)
     {
-//        printf("got keycode, no remap\n");
+        //        printf("got keycode, no remap\n");
 
         /* we already have a keycode for this keysym */
         /* Does it need a shift key though ? */
         if (XKeycodeToKeysym(fk->xdpy, code, 0) != keysym)
         {
-//            printf("does not equal code for index o, needs shift?\n");
+            //            printf("does not equal code for index o, needs shift?\n");
             /* TODO: Assumes 1st modifier is shifted  */
             if (XKeycodeToKeysym(fk->xdpy, code, 1) == keysym)
-                flags |= FAKEKEYMOD_SHIFT; 	/* can get at it via shift */
+                flags |= FAKEKEYMOD_SHIFT; /* can get at it via shift */
             else
                 code = 0; /* urg, some other modifier do it the heavy way */
         }
@@ -294,16 +270,16 @@ fakekey_press_keysym(FakeKey *fk,
     {
         int index;
 
-//        printf("remapping kbd to get code\n");
+        //        printf("remapping kbd to get code\n");
 
         /* Change one of the last 10 keysyms to our converted utf8,
-       * remapping the x keyboard on the fly.
-       *
-       * This make assumption the last 10 arn't already used.
-       * TODO: probably safer to check for this.
-       */
+         * remapping the x keyboard on the fly.
+         *
+         * This make assumption the last 10 arn't already used.
+         * TODO: probably safer to check for this.
+         */
 
-        modifiedkey = (modifiedkey+1) % 10;
+        modifiedkey = (modifiedkey + 1) % 10;
 
         /* Point at the end of keysyms, modifier 0 */
 
@@ -311,34 +287,29 @@ fakekey_press_keysym(FakeKey *fk,
 
         fk->keysyms[index] = keysym;
 
-        XChangeKeyboardMapping(fk->xdpy,
-                               fk->min_keycode,
-                               fk->n_keysyms_per_keycode,
-                               fk->keysyms,
-                               (fk->max_keycode-fk->min_keycode));
+        XChangeKeyboardMapping(fk->xdpy, fk->min_keycode, fk->n_keysyms_per_keycode, fk->keysyms, (fk->max_keycode - fk->min_keycode));
 
         XSync(fk->xdpy, False);
 
         /* From dasher src;
-       * There's no way whatsoever that this could ever possibly
-       * be guaranteed to work (ever), but it does.
-       *
-       */
+         * There's no way whatsoever that this could ever possibly
+         * be guaranteed to work (ever), but it does.
+         *
+         */
 
         code = (unsigned char)(fk->max_keycode - modifiedkey - 1);
 
         /* The below is lightly safer;
-       *
-       *  code = XKeysymToKeycode(fk->xdpy, keysym);
-       *
-       * but this appears to break in that the new mapping is not immediatly
-       * put to work. It would seem a MappingNotify event is needed so
-       * Xlib can do some changes internally ? ( xlib is doing something
-       * related to above ? )
-       *
-       * Probably better to try and grab the mapping notify *here* ?
-       */
-
+         *
+         *  code = XKeysymToKeycode(fk->xdpy, keysym);
+         *
+         * but this appears to break in that the new mapping is not immediatly
+         * put to work. It would seem a MappingNotify event is needed so
+         * Xlib can do some changes internally ? ( xlib is doing something
+         * related to above ? )
+         *
+         * Probably better to try and grab the mapping notify *here* ?
+         */
     }
 
     if (code != 0)
@@ -346,26 +317,22 @@ fakekey_press_keysym(FakeKey *fk,
         fakekey_send_keyevent(fk, code, True, flags);
 
         fk->held_state_flags = flags;
-        fk->held_keycode     = code;
+        fk->held_keycode = code;
 
         return 1;
     }
 
     fk->held_state_flags = 0;
-    fk->held_keycode     = 0;
+    fk->held_keycode = 0;
 
-    return 0; 			/* failed */
+    return 0; /* failed */
 }
 
-int
-fakekey_press(FakeKey        *fk,
-              unsigned char  *utf8_char_in,
-              int            len_bytes,
-              int            flags)
+int fakekey_press(FakeKey *fk, unsigned char *utf8_char_in, int len_bytes, int flags)
 {
-    FkChar32   ucs4_out;
+    FkChar32 ucs4_out;
 
-    if (fk->held_keycode) 	/* key is already held down */
+    if (fk->held_keycode) /* key is already held down */
         return 0;
 
     /* TODO: check for Return key here and other chars */
@@ -373,11 +340,10 @@ fakekey_press(FakeKey        *fk,
     if (len_bytes < 0)
         return 0;
 
-
-    if ( utf8_to_ucs4 (utf8_char_in, &ucs4_out, len_bytes) < 1 )
+    if (utf8_to_ucs4(utf8_char_in, &ucs4_out, len_bytes) < 1)
     {
-        //printf( "failed with %i. len is %i\n", utf8_to_ucs4(utf8_char_in, &ucs4_out, len_bytes), len_bytes );
-        //fflush( stdout );
+        // printf( "failed with %i. len is %i\n", utf8_to_ucs4(utf8_char_in, &ucs4_out, len_bytes), len_bytes );
+        // fflush( stdout );
         return 0;
     }
 
@@ -387,31 +353,30 @@ fakekey_press(FakeKey        *fk,
         return keysym;
     */
 
-    //printf( "ucs4_out: 0x%x\n",  ucs4_out );fflush( stdout );
+    // printf( "ucs4_out: 0x%x\n",  ucs4_out );fflush( stdout );
 
-    if (ucs4_out > 0x00ff)	       /* < 0xff assume Latin-1 1:1 mapping */
+    if (ucs4_out > 0x00ff) /* < 0xff assume Latin-1 1:1 mapping */
     {
-        ucs4_out = ucs4_out | 0x01000000;  /* This gives us the magic X keysym */
+        ucs4_out = ucs4_out | 0x01000000; /* This gives us the magic X keysym */
     }
 
     // added by lcj
-    else if ( ucs4_out == 0x08     //退格
-              || ucs4_out == 0x09  //Tab
-              || ucs4_out == 0xe5  //Caps
-              || ucs4_out == 0x0d  //Enter
-              || ucs4_out == 0x9e  //Insert
-              || ucs4_out == 0xff )//Del
+    else if (ucs4_out == 0x08     // 退格
+             || ucs4_out == 0x09  // Tab
+             || ucs4_out == 0xe5  // Caps
+             || ucs4_out == 0x0d  // Enter
+             || ucs4_out == 0x9e  // Insert
+             || ucs4_out == 0xff) // Del
     {
-        ucs4_out |= 0xff00;//fcitx内部定义
+        ucs4_out |= 0xff00; // fcitx内部定义
     }
 
-    //printf( "x11 KeySym: 0x%x\n",  ucs4_out );fflush( stdout );
+    // printf( "x11 KeySym: 0x%x\n",  ucs4_out );fflush( stdout );
 
     return fakekey_press_keysym(fk, (KeySym)ucs4_out, flags);
 }
 
-void
-fakekey_repeat(FakeKey *fk)
+void fakekey_repeat(FakeKey *fk)
 {
     if (!fk->held_keycode)
         return;
@@ -419,8 +384,7 @@ fakekey_repeat(FakeKey *fk)
     fakekey_send_keyevent(fk, (unsigned char)fk->held_keycode, True, fk->held_state_flags);
 }
 
-void
-fakekey_release(FakeKey *fk)
+void fakekey_release(FakeKey *fk)
 {
     if (!fk->held_keycode)
         return;
@@ -428,6 +392,5 @@ fakekey_release(FakeKey *fk)
     fakekey_send_keyevent(fk, (unsigned char)fk->held_keycode, False, fk->held_state_flags);
 
     fk->held_state_flags = 0;
-    fk->held_keycode     = 0;
+    fk->held_keycode = 0;
 }
-

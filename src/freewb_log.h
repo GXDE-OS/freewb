@@ -2,13 +2,14 @@
 #define FREEWB_LOG_H
 #include <stdio.h>
 #define FREEWB_UI_FLAG_FILE "/tmp/freewb-log-ui.txt"
-//ㄧ
+// ㄧ
 #ifdef __cplusplus
-        extern "C" {
+extern "C"
+{
 #endif
-        void FreewbLog(char* pstr,...);
+    void FreewbLog(char *pstr, ...);
 #ifdef __cplusplus
-        }
+}
 #endif
 
 #endif

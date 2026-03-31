@@ -10,7 +10,7 @@
 
 #include "config.h"
 
-//软件安装路径后缀(在ＨＯＭＥ下面)
+// 软件安装路径后缀(在ＨＯＭＥ下面)
 #define INSTALL_DIR QString(qgetenv("HOME")) + "/.local/freewb"
 
 enum CpuType
@@ -21,17 +21,13 @@ enum CpuType
 
 enum DesktopType
 {
-    DT_UBUNTU,//ubuntu
-    DT_MATE,//kylin
-    DT_UKUI,//uKylin
-    DT_DEEPIN//deepin
+    DT_UBUNTU, // ubuntu
+    DT_MATE,   // kylin
+    DT_UKUI,   // uKylin
+    DT_DEEPIN  // deepin
 };
-
-
 
 extern CpuType g_cpuType;
 extern DesktopType g_desktopType;
-
-
 
 #endif

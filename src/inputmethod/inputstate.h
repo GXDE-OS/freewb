@@ -3,7 +3,8 @@
 
 #include <fcitx/ime.h>
 
-typedef enum _KEY_RELEASED {
+typedef enum _KEY_RELEASED
+{
     KR_OTHER = 0,
     KR_SWITCH,
     KR_2ND_SELECTKEY,
@@ -15,7 +16,8 @@ typedef enum _KEY_RELEASED {
     KR_DEACTIVATE
 } KEY_RELEASED;
 
-struct _FcitxInputState {
+struct _FcitxInputState
+{
     long unsigned int lastKeyPressedTime;
     boolean bIsDoInputOnly;
     KEY_RELEASED keyReleased;
@@ -35,11 +37,11 @@ struct _FcitxInputState {
     boolean dummy3;
 
     /* the ui message part, if there is something in it, then it will be shown */
-    struct _FcitxCandidateWordList* candList;
-    FcitxMessages* msgPreedit;
-    FcitxMessages* msgAuxUp;
-    FcitxMessages* msgAuxDown;
-    FcitxMessages* msgClientPreedit;
+    struct _FcitxCandidateWordList *candList;
+    FcitxMessages *msgPreedit;
+    FcitxMessages *msgAuxUp;
+    FcitxMessages *msgAuxDown;
+    FcitxMessages *msgClientPreedit;
 
     uint32_t keycode;
     uint32_t keysym;
@@ -50,16 +52,16 @@ struct _FcitxInputState {
 
 void FreeWubiInputStateInitializeInstance();
 void FreeWubiInputStateDestroyInstance();
-FcitxInputState* FreeWubiGetInputState();
+FcitxInputState *FreeWubiGetInputState();
 
 void FreeWubiInputStateCleanInputWindow(FcitxInputState *inputState);
 void FreeWubiInputStateCleanInputWindowUp(FcitxInputState *inputState);
-void FreeWubiInputStateCleanInputWindowDown(FcitxInputState* inputState);
+void FreeWubiInputStateCleanInputWindowDown(FcitxInputState *inputState);
 
 void FreeWubiInputStateResetRawInputBuffer();
 
-struct _FcitxCandidateWordList* FreeWubiInputStateGetCandidateList(FcitxInputState* input);
+struct _FcitxCandidateWordList *FreeWubiInputStateGetCandidateList(FcitxInputState *input);
 
-void FreeWubiResetInputState(FcitxInputState* input);
+void FreeWubiResetInputState(FcitxInputState *input);
 
 #endif

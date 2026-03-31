@@ -3,7 +3,7 @@
 
 #include <fcitx/instance.h>
 
-void FreeWubiPanelProxyInitializeInstance(FcitxInstance* instance);
+void FreeWubiPanelProxyInitializeInstance(FcitxInstance *instance);
 void FreeWubiPanelProxyDestroyInstance();
 
 void FreeWubiPanelProxyShowInputWindow();

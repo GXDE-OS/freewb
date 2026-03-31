@@ -3,8 +3,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <string.h>
+#include <time.h>
+
 #include <fcitx-utils/utils.h>
 #include <fcitx/keys.h>
 
@@ -17,6 +18,7 @@ enum PuncKeyNumber
     Key_Bracket,
     Key_Parentheses
 };
+
 char *matchTime(char *str);
 int isPuncKey(FcitxKeySym sym);
 void matchPunc(char *str, int index, boolean puncState);

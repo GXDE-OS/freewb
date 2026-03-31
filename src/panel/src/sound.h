@@ -9,11 +9,10 @@
 #ifndef SOUND_H
 #define SOUND_H
 
-#include <QObject>
 #include <QDebug>
-#include <QSound>
+#include <QObject>
 #include <QProcess>
-
+#include <QSound>
 
 enum SoundType
 {
@@ -32,14 +31,13 @@ class Sound : public QObject
     Q_OBJECT
 
 public:
-    explicit Sound( QObject *parent = nullptr );
+    explicit Sound(QObject *parent = nullptr);
 
 public:
-    static void play_sound( SoundType soundType );
+    static void play_sound(SoundType soundType);
 
 private:
     static const char *s_soundData[SOUND_NUM];
-
 };
 
 #endif // SOUND_H

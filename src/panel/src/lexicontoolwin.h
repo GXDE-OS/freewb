@@ -10,21 +10,20 @@
 #ifndef LEXICONTOOLWIN_H
 #define LEXICONTOOLWIN_H
 
-#include <QWidget>
+#include <QAbstractButton>
+#include <QDebug>
+#include <QDesktopWidget>
 #include <QFile>
+#include <QFileDialog>
+#include <QMessageBox>
 #include <QMouseEvent>
 #include <QPoint>
-#include <QDebug>
 #include <QProcess>
-#include <QMessageBox>
-#include <QAbstractButton>
-#include <QFileDialog>
-#include <QDesktopWidget>
 #include <QThread>
-#include <QMessageBox>
-#include <QAbstractButton>
+#include <QWidget>
 
-namespace Ui {
+namespace Ui
+{
 class LexiconToolWin;
 }
 
@@ -37,29 +36,26 @@ typedef enum
     LTO_OPTIMIZE_TABLE,
     LTO_DUMP_PINYIN_TABLE,
     LTO_GEN_PINYIN_TABLE
-}LexiconToolOp;
-
+} LexiconToolOp;
 
 class LexiconWorker : public QObject
 {
     Q_OBJECT
 
 public:
-    LexiconWorker( QObject *parent = nullptr );
+    LexiconWorker(QObject *parent = nullptr);
     ~LexiconWorker();
 
 signals:
-    void signal_process_updated( LexiconToolOp opType, int opStatus, int count );
+    void signal_process_updated(LexiconToolOp opType, int opStatus, int count);
 
 public slots:
     void slot_start_work();
 
 public:
-    void set_op_param( LexiconToolOp opType, const QString &srcFile, const QString &destFile );
+    void set_op_param(LexiconToolOp opType, const QString &srcFile, const QString &destFile);
 
 protected:
-
-
 private:
     LexiconToolOp m_opType;
     QString m_srcFile;
@@ -67,16 +63,12 @@ private:
     int m_count;
 };
 
-
-
-
-
 class LexiconToolWin : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit LexiconToolWin( QWidget *parent = nullptr );
+    explicit LexiconToolWin(QWidget *parent = nullptr);
     ~LexiconToolWin();
 
 signals:
@@ -87,17 +79,17 @@ public slots:
     void open_win();
 
 protected:
-    //重载函数,用于窗口拖动
-    void mousePressEvent( QMouseEvent *event );
-    void mouseReleaseEvent( QMouseEvent *event );
-    void mouseMoveEvent( QMouseEvent *event );
-    bool eventFilter( QObject *obj, QEvent *event );
+    // 重载函数,用于窗口拖动
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event);
 
-    void add_del_user_word_from_file( int op, const QString &fileName );
+    void add_del_user_word_from_file(int op, const QString &fileName);
     void lexicon_thread_quit();
 
 protected slots:
-    void slot_process_updated( LexiconToolOp opType, int opStatus, int count );
+    void slot_process_updated(LexiconToolOp opType, int opStatus, int count);
     void slot_worker_thread_finished();
 
 private slots:
@@ -117,8 +109,8 @@ private slots:
 private:
     Ui::LexiconToolWin *ui;
 
-    //用于窗口拖动计算
-    bool  m_mouseIsPressed;
+    // 用于窗口拖动计算
+    bool m_mouseIsPressed;
     QPoint m_mouseLastPosition;
 
     QPoint m_defaultPopPosition;

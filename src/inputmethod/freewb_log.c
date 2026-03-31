@@ -1,31 +1,30 @@
-#include <stdio.h>
-#include <time.h>
-#include <string.h>
 #include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
 
-void FreewbLog(char* pszFmt,...)
+void FreewbLog(char *pszFmt, ...)
 {
-	FILE *fp=fopen("/tmp/freewb_log.txt","a+b");
+    FILE *fp = fopen("/tmp/freewb_log.txt", "a+b");
 
-	char buf[2048];
-	time_t timep;   
-	struct tm *p;
+    char buf[2048];
+    time_t timep;
+    struct tm *p;
 
-	time(&timep); /*获得time_t结构的时间，UTC时间*/
-	p = gmtime(&timep); /*转换为struct tm结构的UTC时间*/
+    time(&timep);       /*获得time_t结构的时间，UTC时间*/
+    p = gmtime(&timep); /*转换为struct tm结构的UTC时间*/
 
-	sprintf(buf,"%d%d%d %d:%d:%d",1900 + p->tm_year, 1+ p->tm_mon, p->tm_mday,p->tm_hour,p->tm_min, p->tm_sec);
-	fwrite(buf,sizeof(char),strlen(buf),fp);
-	fwrite(" ",sizeof(char),1,fp);
+    sprintf(buf, "%d%d%d %d:%d:%d", 1900 + p->tm_year, 1 + p->tm_mon, p->tm_mday, p->tm_hour, p->tm_min, p->tm_sec);
+    fwrite(buf, sizeof(char), strlen(buf), fp);
+    fwrite(" ", sizeof(char), 1, fp);
 
     va_list pArgs;
     va_start(pArgs, pszFmt);
     int dwRetVal = vsnprintf(buf, sizeof(buf), pszFmt, pArgs);
     va_end(pArgs);
 
-	fwrite(buf,sizeof(char),strlen(buf),fp);
-	fwrite("\n",sizeof(char),1,fp);
+    fwrite(buf, sizeof(char), strlen(buf), fp);
+    fwrite("\n", sizeof(char), 1, fp);
 
-	fclose(fp);
+    fclose(fp);
 }
-

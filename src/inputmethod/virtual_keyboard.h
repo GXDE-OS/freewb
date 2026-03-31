@@ -1,8 +1,9 @@
 #ifndef _FREE_KEYBORD_H
 #define _FREE_KEYBORD_H
-#include "fcitx/fcitx.h"
-#include "fcitx-config/fcitx-config.h"
 #include "stdio.h"
+
+#include "fcitx-config/fcitx-config.h"
+#include "fcitx/fcitx.h"
 #ifdef __cplusplus
 extern "C"
 {

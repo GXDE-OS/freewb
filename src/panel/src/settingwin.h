@@ -10,25 +10,26 @@
 #ifndef SETTINGWIN_H
 #define SETTINGWIN_H
 
-#include <QWidget>
-#include <QMouseEvent>
-#include <QPoint>
+#include <QColorDialog>
+#include <QDateTime>
 #include <QDebug>
-#include <QFile>
+#include <QDesktopServices>
 #include <QDesktopWidget>
+#include <QEvent>
+#include <QFile>
+#include <QFileDialog>
+#include <QFontDialog>
 #include <QListWidgetItem>
 #include <QMessageBox>
-#include <QFontDialog>
-#include <QColorDialog>
-#include <QFileDialog>
-#include <QDateTime>
-#include <QEvent>
-#include <QDesktopServices>
+#include <QMouseEvent>
+#include <QPoint>
+#include <QWidget>
 
-#include "keyboard.h"
 #include "customkeydialog.h"
+#include "keyboard.h"
 
-namespace Ui {
+namespace Ui
+{
 class SettingWin;
 }
 
@@ -37,7 +38,7 @@ class SettingWin : public QWidget
     Q_OBJECT
 
 public:
-    explicit SettingWin( QWidget *parent = nullptr );
+    explicit SettingWin(QWidget *parent = nullptr);
     ~SettingWin();
 
 public slots:
@@ -46,9 +47,9 @@ public slots:
     void slot_show_version_info();
     void slot_open_advanced_settting_page();
 
-    void slot_custom_keyboard_char_clicked( SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue );
-    void slot_custom_keyboard_mark_clicked( SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue );
-    void slot_custom_btn_ok_clicked( const QString &commSymbol, const QString &shiftSymbol );
+    void slot_custom_keyboard_char_clicked(SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue);
+    void slot_custom_keyboard_mark_clicked(SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue);
+    void slot_custom_btn_ok_clicked(const QString &commSymbol, const QString &shiftSymbol);
 
 protected:
     void init_window_appearance();
@@ -66,21 +67,20 @@ protected:
     void update_short_input_cmb();
     void update_tmp_pinyin_cmb();
     void init_ui_setting_page();
-    void update_toolbar_preview( const QString &skinId );
+    void update_toolbar_preview(const QString &skinId);
     void init_skin_select_cmb();
     void init_candidate_ui_page();
-    void ckb_useGradientBgColor_updated( bool checked );
-    void ckb_useBgImage_updated( bool checked );
+    void ckb_useGradientBgColor_updated(bool checked);
+    void ckb_useBgImage_updated(bool checked);
     void update_fram_candidate_win();
     void init_candidate_option_page();
 
-
 protected:
-    //重载函数
-    void mousePressEvent( QMouseEvent *event );
-    void mouseReleaseEvent( QMouseEvent *event );
-    void mouseMoveEvent( QMouseEvent *event );
-    bool eventFilter( QObject *obj, QEvent *event );
+    // 重载函数
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event);
 
 private slots:
     /****************** 主界面 ***************/
@@ -89,7 +89,7 @@ private slots:
     void on_btnCancel_clicked();
     void on_btnHelp_clicked();
 
-    void on_listWidget_currentItemChanged( QListWidgetItem *current, QListWidgetItem *previous );
+    void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 
     /****************** 常用选项界面 ***************/
     void on_ckbCodeRemind_stateChanged(int arg1);
@@ -104,7 +104,7 @@ private slots:
     /****************** 高级选项设置 ***************/
     void on_ckbShiftCommitChar_toggled(bool checked);
     void on_ckbInputStatistic_toggled(bool checked);
-    void on_ckbTypeEffect_toggled( bool checked );
+    void on_ckbTypeEffect_toggled(bool checked);
     void on_ckbRepeatCalib_toggled(bool checked);
     void on_ckbAutoWordGroup_activated(int index);
 
@@ -140,10 +140,9 @@ private slots:
     void on_btnCandiAutoWord_clicked();
     void on_btnCandiPrompt_clicked();
 
-
     /****************** 候选窗选项 ***************/
-//    void on_ledt2ndRecode_textChanged(const QString &arg1);
-//    void on_ledt3rdRecode_textChanged(const QString &arg1);
+    //    void on_ledt2ndRecode_textChanged(const QString &arg1);
+    //    void on_ledt3rdRecode_textChanged(const QString &arg1);
     void on_ckbShiftSelectRecode_toggled(bool checked);
     void on_ckbCursorFollow_stateChanged(int arg1);
     void on_ckbHideCandiChinese_stateChanged(int arg1);
@@ -164,12 +163,11 @@ private slots:
     void on_cmbTmpPinyin_activated(const QString &arg1);
     void on_btnRestoreShortcutKey_clicked();
 
-
 private:
     Ui::SettingWin *ui;
 
-    //用于窗口拖动计算
-    bool  m_mouseIsPressed;
+    // 用于窗口拖动计算
+    bool m_mouseIsPressed;
     QPoint m_mouseLastPosition;
 
     QPoint m_defaultPopPosition;
@@ -178,28 +176,26 @@ private:
     QWidget m_tooltipsWin;
     QLabel *m_tooltipsLabel;
     bool m_tooltipsWinShowFlg;
-    QMap<QWidget*, QString> m_tipsTextMap;
+    QMap<QWidget *, QString> m_tipsTextMap;
 
+    QListWidgetItem *m_listItemCommon;             // 常用选项
+    QListWidgetItem *m_listItemAdvance;            // 高级选项
+    QListWidgetItem *m_listItemOthers;             // 其他设置
+    QListWidgetItem *m_listItemUi;                 // 界面设置
+    QListWidgetItem *m_listItemCandidateWinUi;     // 候选窗界面
+    QListWidgetItem *m_listItemCandidateWinOption; // 候选窗选项
+    QListWidgetItem *m_listItemShortcutKey;        // 快捷键设置
+    QListWidgetItem *m_listItemCustomKeyChar;      // 定义软键盘
+    QListWidgetItem *m_listItemCustomKeyMark;      // 自定义标点
+    QListWidgetItem *m_listItemVersionInfo;        // 输入法版本信息
+    QListWidgetItem *m_listItemBug;                // Bug信息反馈
 
-    QListWidgetItem *m_listItemCommon;//常用选项
-    QListWidgetItem *m_listItemAdvance;//高级选项
-    QListWidgetItem *m_listItemOthers;//其他设置
-    QListWidgetItem *m_listItemUi;//界面设置
-    QListWidgetItem *m_listItemCandidateWinUi;//候选窗界面
-    QListWidgetItem *m_listItemCandidateWinOption;//候选窗选项
-    QListWidgetItem *m_listItemShortcutKey;//快捷键设置
-    QListWidgetItem *m_listItemCustomKeyChar;//定义软键盘
-    QListWidgetItem *m_listItemCustomKeyMark;//自定义标点
-    QListWidgetItem *m_listItemVersionInfo;//输入法版本信息
-    QListWidgetItem *m_listItemBug;//Bug信息反馈
+    Keyboard *m_kbCustomKeyChar;        // 自定义按键字符设置页面的键盘
+    Keyboard *m_kbCustomKeyMark;        // 自定义按键标点设置页面的键盘
+    CustomKeyDialog *m_customKeyDialog; // 自定义按键对话框
 
-    Keyboard *m_kbCustomKeyChar;//自定义按键字符设置页面的键盘
-    Keyboard *m_kbCustomKeyMark;//自定义按键标点设置页面的键盘
-    CustomKeyDialog *m_customKeyDialog;//自定义按键对话框
-
-    SymbolKeyIdx m_curSymbolKeyIdx;//当前正在自定义的按键
-    CustomKeyValue m_curCustomKeyValue;//当前正在自定义的按键值
-
+    SymbolKeyIdx m_curSymbolKeyIdx;     // 当前正在自定义的按键
+    CustomKeyValue m_curCustomKeyValue; // 当前正在自定义的按键值
 };
 
 #endif

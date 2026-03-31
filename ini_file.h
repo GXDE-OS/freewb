@@ -1,17 +1,17 @@
 ﻿/**
  * The MIT License (MIT)
  * Copyright (c) 2019-2020, Gaaagaa All rights reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
  * the Software without restriction, including without limitation the rights to
  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
  * of the Software, and to permit persons to whom the Software is furnished to do
  * so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
@@ -23,23 +23,23 @@
 /**
  * @file xini_file.h
  * Copyright (c) 2019-2020, Gaaagaa All rights reserved.
- * 
+ *
  * @author  ：Gaaagaa
  * @date    : 2021-01-09
  * @version : 1.2.0.1
  * @brief   : `this->operator __base_type()`, gcc not supported.
  * @note    : Sepecial thanks for (qinwanlin)[https://gitee.com/qinwanlin].
- * 
+ *
  * @author  ：Gaaagaa
  * @date    : 2020-11-07
  * @version : 1.2.0.0
  * @brief   : Improved retrieval performance of the operator[].
- * 
+ *
  * @author  ：Gaaagaa
  * @date    : 2020-10-28
  * @version : 1.1.0.0
  * @brief   : update load()/release(), add operator()/try_value().
- * 
+ *
  * @author  ：Gaaagaa
  * @date    : 2019-11-26
  * @version : 1.0.0.0
@@ -49,12 +49,12 @@
 #ifndef __XINI_FILE_H__
 #define __XINI_FILE_H__
 
+#include <cassert>
+#include <fstream>
 #include <list>
 #include <map>
-#include <string>
 #include <sstream>
-#include <fstream>
-#include <cassert>
+#include <string>
 
 ////////////////////////////////////////////////////////////////////////////////
 // xini_node_t : INI 节点的抽象定义
@@ -88,7 +88,7 @@
  *           |--[...]
  *     |--[空行]
  *     |--[...]
- * 
+ *
  * 文件根：INI 文件的虚拟名称，不存在于文件内容中。
  * 空行：空白行，即便有空白字符占据，也算空白行。
  * 注释：以 “;” 或者 “#” 开头后的内容，都算是注释内容。
@@ -105,9 +105,9 @@ typedef enum xini_ntype_t
 {
     XINI_NTYPE_UNDEFINE = 0xFFFFFFFF, ///< 未定义
     XINI_NTYPE_FILEROOT = 0x00000000, ///< 文件根
-    XINI_NTYPE_NILLINE  = 0x00000100, ///< 空行
-    XINI_NTYPE_COMMENT  = 0x00000200, ///< 注释
-    XINI_NTYPE_SECTION  = 0x00000300, ///< 分节
+    XINI_NTYPE_NILLINE = 0x00000100,  ///< 空行
+    XINI_NTYPE_COMMENT = 0x00000200,  ///< 注释
+    XINI_NTYPE_SECTION = 0x00000300,  ///< 分节
     XINI_NTYPE_KEYVALUE = 0x00000400, ///< 键值
 } xini_ntype_t;
 
@@ -137,7 +137,7 @@ protected:
     /**
      * @brief 判断是否为单行字符串。
      */
-    static inline bool is_sline(const std::string & xstr)
+    static inline bool is_sline(const std::string &xstr)
     {
         return (xstr.find_first_of("\r\n") == std::string::npos);
     }
@@ -146,30 +146,22 @@ protected:
     /**
      * @brief 判定字符串是否被修剪过。
      */
-    static inline bool
-            is_xtrim(
-                const std::string & xstr,
-                const char * xchars = XCHARS_TRIM)
+    static inline bool is_xtrim(const std::string &xstr, const char *xchars = XCHARS_TRIM)
     {
         std::string::size_type st_pos = xstr.find_first_of(xchars);
-        return ((std::string::npos == st_pos) ||
-                ((st_pos > 0) && (st_pos < (xstr.size() - 1))));
+        return ((std::string::npos == st_pos) || ((st_pos > 0) && (st_pos < (xstr.size() - 1))));
     }
 
     /**********************************************************/
     /**
      * @brief 修剪字符串前后端的字符集。
      */
-    static inline std::string 
-            trim_xstr(
-                const std::string & xstr,
-                const char * xchars = XCHARS_TRIM)
+    static inline std::string trim_xstr(const std::string &xstr, const char *xchars = XCHARS_TRIM)
     {
         std::string::size_type st_pos = xstr.find_first_not_of(xchars);
         if (std::string::npos != st_pos)
         {
-            return xstr.substr(
-                    st_pos, xstr.find_last_not_of(xchars) - st_pos + 1);
+            return xstr.substr(st_pos, xstr.find_last_not_of(xchars) - st_pos + 1);
         }
 
         return std::string("");
@@ -179,10 +171,7 @@ protected:
     /**
      * @brief 修剪字符串前端的字符集。
      */
-    static inline std::string 
-            trim_lstr(
-                const std::string & xstr,
-                const char * xchars = XCHARS_TRIM)
+    static inline std::string trim_lstr(const std::string &xstr, const char *xchars = XCHARS_TRIM)
     {
         std::string::size_type st_pos = xstr.find_first_not_of(xchars);
         if (std::string::npos != st_pos)
@@ -197,10 +186,7 @@ protected:
     /**
      * @brief 修剪字符串后端的字符集。
      */
-    static inline std::string 
-            trim_rstr(
-                const std::string & xstr,
-                const char * xchars = XCHARS_TRIM)
+    static inline std::string trim_rstr(const std::string &xstr, const char *xchars = XCHARS_TRIM)
     {
         return xstr.substr(0, xstr.find_last_not_of(xchars));
     }
@@ -217,7 +203,7 @@ protected:
      *         - xszt_lcmp == xszt_rcmp，返回 ==  0；
      *         - xszt_lcmp >  xszt_rcmp，返回 >=  1；
      */
-    static int xstr_icmp(const char * xszt_lcmp, const char * xszt_rcmp)
+    static int xstr_icmp(const char *xszt_lcmp, const char *xszt_rcmp)
     {
         int xit_lvalue = 0;
         int xit_rvalue = 0;
@@ -250,11 +236,9 @@ protected:
     {
         typedef std::string first_argument_type;
         typedef std::string second_argument_type;
-        typedef bool        result_type;
+        typedef bool result_type;
 
-        bool operator () (
-            const std::string & xstr_left,
-            const std::string & xstr_right) const
+        bool operator()(const std::string &xstr_left, const std::string &xstr_right) const
         {
             return (xstr_icmp(xstr_left.c_str(), xstr_right.c_str()) < 0);
         }
@@ -262,16 +246,12 @@ protected:
 
     // constructor/destructor
 protected:
-    xini_node_t(int xini_ntype, xini_node_t * xowner_ptr)
-        : m_xini_ntype(xini_ntype)
-        , m_xowner_ptr(xowner_ptr)
+    xini_node_t(int xini_ntype, xini_node_t *xowner_ptr) : m_xini_ntype(xini_ntype), m_xowner_ptr(xowner_ptr)
     {
-
     }
 
     virtual ~xini_node_t(void)
     {
-
     }
 
     // extensible interfaces
@@ -280,7 +260,7 @@ public:
     /**
      * @brief 将 节点信息 导向 输出流，派生的子类中必须实现具体操作。
      */
-    virtual const xini_node_t & operator >> (std::ostream & ostr) const = 0;
+    virtual const xini_node_t &operator>>(std::ostream &ostr) const = 0;
 
     /**********************************************************/
     /**
@@ -312,9 +292,7 @@ protected:
     /**
      * @brief 重命名附属的子节点（分节节点、键值节点）的索引名。
      */
-    virtual bool rename_nsub(
-                    xini_node_t * xnsub_ptr,
-                    const std::string & xstr_name)
+    virtual bool rename_nsub(xini_node_t *xnsub_ptr, const std::string &xstr_name)
     {
         return false;
     }
@@ -325,26 +303,31 @@ public:
     /**
      * @brief 节点类型。
      */
-    inline int ntype(void) const { return m_xini_ntype; }
+    inline int ntype(void) const
+    {
+        return m_xini_ntype;
+    }
 
     /**********************************************************/
     /**
      * @brief 获取节点的持有者。
      */
-    inline xini_node_t * get_owner(void) const { return m_xowner_ptr; }
+    inline xini_node_t *get_owner(void) const
+    {
+        return m_xowner_ptr;
+    }
 
     // data members
 protected:
-    int           m_xini_ntype;   ///< 节点类型
-    xini_node_t * m_xowner_ptr;   ///< 节点持有者
+    int m_xini_ntype;          ///< 节点类型
+    xini_node_t *m_xowner_ptr; ///< 节点持有者
 };
 
 /**********************************************************/
 /**
  * @brief 定义 xini_node_t 的流输出操作符函数。
  */
-inline std::ostream & operator << (
-    std::ostream & ostr, const xini_node_t & xini_node)
+inline std::ostream &operator<<(std::ostream &ostr, const xini_node_t &xini_node)
 {
     xini_node >> ostr;
     return ostr;
@@ -366,21 +349,18 @@ protected:
     /**********************************************************/
     /**
      * @brief 尝试使用字符串直接创建并初始化 xini_nilline_t 对象。
-     * 
-     * @param [in ] xstr_line  : 
+     *
+     * @param [in ] xstr_line  :
      *  用于创建 空行节点 的字符串行，
      *  其已经被 trim_xstr() 修剪前后端的空白字符。
-     * 
-     * @param [in ] xowner_ptr : 
+     *
+     * @param [in ] xowner_ptr :
      *  键值节点的拥有者（xini_section_t 类型）。
-     * 
+     *
      * @return xini_node_t * :
      *  操作成功，返回的 空行节点；若失败，则返回 NULL 。
      */
-    static xini_node_t *
-                try_create(
-                    const std::string & xstr_line,
-                    xini_node_t * xowner_ptr)
+    static xini_node_t *try_create(const std::string &xstr_line, xini_node_t *xowner_ptr)
     {
         assert(is_xtrim(xstr_line));
         assert(is_sline(xstr_line));
@@ -395,15 +375,12 @@ protected:
 
     // construcor/destructor
 protected:
-    xini_nilline_t(xini_node_t * xowner_ptr)
-        : xini_node_t(XINI_NTYPE_NILLINE, xowner_ptr)
+    xini_nilline_t(xini_node_t *xowner_ptr) : xini_node_t(XINI_NTYPE_NILLINE, xowner_ptr)
     {
-
     }
 
     virtual ~xini_nilline_t(void)
     {
-
     }
 
     // overrides
@@ -412,7 +389,7 @@ public:
     /**
      * @brief 将 节点信息 导向 输出流。
      */
-    virtual const xini_node_t & operator >> (std::ostream & ostr) const
+    virtual const xini_node_t &operator>>(std::ostream &ostr) const
     {
         ostr << std::endl;
         return *this;
@@ -435,47 +412,40 @@ protected:
     /**********************************************************/
     /**
      * @brief 尝试使用字符串直接创建并初始化 xini_comment_t 对象。
-     * 
-     * @param [in ] xstr_line  : 
+     *
+     * @param [in ] xstr_line  :
      *  用于创建 注释节点 的字符串行，
      *  其已经被 trim_xstr() 修剪前后端的空白字符。
-     * 
-     * @param [in ] xowner_ptr : 
+     *
+     * @param [in ] xowner_ptr :
      *  键值节点的拥有者（xini_section_t 类型）。
-     * 
+     *
      * @return xini_node_t * :
      *  操作成功，返回的 注释节点；若失败，则返回 NULL 。
      */
-    static xini_node_t *
-                try_create(
-                    const std::string & xstr_line,
-                    xini_node_t * xowner_ptr)
+    static xini_node_t *try_create(const std::string &xstr_line, xini_node_t *xowner_ptr)
     {
         assert(is_xtrim(xstr_line));
         assert(is_sline(xstr_line));
 
-        if (xstr_line.empty() ||
-            ((';' != xstr_line.at(0)) && ('#' != xstr_line.at(0))))
+        if (xstr_line.empty() || ((';' != xstr_line.at(0)) && ('#' != xstr_line.at(0))))
         {
             return NULL;
         }
 
-        xini_comment_t * xnode_ptr = new xini_comment_t(xowner_ptr);
+        xini_comment_t *xnode_ptr = new xini_comment_t(xowner_ptr);
         xnode_ptr->m_xstr_text = xstr_line;
         return xnode_ptr;
     }
 
     // construcor/destructor
 protected:
-    xini_comment_t(xini_node_t * xowner_ptr)
-        : xini_node_t(XINI_NTYPE_COMMENT, xowner_ptr)
+    xini_comment_t(xini_node_t *xowner_ptr) : xini_node_t(XINI_NTYPE_COMMENT, xowner_ptr)
     {
-
     }
 
     virtual ~xini_comment_t(void)
     {
-
     }
 
     // overrides
@@ -484,7 +454,7 @@ public:
     /**
      * @brief 将 节点信息 导向 输出流。
      */
-    virtual const xini_node_t & operator >> (std::ostream & ostr) const
+    virtual const xini_node_t &operator>>(std::ostream &ostr) const
     {
         ostr << m_xstr_text << std::endl;
         return *this;
@@ -496,10 +466,13 @@ public:
     /**
      * @brief 注释行字符串 内容。
      */
-    inline const std::string & text(void) const { return m_xstr_text; }
+    inline const std::string &text(void) const
+    {
+        return m_xstr_text;
+    }
 
 protected:
-    std::string   m_xstr_text;  ///< 注释行字符串
+    std::string m_xstr_text; ///< 注释行字符串
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -519,11 +492,11 @@ protected:
     /**********************************************************/
     /**
      * @brief 检查键名字符串格式是否有效。
-     * 
-     * @param [in ] xstr_name : 
+     *
+     * @param [in ] xstr_name :
      *  待检查的 键名，其已经被 trim_xstr() 修剪过前后端的空白字符。
      */
-    static bool check_kname(const std::string & xstr_name)
+    static bool check_kname(const std::string &xstr_name)
     {
         assert(is_xtrim(xstr_name));
 
@@ -537,8 +510,7 @@ protected:
             return false;
         }
 
-        if (('[' == xstr_name.at(0)) &&
-            (std::string::npos != xstr_name.find(']')))
+        if (('[' == xstr_name.at(0)) && (std::string::npos != xstr_name.find(']')))
         {
             return false;
         }
@@ -549,19 +521,16 @@ protected:
     /**********************************************************/
     /**
      * @brief 尝试使用字符串直接创建并初始化 xini_keyvalue_t 对象。
-     * 
-     * @param [in ] xstr_line  : 
+     *
+     * @param [in ] xstr_line  :
      *  用于创建 键值节点 的字符串行，其已经被 trim_xstr() 修剪前后端的空白字符。
-     * 
+     *
      * @param [in ] xowner_ptr : 键值节点的拥有者（xini_section_t 类型）。
-     * 
+     *
      * @return xini_node_t * :
      *  操作成功，返回的 键值节点；若失败，则返回 NULL 。
      */
-    static xini_node_t *
-                try_create(
-                    const std::string & xstr_line,
-                    xini_node_t * xowner_ptr)
+    static xini_node_t *try_create(const std::string &xstr_line, xini_node_t *xowner_ptr)
     {
         assert(is_xtrim(xstr_line));
         assert(is_sline(xstr_line));
@@ -587,7 +556,7 @@ protected:
 
         //======================================
 
-        xini_keyvalue_t * xnode_ptr = new xini_keyvalue_t(xowner_ptr);
+        xini_keyvalue_t *xnode_ptr = new xini_keyvalue_t(xowner_ptr);
 
         xnode_ptr->m_xstr_kname = xstr_kname;
         xnode_ptr->m_xstr_value = trim_xstr(xstr_line.substr(st_eq + 1));
@@ -599,15 +568,12 @@ protected:
 
     // construcor/destructor
 protected:
-    xini_keyvalue_t(xini_node_t * xowner_ptr)
-        : xini_node_t(XINI_NTYPE_KEYVALUE, xowner_ptr)
+    xini_keyvalue_t(xini_node_t *xowner_ptr) : xini_node_t(XINI_NTYPE_KEYVALUE, xowner_ptr)
     {
-
     }
 
     virtual ~xini_keyvalue_t(void)
     {
-
     }
 
     // overrides
@@ -616,12 +582,9 @@ public:
     /**
      * @brief 将 节点信息 导向 输出流。
      */
-    virtual const xini_node_t & operator >> (std::ostream & ostr) const
+    virtual const xini_node_t &operator>>(std::ostream &ostr) const
     {
-        ostr << m_xstr_kname
-             << '='
-             << m_xstr_value
-             << std::endl;
+        ostr << m_xstr_kname << '=' << m_xstr_value << std::endl;
         return *this;
     }
 
@@ -631,14 +594,14 @@ protected:
     /**
      * @brief 数值的读操作。
      */
-    template< typename __number_type >
+    template <typename __number_type>
     __number_type get_numb(void) const
     {
-        __number_type      numb;
+        __number_type numb;
         std::istringstream istr(m_xstr_value);
         istr >> numb;
         if (istr.fail())
-            return static_cast< __number_type >(0);
+            return static_cast<__number_type>(0);
         return numb;
     }
 
@@ -646,13 +609,13 @@ protected:
     /**
      * @brief 数值的读操作（带默认值）。
      */
-    template< typename __number_type >
+    template <typename __number_type>
     __number_type get_numb(__number_type x_default) const
     {
         if (empty())
             return x_default;
 
-        __number_type      numb;
+        __number_type numb;
         std::istringstream istr(m_xstr_value);
         istr >> numb;
         if (istr.fail())
@@ -664,7 +627,7 @@ protected:
     /**
      * @brief 数值的写操作。
      */
-    template< typename __number_type >
+    template <typename __number_type>
     void set_numb(__number_type x_value)
     {
         std::ostringstream ostr;
@@ -677,7 +640,7 @@ protected:
     /**
      * @brief 数值的写操作。
      */
-    template< typename __number_type >
+    template <typename __number_type>
     void set_numb(__number_type x_value, std::streamsize x_precision)
     {
         std::ostringstream ostr;
@@ -691,7 +654,7 @@ protected:
     /**
      * @brief 数值的读操作（键值为 空（或格式非法）时，同步写入默认值）。
      */
-    template< typename __number_type >
+    template <typename __number_type>
     __number_type try_numb(__number_type x_default)
     {
         if (empty())
@@ -700,7 +663,7 @@ protected:
             return x_default;
         }
 
-        __number_type      numb;
+        __number_type numb;
         std::istringstream istr(m_xstr_value);
         istr >> numb;
         if (istr.fail())
@@ -716,7 +679,7 @@ protected:
     /**
      * @brief 数值的读操作（键值为 空（或格式非法）时，同步写入默认值）。
      */
-    template< typename __number_type >
+    template <typename __number_type>
     __number_type try_numb(__number_type x_default, std::streamsize x_precision)
     {
         if (empty())
@@ -725,7 +688,7 @@ protected:
             return x_default;
         }
 
-        __number_type      numb;
+        __number_type numb;
         std::istringstream istr(m_xstr_value);
         istr >> numb;
         if (istr.fail())
@@ -760,7 +723,7 @@ protected:
         //======================================
         // 按 整数值 解析
 
-        long               numb;
+        long numb;
         std::istringstream istr(m_xstr_value);
         istr >> numb;
         if (istr.fail())
@@ -780,67 +743,159 @@ public:
     //======================================
     // 基础数据类型的读操作
 
-    operator const char * () const { return m_xstr_value.c_str(); }
+    operator const char *() const
+    {
+        return m_xstr_value.c_str();
+    }
 
-    operator bool () const
+    operator bool() const
     {
         if (0 == xstr_icmp(m_xstr_value.c_str(), "true"))
             return true;
         if (0 == xstr_icmp(m_xstr_value.c_str(), "false"))
             return false;
-        return (0L != get_numb< long >());
+        return (0L != get_numb<long>());
     }
 
-    operator short              () const { return get_numb< short              >(); }
-    operator unsigned short     () const { return get_numb< unsigned short     >(); }
-    operator int                () const { return get_numb< int                >(); }
-    operator unsigned int       () const { return get_numb< unsigned int       >(); }
-    operator long               () const { return get_numb< long               >(); }
-    operator unsigned long      () const { return get_numb< unsigned long      >(); }
-    operator long long          () const { return get_numb< long long          >(); }
-    operator unsigned long long () const { return get_numb< unsigned long long >(); }
-    operator float              () const { return get_numb< float              >(); }
-    operator double             () const { return get_numb< double             >(); }
-    operator long double        () const { return get_numb< long double        >(); }
+    operator short() const
+    {
+        return get_numb<short>();
+    }
+
+    operator unsigned short() const
+    {
+        return get_numb<unsigned short>();
+    }
+
+    operator int() const
+    {
+        return get_numb<int>();
+    }
+
+    operator unsigned int() const
+    {
+        return get_numb<unsigned int>();
+    }
+
+    operator long() const
+    {
+        return get_numb<long>();
+    }
+
+    operator unsigned long() const
+    {
+        return get_numb<unsigned long>();
+    }
+
+    operator long long() const
+    {
+        return get_numb<long long>();
+    }
+
+    operator unsigned long long() const
+    {
+        return get_numb<unsigned long long>();
+    }
+
+    operator float() const
+    {
+        return get_numb<float>();
+    }
+
+    operator double() const
+    {
+        return get_numb<double>();
+    }
+
+    operator long double() const
+    {
+        return get_numb<long double>();
+    }
 
     //======================================
     // 重载 operator ()，实现带上默认值的读操作
 
-    const char * operator () (const char * x_default) const
+    const char *operator()(const char *x_default) const
     {
         if (empty())
             return x_default;
         return m_xstr_value.c_str();
     }
 
-    bool operator () (bool x_default) const
+    bool operator()(bool x_default) const
     {
         if (0 == xstr_icmp(m_xstr_value.c_str(), "true"))
             return true;
         if (0 == xstr_icmp(m_xstr_value.c_str(), "false"))
             return false;
-        return (0 != get_numb< int >(x_default ? 1 : 0));
+        return (0 != get_numb<int>(x_default ? 1 : 0));
     }
 
-    short              operator () (short               x_default) const { return get_numb< short              >(x_default); }
-    unsigned short     operator () (unsigned short      x_default) const { return get_numb< unsigned short     >(x_default); }
-    int                operator () (int                 x_default) const { return get_numb< int                >(x_default); }
-    unsigned int       operator () (unsigned int        x_default) const { return get_numb< unsigned int       >(x_default); }
-    long               operator () (long                x_default) const { return get_numb< long               >(x_default); }
-    unsigned long      operator () (unsigned long       x_default) const { return get_numb< unsigned long      >(x_default); }
-    long long          operator () (long long           x_default) const { return get_numb< long long          >(x_default); }
-    unsigned long long operator () (unsigned long long  x_default) const { return get_numb< unsigned long long >(x_default); }
-    float              operator () (float               x_default) const { return get_numb< float              >(x_default); }
-    double             operator () (double              x_default) const { return get_numb< double             >(x_default); }
-    long double        operator () (long double         x_default) const { return get_numb< long double        >(x_default); }
+    short operator()(short x_default) const
+    {
+        return get_numb<short>(x_default);
+    }
 
-    const char *       operator () (const std::string & x_default) const { return this->operator ()(x_default.c_str()); }
+    unsigned short operator()(unsigned short x_default) const
+    {
+        return get_numb<unsigned short>(x_default);
+    }
+
+    int operator()(int x_default) const
+    {
+        return get_numb<int>(x_default);
+    }
+
+    unsigned int operator()(unsigned int x_default) const
+    {
+        return get_numb<unsigned int>(x_default);
+    }
+
+    long operator()(long x_default) const
+    {
+        return get_numb<long>(x_default);
+    }
+
+    unsigned long operator()(unsigned long x_default) const
+    {
+        return get_numb<unsigned long>(x_default);
+    }
+
+    long long operator()(long long x_default) const
+    {
+        return get_numb<long long>(x_default);
+    }
+
+    unsigned long long operator()(unsigned long long x_default) const
+    {
+        return get_numb<unsigned long long>(x_default);
+    }
+
+    float operator()(float x_default) const
+    {
+        return get_numb<float>(x_default);
+    }
+
+    double operator()(double x_default) const
+    {
+        return get_numb<double>(x_default);
+    }
+
+    long double operator()(long double x_default) const
+    {
+        return get_numb<long double>(x_default);
+    }
+
+    const char *operator()(const std::string &x_default) const
+    {
+        return this->operator()(x_default.c_str());
+    }
 
     //======================================
     // 与重载的 operator () 带默认值读取操作符功能类似，
     // 但键值为 空（或格式非法）时，会同步写入默认值
 
-    const char * try_value(const char * x_default)
+    const char *try_value(const char *x_default)
     {
         if (empty())
             set_value(x_default);
@@ -852,44 +907,158 @@ public:
         return try_bool(x_default);
     }
 
-    short              try_value(short               x_default) { return try_numb< short              >(x_default    ); }
-    unsigned short     try_value(unsigned short      x_default) { return try_numb< unsigned short     >(x_default    ); }
-    int                try_value(int                 x_default) { return try_numb< int                >(x_default    ); }
-    unsigned int       try_value(unsigned int        x_default) { return try_numb< unsigned int       >(x_default    ); }
-    long               try_value(long                x_default) { return try_numb< long               >(x_default    ); }
-    unsigned long      try_value(unsigned long       x_default) { return try_numb< unsigned long      >(x_default    ); }
-    long long          try_value(long long           x_default) { return try_numb< long long          >(x_default    ); }
-    unsigned long long try_value(unsigned long long  x_default) { return try_numb< unsigned long long >(x_default    ); }
-    float              try_value(float               x_default) { return try_numb< float              >(x_default,  6); }
-    double             try_value(double              x_default) { return try_numb< double             >(x_default, 16); }
-    long double        try_value(long double         x_default) { return try_numb< long double        >(x_default, 16); }
+    short try_value(short x_default)
+    {
+        return try_numb<short>(x_default);
+    }
 
-    const char *       try_value(const std::string & x_default) { return this->try_value(x_default.c_str()); }
+    unsigned short try_value(unsigned short x_default)
+    {
+        return try_numb<unsigned short>(x_default);
+    }
+
+    int try_value(int x_default)
+    {
+        return try_numb<int>(x_default);
+    }
+
+    unsigned int try_value(unsigned int x_default)
+    {
+        return try_numb<unsigned int>(x_default);
+    }
+
+    long try_value(long x_default)
+    {
+        return try_numb<long>(x_default);
+    }
+
+    unsigned long try_value(unsigned long x_default)
+    {
+        return try_numb<unsigned long>(x_default);
+    }
+
+    long long try_value(long long x_default)
+    {
+        return try_numb<long long>(x_default);
+    }
+
+    unsigned long long try_value(unsigned long long x_default)
+    {
+        return try_numb<unsigned long long>(x_default);
+    }
+
+    float try_value(float x_default)
+    {
+        return try_numb<float>(x_default, 6);
+    }
+
+    double try_value(double x_default)
+    {
+        return try_numb<double>(x_default, 16);
+    }
+
+    long double try_value(long double x_default)
+    {
+        return try_numb<long double>(x_default, 16);
+    }
+
+    const char *try_value(const std::string &x_default)
+    {
+        return this->try_value(x_default.c_str());
+    }
 
     //======================================
     // 基础数据类型的写操作
 
-    xini_keyvalue_t & operator = (const char *       x_value) { set_value(std::string(x_value));               return *this; }
-    xini_keyvalue_t & operator = (bool               x_value) { invk_set_value(std::string(x_value ? "true" : "false")); return *this; }
-    xini_keyvalue_t & operator = (short              x_value) { set_numb< short              >(x_value    ); return *this; }
-    xini_keyvalue_t & operator = (unsigned short     x_value) { set_numb< unsigned short     >(x_value    ); return *this; }
-    xini_keyvalue_t & operator = (int                x_value) { set_numb< int                >(x_value    ); return *this; }
-    xini_keyvalue_t & operator = (unsigned int       x_value) { set_numb< unsigned int       >(x_value    ); return *this; }
-    xini_keyvalue_t & operator = (long               x_value) { set_numb< long               >(x_value    ); return *this; }
-    xini_keyvalue_t & operator = (unsigned long      x_value) { set_numb< unsigned long      >(x_value    ); return *this; }
-    xini_keyvalue_t & operator = (long long          x_value) { set_numb< long long          >(x_value    ); return *this; }
-    xini_keyvalue_t & operator = (unsigned long long x_value) { set_numb< unsigned long long >(x_value    ); return *this; }
-    xini_keyvalue_t & operator = (float              x_value) { set_numb< float              >(x_value,  6); return *this; }
-    xini_keyvalue_t & operator = (double             x_value) { set_numb< double             >(x_value, 16); return *this; }
-    xini_keyvalue_t & operator = (long double        x_value) { set_numb< long double        >(x_value, 16); return *this; }
+    xini_keyvalue_t &operator=(const char *x_value)
+    {
+        set_value(std::string(x_value));
+        return *this;
+    }
 
-    xini_keyvalue_t & operator = (const std::string & x_value) { set_value(x_value); return *this; }
+    xini_keyvalue_t &operator=(bool x_value)
+    {
+        invk_set_value(std::string(x_value ? "true" : "false"));
+        return *this;
+    }
+
+    xini_keyvalue_t &operator=(short x_value)
+    {
+        set_numb<short>(x_value);
+        return *this;
+    }
+
+    xini_keyvalue_t &operator=(unsigned short x_value)
+    {
+        set_numb<unsigned short>(x_value);
+        return *this;
+    }
+
+    xini_keyvalue_t &operator=(int x_value)
+    {
+        set_numb<int>(x_value);
+        return *this;
+    }
+
+    xini_keyvalue_t &operator=(unsigned int x_value)
+    {
+        set_numb<unsigned int>(x_value);
+        return *this;
+    }
+
+    xini_keyvalue_t &operator=(long x_value)
+    {
+        set_numb<long>(x_value);
+        return *this;
+    }
+
+    xini_keyvalue_t &operator=(unsigned long x_value)
+    {
+        set_numb<unsigned long>(x_value);
+        return *this;
+    }
+
+    xini_keyvalue_t &operator=(long long x_value)
+    {
+        set_numb<long long>(x_value);
+        return *this;
+    }
+
+    xini_keyvalue_t &operator=(unsigned long long x_value)
+    {
+        set_numb<unsigned long long>(x_value);
+        return *this;
+    }
+
+    xini_keyvalue_t &operator=(float x_value)
+    {
+        set_numb<float>(x_value, 6);
+        return *this;
+    }
+
+    xini_keyvalue_t &operator=(double x_value)
+    {
+        set_numb<double>(x_value, 16);
+        return *this;
+    }
+
+    xini_keyvalue_t &operator=(long double x_value)
+    {
+        set_numb<long double>(x_value, 16);
+        return *this;
+    }
+
+    xini_keyvalue_t &operator=(const std::string &x_value)
+    {
+        set_value(x_value);
+        return *this;
+    }
 
     /**********************************************************/
     /**
      * @brief 键值节点相互赋值时，只 取值 而 忽略 键名。
      */
-    xini_keyvalue_t & operator = (const xini_keyvalue_t & x_value)
+    xini_keyvalue_t &operator=(const xini_keyvalue_t &x_value)
     {
         if (this != &x_value)
             invk_set_value(x_value.value());
@@ -904,7 +1073,7 @@ public:
     /**
      * @brief 键名。
      */
-    inline const std::string & key(void) const
+    inline const std::string &key(void) const
     {
         return m_xstr_kname;
     }
@@ -913,7 +1082,7 @@ public:
     /**
      * @brief 键值。
      */
-    inline const std::string & value(void) const
+    inline const std::string &value(void) const
     {
         return m_xstr_value;
     }
@@ -931,7 +1100,7 @@ public:
     /**
      * @brief 修改键名。
      */
-    bool set_key(const std::string & xstr_key)
+    bool set_key(const std::string &xstr_key)
     {
         std::string xstr_kname = trim_xstr(xstr_key);
         if (check_kname(xstr_kname))
@@ -946,7 +1115,7 @@ public:
     /**
      * @brief 设置键值。
      */
-    inline void set_value(const std::string & x_value)
+    inline void set_value(const std::string &x_value)
     {
         std::string xstr = x_value.substr(0, x_value.find_first_of("\r\n"));
         invk_set_value(trim_xstr(xstr));
@@ -958,7 +1127,7 @@ protected:
     /**
      * @brief 设置（单行文本 且 去除头尾空白字符 的）键值。
      */
-    inline void invk_set_value(const std::string & xstr_value)
+    inline void invk_set_value(const std::string &xstr_value)
     {
         if (xstr_value != m_xstr_value)
         {
@@ -968,8 +1137,8 @@ protected:
     }
 
 protected:
-    std::string   m_xstr_kname;  ///< 键名
-    std::string   m_xstr_value;  ///< 键值
+    std::string m_xstr_kname; ///< 键名
+    std::string m_xstr_value; ///< 键值
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -986,10 +1155,11 @@ class xini_section_t : public xini_node_t
 
     // common data types
 protected:
-    typedef std::list< xini_node_t * >                              xlst_node_t;
-    typedef std::map< std::string, xini_keyvalue_t *, xstr_icmp_t > xmap_ndkv_t;
+    typedef std::list<xini_node_t *> xlst_node_t;
+    typedef std::map<std::string, xini_keyvalue_t *, xstr_icmp_t> xmap_ndkv_t;
+
 public:
-    typedef xlst_node_t::iterator       iterator;
+    typedef xlst_node_t::iterator iterator;
     typedef xlst_node_t::const_iterator const_iterator;
 
     // common invoking
@@ -998,7 +1168,7 @@ protected:
     /**
      * @brief 修剪 分节名字符串 前后端多余的字符。
      */
-    static inline std::string trim_sname(const std::string & xstr_name)
+    static inline std::string trim_sname(const std::string &xstr_name)
     {
         return trim_xstr(xstr_name, "[] \t\n\r\f\v");
     }
@@ -1006,12 +1176,12 @@ protected:
     /**********************************************************/
     /**
      * @brief 检查分节名字符串格式是否有效。
-     * 
-     * @param [in ] xstr_name : 
-     *  待检查的 分节名，操作前其已经被 
+     *
+     * @param [in ] xstr_name :
+     *  待检查的 分节名，操作前其已经被
      *  trim_sname() 修剪过前后端多余的字符。
      */
-    static inline bool check_sname(const std::string & xstr_name)
+    static inline bool check_sname(const std::string &xstr_name)
     {
         assert(is_xtrim(xstr_name));
         return is_sline(xstr_name);
@@ -1021,10 +1191,7 @@ protected:
     /**
      * @brief 尝试使用字符串直接创建并初始化 xini_section_t 对象。
      */
-    static xini_node_t *
-                try_create(
-                    const std::string & xstr_line,
-                    xini_node_t * xowner_ptr)
+    static xini_node_t *try_create(const std::string &xstr_line, xini_node_t *xowner_ptr)
     {
         assert(is_xtrim(xstr_line));
         assert(is_sline(xstr_line));
@@ -1049,10 +1216,10 @@ protected:
 
         //======================================
 
-        xini_section_t * xnode_ptr = new xini_section_t(xowner_ptr);
+        xini_section_t *xnode_ptr = new xini_section_t(xowner_ptr);
         xnode_ptr->m_xstr_name = trim_xstr(xstr_line.substr(1, st_pos - 1));
 
-        // 将 自身 作为 节点 加入到 m_xlst_node 中，但并不意味着 m_xlst_node 
+        // 将 自身 作为 节点 加入到 m_xlst_node 中，但并不意味着 m_xlst_node
         // 的 首个节点 就一定是 自身节点，因为 xini_file_t 在加载过程中，
         // 会调用 pop_tail_comment() 操作，这有可能在 m_xlst_node 前端新增
         // 一些 注释/空行节点。所以在进行 流输出 操作时，自身节点 则可起到 占位行
@@ -1064,18 +1231,13 @@ protected:
 
     // construcor/destructor
 protected:
-    xini_section_t(xini_node_t * xowner_ptr)
-        : xini_node_t(XINI_NTYPE_SECTION, xowner_ptr)
+    xini_section_t(xini_node_t *xowner_ptr) : xini_node_t(XINI_NTYPE_SECTION, xowner_ptr)
     {
-
     }
 
     virtual ~xini_section_t(void)
     {
-        for (std::list< xini_node_t * >::iterator
-                itlst = m_xlst_node.begin();
-             itlst != m_xlst_node.end();
-             ++itlst)
+        for (std::list<xini_node_t *>::iterator itlst = m_xlst_node.begin(); itlst != m_xlst_node.end(); ++itlst)
         {
             if (XINI_NTYPE_SECTION != (*itlst)->ntype())
             {
@@ -1093,15 +1255,11 @@ public:
     /**
      * @brief 将 节点信息 导向 输出流。
      */
-    virtual const xini_node_t & operator >> (std::ostream & ostr) const
+    virtual const xini_node_t &operator>>(std::ostream &ostr) const
     {
-        for (std::list< xini_node_t * >::const_iterator
-                itlst = m_xlst_node.begin();
-             itlst != m_xlst_node.end();
-             ++itlst)
+        for (std::list<xini_node_t *>::const_iterator itlst = m_xlst_node.begin(); itlst != m_xlst_node.end(); ++itlst)
         {
-            if (this == static_cast< xini_section_t * >(
-                            const_cast< xini_node_t * >(*itlst)))
+            if (this == static_cast<xini_section_t *>(const_cast<xini_node_t *>(*itlst)))
             {
                 if (!m_xstr_name.empty())
                 {
@@ -1123,14 +1281,11 @@ protected:
      * @brief 重命名附属的子节点（键值节点）的索引名。
      * @note  该接口仅由 xini_keyvalue_t::set_key() 调用。
      */
-    virtual bool rename_nsub(
-                    xini_node_t * xnsub_ptr,
-                    const std::string & xstr_name)
+    virtual bool rename_nsub(xini_node_t *xnsub_ptr, const std::string &xstr_name)
     {
         assert(XINI_NTYPE_KEYVALUE == xnsub_ptr->ntype());
 
-        return rename_knode(
-            static_cast< xini_keyvalue_t * >(xnsub_ptr), xstr_name);
+        return rename_knode(static_cast<xini_keyvalue_t *>(xnsub_ptr), xstr_name);
     }
 
     // overrides : operator
@@ -1139,7 +1294,7 @@ public:
     /**
      * @brief 重载 operator [] 操作符，实现 键值 节点的索引操作。
      */
-    xini_keyvalue_t & operator [] (const std::string & xstr_key)
+    xini_keyvalue_t &operator[](const std::string &xstr_key)
     {
         //======================================
 
@@ -1148,7 +1303,7 @@ public:
 
         //======================================
 
-        xini_keyvalue_t * xndkv_ptr = find_knode(xstr_nkey);
+        xini_keyvalue_t *xndkv_ptr = find_knode(xstr_nkey);
         if (NULL != xndkv_ptr)
         {
             return *xndkv_ptr;
@@ -1159,9 +1314,7 @@ public:
         // 则 新增 此 键值节点，但并不设置 脏标识，
         // 避免存储不必要的 空键值节点
 
-        xndkv_ptr =
-            static_cast< xini_keyvalue_t * >(
-                xini_keyvalue_t::try_create(xstr_nkey + "=", get_owner()));
+        xndkv_ptr = static_cast<xini_keyvalue_t *>(xini_keyvalue_t::try_create(xstr_nkey + "=", get_owner()));
         assert(NULL != xndkv_ptr);
 
         m_xlst_node.push_back(xndkv_ptr);
@@ -1178,7 +1331,7 @@ public:
     /**
      * @brief 分节 名称。
      */
-    inline const std::string & name(void) const
+    inline const std::string &name(void) const
     {
         return m_xstr_name;
     }
@@ -1187,7 +1340,7 @@ public:
     /**
      * @brief 修改 分节 名称。
      */
-    bool set_name(const std::string & xstr_name)
+    bool set_name(const std::string &xstr_name)
     {
         std::string xstr_sname = trim_sname(xstr_name);
         if (!check_sname(xstr_sname))
@@ -1222,8 +1375,7 @@ public:
      */
     inline bool has_end_nilline(void) const
     {
-        if (!m_xlst_node.empty() &&
-            (XINI_NTYPE_NILLINE == m_xlst_node.back()->ntype()))
+        if (!m_xlst_node.empty() && (XINI_NTYPE_NILLINE == m_xlst_node.back()->ntype()))
         {
             return true;
         }
@@ -1234,7 +1386,7 @@ public:
     /**
      * @brief 判定当前是否已经包含指定的 键值节点。
      */
-    inline bool key_included(const std::string & xstr_key) const
+    inline bool key_included(const std::string &xstr_key) const
     {
         return (NULL != find_knode(trim_xstr(xstr_key)));
     }
@@ -1242,17 +1394,17 @@ public:
     /**********************************************************/
     /**
      * @brief 对 键值节点 进行重命名（索引键名）操作。
-     * 
+     *
      * @param [in ] xstr_key  : 目标操作的索引键名。
      * @param [in ] xstr_name : 重新设置键值节点的索引键名。
-     * 
+     *
      * @return 重命名操作 是否成功。
      */
-    bool key_rename(const std::string & xstr_key, const std::string & xstr_name)
+    bool key_rename(const std::string &xstr_key, const std::string &xstr_name)
     {
         //======================================
 
-        xini_keyvalue_t * xndkv_ptr = find_knode(trim_xstr(xstr_key));
+        xini_keyvalue_t *xndkv_ptr = find_knode(trim_xstr(xstr_key));
         if (NULL == xndkv_ptr)
         {
             return false;
@@ -1273,7 +1425,7 @@ public:
     /**
      * @brief 删除指定键值。
      */
-    bool key_remove(const std::string & xstr_key)
+    bool key_remove(const std::string &xstr_key)
     {
         //======================================
 
@@ -1285,15 +1437,12 @@ public:
 
         //======================================
 
-        for (xlst_node_t::iterator
-                itlst  = m_xlst_node.begin();
-                itlst != m_xlst_node.end();
-                ++itlst)
+        for (xlst_node_t::iterator itlst = m_xlst_node.begin(); itlst != m_xlst_node.end(); ++itlst)
         {
             if (XINI_NTYPE_KEYVALUE != (*itlst)->ntype())
                 continue;
 
-            if (static_cast< xini_node_t * >(itmap->second) == (*itlst))
+            if (static_cast<xini_node_t *>(itmap->second) == (*itlst))
             {
                 delete *itlst;
                 m_xlst_node.erase(itlst);
@@ -1317,25 +1466,37 @@ public:
     /**
      * @brief 节点表的起始位置迭代器。
      */
-    inline iterator begin(void) { return m_xlst_node.begin(); }
+    inline iterator begin(void)
+    {
+        return m_xlst_node.begin();
+    }
 
     /**********************************************************/
     /**
      * @brief 节点表的起始位置迭代器。
      */
-    inline const_iterator begin(void) const { return m_xlst_node.begin(); }
+    inline const_iterator begin(void) const
+    {
+        return m_xlst_node.begin();
+    }
 
     /**********************************************************/
     /**
      * @brief 节点表的结束位置迭代器。
      */
-    inline iterator end(void) { return m_xlst_node.end(); }
+    inline iterator end(void)
+    {
+        return m_xlst_node.end();
+    }
 
     /**********************************************************/
     /**
      * @brief 节点表的结束位置迭代器。
      */
-    inline const_iterator end(void) const { return m_xlst_node.end(); }
+    inline const_iterator end(void) const
+    {
+        return m_xlst_node.end();
+    }
 
     /**********************************************************/
     /**
@@ -1400,20 +1561,19 @@ protected:
     /**********************************************************/
     /**
      * @brief 添加（空行、注释、键值 类型的）节点。
-     * 
+     *
      * @param [in ] xnode_ptr: （空行、注释、键值 类型的）节点。
-     * 
+     *
      * @return 操作是否成功。
      */
-    bool push_node(xini_node_t * xnode_ptr)
+    bool push_node(xini_node_t *xnode_ptr)
     {
         if (NULL == xnode_ptr)
         {
             return false;
         }
 
-        if ((XINI_NTYPE_NILLINE == xnode_ptr->ntype()) ||
-            (XINI_NTYPE_COMMENT == xnode_ptr->ntype()))
+        if ((XINI_NTYPE_NILLINE == xnode_ptr->ntype()) || (XINI_NTYPE_COMMENT == xnode_ptr->ntype()))
         {
             m_xlst_node.push_back(xnode_ptr);
             return true;
@@ -1421,8 +1581,7 @@ protected:
 
         if (XINI_NTYPE_KEYVALUE == xnode_ptr->ntype())
         {
-            xini_keyvalue_t * xnode_kvptr =
-                    static_cast< xini_keyvalue_t * >(xnode_ptr);
+            xini_keyvalue_t *xnode_kvptr = static_cast<xini_keyvalue_t *>(xnode_ptr);
 
             if (NULL != find_knode(xnode_kvptr->key()))
             {
@@ -1440,14 +1599,14 @@ protected:
     /**********************************************************/
     /**
      * @brief 查找分节下的 键值 节点。
-     * 
+     *
      * @param [in ] xstr_xkey: 索引键字符串，比较时忽略大小写。
-     * 
+     *
      * @return xini_keyvalue_t *
      *         - 成功，返回 对应的节点；
      *         - 失败，返回 NULL 。
      */
-    xini_keyvalue_t * find_knode(const std::string & xstr_xkey) const
+    xini_keyvalue_t *find_knode(const std::string &xstr_xkey) const
     {
         xmap_ndkv_t::const_iterator itfind = m_xmap_ndkv.find(xstr_xkey);
         if (itfind != m_xmap_ndkv.end())
@@ -1461,18 +1620,18 @@ protected:
     /**********************************************************/
     /**
      * @brief 从 节点表 尾部取出 非当前 分节 下的注释节点（按 空行 节点作为分界）。
-     * 
+     *
      * @param [in ] xlst_comm : 接收返回的注释节点表（在链表头部添加返回的节点）。
      * @param [in ] xbt_front : 表明操作是从 xlst_comm 前/后附加返回的节点。
-     * 
+     *
      * @return size_t
      *         - 返回取出的节点数量。
      */
-    size_t pop_tail_comment(std::list< xini_node_t * > & xlst_comm, bool xbt_front)
+    size_t pop_tail_comment(std::list<xini_node_t *> &xlst_comm, bool xbt_front)
     {
-        std::list< xini_node_t * > xlst_node;
+        std::list<xini_node_t *> xlst_node;
 
-        size_t xst_line =  0;
+        size_t xst_line = 0;
         size_t xst_maxl = m_xlst_node.size();
 
         // 节点表只有三种类型的节点：键值，空行，注释，
@@ -1480,7 +1639,7 @@ protected:
 
         while ((xst_line++ < xst_maxl) && !m_xlst_node.empty())
         {
-            xini_node_t * xnode_ptr = m_xlst_node.back();
+            xini_node_t *xnode_ptr = m_xlst_node.back();
 
             // 遇到空行节点
             if (XINI_NTYPE_NILLINE == xnode_ptr->ntype())
@@ -1496,8 +1655,7 @@ protected:
 
             // 若反向遍历过程中，一直未遇到空行，
             // 则将原取出的注释节点还回节点表中
-            if ((XINI_NTYPE_KEYVALUE == xnode_ptr->ntype()) ||
-                (XINI_NTYPE_SECTION  == xnode_ptr->ntype()))
+            if ((XINI_NTYPE_KEYVALUE == xnode_ptr->ntype()) || (XINI_NTYPE_SECTION == xnode_ptr->ntype()))
             {
                 m_xlst_node.splice(m_xlst_node.end(), xlst_node);
                 break;
@@ -1536,13 +1694,13 @@ protected:
     /**********************************************************/
     /**
      * @brief 对 键值节点 进行重命名操作。
-     * 
+     *
      * @param [in ] xndkv_ptr : 目标操作的键值节点。
      * @param [in ] xstr_name : 重新设置键值节点的索引键名。
-     * 
+     *
      * @return 重命名操作 是否成功。
      */
-    bool rename_knode(xini_keyvalue_t * xndkv_ptr, const std::string & xstr_name)
+    bool rename_knode(xini_keyvalue_t *xndkv_ptr, const std::string &xstr_name)
     {
         //======================================
 
@@ -1575,9 +1733,9 @@ protected:
     }
 
 protected:
-    std::string   m_xstr_name;  ///< 分节名称
-    xlst_node_t   m_xlst_node;  ///< 分节下的节点表
-    xmap_ndkv_t   m_xmap_ndkv;  ///< 分节下的 键值节点 映射表
+    std::string m_xstr_name; ///< 分节名称
+    xlst_node_t m_xlst_node; ///< 分节下的节点表
+    xmap_ndkv_t m_xmap_ndkv; ///< 分节下的 键值节点 映射表
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1593,10 +1751,11 @@ class xini_file_t : public xini_node_t
 
     // common data types
 protected:
-    typedef std::list< xini_section_t * >                          xlst_section_t;
-    typedef std::map< std::string, xini_section_t *, xstr_icmp_t > xmap_section_t;
+    typedef std::list<xini_section_t *> xlst_section_t;
+    typedef std::map<std::string, xini_section_t *, xstr_icmp_t> xmap_section_t;
+
 public:
-    typedef xlst_section_t::iterator       iterator;
+    typedef xlst_section_t::iterator iterator;
     typedef xlst_section_t::const_iterator const_iterator;
 
     // common invoking
@@ -1605,24 +1764,21 @@ protected:
     /**
      * @brief 依据给定的 INI 文本行，创建相应的节点。
      */
-    static xini_node_t *
-                make_node(
-                    const std::string & xstr_line,
-                    xini_file_t * xowner_ptr)
+    static xini_node_t *make_node(const std::string &xstr_line, xini_file_t *xowner_ptr)
     {
-        xini_node_t * xnode_ptr = NULL;
+        xini_node_t *xnode_ptr = NULL;
 
-#define XTRY_CREATE(nptr, node, owner)                 \
-        do                                             \
-        {                                              \
-            nptr = node::try_create(xstr_line, owner); \
-            if (NULL != nptr)                          \
-                return nptr;                           \
-        } while (0)
+#define XTRY_CREATE(nptr, node, owner)                                                                                                                                                                                                                                                                     \
+    do                                                                                                                                                                                                                                                                                                     \
+    {                                                                                                                                                                                                                                                                                                      \
+        nptr = node::try_create(xstr_line, owner);                                                                                                                                                                                                                                                         \
+        if (NULL != nptr)                                                                                                                                                                                                                                                                                  \
+            return nptr;                                                                                                                                                                                                                                                                                   \
+    } while (0)
 
-        XTRY_CREATE(xnode_ptr, xini_nilline_t , xowner_ptr);
-        XTRY_CREATE(xnode_ptr, xini_comment_t , xowner_ptr);
-        XTRY_CREATE(xnode_ptr, xini_section_t , xowner_ptr);
+        XTRY_CREATE(xnode_ptr, xini_nilline_t, xowner_ptr);
+        XTRY_CREATE(xnode_ptr, xini_comment_t, xowner_ptr);
+        XTRY_CREATE(xnode_ptr, xini_section_t, xowner_ptr);
         XTRY_CREATE(xnode_ptr, xini_keyvalue_t, xowner_ptr);
 
 #undef XTRY_CREATE
@@ -1632,16 +1788,11 @@ protected:
 
     // constructor/destructor
 public:
-    xini_file_t(void)
-        : xini_node_t(XINI_NTYPE_FILEROOT, NULL)
-        , m_xbt_dirty(false)
+    xini_file_t(void) : xini_node_t(XINI_NTYPE_FILEROOT, NULL), m_xbt_dirty(false)
     {
-
     }
 
-    xini_file_t(const std::string & xstr_filepath)
-        : xini_node_t(XINI_NTYPE_FILEROOT, NULL)
-        , m_xbt_dirty(false)
+    xini_file_t(const std::string &xstr_filepath) : xini_node_t(XINI_NTYPE_FILEROOT, NULL), m_xbt_dirty(false)
     {
         load(xstr_filepath);
     }
@@ -1657,19 +1808,15 @@ public:
     /**
      * @brief 将 节点信息 导向 输出流。
      */
-    virtual const xini_node_t & operator >> (std::ostream & ostr) const
+    virtual const xini_node_t &operator>>(std::ostream &ostr) const
     {
-        for (std::list< xini_section_t * >::const_iterator
-                itlst = m_xlst_sect.begin();
-             itlst != m_xlst_sect.end();
-             ++itlst)
+        for (std::list<xini_section_t *>::const_iterator itlst = m_xlst_sect.begin(); itlst != m_xlst_sect.end(); ++itlst)
         {
             if ((*itlst)->empty())
                 continue;
 
             **itlst >> ostr;
-            if (!(*itlst)->has_end_nilline() &&
-                ((*itlst) != m_xlst_sect.back()))
+            if (!(*itlst)->has_end_nilline() && ((*itlst) != m_xlst_sect.back()))
             {
                 ostr << std::endl;
             }
@@ -1702,14 +1849,11 @@ protected:
      * @brief 重命名附属的子节点（分节节点）的索引名。
      * @note  该接口仅由 xini_section_t::set_name() 调用。
      */
-    virtual bool rename_nsub(
-                    xini_node_t * xnsub_ptr,
-                    const std::string & xstr_name)
+    virtual bool rename_nsub(xini_node_t *xnsub_ptr, const std::string &xstr_name)
     {
         assert(XINI_NTYPE_SECTION == xnsub_ptr->ntype());
 
-        return rename_sect(
-            static_cast< xini_section_t * >(xnsub_ptr), xstr_name);
+        return rename_sect(static_cast<xini_section_t *>(xnsub_ptr), xstr_name);
     }
 
     // overrides : operator
@@ -1718,12 +1862,12 @@ public:
     /**
      * @brief 从 输出流 构建 xini_file_t 内容。
      */
-    xini_file_t & operator << (std::istream & istr)
+    xini_file_t &operator<<(std::istream &istr)
     {
         //======================================
 
         // 记录当前操作的分节
-        xini_section_t * xsect_ptr = NULL;
+        xini_section_t *xsect_ptr = NULL;
 
         if (m_xlst_sect.empty())
         {
@@ -1767,7 +1911,7 @@ public:
             //======================================
 
             // 创建节点
-            xini_node_t * xnode_ptr = make_node(xstr_line, this);
+            xini_node_t *xnode_ptr = make_node(xstr_line, this);
             if (NULL == xnode_ptr)
             {
                 continue;
@@ -1776,14 +1920,12 @@ public:
             // 若为 分节 节点，则加入到分节表中，并更新当前操作的 分节节点
             if (XINI_NTYPE_SECTION == xnode_ptr->ntype())
             {
-                xsect_ptr =
-                    push_sect(static_cast< xini_section_t * >(xnode_ptr),
-                              xsect_ptr);
+                xsect_ptr = push_sect(static_cast<xini_section_t *>(xnode_ptr), xsect_ptr);
 
-                if (xsect_ptr != static_cast< xini_section_t * >(xnode_ptr))
+                if (xsect_ptr != static_cast<xini_section_t *>(xnode_ptr))
                     delete xnode_ptr; // 添加新分节失败，删除该节点
                 else
-                    set_dirty(true);  // 添加新分节成功，设置脏标识
+                    set_dirty(true); // 添加新分节成功，设置脏标识
 
                 continue;
             }
@@ -1812,7 +1954,7 @@ public:
     /**
      * @brief 重载 operator [] 操作符，实现 分节 索引操作。
      */
-    xini_section_t & operator [] (const std::string & xstr_sect)
+    xini_section_t &operator[](const std::string &xstr_sect)
     {
         //======================================
 
@@ -1821,7 +1963,7 @@ public:
 
         //======================================
 
-        xini_section_t * xsect_ptr = find_sect(xstr_name);
+        xini_section_t *xsect_ptr = find_sect(xstr_name);
         if (NULL != xsect_ptr)
         {
             return *xsect_ptr;
@@ -1832,9 +1974,7 @@ public:
         // 则 新增 此分节，但并不设置 脏标识，
         // 避免存储不必要的  空分节
 
-        xsect_ptr =
-            static_cast< xini_section_t * >(
-                xini_section_t::try_create("[" + xstr_name + "]", this));
+        xsect_ptr = static_cast<xini_section_t *>(xini_section_t::try_create("[" + xstr_name + "]", this));
         assert(NULL != xsect_ptr);
 
         m_xlst_sect.push_back(xsect_ptr);
@@ -1854,14 +1994,14 @@ public:
      *  load() 操作的成功与否，并不影响后续的键值读写操作，
      *  其只能标示 xini_file_t 对象是否关联可至指定路径
      *  （本地磁盘 或 远程网络 等的）文件。
-     * 
+     *
      * @param [in ] xstr_text : 文件路径。
-     * 
+     *
      * @return bool
      *         - 成功，返回 true ；
      *         - 失败，返回 false。
      */
-    bool load(const std::string & xstr_filepath)
+    bool load(const std::string &xstr_filepath)
     {
         // 先释放当前对象
         release();
@@ -1887,11 +2027,11 @@ public:
             int xchar = xfile_reader.get();
             if (std::iscntrl(xchar) || std::isprint(xchar))
             {
-                xfile_reader.putback(static_cast< char >(xchar));
+                xfile_reader.putback(static_cast<char>(xchar));
                 break;
             }
 
-            m_xstr_head.push_back(static_cast< char >(xchar));
+            m_xstr_head.push_back(static_cast<char>(xchar));
         }
 
         *this << xfile_reader;
@@ -1904,11 +2044,10 @@ public:
     /**
      * @brief 将当前文件根下的所有节点直接输出到文件中。
      */
-    bool dump(const std::string & xstr_filepath)
+    bool dump(const std::string &xstr_filepath)
     {
         // 打开文件
-        std::ofstream xfile_writer(
-            xstr_filepath.c_str(), std::ios_base::trunc);
+        std::ofstream xfile_writer(xstr_filepath.c_str(), std::ios_base::trunc);
         if (!xfile_writer.is_open())
         {
             return false;
@@ -1935,10 +2074,7 @@ public:
         m_xstr_path.clear();
         m_xstr_head.clear();
 
-        for (std::list< xini_section_t * >::iterator
-                itlst = m_xlst_sect.begin();
-             itlst != m_xlst_sect.end();
-             ++itlst)
+        for (std::list<xini_section_t *>::iterator itlst = m_xlst_sect.begin(); itlst != m_xlst_sect.end(); ++itlst)
         {
             delete *itlst;
         }
@@ -1951,7 +2087,7 @@ public:
     /**
      * @brief 当前关联的文件路径。
      */
-    inline const std::string & filepath(void) const
+    inline const std::string &filepath(void) const
     {
         return m_xstr_path;
     }
@@ -1969,7 +2105,7 @@ public:
     /**
      * @brief 判定当前是否包含指定的 分节。
      */
-    inline bool sect_included(const std::string & xstr_sect) const
+    inline bool sect_included(const std::string &xstr_sect) const
     {
         return (NULL != find_sect(xini_section_t::trim_sname(xstr_sect)));
     }
@@ -1977,20 +2113,17 @@ public:
     /**********************************************************/
     /**
      * @brief 对 分节 进行重命名操作。
-     * 
+     *
      * @param [in ] xstr_sect : 目标操作的分节名称。
      * @param [in ] xstr_name : 重新设置分节的名称。
-     * 
+     *
      * @return 重命名操作 是否成功。
      */
-    bool sect_rename(
-                const std::string & xstr_sect,
-                const std::string & xstr_name)
+    bool sect_rename(const std::string &xstr_sect, const std::string &xstr_name)
     {
         //======================================
 
-        xini_section_t * xsect_ptr =
-            find_sect(xini_section_t::trim_sname(xstr_sect));
+        xini_section_t *xsect_ptr = find_sect(xini_section_t::trim_sname(xstr_sect));
         if (NULL == xsect_ptr)
         {
             return false;
@@ -2011,12 +2144,11 @@ public:
     /**
      * @brief 删除指定分节。
      */
-    bool sect_remove(const std::string & xstr_sect)
+    bool sect_remove(const std::string &xstr_sect)
     {
         //======================================
 
-        xmap_section_t::iterator itmap =
-            m_xmap_sect.find(xini_section_t::trim_sname(xstr_sect));
+        xmap_section_t::iterator itmap = m_xmap_sect.find(xini_section_t::trim_sname(xstr_sect));
         if (itmap == m_xmap_sect.end())
         {
             return false;
@@ -2024,10 +2156,7 @@ public:
 
         //======================================
 
-        for (xlst_section_t::iterator
-                itlst  = m_xlst_sect.begin();
-                itlst != m_xlst_sect.end();
-                ++itlst)
+        for (xlst_section_t::iterator itlst = m_xlst_sect.begin(); itlst != m_xlst_sect.end(); ++itlst)
         {
             if (itmap->second == (*itlst))
             {
@@ -2053,25 +2182,37 @@ public:
     /**
      * @brief 分节表的起始位置迭代器。
      */
-    inline iterator begin(void) { return m_xlst_sect.begin(); }
+    inline iterator begin(void)
+    {
+        return m_xlst_sect.begin();
+    }
 
     /**********************************************************/
     /**
      * @brief 分节表的起始位置迭代器。
      */
-    inline const_iterator begin(void) const { return m_xlst_sect.begin(); }
+    inline const_iterator begin(void) const
+    {
+        return m_xlst_sect.begin();
+    }
 
     /**********************************************************/
     /**
      * @brief 分节表的结束位置迭代器。
      */
-    inline iterator end(void) { return m_xlst_sect.end(); }
+    inline iterator end(void)
+    {
+        return m_xlst_sect.end();
+    }
 
     /**********************************************************/
     /**
      * @brief 分节表的结束位置迭代器。
      */
-    inline const_iterator end(void) const { return m_xlst_sect.end(); }
+    inline const_iterator end(void) const
+    {
+        return m_xlst_sect.end();
+    }
 
     // inner invoking
 protected:
@@ -2079,7 +2220,7 @@ protected:
     /**
      * @brief 查找分节。
      */
-    xini_section_t * find_sect(const std::string & xstr_sect) const
+    xini_section_t *find_sect(const std::string &xstr_sect) const
     {
         xmap_section_t::const_iterator itfind = m_xmap_sect.find(xstr_sect);
         if (itfind != m_xmap_sect.end())
@@ -2093,19 +2234,18 @@ protected:
     /**********************************************************/
     /**
      * @brief 加入新分节（该接口仅由 operator << 调用）。
-     * 
+     *
      * @param [in ] xnew_ptr  : 新增分节。
      * @param [in ] xsect_ptr : 当前操作分节。
-     * 
+     *
      * @return xini_section_t *
      *         - 返回当前操作分节。
      *         - 若返回值 != xnew_ptr 则表示操作失败，新增分节和内部分节重名。
      */
-    xini_section_t * push_sect(xini_section_t * xnew_ptr,
-                               xini_section_t * xsect_ptr)
+    xini_section_t *push_sect(xini_section_t *xnew_ptr, xini_section_t *xsect_ptr)
     {
         // 查找同名分节
-        xini_section_t * xfind_ptr = find_sect(xnew_ptr->name());
+        xini_section_t *xfind_ptr = find_sect(xnew_ptr->name());
 
         if (NULL == xfind_ptr)
         {
@@ -2128,7 +2268,7 @@ protected:
             // 保证空行隔开
             if (!xfind_ptr->has_end_nilline())
             {
-                xfind_ptr->push_node(new xini_nilline_t(this));  
+                xfind_ptr->push_node(new xini_nilline_t(this));
             }
 
             // 增加注释节点
@@ -2150,13 +2290,13 @@ protected:
     /**********************************************************/
     /**
      * @brief 对 分节 进行重命名操作。
-     * 
+     *
      * @param [in ] xsect_ptr : 目标操作的分节。
      * @param [in ] xstr_name : 重新设置分节的名称。
-     * 
+     *
      * @return 重命名操作 是否成功。
      */
-    bool rename_sect(xini_section_t * xsect_ptr, const std::string & xstr_name)
+    bool rename_sect(xini_section_t *xsect_ptr, const std::string &xstr_name)
     {
         //======================================
 
@@ -2190,19 +2330,18 @@ protected:
 
     // data members
 protected:
-    bool              m_xbt_dirty;  ///< 脏标识
-    std::string       m_xstr_path;  ///< 文件路径
-    std::string       m_xstr_head;  ///< 用于存储文件头的编码字符信息（如 utf-8 的 bom 标识）
-    xlst_section_t    m_xlst_sect;  ///< 文件根下的 分节 节点表
-    xmap_section_t    m_xmap_sect;  ///< 各个 分节 的节点映射表
+    bool m_xbt_dirty;           ///< 脏标识
+    std::string m_xstr_path;    ///< 文件路径
+    std::string m_xstr_head;    ///< 用于存储文件头的编码字符信息（如 utf-8 的 bom 标识）
+    xlst_section_t m_xlst_sect; ///< 文件根下的 分节 节点表
+    xmap_section_t m_xmap_sect; ///< 各个 分节 的节点映射表
 };
 
 /**********************************************************/
 /**
  * @brief 定义 xini_file_t 的流输入操作符函数。
  */
-inline std::istream & operator >> (
-    std::istream & istr, xini_file_t & xini_file)
+inline std::istream &operator>>(std::istream &istr, xini_file_t &xini_file)
 {
     xini_file << istr;
     return istr;

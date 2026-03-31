@@ -1,16 +1,20 @@
 #include "inputstate.h"
 
+#include <fcitx-utils/utils.h>
 #include <fcitx/candidate.h>
 #include <fcitx/ui.h>
-#include <fcitx-utils/utils.h>
 
-static FcitxInputState* freeWubiInputState = NULL;
-FcitxInputState* FreeWubiGetInputState() {
+static FcitxInputState *freeWubiInputState = NULL;
+
+FcitxInputState *FreeWubiGetInputState()
+{
     return freeWubiInputState;
 }
 
-void FreeWubiInputStateInitializeInstance() {
-    if (freeWubiInputState != NULL) {
+void FreeWubiInputStateInitializeInstance()
+{
+    if (freeWubiInputState != NULL)
+    {
         FreeWubiInputStateDestroyInstance();
     }
 
@@ -23,8 +27,10 @@ void FreeWubiInputStateInitializeInstance() {
     freeWubiInputState->candList = FcitxCandidateWordNewList();
 }
 
-void FreeWubiInputStateDestroyInstance() {
-    if (freeWubiInputState == NULL) {
+void FreeWubiInputStateDestroyInstance()
+{
+    if (freeWubiInputState == NULL)
+    {
         return;
     }
 
@@ -51,19 +57,19 @@ void FreeWubiInputStateCleanInputWindowUp(FcitxInputState *inputState)
     FcitxMessagesSetMessageCount(inputState->msgClientPreedit, 0);
 }
 
-void FreeWubiInputStateCleanInputWindowDown(FcitxInputState* inputState)
+void FreeWubiInputStateCleanInputWindowDown(FcitxInputState *inputState)
 {
     FcitxCandidateWordReset(inputState->candList);
     FcitxMessagesSetMessageCount(inputState->msgAuxDown, 0);
 }
 
-void FreeWubiInputStateResetRawInputBuffer(FcitxInputState* inputState)
+void FreeWubiInputStateResetRawInputBuffer(FcitxInputState *inputState)
 {
     FcitxInputStateSetRawInputBufferSize(inputState, 0);
     FcitxInputStateGetRawInputBuffer(inputState)[0] = '\0';
 }
 
-void FreeWubiResetInputState(FcitxInputState* input)
+void FreeWubiResetInputState(FcitxInputState *input)
 {
     FcitxCandidateWordReset(input->candList);
     input->iCursorPos = 0;
@@ -75,19 +81,20 @@ void FreeWubiResetInputState(FcitxInputState* input)
     input->bIsDoInputOnly = false;
     input->bIsInRemind = false;
 
-    FcitxMessages* msgAuxUp = FcitxInputStateGetAuxUp(input);
+    FcitxMessages *msgAuxUp = FcitxInputStateGetAuxUp(input);
     FcitxMessagesSetMessageCount(msgAuxUp, 0);
 
-    FcitxMessages* msgPreedit = FcitxInputStateGetPreedit(input);
+    FcitxMessages *msgPreedit = FcitxInputStateGetPreedit(input);
     FcitxMessagesSetMessageCount(msgPreedit, 0);
 
-    FcitxMessages* msgAuxDown = FcitxInputStateGetAuxDown(input);
+    FcitxMessages *msgAuxDown = FcitxInputStateGetAuxDown(input);
     FcitxMessagesSetMessageCount(msgAuxDown, 0);
 
     FcitxCandidateWordReset(FreeWubiInputStateGetCandidateList(input));
-    FcitxMessages* msgClientPreedit = FcitxInputStateGetClientPreedit(input);
+    FcitxMessages *msgClientPreedit = FcitxInputStateGetClientPreedit(input);
 }
 
-struct _FcitxCandidateWordList* FreeWubiInputStateGetCandidateList(FcitxInputState* input) {
+struct _FcitxCandidateWordList *FreeWubiInputStateGetCandidateList(FcitxInputState *input)
+{
     return input->candList;
 }

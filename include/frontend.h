@@ -28,24 +28,26 @@
 
 #include <stdint.h>
 
-#include <fcitx-utils/utarray.h>
 #include <fcitx-config/fcitx-config.h>
 #include <fcitx-config/hotkey.h>
+#include <fcitx-utils/utarray.h>
 #include <fcitx/ime.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
     struct _FcitxInstance;
-    typedef void* (*FcitxICDataAllocCallback)(void* arg);
-    typedef void (*FcitxICDataFreeCallback)(void* arg, void* data);
-    typedef void* (*FcitxICDataCopyCallback)(void* arg, void* data, void* src);
+    typedef void *(*FcitxICDataAllocCallback)(void *arg);
+    typedef void (*FcitxICDataFreeCallback)(void *arg, void *data);
+    typedef void *(*FcitxICDataCopyCallback)(void *arg, void *data, void *src);
 
     /**
      * Input Method State
      **/
-    typedef enum _FcitxContextState {
+    typedef enum _FcitxContextState
+    {
         IS_CLOSED = 0,
         IS_INACTIVE,
         IS_ACTIVE,
@@ -53,11 +55,12 @@ extern "C" {
     } FcitxContextState;
 
     /** fcitx input context capacity flags */
-    typedef enum _FcitxCapacityFlags {
+    typedef enum _FcitxCapacityFlags
+    {
         CAPACITY_NONE = 0,
         CAPACITY_CLIENT_SIDE_UI = (1 << 0),
         CAPACITY_PREEDIT = (1 << 1),
-        CAPACITY_CLIENT_SIDE_CONTROL_STATE =  (1 << 2),
+        CAPACITY_CLIENT_SIDE_CONTROL_STATE = (1 << 2),
         CAPACITY_PASSWORD = (1 << 3),
         CAPACITY_FORMATTED_PREEDIT = (1 << 4),
         CAPACITY_CLIENT_UNFOCUS_COMMIT = (1 << 5),
@@ -85,51 +88,57 @@ extern "C" {
     /**
      * Input Context, normally one for one program
      **/
-    typedef struct _FcitxInputContext {
-        FcitxContextState state; /**< input method state */
-        int offset_x; /**< x offset to the window */
-        int offset_y; /**< y offset to the window */
-        int frontendid; /**< frontend id */
-        void *privateic; /**< private input context data */
-        FcitxCapacityFlags contextCaps; /**< input context capacity */
-        struct _FcitxInputContext* next; /**< next input context */
+    typedef struct _FcitxInputContext
+    {
+        FcitxContextState state;         /**< input method state */
+        int offset_x;                    /**< x offset to the window */
+        int offset_y;                    /**< y offset to the window */
+        int frontendid;                  /**< frontend id */
+        void *privateic;                 /**< private input context data */
+        FcitxCapacityFlags contextCaps;  /**< input context capacity */
+        struct _FcitxInputContext *next; /**< next input context */
     } FcitxInputContext;
 
-    typedef struct _FcitxInputContext2 {
+    typedef struct _FcitxInputContext2
+    {
         FcitxInputContext inputContext;
-        char* imname;
+        char *imname;
         intptr_t switchBySwitchKey;
-        UT_array* data;
-        char* prgname; /**< program name */
-        union {
+        UT_array *data;
+        char *prgname; /**< program name */
+
+        union
+        {
             FcitxTriState mayUsePreedit;
-            void* _dummy;
+            void *_dummy;
         };
-        void* padding[12];
+
+        void *padding[12];
     } FcitxInputContext2;
 
     /**
      * Program IM Module Frontend
      **/
-    typedef struct _FcitxFrontend {
-        void* (*Create)(struct _FcitxInstance*, int frontendindex); /**< frontend create callback */
-        boolean(*Destroy)(void *arg); /**< frontend destroy callback */
-        void (*CreateIC)(void* arg, FcitxInputContext*, void* priv); /**< frontend create input context callback */
-        boolean(*CheckIC)(void* arg, FcitxInputContext* arg1, void* arg2); /**< frontend check context with private value callback */
-        void (*DestroyIC)(void* arg, FcitxInputContext *context); /**< frontend destroy input context callback */
-        void (*EnableIM)(void* arg, FcitxInputContext* arg1); /**< frontend enable input method to client callback */
-        void (*CloseIM)(void* arg, FcitxInputContext* arg1); /**< frontend close input method to client callback */
-        void (*CommitString)(void* arg, FcitxInputContext* arg1, const char* arg2); /**< frontend commit string callback */
-        void (*ForwardKey)(void* arg, FcitxInputContext* arg1, FcitxKeyEventType event, FcitxKeySym sym, unsigned int state); /**< frontend forward key callback */
-        void (*SetWindowOffset)(void* arg, FcitxInputContext* ic, int x, int y); /**< frontend set window offset callback */
-        void (*GetWindowRect)(void* arg, FcitxInputContext* ic, int* x, int* y, int* w, int* h); /**< frontend get window position callback */
-        void (*UpdatePreedit)(void* arg, FcitxInputContext* ic); /**< frontend update preedit callback */
-        void (*UpdateClientSideUI)(void* arg, FcitxInputContext* ic); /**< frontend update client side user interface callback */
-        void (*ReloadConfig)(void* arg); /**< frontend reload config callback */
-        boolean(*CheckICFromSameApplication)(void* arg, FcitxInputContext* icToCheck, FcitxInputContext* ic); /**< frontend check input context from same application callback */
-        pid_t (*GetPid)(void* arg, FcitxInputContext* arg1); /**< get pid for ic, zero for unknown */
-        void (*DeleteSurroundingText)(void* addonInstance, FcitxInputContext* ic, int offset, unsigned int size);
-        boolean (*GetSurroundingPreedit)(void* addonInstance, FcitxInputContext* ic, char** str, unsigned int* cursor, unsigned int* anchor);
+    typedef struct _FcitxFrontend
+    {
+        void *(*Create)(struct _FcitxInstance *, int frontendindex);                                                          /**< frontend create callback */
+        boolean (*Destroy)(void *arg);                                                                                        /**< frontend destroy callback */
+        void (*CreateIC)(void *arg, FcitxInputContext *, void *priv);                                                         /**< frontend create input context callback */
+        boolean (*CheckIC)(void *arg, FcitxInputContext *arg1, void *arg2);                                                   /**< frontend check context with private value callback */
+        void (*DestroyIC)(void *arg, FcitxInputContext *context);                                                             /**< frontend destroy input context callback */
+        void (*EnableIM)(void *arg, FcitxInputContext *arg1);                                                                 /**< frontend enable input method to client callback */
+        void (*CloseIM)(void *arg, FcitxInputContext *arg1);                                                                  /**< frontend close input method to client callback */
+        void (*CommitString)(void *arg, FcitxInputContext *arg1, const char *arg2);                                           /**< frontend commit string callback */
+        void (*ForwardKey)(void *arg, FcitxInputContext *arg1, FcitxKeyEventType event, FcitxKeySym sym, unsigned int state); /**< frontend forward key callback */
+        void (*SetWindowOffset)(void *arg, FcitxInputContext *ic, int x, int y);                                              /**< frontend set window offset callback */
+        void (*GetWindowRect)(void *arg, FcitxInputContext *ic, int *x, int *y, int *w, int *h);                              /**< frontend get window position callback */
+        void (*UpdatePreedit)(void *arg, FcitxInputContext *ic);                                                              /**< frontend update preedit callback */
+        void (*UpdateClientSideUI)(void *arg, FcitxInputContext *ic);                                                         /**< frontend update client side user interface callback */
+        void (*ReloadConfig)(void *arg);                                                                                      /**< frontend reload config callback */
+        boolean (*CheckICFromSameApplication)(void *arg, FcitxInputContext *icToCheck, FcitxInputContext *ic);                /**< frontend check input context from same application callback */
+        pid_t (*GetPid)(void *arg, FcitxInputContext *arg1);                                                                  /**< get pid for ic, zero for unknown */
+        void (*DeleteSurroundingText)(void *addonInstance, FcitxInputContext *ic, int offset, unsigned int size);
+        boolean (*GetSurroundingPreedit)(void *addonInstance, FcitxInputContext *ic, char **str, unsigned int *cursor, unsigned int *anchor);
     } FcitxFrontend;
 
     /**
@@ -138,7 +147,7 @@ extern "C" {
      * @param  frontends array
      * @return void
      **/
-    void FcitxFrontendsInit(UT_array* frontends);
+    void FcitxFrontendsInit(UT_array *frontends);
 
     /**
      * Find Input Context By Frontend Specific filter
@@ -148,7 +157,7 @@ extern "C" {
      * @param filter frontend specific filter
      * @return FcitxInputContext*
      **/
-    FcitxInputContext* FcitxInstanceFindIC(struct _FcitxInstance* instance, int frontendid, void* filter);
+    FcitxInputContext *FcitxInstanceFindIC(struct _FcitxInstance *instance, int frontendid, void *filter);
 
     /**
      * Creat New Input Context
@@ -158,7 +167,7 @@ extern "C" {
      * @param priv frontend specific data
      * @return FcitxInputContext*
      **/
-    FcitxInputContext* FcitxInstanceCreateIC(struct _FcitxInstance* instance, int frontendid, void* priv);
+    FcitxInputContext *FcitxInstanceCreateIC(struct _FcitxInstance *instance, int frontendid, void *priv);
 
     /**
      * Destroy Input context
@@ -168,7 +177,7 @@ extern "C" {
      * @param filter frontend specific filter
      * @return void
      **/
-    void FcitxInstanceDestroyIC(struct _FcitxInstance* instance, int frontendid, void* filter);
+    void FcitxInstanceDestroyIC(struct _FcitxInstance *instance, int frontendid, void *filter);
 
     /**
      * Load All frontend
@@ -176,7 +185,7 @@ extern "C" {
      * @param instance
      * @return void
      **/
-    boolean FcitxInstanceLoadFrontend(struct _FcitxInstance* instance);
+    boolean FcitxInstanceLoadFrontend(struct _FcitxInstance *instance);
 
     /**
      * Commit String to Client
@@ -186,7 +195,7 @@ extern "C" {
      * @param str String to commit
      * @return void
      **/
-    void FcitxInstanceCommitString(struct _FcitxInstance* instance, FcitxInputContext* ic, const char* str);
+    void FcitxInstanceCommitString(struct _FcitxInstance *instance, FcitxInputContext *ic, const char *str);
 
     /**
      * Get surrounding text for an ic
@@ -198,7 +207,7 @@ extern "C" {
      * @param anchor selection anchor of surrounding text
      * @return boolean
      **/
-    boolean FcitxInstanceGetSurroundingText(struct _FcitxInstance* instance, FcitxInputContext* ic, char** str, unsigned int* cursor, unsigned int* anchor);
+    boolean FcitxInstanceGetSurroundingText(struct _FcitxInstance *instance, FcitxInputContext *ic, char **str, unsigned int *cursor, unsigned int *anchor);
 
     /**
      * Delete client surrounding text
@@ -209,7 +218,7 @@ extern "C" {
      * @param size size
      * @return void
      **/
-    void FcitxInstanceDeleteSurroundingText(struct _FcitxInstance* instance, FcitxInputContext* ic, int offset, unsigned int size);
+    void FcitxInstanceDeleteSurroundingText(struct _FcitxInstance *instance, FcitxInputContext *ic, int offset, unsigned int size);
 
     /**
      * Set Cursor Position
@@ -220,7 +229,7 @@ extern "C" {
      * @param y ypos
      * @return void
      **/
-    void FcitxInstanceSetWindowOffset(struct _FcitxInstance* instance, FcitxInputContext* ic, int x, int y);
+    void FcitxInstanceSetWindowOffset(struct _FcitxInstance *instance, FcitxInputContext *ic, int x, int y);
 
     /**
      * Get Cursor Position
@@ -231,7 +240,7 @@ extern "C" {
      * @param y ypos
      * @return void
      **/
-    void FcitxInstanceGetWindowPosition(struct _FcitxInstance* instance, FcitxInputContext *ic, int* x, int* y);
+    void FcitxInstanceGetWindowPosition(struct _FcitxInstance *instance, FcitxInputContext *ic, int *x, int *y);
 
     /**
      * Get Cursor Rect
@@ -244,7 +253,7 @@ extern "C" {
      * @param h height
      * @return void
      **/
-     void FcitxInstanceGetWindowRect(struct _FcitxInstance* instance, FcitxInputContext* ic, int* x, int* y, int* w, int* h);
+    void FcitxInstanceGetWindowRect(struct _FcitxInstance *instance, FcitxInputContext *ic, int *x, int *y, int *w, int *h);
 
     /**
      * Update preedit text to client window
@@ -253,7 +262,7 @@ extern "C" {
      * @param ic input context
      * @return void
      **/
-    void FcitxInstanceUpdatePreedit(struct _FcitxInstance* instance, FcitxInputContext* ic);
+    void FcitxInstanceUpdatePreedit(struct _FcitxInstance *instance, FcitxInputContext *ic);
 
     /**
      * Update all user interface element to client (Aux Text, Preedit, Candidate Word)
@@ -262,7 +271,7 @@ extern "C" {
      * @param ic input context
      * @return void
      **/
-    void FcitxInstanceUpdateClientSideUI(struct _FcitxInstance* instance, FcitxInputContext* ic);
+    void FcitxInstanceUpdateClientSideUI(struct _FcitxInstance *instance, FcitxInputContext *ic);
 
     /**
      * Get Current State, if only want to get state, this function is better, because it will handle the case that Input Context is NULL.
@@ -270,7 +279,7 @@ extern "C" {
      * @param instance fcitx instance
      * @return IME_STATE
      **/
-    FcitxContextState FcitxInstanceGetCurrentState(struct _FcitxInstance* instance);
+    FcitxContextState FcitxInstanceGetCurrentState(struct _FcitxInstance *instance);
 
     /**
      * Get Current State, consider the option firstAsInactive
@@ -280,7 +289,7 @@ extern "C" {
      *
      * @see FcitxInstanceGetCurrentState
      **/
-    FcitxContextState FcitxInstanceGetCurrentStatev2(struct _FcitxInstance* instance);
+    FcitxContextState FcitxInstanceGetCurrentStatev2(struct _FcitxInstance *instance);
 
     /**
      * get current ic capacity flag, if only want to get capacity, this function is better, because it will handle the case that Input Context is NULL.
@@ -288,7 +297,7 @@ extern "C" {
      * @param instance fcitx instance
      * @return CapacityFlags
      **/
-    FcitxCapacityFlags FcitxInstanceGetCurrentCapacity(struct _FcitxInstance* instance);
+    FcitxCapacityFlags FcitxInstanceGetCurrentCapacity(struct _FcitxInstance *instance);
 
     /**
      * set all ic from same application to the given ic
@@ -298,7 +307,7 @@ extern "C" {
      * @param ic object ic
      * @return void
      **/
-    void FcitxInstanceSetICStateFromSameApplication(struct _FcitxInstance* instance, int frontendid, FcitxInputContext *ic);
+    void FcitxInstanceSetICStateFromSameApplication(struct _FcitxInstance *instance, int frontendid, FcitxInputContext *ic);
 
     /**
      * get a per-ic data
@@ -311,8 +320,7 @@ extern "C" {
      *
      * @since 4.2.5
      **/
-    void* FcitxInstanceGetICData(struct _FcitxInstance* instance, FcitxInputContext* ic, int icdataid);
-
+    void *FcitxInstanceGetICData(struct _FcitxInstance *instance, FcitxInputContext *ic, int icdataid);
 
     /**
      * get a per-ic data
@@ -326,7 +334,7 @@ extern "C" {
      *
      * @since 4.2.5
      **/
-    void FcitxInstanceSetICData(struct _FcitxInstance* instance, FcitxInputContext* ic, int icdataid, void* newdata);
+    void FcitxInstanceSetICData(struct _FcitxInstance *instance, FcitxInputContext *ic, int icdataid, void *newdata);
 
     /**
      * alloc a per-ic data slot
@@ -340,7 +348,7 @@ extern "C" {
      *
      * @since 4.2.5
      **/
-    int FcitxInstanceAllocDataForIC(struct _FcitxInstance* instance, FcitxICDataAllocCallback allocCallback, FcitxICDataCopyCallback copyCallback, FcitxICDataFreeCallback freeCallback, void* arg);
+    int FcitxInstanceAllocDataForIC(struct _FcitxInstance *instance, FcitxICDataAllocCallback allocCallback, FcitxICDataCopyCallback copyCallback, FcitxICDataFreeCallback freeCallback, void *arg);
 
     /**
      * check current ic support preedit or not
@@ -351,7 +359,7 @@ extern "C" {
      *
      * @since 4.2.5
      **/
-    boolean FcitxInstanceICSupportPreedit(struct _FcitxInstance* instance, FcitxInputContext* ic);
+    boolean FcitxInstanceICSupportPreedit(struct _FcitxInstance *instance, FcitxInputContext *ic);
 
 #ifdef __cplusplus
 }

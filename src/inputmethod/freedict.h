@@ -4,7 +4,6 @@
 #include <ctype.h>
 
 #include <dbus/dbus.h>
-
 #include <fcitx-utils/memory.h>
 
 #include "freewubi-config.h"
@@ -136,7 +135,7 @@ typedef struct
 {
     FcitxGenericConfig config;
 
-    FcitxfreewubiConfig* freeWubiConfig;
+    FcitxfreewubiConfig *freeWubiConfig;
 
     // zyp add
     TableType tableType;
@@ -167,12 +166,12 @@ boolean IsInputKey(const TableMetaData *tableMetaData, int iKey);
 boolean IsUncommonKey(const TableMetaData *tableMetaData, int iKey, int state);
 unsigned int CalHZIndex(char *strHZ);
 char *getFreewbPath();
-void adjustOrder(DBusConnection* conn, TableMetaData *tableMetaData, TableDict *dict, char *wordText, char *wordCode);
+void adjustOrder(DBusConnection *conn, TableMetaData *tableMetaData, TableDict *dict, char *wordText, char *wordCode);
 boolean LoadQuickTable(TableMetaData *tableMetaData);
 void freeQucikTable(TableMetaData *tableMetaData);
 QUCIK_TABLE *findQuickPharse(TableMetaData *tableMetaData, FcitxKeySym sym);
 
-boolean LoadAutoEng(TableMetaData *tableMetaData, const char* strAutoEng);
+boolean LoadAutoEng(TableMetaData *tableMetaData, const char *strAutoEng);
 void freeAutoEng(TableMetaData *tableMetaData);
 boolean isAutoEngStr(TableMetaData *tableMetaData, char *str);
 

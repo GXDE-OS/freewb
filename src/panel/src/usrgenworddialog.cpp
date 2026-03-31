@@ -1,27 +1,26 @@
 #include "usrgenworddialog.h"
-#include "ui_usrgenworddialog.h"
+
 #include "commdefine.h"
 #include "settings.h"
-
+#include "ui_usrgenworddialog.h"
 
 #define QSS_BORDER_ACTIVE "color: rgb(255, 255, 255);background-color: rgb(10, 120, 203);"
 #define QSS_BORDER_DEACTIVE "color: rgb(0, 0, 0);background-color: rgb(200, 200, 200);"
 
-
-UsrGenWordDialog::UsrGenWordDialog( QWidget *parent ) : QDialog(parent), ui(new Ui::UsrGenWordDialog)
+UsrGenWordDialog::UsrGenWordDialog(QWidget *parent) : QDialog(parent), ui(new Ui::UsrGenWordDialog)
 {
     ui->setupUi(this);
-    //setWindowFlags( Qt::Tool | Qt::FramelessWindowHint );
-    setWindowFlags(Qt::WindowStaysOnTopHint|Qt::Tool);
+    // setWindowFlags( Qt::Tool | Qt::FramelessWindowHint );
+    setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
     m_mouseIsPressed = false;
     m_mouseLastPosition = QPoint();
 
-    QRegExp rx( "^[a-z]{1,16}$" );
-    QRegExpValidator *validator = new QRegExpValidator( rx, this );
-    ui->ledtWordCode->setValidator( validator );
+    QRegExp rx("^[a-z]{1,16}$");
+    QRegExpValidator *validator = new QRegExpValidator(rx, this);
+    ui->ledtWordCode->setValidator(validator);
 
     QDesktopWidget *d = QApplication::desktop();
-    m_defaultPopPosition = QPoint( (d->width() - size().width())/2, (d->height() - size().height())/2 );
+    m_defaultPopPosition = QPoint((d->width() - size().width()) / 2, (d->height() - size().height()) / 2);
 
     m_userWordFile = INSTALL_DIR + "/data/user_word.txt";
 
@@ -33,65 +32,60 @@ UsrGenWordDialog::~UsrGenWordDialog()
     delete ui;
 }
 
-
-bool UsrGenWordDialog::eventFilter( QObject *obj, QEvent *event )
+bool UsrGenWordDialog::eventFilter(QObject *obj, QEvent *event)
 {
     bool isProcessed = false;
-     QKeyEvent *keyEvt = static_cast<QKeyEvent *>( event );
+    QKeyEvent *keyEvt = static_cast<QKeyEvent *>(event);
 
-    if(keyEvt->key()==Qt::Key_Escape)
+    if (keyEvt->key() == Qt::Key_Escape)
     {
         on_btnExit_clicked();
-    }   
+    }
 
-    if ( isProcessed == false )
+    if (isProcessed == false)
     {
-        return QWidget::eventFilter( obj, event );
+        return QWidget::eventFilter(obj, event);
     }
 
     return isProcessed;
 }
 
-void UsrGenWordDialog::mousePressEvent( QMouseEvent *event )
+void UsrGenWordDialog::mousePressEvent(QMouseEvent *event)
 {
-    if( event->button() == Qt::LeftButton )
+    if (event->button() == Qt::LeftButton)
     {
         m_mouseIsPressed = true;
         m_mouseLastPosition = event->globalPos();
     }
 }
 
-
-void UsrGenWordDialog::mouseReleaseEvent( QMouseEvent *event )
+void UsrGenWordDialog::mouseReleaseEvent(QMouseEvent *event)
 {
-    if( event->button() == Qt::LeftButton )
+    if (event->button() == Qt::LeftButton)
     {
         m_mouseIsPressed = false;
     }
 }
 
-
-void UsrGenWordDialog::mouseMoveEvent( QMouseEvent *event )
+void UsrGenWordDialog::mouseMoveEvent(QMouseEvent *event)
 {
-    if( m_mouseIsPressed )
-     {
+    if (m_mouseIsPressed)
+    {
         QPoint mouseCurrPosition = event->globalPos();
-        move( pos() + mouseCurrPosition - m_mouseLastPosition );
+        move(pos() + mouseCurrPosition - m_mouseLastPosition);
         m_mouseLastPosition = mouseCurrPosition;
     }
 }
 
-
-
 void UsrGenWordDialog::init_user_word_file()
 {
-    QFile textFile( m_userWordFile );
-    QTextStream textStream( &textFile );
-    textStream.setCodec( "UTF-8" );
+    QFile textFile(m_userWordFile);
+    QTextStream textStream(&textFile);
+    textStream.setCodec("UTF-8");
 
-    if( !textFile.exists() || textFile.size()<15 )
+    if (!textFile.exists() || textFile.size() < 15)
     {
-        if ( !textFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text) )
+        if (!textFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
         {
             qWarning() << textFile.fileName() << " open failed!";
             return;
@@ -120,47 +114,46 @@ void UsrGenWordDialog::init_user_word_file()
         strList << "year=$y年\n";
 
         strList.sort();
-        strList.insert( 0, "[UserWord]\n" );
+        strList.insert(0, "[UserWord]\n");
 
-        foreach( QString str, strList )
+        foreach(QString str, strList)
         {
             textStream << str;
         }
         textStream.flush();
         textFile.close();
 
-        Settings::save_userWord_change_flg_to_file( 1 );
+        Settings::save_userWord_change_flg_to_file(1);
     }
 }
 
-
-void UsrGenWordDialog::add_user_word( const QString &wordText, const QString &wordCode )
+void UsrGenWordDialog::add_user_word(const QString &wordText, const QString &wordCode)
 {
-    QFile textFile( m_userWordFile );
-    QTextStream textStream( &textFile );
-    textStream.setCodec( "UTF-8" );
+    QFile textFile(m_userWordFile);
+    QTextStream textStream(&textFile);
+    textStream.setCodec("UTF-8");
 
-    if ( !textFile.open(QIODevice::ReadWrite | QIODevice::Text) )
+    if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
     {
         qWarning() << textFile.fileName() << " open failed!";
         return;
     }
 
-    QStringList strList = textStream.readAll().split( '\n' );
-    textFile.resize( 0 );
+    QStringList strList = textStream.readAll().split('\n');
+    textFile.resize(0);
 
-    if ( strList.length() )
+    if (strList.length())
     {
-        strList.takeAt( 0 );
+        strList.takeAt(0);
     }
     strList << QString("%1=%2").arg(wordCode).arg(wordText);
     strList.removeDuplicates();
     strList.sort();
-    strList.insert( 0, "[UserWord]" );
+    strList.insert(0, "[UserWord]");
 
-    foreach( QString str, strList )
+    foreach(QString str, strList)
     {
-        if ( !str.isEmpty() )
+        if (!str.isEmpty())
         {
             textStream << str + "\n";
         }
@@ -169,32 +162,32 @@ void UsrGenWordDialog::add_user_word( const QString &wordText, const QString &wo
     textFile.close();
 }
 
-void UsrGenWordDialog::delete_user_word( const QString &wordText, const QString &wordCode )
+void UsrGenWordDialog::delete_user_word(const QString &wordText, const QString &wordCode)
 {
-    QFile textFile( m_userWordFile );
-    QTextStream textStream( &textFile );
-    textStream.setCodec( "UTF-8" );
+    QFile textFile(m_userWordFile);
+    QTextStream textStream(&textFile);
+    textStream.setCodec("UTF-8");
 
-    if ( !textFile.open(QIODevice::ReadWrite | QIODevice::Text) )
+    if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
     {
         qWarning() << textFile.fileName() << " open failed!";
         return;
     }
 
-    QStringList strList = textStream.readAll().split( '\n' );
-    textFile.resize( 0 );
-    if ( strList.length() )
+    QStringList strList = textStream.readAll().split('\n');
+    textFile.resize(0);
+    if (strList.length())
     {
         int pos;
-        if ( (pos = strList.indexOf(QString("%1=%2").arg(wordCode).arg(wordText))) != -1 )
+        if ((pos = strList.indexOf(QString("%1=%2").arg(wordCode).arg(wordText))) != -1)
         {
-            strList.removeAt( pos );
+            strList.removeAt(pos);
         }
     }
 
-    foreach( QString str, strList )
+    foreach(QString str, strList)
     {
-        if ( !str.isEmpty() )
+        if (!str.isEmpty())
         {
             textStream << str + "\n";
         }
@@ -203,12 +196,11 @@ void UsrGenWordDialog::delete_user_word( const QString &wordText, const QString 
     textFile.close();
 }
 
-
-void UsrGenWordDialog::slot_show_dialog( const QString &wordText, const QString &wordCode )
+void UsrGenWordDialog::slot_show_dialog(const QString &wordText, const QString &wordCode)
 {
-    ui->ledtWordText->setText( wordText );
-    ui->ledtWordCode->setText( wordCode );
-    if( wordCode.length()<1 )
+    ui->ledtWordText->setText(wordText);
+    ui->ledtWordCode->setText(wordCode);
+    if (wordCode.length() < 1)
     {
         ui->ledtWordCode->setFocus();
     }
@@ -217,18 +209,16 @@ void UsrGenWordDialog::slot_show_dialog( const QString &wordText, const QString 
 
 void UsrGenWordDialog::slot_userWord_file_saved()
 {
-    Settings::save_userWord_change_flg_to_file( 1 );
+    Settings::save_userWord_change_flg_to_file(1);
     emit signal_user_word_changed();
 }
 
-
-
 void UsrGenWordDialog::on_btnOk_clicked()
 {
-    add_user_word( ui->ledtWordText->text(), ui->ledtWordCode->text() );
+    add_user_word(ui->ledtWordText->text(), ui->ledtWordCode->text());
     accept();
 
-    Settings::save_userWord_change_flg_to_file( 1 );
+    Settings::save_userWord_change_flg_to_file(1);
     emit signal_user_word_changed();
 }
 
@@ -238,4 +228,3 @@ void UsrGenWordDialog::on_btnExit_clicked()
     ui->ledtWordCode->clear();
     accept();
 }
-

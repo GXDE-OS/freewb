@@ -1,8 +1,8 @@
 #include "backupdialog.h"
-#include "ui_backupdialog.h"
+
 #include "commdefine.h"
 #include "settings.h"
-
+#include "ui_backupdialog.h"
 
 #define QSS_BORDER_ACTIVE "color: rgb(255, 255, 255);background-color: rgb(10, 120, 203);"
 #define QSS_BORDER_DEACTIVE "color: rgb(0, 0, 0);background-color: rgb(200, 200, 200);"
@@ -11,20 +11,17 @@
 #define QSS_BTN_CLOSE1 "border-image: url(:/image/setting/close1.png);"
 #define QSS_BTN_CLOSE2 "border-image: url(:/image/setting/close2.png);"
 
-
-#define FILE_WUBI_TABLE     INSTALL_DIR + "/data/mb/" + Settings::get_cur_used_lexicon() + "/freeime.mb"
-#define FILE_PINYIN_TABLE   INSTALL_DIR + "/data/mb/" + Settings::get_cur_used_lexicon() + "/attach.mb"
-#define FILE_USER_TABLE     INSTALL_DIR + "/data/user_word.txt"
-#define FILE_QUICK_TABLE    INSTALL_DIR + "/data/quick_table.txt"
-#define FILE_SETTINGS       INSTALL_DIR + "/config/config.ini"
-#define DIR_DEFAULT_BACKUP  INSTALL_DIR + "/backup"
-#define FILE_BACKUP         DIR_DEFAULT_BACKUP + "/freewb_" + QDateTime::currentDateTime().toString( "yyyyMMdd_hhmmss" ) + ".bak"
-
+#define FILE_WUBI_TABLE INSTALL_DIR + "/data/mb/" + Settings::get_cur_used_lexicon() + "/freeime.mb"
+#define FILE_PINYIN_TABLE INSTALL_DIR + "/data/mb/" + Settings::get_cur_used_lexicon() + "/attach.mb"
+#define FILE_USER_TABLE INSTALL_DIR + "/data/user_word.txt"
+#define FILE_QUICK_TABLE INSTALL_DIR + "/data/quick_table.txt"
+#define FILE_SETTINGS INSTALL_DIR + "/config/config.ini"
+#define DIR_DEFAULT_BACKUP INSTALL_DIR + "/backup"
+#define FILE_BACKUP DIR_DEFAULT_BACKUP + "/freewb_" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss") + ".bak"
 
 const qint32 g_backupFileHead = 1618188;
 
-
-BackupWorker::BackupWorker( QObject *parent ) : QObject( parent )
+BackupWorker::BackupWorker(QObject *parent) : QObject(parent)
 {
 }
 
@@ -32,16 +29,15 @@ BackupWorker::~BackupWorker()
 {
 }
 
-void BackupWorker::set_op_param( int opFlg, const QString &backupFile  )
+void BackupWorker::set_op_param(int opFlg, const QString &backupFile)
 {
     m_opFlg = opFlg;
     m_backupFile = backupFile;
 }
 
-
 void BackupWorker::slot_start_work()
 {
-    if ( m_opFlg )
+    if (m_opFlg)
     {
         start_restore();
     }
@@ -51,10 +47,9 @@ void BackupWorker::slot_start_work()
     }
 }
 
-
 void BackupWorker::start_backup()
 {
-    #define BUF_SIZE (1024*4)
+#define BUF_SIZE (1024 * 4)
     QString curUsedLexiconName = Settings::get_cur_used_lexicon();
     qint32 lexiconNameSize = curUsedLexiconName.toUtf8().length();
     qint32 wbTableSize = 0;
@@ -62,51 +57,45 @@ void BackupWorker::start_backup()
     qint32 userTableSize = 0;
     qint32 quickTableSize = 0;
     qint32 settingFileSize = 0;
-    QFile wbTableFile( FILE_WUBI_TABLE );
-    QFile pyTableFile( FILE_PINYIN_TABLE );
-    QFile userTableFile( FILE_USER_TABLE );
-    QFile quickTableFile( FILE_QUICK_TABLE );
-    QFile settingFile( FILE_SETTINGS );
+    QFile wbTableFile(FILE_WUBI_TABLE);
+    QFile pyTableFile(FILE_PINYIN_TABLE);
+    QFile userTableFile(FILE_USER_TABLE);
+    QFile quickTableFile(FILE_QUICK_TABLE);
+    QFile settingFile(FILE_SETTINGS);
 
     int failedFlg = 0;
 
-    QFile backupFile( m_backupFile );
-    QDataStream backupStream( &backupFile );
-    if ( !backupFile.open(QIODevice::WriteOnly | QIODevice::Truncate) )
+    QFile backupFile(m_backupFile);
+    QDataStream backupStream(&backupFile);
+    if (!backupFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
         qWarning() << m_backupFile << "open failed!";
         failedFlg = 1;
     }
     else
     {
-        backupFile.seek( sizeof(g_backupFileHead)
-                         + sizeof(lexiconNameSize)
-                         + sizeof(wbTableSize)
-                         + sizeof(pyTableSize)
-                         + sizeof(userTableSize)
-                         + sizeof(quickTableSize)
-                         + sizeof(settingFileSize) );
+        backupFile.seek(sizeof(g_backupFileHead) + sizeof(lexiconNameSize) + sizeof(wbTableSize) + sizeof(pyTableSize) + sizeof(userTableSize) + sizeof(quickTableSize) + sizeof(settingFileSize));
         QDataStream dataStream;
         char *bytebuf = new char[BUF_SIZE];
 
-        //写入词库名
-        backupStream.writeRawData( curUsedLexiconName.toUtf8().data(), lexiconNameSize );
+        // 写入词库名
+        backupStream.writeRawData(curUsedLexiconName.toUtf8().data(), lexiconNameSize);
 
-        //备份五笔词库
-        if ( !wbTableFile.open(QIODevice::ReadOnly) )
+        // 备份五笔词库
+        if (!wbTableFile.open(QIODevice::ReadOnly))
         {
-            qWarning() <<  FILE_WUBI_TABLE << "open failed!";
+            qWarning() << FILE_WUBI_TABLE << "open failed!";
             failedFlg = 1;
         }
         else
         {
-            dataStream.setDevice( &wbTableFile );
-            while ( 1 )
+            dataStream.setDevice(&wbTableFile);
+            while (1)
             {
-                int size = dataStream.readRawData( bytebuf, BUF_SIZE );
-                if ( size > 0 )
+                int size = dataStream.readRawData(bytebuf, BUF_SIZE);
+                if (size > 0)
                 {
-                    backupStream.writeRawData( bytebuf, size );
+                    backupStream.writeRawData(bytebuf, size);
                     wbTableSize += size;
                 }
                 else
@@ -115,23 +104,23 @@ void BackupWorker::start_backup()
                 }
             }
             wbTableFile.close();
-            //qDebug() << "wubimb file size: " << wbTableSize;
+            // qDebug() << "wubimb file size: " << wbTableSize;
         }
 
-        //备份拼音词库
-        if ( !pyTableFile.open(QIODevice::ReadOnly) )
+        // 备份拼音词库
+        if (!pyTableFile.open(QIODevice::ReadOnly))
         {
-            qWarning() <<  FILE_PINYIN_TABLE << "open failed!";
+            qWarning() << FILE_PINYIN_TABLE << "open failed!";
         }
         else
         {
-            dataStream.setDevice( &pyTableFile );
-            while ( 1 )
+            dataStream.setDevice(&pyTableFile);
+            while (1)
             {
-                int size = dataStream.readRawData( bytebuf, BUF_SIZE );
-                if ( size > 0 )
+                int size = dataStream.readRawData(bytebuf, BUF_SIZE);
+                if (size > 0)
                 {
-                    backupStream.writeRawData( bytebuf, size );
+                    backupStream.writeRawData(bytebuf, size);
                     pyTableSize += size;
                 }
                 else
@@ -140,23 +129,23 @@ void BackupWorker::start_backup()
                 }
             }
             pyTableFile.close();
-            //qDebug() << "pinyinmb file size: " << pyTableSize;
+            // qDebug() << "pinyinmb file size: " << pyTableSize;
         }
 
-        //备份用户词组表
-        if ( !userTableFile.open(QIODevice::ReadOnly) )
+        // 备份用户词组表
+        if (!userTableFile.open(QIODevice::ReadOnly))
         {
-            qWarning() <<  FILE_USER_TABLE << "open failed!";
+            qWarning() << FILE_USER_TABLE << "open failed!";
         }
         else
         {
-            dataStream.setDevice( &userTableFile );
-            while ( 1 )
+            dataStream.setDevice(&userTableFile);
+            while (1)
             {
-                int size = dataStream.readRawData( bytebuf, BUF_SIZE );
-                if ( size > 0 )
+                int size = dataStream.readRawData(bytebuf, BUF_SIZE);
+                if (size > 0)
                 {
-                    backupStream.writeRawData( bytebuf, size );
+                    backupStream.writeRawData(bytebuf, size);
                     userTableSize += size;
                 }
                 else
@@ -165,23 +154,23 @@ void BackupWorker::start_backup()
                 }
             }
             userTableFile.close();
-            //qDebug() << "userword file size: " << userTableSize;
+            // qDebug() << "userword file size: " << userTableSize;
         }
 
-        //备份快捷码表
-        if ( !quickTableFile.open(QIODevice::ReadOnly) )
+        // 备份快捷码表
+        if (!quickTableFile.open(QIODevice::ReadOnly))
         {
-            qWarning() <<  FILE_QUICK_TABLE << "open failed!";
+            qWarning() << FILE_QUICK_TABLE << "open failed!";
         }
         else
         {
-            dataStream.setDevice( &quickTableFile );
-            while ( 1 )
+            dataStream.setDevice(&quickTableFile);
+            while (1)
             {
-                int size = dataStream.readRawData( bytebuf, BUF_SIZE );
-                if ( size > 0 )
+                int size = dataStream.readRawData(bytebuf, BUF_SIZE);
+                if (size > 0)
                 {
-                    backupStream.writeRawData( bytebuf, size );
+                    backupStream.writeRawData(bytebuf, size);
                     quickTableSize += size;
                 }
                 else
@@ -190,23 +179,23 @@ void BackupWorker::start_backup()
                 }
             }
             quickTableFile.close();
-            //qDebug() << "quick table file size: " << quickTableSize;
+            // qDebug() << "quick table file size: " << quickTableSize;
         }
 
-        //备份用户设置文件
-        if ( !settingFile.open(QIODevice::ReadOnly) )
+        // 备份用户设置文件
+        if (!settingFile.open(QIODevice::ReadOnly))
         {
-            qWarning() <<  FILE_SETTINGS << "open failed!";
+            qWarning() << FILE_SETTINGS << "open failed!";
         }
         else
         {
-            dataStream.setDevice( &settingFile );
-            while ( 1 )
+            dataStream.setDevice(&settingFile);
+            while (1)
             {
-                int size = dataStream.readRawData( bytebuf, BUF_SIZE );
-                if ( size > 0 )
+                int size = dataStream.readRawData(bytebuf, BUF_SIZE);
+                if (size > 0)
                 {
-                    backupStream.writeRawData( bytebuf, size );
+                    backupStream.writeRawData(bytebuf, size);
                     settingFileSize += size;
                 }
                 else
@@ -215,33 +204,30 @@ void BackupWorker::start_backup()
                 }
             }
             settingFile.close();
-            //qDebug() << "settings file size: " << sysSettingSize;
+            // qDebug() << "settings file size: " << sysSettingSize;
         }
 
-        //写入文件头部信息
-        backupFile.seek( 0 );
-        backupStream << g_backupFileHead << lexiconNameSize
-                     << wbTableSize << pyTableSize << userTableSize << quickTableSize
-                     << settingFileSize;
+        // 写入文件头部信息
+        backupFile.seek(0);
+        backupStream << g_backupFileHead << lexiconNameSize << wbTableSize << pyTableSize << userTableSize << quickTableSize << settingFileSize;
 
         backupFile.close();
-        delete []bytebuf;
+        delete[] bytebuf;
     }
 
-
-    if ( !failedFlg )
+    if (!failedFlg)
     {
-        emit signal_process_updated( m_opFlg, 100 );
+        emit signal_process_updated(m_opFlg, 100);
     }
     else
     {
-        emit signal_process_updated( m_opFlg, -1 );
+        emit signal_process_updated(m_opFlg, -1);
     }
 }
 
 void BackupWorker::start_restore()
 {
-    #define BUF_SIZE (1024*4)
+#define BUF_SIZE (1024 * 4)
     qint32 backupFileHead;
     qint32 lexiconNameSize = 0;
     qint32 wbTableSize = 0;
@@ -251,44 +237,35 @@ void BackupWorker::start_restore()
     qint32 settingFileSize = 0;
     QFile wbTableFile;
     QFile pyTableFile;
-    QFile userTableFile( FILE_USER_TABLE );
-    QFile quickTableFile( FILE_QUICK_TABLE );
-    QFile settingFile( FILE_SETTINGS );
+    QFile userTableFile(FILE_USER_TABLE);
+    QFile quickTableFile(FILE_QUICK_TABLE);
+    QFile settingFile(FILE_SETTINGS);
     int failedFlg = 0;
 
-    QFile backupFile( m_backupFile );
-    QDataStream backupStream( &backupFile );
-    if ( !backupFile.open(QIODevice::ReadOnly) )
+    QFile backupFile(m_backupFile);
+    QDataStream backupStream(&backupFile);
+    if (!backupFile.open(QIODevice::ReadOnly))
     {
         qWarning() << m_backupFile << "open failed!";
         failedFlg = 1;
     }
     else
     {
-        //读取文件头部信息
-        quint32 dataHeadSize = sizeof(g_backupFileHead)
-                                + sizeof(lexiconNameSize)
-                                + sizeof(wbTableSize)
-                                + sizeof(pyTableSize)
-                                + sizeof(userTableSize)
-                                + sizeof(quickTableSize)
-                                + sizeof(settingFileSize);
-        backupStream >> backupFileHead >> lexiconNameSize
-                     >> wbTableSize >> pyTableSize >> userTableSize >> quickTableSize
-                     >> settingFileSize;
+        // 读取文件头部信息
+        quint32 dataHeadSize = sizeof(g_backupFileHead) + sizeof(lexiconNameSize) + sizeof(wbTableSize) + sizeof(pyTableSize) + sizeof(userTableSize) + sizeof(quickTableSize) + sizeof(settingFileSize);
+        backupStream >> backupFileHead >> lexiconNameSize >> wbTableSize >> pyTableSize >> userTableSize >> quickTableSize >> settingFileSize;
 
         char str[128] = {0};
-        Q_ASSERT( lexiconNameSize < 128 );
-        backupStream.readRawData( str, lexiconNameSize );
-        QString backupLexiconName( str );
+        Q_ASSERT(lexiconNameSize < 128);
+        backupStream.readRawData(str, lexiconNameSize);
+        QString backupLexiconName(str);
 
         quint32 dataSize = static_cast<quint32>(lexiconNameSize + wbTableSize + pyTableSize + userTableSize + quickTableSize + settingFileSize);
 #ifdef DEBUG
         qDebug() << backupFileHead << lexiconNameSize << wbTableSize << pyTableSize << userTableSize << quickTableSize << settingFileSize;
 #endif
-        //判断备份文件是否有效
-        if( (backupFileHead != g_backupFileHead)
-            || (dataHeadSize + dataSize != backupFile.size()) )
+        // 判断备份文件是否有效
+        if ((backupFileHead != g_backupFileHead) || (dataHeadSize + dataSize != backupFile.size()))
         {
             qWarning() << m_backupFile << "is invalid!";
             failedFlg = 1;
@@ -299,28 +276,28 @@ void BackupWorker::start_restore()
             char *bytebuf = new char[BUF_SIZE];
 
             QString lexiconDir = INSTALL_DIR + "/data/mb/" + backupLexiconName;
-            if ( !QDir(lexiconDir).exists() )
+            if (!QDir(lexiconDir).exists())
             {
-                if ( !QDir().mkdir( lexiconDir ) )
+                if (!QDir().mkdir(lexiconDir))
                 {
                     qWarning() << lexiconDir << "create failed!";
                 }
             }
 
-            //恢复五笔词库
-            wbTableFile.setFileName( lexiconDir + "/freeime.mb" );
-            if ( !wbTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate) )
+            // 恢复五笔词库
+            wbTableFile.setFileName(lexiconDir + "/freeime.mb");
+            if (!wbTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
             {
-                qWarning() <<  FILE_WUBI_TABLE << "open failed!";
+                qWarning() << FILE_WUBI_TABLE << "open failed!";
             }
             else
             {
-                backupFile.seek( dataHeadSize + static_cast<quint32>(lexiconNameSize) );
-                dataStream.setDevice( &wbTableFile );
+                backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize));
+                dataStream.setDevice(&wbTableFile);
                 qint32 readBytes = 0, totalWriteBytes = 0;
-                while ( totalWriteBytes < wbTableSize )
+                while (totalWriteBytes < wbTableSize)
                 {
-                    if ( totalWriteBytes + BUF_SIZE <= wbTableSize )
+                    if (totalWriteBytes + BUF_SIZE <= wbTableSize)
                     {
                         readBytes = BUF_SIZE;
                     }
@@ -329,10 +306,10 @@ void BackupWorker::start_restore()
                         readBytes = wbTableSize - totalWriteBytes;
                     }
 
-                    int size = backupStream.readRawData( bytebuf, readBytes );
-                    if ( size > 0 )
+                    int size = backupStream.readRawData(bytebuf, readBytes);
+                    if (size > 0)
                     {
-                        dataStream.writeRawData( bytebuf, size );
+                        dataStream.writeRawData(bytebuf, size);
                         totalWriteBytes += size;
                     }
                     else
@@ -341,27 +318,25 @@ void BackupWorker::start_restore()
                     }
                 }
                 wbTableFile.close();
-                #ifdef DEBUG
+#ifdef DEBUG
                 qDebug() << "wubimb file size: " << totalWriteBytes;
-                #endif
+#endif
             }
 
-            //恢复拼音词库
-            pyTableFile.setFileName( lexiconDir + "/attach.mb" );
-            if ( !pyTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate) )
+            // 恢复拼音词库
+            pyTableFile.setFileName(lexiconDir + "/attach.mb");
+            if (!pyTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
             {
-                qWarning() <<  FILE_PINYIN_TABLE << "open failed!";
+                qWarning() << FILE_PINYIN_TABLE << "open failed!";
             }
             else
             {
-                backupFile.seek( dataHeadSize
-                                 + static_cast<quint32>(lexiconNameSize)
-                                 + static_cast<quint32>(wbTableSize) );
-                dataStream.setDevice( &pyTableFile );
+                backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize));
+                dataStream.setDevice(&pyTableFile);
                 qint32 readBytes = 0, totalWriteBytes = 0;
-                while ( totalWriteBytes < pyTableSize )
+                while (totalWriteBytes < pyTableSize)
                 {
-                    if ( totalWriteBytes + BUF_SIZE <= pyTableSize )
+                    if (totalWriteBytes + BUF_SIZE <= pyTableSize)
                     {
                         readBytes = BUF_SIZE;
                     }
@@ -370,10 +345,10 @@ void BackupWorker::start_restore()
                         readBytes = pyTableSize - totalWriteBytes;
                     }
 
-                    int size = backupStream.readRawData( bytebuf, readBytes );
-                    if ( size > 0 )
+                    int size = backupStream.readRawData(bytebuf, readBytes);
+                    if (size > 0)
                     {
-                        dataStream.writeRawData( bytebuf, size );
+                        dataStream.writeRawData(bytebuf, size);
                         totalWriteBytes += size;
                     }
                     else
@@ -382,27 +357,24 @@ void BackupWorker::start_restore()
                     }
                 }
                 pyTableFile.close();
-                #ifdef DEBUG
+#ifdef DEBUG
                 qDebug() << "pinyinmb file size: " << totalWriteBytes;
-                #endif
+#endif
             }
 
-            //恢复用户词组表
-            if ( !userTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate) )
+            // 恢复用户词组表
+            if (!userTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
             {
-                qWarning() <<  FILE_USER_TABLE << "open failed!";
+                qWarning() << FILE_USER_TABLE << "open failed!";
             }
             else
             {
-                backupFile.seek( dataHeadSize
-                                 + static_cast<quint32>(lexiconNameSize)
-                                 + static_cast<quint32>(wbTableSize)
-                                 + static_cast<quint32>(pyTableSize) );
-                dataStream.setDevice( &userTableFile );
+                backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize) + static_cast<quint32>(pyTableSize));
+                dataStream.setDevice(&userTableFile);
                 qint32 readBytes = 0, totalWriteBytes = 0;
-                while ( totalWriteBytes < userTableSize )
+                while (totalWriteBytes < userTableSize)
                 {
-                    if ( totalWriteBytes + BUF_SIZE <= userTableSize )
+                    if (totalWriteBytes + BUF_SIZE <= userTableSize)
                     {
                         readBytes = BUF_SIZE;
                     }
@@ -411,10 +383,10 @@ void BackupWorker::start_restore()
                         readBytes = userTableSize - totalWriteBytes;
                     }
 
-                    int size = backupStream.readRawData( bytebuf, readBytes );
-                    if ( size > 0 )
+                    int size = backupStream.readRawData(bytebuf, readBytes);
+                    if (size > 0)
                     {
-                        dataStream.writeRawData( bytebuf, size );
+                        dataStream.writeRawData(bytebuf, size);
                         totalWriteBytes += size;
                     }
                     else
@@ -423,29 +395,24 @@ void BackupWorker::start_restore()
                     }
                 }
                 userTableFile.close();
-                #ifdef DEBUG
+#ifdef DEBUG
                 qDebug() << "pinyinmb file size: " << totalWriteBytes;
-                #endif
+#endif
             }
 
-
-            //恢复快捷码表
-            if ( !quickTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate) )
+            // 恢复快捷码表
+            if (!quickTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
             {
-                qWarning() <<  FILE_QUICK_TABLE << "open failed!";
+                qWarning() << FILE_QUICK_TABLE << "open failed!";
             }
             else
             {
-                backupFile.seek( dataHeadSize
-                                 + static_cast<quint32>(lexiconNameSize)
-                                 + static_cast<quint32>(wbTableSize)
-                                 + static_cast<quint32>(pyTableSize)
-                                 + static_cast<quint32>(userTableSize) );
-                dataStream.setDevice( &quickTableFile );
+                backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize) + static_cast<quint32>(pyTableSize) + static_cast<quint32>(userTableSize));
+                dataStream.setDevice(&quickTableFile);
                 qint32 readBytes = 0, totalWriteBytes = 0;
-                while ( totalWriteBytes < quickTableSize )
+                while (totalWriteBytes < quickTableSize)
                 {
-                    if ( totalWriteBytes + BUF_SIZE <= quickTableSize )
+                    if (totalWriteBytes + BUF_SIZE <= quickTableSize)
                     {
                         readBytes = BUF_SIZE;
                     }
@@ -454,10 +421,10 @@ void BackupWorker::start_restore()
                         readBytes = quickTableSize - totalWriteBytes;
                     }
 
-                    int size = backupStream.readRawData( bytebuf, readBytes );
-                    if ( size > 0 )
+                    int size = backupStream.readRawData(bytebuf, readBytes);
+                    if (size > 0)
                     {
-                        dataStream.writeRawData( bytebuf, size );
+                        dataStream.writeRawData(bytebuf, size);
                         totalWriteBytes += size;
                     }
                     else
@@ -466,29 +433,24 @@ void BackupWorker::start_restore()
                     }
                 }
                 quickTableFile.close();
-                #ifdef DEBUG
+#ifdef DEBUG
                 qDebug() << "quick table file size: " << totalWriteBytes;
-                #endif
+#endif
             }
 
-            //恢复用户设置文件
-            if ( !settingFile.open(QIODevice::WriteOnly | QIODevice::Truncate) )
+            // 恢复用户设置文件
+            if (!settingFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
             {
-                qWarning() <<  FILE_SETTINGS << "open failed!";
+                qWarning() << FILE_SETTINGS << "open failed!";
             }
             else
             {
-                backupFile.seek( dataHeadSize
-                                 + static_cast<quint32>(lexiconNameSize)
-                                 + static_cast<quint32>(wbTableSize)
-                                 + static_cast<quint32>(pyTableSize)
-                                 + static_cast<quint32>(userTableSize)
-                                 + static_cast<quint32>(quickTableSize) );
-                dataStream.setDevice( &settingFile );
+                backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize) + static_cast<quint32>(pyTableSize) + static_cast<quint32>(userTableSize) + static_cast<quint32>(quickTableSize));
+                dataStream.setDevice(&settingFile);
                 qint32 readBytes = 0, totalWriteBytes = 0;
-                while ( totalWriteBytes < settingFileSize )
+                while (totalWriteBytes < settingFileSize)
                 {
-                    if ( totalWriteBytes + BUF_SIZE <= settingFileSize )
+                    if (totalWriteBytes + BUF_SIZE <= settingFileSize)
                     {
                         readBytes = BUF_SIZE;
                     }
@@ -497,10 +459,10 @@ void BackupWorker::start_restore()
                         readBytes = settingFileSize - totalWriteBytes;
                     }
 
-                    int size = backupStream.readRawData( bytebuf, readBytes );
-                    if ( size > 0 )
+                    int size = backupStream.readRawData(bytebuf, readBytes);
+                    if (size > 0)
                     {
-                        dataStream.writeRawData( bytebuf, size );
+                        dataStream.writeRawData(bytebuf, size);
                         totalWriteBytes += size;
                     }
                     else
@@ -509,68 +471,63 @@ void BackupWorker::start_restore()
                     }
                 }
                 settingFile.close();
-                #ifdef DEBUG
+#ifdef DEBUG
                 qDebug() << "setting file size: " << totalWriteBytes;
-                #endif
+#endif
             }
 
             backupFile.close();
-            delete []bytebuf;
+            delete[] bytebuf;
         }
     }
 
-
-    if ( !failedFlg )
+    if (!failedFlg)
     {
-        emit signal_process_updated( m_opFlg, 100 );
+        emit signal_process_updated(m_opFlg, 100);
     }
     else
     {
-        emit signal_process_updated( m_opFlg, -1 );
+        emit signal_process_updated(m_opFlg, -1);
     }
 }
 
-
-
-BackupDialog::BackupDialog( QDialog *parent ) : QDialog(parent), ui( new Ui::BackupDialog )
+BackupDialog::BackupDialog(QDialog *parent) : QDialog(parent), ui(new Ui::BackupDialog)
 {
     ui->setupUi(this);
-    setWindowFlags( Qt::FramelessWindowHint | Qt::Tool );
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
 
     m_mouseIsPressed = false;
     m_mouseLastPosition = QPoint();
 
     QDesktopWidget *d = QApplication::desktop();
-    m_defaultPopPosition = QPoint( (d->width() - size().width())/2, (d->height() - size().height())/2 );
+    m_defaultPopPosition = QPoint((d->width() - size().width()) / 2, (d->height() - size().height()) / 2);
 
-    m_backupThread = new QThread( this );
+    m_backupThread = new QThread(this);
     m_backupWorker = new BackupWorker();
-    m_backupWorker->moveToThread( m_backupThread );
-    connect( m_backupThread, &QThread::started, m_backupWorker, &BackupWorker::slot_start_work );
-    connect( m_backupWorker, &BackupWorker::signal_process_updated, this, &BackupDialog::slot_progress_updated );
+    m_backupWorker->moveToThread(m_backupThread);
+    connect(m_backupThread, &QThread::started, m_backupWorker, &BackupWorker::slot_start_work);
+    connect(m_backupWorker, &BackupWorker::signal_process_updated, this, &BackupDialog::slot_progress_updated);
 
-    ui->btnClose->installEventFilter( this );
+    ui->btnClose->installEventFilter(this);
 }
 
 BackupDialog::~BackupDialog()
 {
     delete ui;
-    if ( m_backupWorker )
+    if (m_backupWorker)
     {
-        #ifdef DEBUG
+#ifdef DEBUG
         qDebug() << "delete m_backupWorker!";
-        #endif
+#endif
         delete m_backupWorker;
     }
 }
 
-
-
 void BackupDialog::backup_thread_quit()
 {
-    if ( m_backupThread )
+    if (m_backupThread)
     {
-        if ( m_backupThread->isRunning() )
+        if (m_backupThread->isRunning())
         {
             m_backupThread->quit();
             m_backupThread->wait();
@@ -578,155 +535,152 @@ void BackupDialog::backup_thread_quit()
     }
 }
 
-
-
-void BackupDialog::mousePressEvent( QMouseEvent *event )
+void BackupDialog::mousePressEvent(QMouseEvent *event)
 {
-    if( event->button() == Qt::LeftButton )
+    if (event->button() == Qt::LeftButton)
     {
         m_mouseIsPressed = true;
         m_mouseLastPosition = event->globalPos();
     }
 
-    QWidget::mousePressEvent( event );
+    QWidget::mousePressEvent(event);
 }
 
-void BackupDialog::mouseReleaseEvent( QMouseEvent *event )
+void BackupDialog::mouseReleaseEvent(QMouseEvent *event)
 {
-    if( event->button() == Qt::LeftButton )
+    if (event->button() == Qt::LeftButton)
     {
         m_mouseIsPressed = false;
     }
 
-    QWidget::mouseReleaseEvent( event );
+    QWidget::mouseReleaseEvent(event);
 }
 
-void BackupDialog::mouseMoveEvent( QMouseEvent *event )
+void BackupDialog::mouseMoveEvent(QMouseEvent *event)
 {
-    if ( m_mouseIsPressed )
+    if (m_mouseIsPressed)
     {
         QPoint mouseCurrPosition = event->globalPos();
-        move( pos() + mouseCurrPosition - m_mouseLastPosition );
+        move(pos() + mouseCurrPosition - m_mouseLastPosition);
         m_mouseLastPosition = mouseCurrPosition;
     }
 
-    QWidget::mouseMoveEvent( event );
+    QWidget::mouseMoveEvent(event);
 }
 
-bool BackupDialog::eventFilter( QObject *obj, QEvent *event )
+bool BackupDialog::eventFilter(QObject *obj, QEvent *event)
 {
     bool isProcessed = false;
 
-    if ( event->type() == QEvent::WindowActivate )
+    if (event->type() == QEvent::WindowActivate)
     {
-        ui->labelWin->setStyleSheet( QSS_BORDER_ACTIVE );
-        ui->btnClose->setStyleSheet( QSS_BTN_CLOSE1 );
+        ui->labelWin->setStyleSheet(QSS_BORDER_ACTIVE);
+        ui->btnClose->setStyleSheet(QSS_BTN_CLOSE1);
     }
-    else if ( event->type() == QEvent::WindowDeactivate )
+    else if (event->type() == QEvent::WindowDeactivate)
     {
-        ui->labelWin->setStyleSheet( QSS_BORDER_DEACTIVE );
-        ui->btnClose->setStyleSheet( QSS_BTN_CLOSE0 );
+        ui->labelWin->setStyleSheet(QSS_BORDER_DEACTIVE);
+        ui->btnClose->setStyleSheet(QSS_BTN_CLOSE0);
     }
-    else if ( event->type() == QEvent::Enter && obj == ui->btnClose )
+    else if (event->type() == QEvent::Enter && obj == ui->btnClose)
     {
-        ui->btnClose->setStyleSheet( QSS_BTN_CLOSE2 );
+        ui->btnClose->setStyleSheet(QSS_BTN_CLOSE2);
     }
-    else if ( event->type() == QEvent::Leave && obj == ui->btnClose )
+    else if (event->type() == QEvent::Leave && obj == ui->btnClose)
     {
-        if ( isActiveWindow() )
+        if (isActiveWindow())
         {
-            ui->btnClose->setStyleSheet( QSS_BTN_CLOSE1 );
+            ui->btnClose->setStyleSheet(QSS_BTN_CLOSE1);
         }
         else
         {
-            ui->btnClose->setStyleSheet( QSS_BTN_CLOSE0 );
+            ui->btnClose->setStyleSheet(QSS_BTN_CLOSE0);
         }
     }
 
-    if ( isProcessed == false )
+    if (isProcessed == false)
     {
-        return QWidget::eventFilter( obj, event );
+        return QWidget::eventFilter(obj, event);
     }
 
     return isProcessed;
 }
 
-void BackupDialog::slot_progress_updated( int opFlg, int percentage )
+void BackupDialog::slot_progress_updated(int opFlg, int percentage)
 {
-    #ifdef DEBUG
+#ifdef DEBUG
     qDebug() << opFlg << percentage;
-    #endif
-    if ( percentage >= 100 )
+#endif
+    if (percentage >= 100)
     {
-        backup_thread_quit();//请求线程退出
-        if ( opFlg == 0 )
+        backup_thread_quit(); // 请求线程退出
+        if (opFlg == 0)
         {
-            //ui->stackedWidget->setCurrentWidget( ui->pageBackupOk );
-            ui->labelPrompt->setText( "词库与设置备份完成！" );
-            ui->labelDir->setText( m_backupFile );
-            ui->stackedWidget->setCurrentWidget( ui->pagePrompt );
+            // ui->stackedWidget->setCurrentWidget( ui->pageBackupOk );
+            ui->labelPrompt->setText("词库与设置备份完成！");
+            ui->labelDir->setText(m_backupFile);
+            ui->stackedWidget->setCurrentWidget(ui->pagePrompt);
         }
         else
         {
-            ui->labelPrompt->setText( "词库与设置恢复完成！" );
-            ui->labelDir->setText( "" );
-            ui->stackedWidget->setCurrentWidget( ui->pagePrompt );
+            ui->labelPrompt->setText("词库与设置恢复完成！");
+            ui->labelDir->setText("");
+            ui->stackedWidget->setCurrentWidget(ui->pagePrompt);
 
-            Settings::save_ime_table_changed_flg_to_file( 1 );
+            Settings::save_ime_table_changed_flg_to_file(1);
             emit signal_restore_lexicon_and_settings_ok();
         }
     }
-    else if ( percentage < 0 )
+    else if (percentage < 0)
     {
-        backup_thread_quit();//请求线程退出
-        ui->labelPrompt->setText( QString("词库与设置%1失败！").arg( opFlg? "恢复":"备份" ) );
-        ui->stackedWidget->setCurrentWidget( ui->pagePrompt );
+        backup_thread_quit(); // 请求线程退出
+        ui->labelPrompt->setText(QString("词库与设置%1失败！").arg(opFlg ? "恢复" : "备份"));
+        ui->stackedWidget->setCurrentWidget(ui->pagePrompt);
     }
     else
     {
-        ui->progressBar->setValue( percentage );
+        ui->progressBar->setValue(percentage);
     }
 }
 
-
 void BackupDialog::slot_backup_lexicon_and_settings()
 {
-    QDir backupDir( DIR_DEFAULT_BACKUP );
-    if ( !backupDir.exists() )
+    QDir backupDir(DIR_DEFAULT_BACKUP);
+    if (!backupDir.exists())
     {
-        backupDir.mkdir( DIR_DEFAULT_BACKUP ) ;
+        backupDir.mkdir(DIR_DEFAULT_BACKUP);
     }
 
-    m_backupFile = QFileDialog::getSaveFileName( this, "生成备份文件", FILE_BACKUP );
-    if ( !m_backupFile.isEmpty() )
+    m_backupFile = QFileDialog::getSaveFileName(this, "生成备份文件", FILE_BACKUP);
+    if (!m_backupFile.isEmpty())
     {
-        m_backupWorker->set_op_param( 0, m_backupFile );
+        m_backupWorker->set_op_param(0, m_backupFile);
         m_backupThread->start();
 
-        ui->stackedWidget->setCurrentWidget( ui->pageBackupRestore );
-        ui->label->setText( "正在备份，请稍后..." );
-        move( m_defaultPopPosition );
+        ui->stackedWidget->setCurrentWidget(ui->pageBackupRestore);
+        ui->label->setText("正在备份，请稍后...");
+        move(m_defaultPopPosition);
         exec();
     }
 }
 
 void BackupDialog::slot_restore_lexicon_and_settings()
 {
-    QDir backupDir( DIR_DEFAULT_BACKUP );
-    if ( !backupDir.exists() )
+    QDir backupDir(DIR_DEFAULT_BACKUP);
+    if (!backupDir.exists())
     {
-        backupDir.mkdir( DIR_DEFAULT_BACKUP ) ;
+        backupDir.mkdir(DIR_DEFAULT_BACKUP);
     }
 
-    QString restoreFile = QFileDialog::getOpenFileName( this, "选择备份文件", FILE_BACKUP );
-    if ( !restoreFile.isEmpty() )
+    QString restoreFile = QFileDialog::getOpenFileName(this, "选择备份文件", FILE_BACKUP);
+    if (!restoreFile.isEmpty())
     {
-        m_backupWorker->set_op_param( 1, restoreFile );
+        m_backupWorker->set_op_param(1, restoreFile);
         m_backupThread->start();
 
-        ui->stackedWidget->setCurrentWidget( ui->pageBackupRestore );
-        ui->label->setText( "正在恢复，请稍后..." );
-        move( m_defaultPopPosition );
+        ui->stackedWidget->setCurrentWidget(ui->pageBackupRestore);
+        ui->label->setText("正在恢复，请稍后...");
+        move(m_defaultPopPosition);
         exec();
     }
 }
@@ -740,27 +694,27 @@ void BackupDialog::on_btnClose_clicked()
 void BackupDialog::on_btnYes_clicked()
 {
     char cmd[128] = {0};
-    if ( g_desktopType == DT_MATE )//银河麒麟系统
+    if (g_desktopType == DT_MATE) // 银河麒麟系统
     {
-        sprintf( cmd, "caja %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data() );
+        sprintf(cmd, "caja %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data());
     }
-    else if ( g_desktopType == DT_UKUI )//优麒麟系统
+    else if (g_desktopType == DT_UKUI) // 优麒麟系统
     {
-        sprintf( cmd, "peony %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data() );
+        sprintf(cmd, "peony %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data());
     }
-    else if ( g_desktopType == DT_DEEPIN )//深度系统
+    else if (g_desktopType == DT_DEEPIN) // 深度系统
     {
-        sprintf( cmd, "pcmanfm %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data() );
+        sprintf(cmd, "pcmanfm %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data());
     }
-    else if ( g_desktopType == DT_UBUNTU ) //Ubuntu
+    else if (g_desktopType == DT_UBUNTU) // Ubuntu
     {
-        sprintf( cmd, "nautilus -s %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data() );
+        sprintf(cmd, "nautilus -s %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data());
     }
     else
     {
-        sprintf( cmd, "xdg-open %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data() );
+        sprintf(cmd, "xdg-open %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data());
     }
-    system( cmd );
+    system(cmd);
 
     accept();
 }
