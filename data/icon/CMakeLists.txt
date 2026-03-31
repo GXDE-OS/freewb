@@ -1,6 +1,0 @@
-set(usrdata ${FCITX4_PREFIX}/share)
-set(pkgdatadir ${usrdata}/fcitx)
-install(FILES freewb.png RENAME freewubi.png DESTINATION ${pkgdatadir}/imicon )
-install(FILES freewb.png RENAME fcitx-freewubi.png DESTINATION ${usrdata}/icons/hicolor/48x48/apps)
-install(FILES freewb.png DESTINATION ${pkgdatadir}/skin/default)
-install(FILES freewb.png DESTINATION ${pkgdatadir}/skin/classic)
