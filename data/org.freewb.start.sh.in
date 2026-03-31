@@ -1,22 +1,22 @@
 #!/bin/bash
 if [ ! -d $HOME/.local/freewb ];then
-mkdir $HOME/.local/freewb -p
+	mkdir $HOME/.local/freewb -p
 fi
 
 if [ ! -d $HOME/.local/freewb/config ];then
-cp @CMAKE_INSTALL_PREFIX@/share/freewb/config $HOME/.local/freewb/ -r
+	cp @CMAKE_INSTALL_PREFIX@/share/freewb/config $HOME/.local/freewb/ -r
 fi
 
 if [ ! -d $HOME/.local/freewb/data ];then
-cp @CMAKE_INSTALL_PREFIX@/share/freewb/data $HOME/.local/freewb/ -r
+	cp @CMAKE_INSTALL_PREFIX@/share/freewb/data $HOME/.local/freewb/ -r
 fi
 
 if [ ! -d $HOME/.local/freewb/skin ];then
-cp @CMAKE_INSTALL_PREFIX@/share/freewb/skin $HOME/.local/freewb/ -r
+	cp @CMAKE_INSTALL_PREFIX@/share/freewb/skin $HOME/.local/freewb/ -r
 fi
 
 if [ ! -d $HOME/.local/freewb/help ]; then
-cp @CMAKE_INSTALL_PREFIX@/share/freewb/help $HOME/.local/freewb/ -r
+	cp @CMAKE_INSTALL_PREFIX@/share/freewb/help $HOME/.local/freewb/ -r
 fi
 
 if [ "$1" != "poweron" ]; then

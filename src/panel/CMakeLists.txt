@@ -52,14 +52,5 @@ target_link_libraries( ${PROJECT_NAME}
 
 #安装可执行文件
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
-#安装相关依赖目录
-configure_file(${PROJECT_SOURCE_DIR}/fcitx-freewb-panel.desktop.in ${CMAKE_CURRENT_BINARY_DIR}/fcitx-freewb-panel.desktop IMMEDIATE @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/fcitx-freewb-panel.desktop DESTINATION /etc/xdg/autostart )
-
-configure_file(freewb.sh.in ${CMAKE_CURRENT_BINARY_DIR}/freewb.sh IMMEDIATE @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/freewb.sh DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ  GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE )
 
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION ${CMAKE_INSTALL_PREFIX}/share/freewb)
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/config DESTINATION ${CMAKE_INSTALL_PREFIX}/share/freewb)
-
