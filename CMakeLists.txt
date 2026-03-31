@@ -61,15 +61,9 @@ if(ENABLE_FCITX4)
     add_definitions(-D__FCITX4__)
     message(STATUS "fcitx install prefix dir is:" ${FCITX4_PREFIX})
 endif()
-
-add_definitions("-DLOCALEDIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\"")
  
-configure_file(config.h.in ${CMAKE_SOURCE_DIR}/include/config.h
-  IMMEDIATE @ONLY)
+configure_file(config.h.in ${CMAKE_SOURCE_DIR}/include/config.h IMMEDIATE @ONLY)
 
-# The po dir (and targets, if any) should be added before any other translate
-# related sources are processed.
-add_subdirectory(po)
 add_subdirectory(src)
 add_subdirectory(data)
 add_subdirectory(help)
