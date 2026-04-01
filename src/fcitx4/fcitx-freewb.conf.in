@@ -1,10 +1,10 @@
 [Addon]
-Name=fcitx-freewubi
-_GeneralName=FreeWubi
-_Comment=FreeWubi Input Method for Fcitx
+Name=freewb
+_GeneralName=freewb
+_Comment=Freewb Input Method for Fcitx
 Category=InputMethod
 Enabled=True
-Library=fcitx-freewubi.so
+Library=fcitx-freewb.so
 Type=SharedLibrary
 Dependency=fcitx-punc
 IMRegisterMethod=ConfigFile
