@@ -31,7 +31,7 @@
 #include "fcitx-utils/utf8.h"
 #include "fcitx/fcitx.h"
 
-#include "../inputmethod/freedict.h"
+#include "../fcitx4/freedict.h"
 #include "config.h"
 
 // #define INTERNAL_VERSION 3

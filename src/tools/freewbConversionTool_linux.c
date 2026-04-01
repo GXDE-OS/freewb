@@ -1,7 +1,7 @@
 #include "freewbConversionTool.h"
 
 #if defined(__LINUX__) && defined(__FCITX4__)
-#include "../inputmethod/freedict.h"
+#include "../fcitx4/freedict.h"
 #define CHECK_OPTION(str, x) (strstr((str), strConst[x]) == (str))
 
 #define STR_DESCRIPTION 0

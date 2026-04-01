@@ -1,0 +1,1 @@
+message(STATUS "Building fcitx5 module")
