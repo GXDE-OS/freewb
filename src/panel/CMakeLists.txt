@@ -52,5 +52,3 @@ target_link_libraries( ${PROJECT_NAME}
 
 #安装可执行文件
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
-
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION ${CMAKE_INSTALL_PREFIX}/share/freewb)
