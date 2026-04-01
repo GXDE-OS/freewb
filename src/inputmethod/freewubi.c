@@ -298,7 +298,7 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
     FcitxInstanceSetContext(fwb->owner, CONTEXT_ALTERNATIVE_PREVPAGE_KEY, fwb->config.hkAlternativePrevPage);
     FcitxInstanceSetContext(fwb->owner, CONTEXT_ALTERNATIVE_NEXTPAGE_KEY, fwb->config.hkAlternativeNextPage);
 
-    if (sym == FcitxKey_Escape)
+    if (sym == FcitxKey_Escape && state == FcitxKeyState_None)
     {
         FreeWubiPanelProxyCloseInputWindow();
         return IRV_CLEAN;
@@ -2931,7 +2931,7 @@ static boolean LoadFreeWubiGlobalInfo(Fcitxfreewubi *fwb)
     FcitxLog(INFO, "func : %s line : %d ini filename: %s ", __FUNCTION__, __LINE__, inifile);
     INI *ini = fileToIni(inifile);
 
-    strcpy(key, GetIniKeyString(ini, "快捷键", "setupOption", "CTRL_KEYCOMMA"));
+    strcpy(key, GetIniKeyString(ini, "快捷键", "setupOption", "CTRL_KEY_COMMA"));
     ptr = key + 5;
     fwb->config.hkSetup[0].sym = FreewbHotkeyGetKeyList(ptr);
 
@@ -2939,7 +2939,7 @@ static boolean LoadFreeWubiGlobalInfo(Fcitxfreewubi *fwb)
     ptr = key + 5;
     fwb->config.hkSwitchSkin[0].sym = FreewbHotkeyGetKeyList(ptr);
 
-    strcpy(key, GetIniKeyString(ini, "快捷键", "switchInputMode", "CTRL_KEY_BACKSLASH"));
+    strcpy(key, GetIniKeyString(ini, "快捷键", "switchInputMode", "CTRL_KEY_BACK_SLASH"));
     ptr = key + 5;
     fwb->config.hkSwitchFreeim[0].sym = FreewbHotkeyGetKeyList(ptr);
 

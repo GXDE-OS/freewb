@@ -88,7 +88,7 @@ DefaultValue=CTRL+KEY_M
 [快捷键/switchVKb]
 Description=切换软键盘
 Type=Hotkey
-DefaultValue=SHIFT+KEY_ESC
+DefaultValue=CTRL+KEY_ESC
 
 [快捷键/quickDelScreenItem]
 Description=快删上屏内容
