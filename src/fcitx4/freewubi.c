@@ -2772,8 +2772,6 @@ static void *FcitxFreeWubiCreate(FcitxInstance *instance)
 
     FreeWubiInputStateInitializeInstance();
 
-    bindtextdomain("fcitx-freewubi", LOCALEDIR);
-
     run_freewb_panel();
 
     FreeWubiPanelProxyInitializeInstance(instance);
