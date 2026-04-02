@@ -17,7 +17,6 @@ set(fcitx_freewubi_sources
 set(fcitx_freewubi_headers
   ini.h
   freewubi-config.h
-  freewubi.h
   freewubi-internal.h
   freedict.h
   utf8_in_gb18030.h

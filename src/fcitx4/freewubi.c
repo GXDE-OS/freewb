@@ -96,86 +96,17 @@ static void freeAutoPhrase(TableMetaData *tableMetaData);
 
 static FcitxHotkey FreewbCTRL_ENTER[2];
 static FcitxHotkey FreewbCAPS_LOCK[2];
-static void InternalInit(Fcitxfreewubi *fwb);
 static int digitalNumberTrans(FcitxKeySym sym);
 static void playSound(SoundType sType);
 
-static boolean reloadFreewb(Fcitxfreewubi *fwb);
+static void reloadFreewb(Fcitxfreewubi *fwb);
 static void Fcitx4IMOnChanged(void *arg);
 static boolean tray_menu_handler_empty(void *arg);
 static void freewb_settings_handler(void *arg);
 
-// #define DEBUG
-
 void FreeWubiInstanceCommitString(FcitxInstance *instance, FcitxInputContext *ic, const char *str)
 {
     FcitxInstanceCommitString(instance, ic, str);
-}
-
-void freeGetOption(Fcitxfreewubi *fwb)
-{
-
-    char *path = getFreewbPath();
-    char *inifile;
-    fcitx_utils_alloc_cat_str(inifile, path, "/config/", "config.ini");
-    FcitxLog(INFO, "func : %s line : %d ini filename: %s ", __FUNCTION__, __LINE__, inifile);
-    INI *ini = fileToIni(inifile);
-
-    fwb->config.bUseSmartPunc = GetIniKeyBool(ini, "Common", "smartMark");
-    fwb->config.bFullSpace = GetIniKeyBool(ini, "Common", "spaceFullWhenCharHalf");
-    fwb->config.bRecodeProof = GetIniKeyBool(ini, "Advanced", "recodeCalib");
-    fwb->config.bInputVoice = GetIniKeyBool(ini, "Advanced", "typeEffect");
-    fwb->config.iAutoPhraseOpt = GetIniKeyInt(ini, "Advanced", "autoWordGroupOpt", 1);
-
-    fwb->config.bUserWordChanged = GetIniKeyBool(ini, "Misc", "userWordFlg");
-    fwb->config.iImType = GetIniKeyInt(ini, "Misc", "inputMode", 1);
-    fwb->config.bBackUpTable = GetIniKeyBool(ini, "Misc", "imeTableChanged");
-    fwb->config.bIsGBK = GetIniKeyBool(ini, "Misc", "currentCharset");
-    fwb->config.bQuickTableChanged = GetIniKeyBool(ini, "Misc", "quickFlg");
-    fwb->config.iKeyboardMode = GetIniKeyInt(ini, "Misc", "vkMode", 1);
-    fwb->config.bIsTraditional = GetIniKeyBool(ini, "Misc", "simpTradFlg");
-
-    fcitx_utils_string_swap(&fwb->config.WubiPath, GetIniKeyString(ini, "Misc", "wubiTable", "freeime.mb"));
-    fcitx_utils_string_swap(&fwb->config.PinyinPath, GetIniKeyString(ini, "Misc", "pinyinTable", "attach.mb"));
-    fcitx_utils_string_swap(&fwb->config.usrPath, GetIniKeyString(ini, "Misc", "UsrFile", "user_word.txt"));
-
-    fcitx_utils_string_swap(&fwb->config.strUsrKeyBoard, GetIniKeyString(ini, "Misc", "CoustomChar", ""));
-    fcitx_utils_string_swap(&fwb->config.strPuncKeyBoard, GetIniKeyString(ini, "Misc", "CoustomMark", ""));
-
-    fwb->config.bAutoHalf = GetIniKeyBool(ini, "Others", "autoToHalfMarkFlg");
-    fcitx_utils_string_swap(&fwb->config.strAutoEng, GetIniKeyString(ini, "Others", "autoToEnStr", "www http mail."));
-
-    fwb->config.bDisableHk = GetIniKeyBool(ini, "ShortcutKey", "disableAllShortcutKey");
-
-    char key[256], *ptr;
-    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "showHideCandiWin", "KEY_NONE"));
-    ptr = key;
-    ptr += 5;
-    fwb->config.hkShowHideCandiWin[0].sym = FreewbHotkeyGetKeyList(ptr);
-    fwb->config.hkShowHideCandiWin[0].state = FcitxKeyState_Ctrl;
-
-    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "showHideToolbar", "KEY_NONE"));
-    ptr = key;
-    ptr += 5;
-    fwb->config.hkShowHideToolbar[0].sym = FreewbHotkeyGetKeyList(ptr);
-    fwb->config.hkShowHideToolbar[0].state = FcitxKeyState_Ctrl;
-
-    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "markAutoPair", "KEY_NONE"));
-    ptr = key;
-    ptr += 5;
-    fwb->config.hkSmartPunc[0].sym = FreewbHotkeyGetKeyList(ptr);
-    fwb->config.hkSmartPunc[0].state = FcitxKeyState_Ctrl;
-
-    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "switchLexicon", "KEY_NONE"));
-    ptr = key;
-    ptr += 5;
-    fwb->config.hkSwitchTable[0].sym = FreewbHotkeyGetKeyList(ptr);
-    fwb->config.hkSwitchTable[0].state = FcitxKeyState_Ctrl;
-
-    free(ini);
-    ini = NULL;
-    free(path);
-    free(inifile);
 }
 
 void run_freewb_panel()
@@ -187,10 +118,176 @@ void run_freewb_panel()
     system(panelBin);
 }
 
-static boolean FreeWubiInit(void *arg)
+static void loadAllConfig(Fcitxfreewubi *fwb)
 {
-    Fcitxfreewubi *fwb = (Fcitxfreewubi *)arg;
-    freeGetOption(fwb);
+    char configPath[256];
+    sprintf(configPath, "%s/.local/freewb/config/config.ini", getenv("HOME"));
+    INI *ini = fileToIni(configPath);
+    if (ini == NULL)
+    {
+        return;
+    }
+
+    fwb->config.bUseSmartPunc = GetIniKeyBool(ini, "Common", "smartMark");
+    fwb->config.bFullSpace = GetIniKeyBool(ini, "Common", "spaceFullWhenCharHalf");
+    fwb->config.bCodeRemind = GetIniKeyBool(ini, "Common", "codeRemind");
+    fwb->config.bAutoAdjustOrder = GetIniKeyBool(ini, "Common", "autoAdjustFreq");
+    fwb->config.bPhraseRemind = GetIniKeyBool(ini, "Common", "wordThink");
+    fwb->config.bRemindExistWords = GetIniKeyBool(ini, "Common", "remindExistWord");
+    fwb->config.bRecodeVoice = GetIniKeyBool(ini, "Common", "alertWhenEmptyCode");
+    fwb->config.bEnterClear = GetIniKeyBool(ini, "Common", "enterClear");
+    fwb->config.bShiftCommit = GetIniKeyBool(ini, "Advanced", "shiftCommitChar");
+    fwb->config.bRecodeProof = GetIniKeyBool(ini, "Advanced", "recodeCalib");
+    fwb->config.bInputVoice = GetIniKeyBool(ini, "Advanced", "typeEffect");
+    fwb->config.iAutoPhraseOpt = GetIniKeyInt(ini, "Advanced", "autoWordGroupOpt", 1);
+
+    fwb->config.bUserWordChanged = GetIniKeyInt(ini, "Misc", "userWordFlg", 1);
+    fwb->config.iImType = GetIniKeyInt(ini, "Misc", "inputMode", 1);
+    fwb->config.bBackUpTable = GetIniKeyBool(ini, "Misc", "imeTableChanged");
+    fwb->config.bIsGBK = GetIniKeyInt(ini, "Misc", "currentCharset", 0);
+    fwb->config.bQuickTableChanged = GetIniKeyBool(ini, "Misc", "quickFlg");
+    fwb->config.iKeyboardMode = GetIniKeyInt(ini, "Misc", "vkMode", 1);
+    fwb->config.bIsTraditional = GetIniKeyBool(ini, "Misc", "simpTradFlg");
+    fcitx_utils_string_swap(&fwb->config.WubiPath, GetIniKeyString(ini, "Misc", "wubiTable", "wubi.mb"));
+    fcitx_utils_string_swap(&fwb->config.PinyinPath, GetIniKeyString(ini, "Misc", "pinyinTable", "pinyin.mb"));
+    fcitx_utils_string_swap(&fwb->config.usrPath, GetIniKeyString(ini, "Misc", "UsrFile", "user_word.txt"));
+
+    fcitx_utils_string_swap(&fwb->config.strUsrKeyBoard, GetIniKeyString(ini, "Misc", "CoustomChar", ""));
+    fcitx_utils_string_swap(&fwb->config.strPuncKeyBoard, GetIniKeyString(ini, "Misc", "CoustomMark", ""));
+
+    fwb->bIsAutoEnglish = false;
+
+    fwb->config.bAutoHalf = GetIniKeyBool(ini, "Others", "autoToHalfMarkFlg");
+    fcitx_utils_string_swap(&fwb->config.strAutoEng, GetIniKeyString(ini, "Others", "autoToEnStr", "www http mail."));
+
+    fwb->config.bDisableHk = GetIniKeyBool(ini, "ShortcutKey", "disableAllShortcutKey");
+
+    char key[256], *ptr;
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "showHideCandiWin", "CTRL+KEY_RIGHT"));
+    ptr = key;
+    ptr += 5;
+    fwb->config.hkShowHideCandiWin[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkShowHideCandiWin[0].state = FcitxKeyState_Ctrl;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "showHideToolbar", "CTRL+KEY_LEFT"));
+    ptr = key;
+    ptr += 5;
+    fwb->config.hkShowHideToolbar[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkShowHideToolbar[0].state = FcitxKeyState_Ctrl;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "markAutoPair", "CTRL+KEY_DEL"));
+    ptr = key;
+    ptr += 5;
+    fwb->config.hkSmartPunc[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkSmartPunc[0].state = FcitxKeyState_Ctrl;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "switchLexicon", "CTRL+KEY_QUOTE"));
+    ptr = key;
+    ptr += 5;
+    fwb->config.hkSwitchTable[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkSwitchTable[0].state = FcitxKeyState_Ctrl;
+
+    FreewbCTRL_ENTER[0].desc = NULL;
+    FreewbCTRL_ENTER[0].state = FcitxKeyState_Ctrl;
+    FreewbCTRL_ENTER[0].sym = FcitxKey_Return;
+    FreewbCAPS_LOCK[0].desc = NULL;
+    FreewbCAPS_LOCK[0].state = FcitxKeyState_None;
+    FreewbCAPS_LOCK[0].sym = FcitxKey_Caps_Lock;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "setupOption", "CTRL+KEY_COMMA"));
+    ptr = key + 5;
+    fwb->config.hkSetup[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkSetup[0].state = 4;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "switchSkin", "CTRL+KEY_NONE"));
+    ptr = key + 5;
+    fwb->config.hkSwitchSkin[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkSwitchSkin[0].state = 4;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "switchInputMode", "CTRL+KEY_BACK_SLASH"));
+    ptr = key + 5;
+    fwb->config.hkSwitchFreeim[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkSwitchFreeim[0].state = 4;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "switchVKb", "CTRL+KEY_ESC"));
+    ptr = key + 5;
+    fwb->config.hkSwitchVKb[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkSwitchVKb[0].state = 4;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "switchChttrans", "CTRL+KEY_J"));
+    ptr = key + 5;
+    fwb->config.hkSwitchChttrans[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkSwitchChttrans[0].state = 4;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "switchCharSet", "CTRL+KEY_M"));
+    ptr = key;
+    ptr += 5;
+    fwb->config.hkSwitchCharSet[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkSwitchCharSet[0].state = 4;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "quickDelScreenItem", "CTRL+KEY_BACKSPACE"));
+    ptr = key;
+    ptr += 5;
+    fwb->config.hkQuickDelete[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkQuickDelete[0].state = 4;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "backFindCode", "CTRL+KEY_SLASH"));
+    ptr = key;
+    ptr += 5;
+    fwb->config.hkReverseCheck[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkReverseCheck[0].state = 4;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "onlineAddWord", "CTRL+KEY_EQUAL"));
+    ptr = key;
+    ptr += 5;
+    fwb->config.hkTableAddPhrase[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkTableAddPhrase[0].state = 4;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "onlineDelWord", "CTRL+KEY_DASH"));
+    ptr = key;
+    ptr += 5;
+    fwb->config.hkTableDelPhrase[0].sym = FreewbHotkeyGetKeyList(ptr);
+    fwb->config.hkTableDelPhrase[0].state = 4;
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "tempPinyin", "KEY_BACKQUOTE"));
+    fwb->config.unCommonKey[0].sym = FreewbHotkeyGetKeyList(key);
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "tempEnglish", "KEY_SEMICOLON"));
+    fwb->config.tempEnglishKey[0].sym = FreewbHotkeyGetKeyList(key);
+
+    strcpy(key, GetIniKeyString(ini, "ShortcutKey", "shortcutInput", "KEY_QUOTE"));
+    fwb->config.QuickInputKey[0].sym = FreewbHotkeyGetKeyList(key);
+
+    fwb->config.iCandidateWordNumber = GetIniKeyInt(ini, "CandidateWinOptions", "candiWordCount", 3);
+
+    strcpy(key, GetIniKeyString(ini, "CandidateWinOptions", "secondRecodeKey", "KEY_SEMICOLON"));
+    fwb->config.hkSecondRecode[0].sym = FreewbHotkeyGetKeyList(key);
+    fwb->config.hkSecondRecode[0].state = 0;
+
+    strcpy(key, GetIniKeyString(ini, "CandidateWinOptions", "thirdRecodeKey", "KEY_QUOTE"));
+    fwb->config.hkThirdRecode[0].state = 0;
+    fwb->config.hkThirdRecode[0].sym = FreewbHotkeyGetKeyList(key);
+
+    strcpy(key, GetIniKeyString(ini, "CandidateWinOptions", "prevPageKey", "KEY_DASH"));
+    fwb->config.hkAlternativePrevPage[0].sym = FreewbHotkeyGetKeyList(key);
+    fwb->config.hkAlternativePrevPage[0].state = 0;
+
+    strcpy(key, GetIniKeyString(ini, "CandidateWinOptions", "nextPageKey", "KEY_EQUAL"));
+    fwb->config.hkAlternativeNextPage[0].sym = FreewbHotkeyGetKeyList(key);
+    fwb->config.hkAlternativeNextPage[0].state = 0;
+
+    fwb->hkReverseCheckByClip[0].desc = NULL;
+    fwb->hkReverseCheckByClip[0].state = 12; // CTRL + ALT + sym
+    fwb->hkReverseCheckByClip[0].sym = fwb->config.hkReverseCheck[0].sym;
+
+    fwb->hkTableAddPhraseByClip[0].desc = NULL;
+    fwb->hkTableAddPhraseByClip[0].sym = fwb->config.hkTableAddPhrase[0].sym;
+    fwb->hkTableAddPhraseByClip[0].state = 12; // CTRL + ALT + sym
+}
+
+static boolean FreeWubiInit(Fcitxfreewubi *fwb)
+{
+    loadAllConfig(fwb);
     if (!fwb->table)
     {
         fwb->table = fcitx_utils_new(TableMetaData);
@@ -199,34 +296,10 @@ static boolean FreeWubiInit(void *arg)
         fwb->table->tableType = FREE_WUBI;
     }
 
-    char FileName[256];
-    // sprintf(FileName,"%s/.config/fcitx/conf/fcitx-freewubi.config",getenv("HOME"));
-    sprintf(FileName, "%s/.local/freewb/config/config.ini", getenv("HOME"));
-    // puts(FileName);
-    FcitxLog(INFO, "func : %s line : %d ini filename: %s ", __FUNCTION__, __LINE__, FileName);
-
-    INI *ini = fileToIni(FileName);
-    int i = GetIniKeyInt(ini, "Misc", "inputMode", 1);
-    if (i == -1)
-        i = 1;
-
-    fwb->config.iImType = i;
     fwb->table->tableType = fwb->config.iImType;
+    fwb->bNeedMoveCur = false;
+    fwb->pLastCommitRecord = NULL;
 
-    i = GetIniKeyInt(ini, "Misc", "currentCharset", 0);
-    if (i == -1)
-        i = 0;
-    fwb->config.bIsGBK = i;
-
-    i = GetIniKeyInt(ini, "Misc", "simpTradFlg", 0);
-    if (i == -1)
-        i = 0;
-    fwb->config.bIsTraditional = i;
-
-    free(ini);
-    ini = NULL;
-
-    fwb->bIsAutoEnglish = false;
     return true;
 }
 
@@ -2757,11 +2830,7 @@ void playSound(SoundType sType)
 static void FreeWubiReloadConfig(void *arg)
 {
     Fcitxfreewubi *fwb = (Fcitxfreewubi *)arg;
-#ifdef DEBUG
-    FcitxLog(INFO, _("FreewubiReloadConfig"));
-#endif
-    FcitxIM *cr_im = FcitxInstanceGetCurrentIM(fwb->owner);
-    // printf("ccccccccccccccc   current im :%s\n",cr_im->uniqueName );
+
     reloadFreewb(fwb);
 }
 
@@ -2777,7 +2846,6 @@ static void *FcitxFreeWubiCreate(FcitxInstance *instance)
     FreeWubiPanelProxyInitializeInstance(instance);
     FreeWubiPanelProxyOnTriggerOn();
 
-    InternalInit(freewubi);
     FcitxIMEventHook imhook = {Fcitx4IMOnChanged, freewubi};
     FcitxInstanceRegisterIMChangedHook(freewubi->owner, imhook);
 
@@ -2800,7 +2868,6 @@ static void *FcitxFreeWubiCreate(FcitxInstance *instance)
     FcitxInstanceSetContext(freewubi->owner, CONTEXT_DISABLE_QUICKPHRASE, &flags);
     FcitxUIRegisterStatus(freewubi->owner, freewubi->owner, _("属性设置"), _("属性设置"), _("属性设置"), freewb_settings_handler, tray_menu_handler_empty);
 
-    reloadFreewb(freewubi);
     return freewubi;
 }
 
@@ -2871,179 +2938,14 @@ static void FcitxFreeWubiDestroy(void *arg)
 extern "C"
 {
 #endif
-    // CONFIG_DEFINE_LOAD_AND_SAVE(freewubi, FcitxfreewubiConfig, "fcitx-freewubi");
-
-    CONFIG_DESC_DEFINE(GetFreewubiGlobalConfigDesc, "fcitx-freewubi.desc")
     FCITX_DEFINE_PLUGIN(fcitx_freewubi, ime, FcitxIMClass) = {FcitxFreeWubiCreate, FcitxFreeWubiDestroy};
-
 #ifdef __cplusplus
 }
 #endif
 
-static boolean LoadFreeWubiGlobalInfo(Fcitxfreewubi *fwb)
+void reloadFreewb(Fcitxfreewubi *fwb)
 {
-
-    // FcitxLog(INFO,_("LoadFreeWubiGlobalInfo"));
-
-    char *path = getFreewbPath();
-    char *configPath;
-    fcitx_utils_alloc_cat_str(configPath, path, "/config/", "config.ini");
-    FILE *fpg = fopen(configPath, "r");
-
-    freeGetOption(fwb);
-
-    free(path);
-    free(configPath);
-
-    if (!fpg)
-    {
-        FcitxLog(ERROR, _("FreeWubi: open config.ini fail"));
-        return false;
-    }
-    FcitxConfigFile *cgfile = FcitxConfigParseConfigFileFp(fpg, GetFreewubiGlobalConfigDesc());
-    fclose(fpg);
-    if (!cgfile)
-    {
-        FcitxLog(ERROR, _("FreeWubi: open fcitx-freewubi.desc fail"));
-        return false;
-    }
-
-    FcitxfreewubiConfigConfigBind(&fwb->config, cgfile, GetFreewubiGlobalConfigDesc());
-    freeWbConfigBindSync((FcitxGenericConfig *)&fwb->config);
-    FreewbCTRL_ENTER[0].desc = NULL;
-    FreewbCTRL_ENTER[0].state = FcitxKeyState_Ctrl;
-    FreewbCTRL_ENTER[0].sym = FcitxKey_Return;
-    FreewbCAPS_LOCK[0].desc = NULL;
-    FreewbCAPS_LOCK[0].state = FcitxKeyState_None;
-    FreewbCAPS_LOCK[0].sym = FcitxKey_Caps_Lock;
-    fwb->hkReverseCheckByClip[0].desc = NULL;
-    fwb->hkReverseCheckByClip[0].state = FcitxKeyState_Ctrl_Alt;
-    fwb->hkReverseCheckByClip[0].sym = fwb->config.hkReverseCheck[0].sym;
-    fwb->hkTableAddPhraseByClip[0].desc = NULL;
-    fwb->hkTableAddPhraseByClip[0].state = FcitxKeyState_Ctrl_Alt;
-    fwb->hkTableAddPhraseByClip[0].sym = fwb->config.hkTableAddPhrase[0].sym;
-
-    char *ptr, key[128];
-    char inifile[256];
-    sprintf(inifile, "%s/.config/fcitx/conf/fcitx-freewubi.config", getenv("HOME"));
-    FcitxLog(INFO, "func : %s line : %d ini filename: %s ", __FUNCTION__, __LINE__, inifile);
-    INI *ini = fileToIni(inifile);
-
-    strcpy(key, GetIniKeyString(ini, "快捷键", "setupOption", "CTRL_KEY_COMMA"));
-    ptr = key + 5;
-    fwb->config.hkSetup[0].sym = FreewbHotkeyGetKeyList(ptr);
-
-    strcpy(key, GetIniKeyString(ini, "快捷键", "switchSkin", "KEY_NONE"));
-    ptr = key + 5;
-    fwb->config.hkSwitchSkin[0].sym = FreewbHotkeyGetKeyList(ptr);
-
-    strcpy(key, GetIniKeyString(ini, "快捷键", "switchInputMode", "CTRL_KEY_BACK_SLASH"));
-    ptr = key + 5;
-    fwb->config.hkSwitchFreeim[0].sym = FreewbHotkeyGetKeyList(ptr);
-
-    strcpy(key, GetIniKeyString(ini, "快捷键", "switchVKb", "CTRL_KEY_ESC"));
-    ptr = key + 5;
-    fwb->config.hkSwitchVKb[0].sym = FreewbHotkeyGetKeyList(ptr);
-
-    strcpy(key, GetIniKeyString(ini, "快捷键", "switchChttrans", "CTRL_KEY_J"));
-    ptr = key + 5;
-    fwb->config.hkSwitchChttrans[0].sym = FreewbHotkeyGetKeyList(ptr);
-
-    strcpy(key, GetIniKeyString(ini, "快捷键", "switchCharSet", "CTRL_KEY_M"));
-    ptr = key;
-    ptr += 5;
-    fwb->config.hkSwitchCharSet[0].sym = FreewbHotkeyGetKeyList(ptr);
-
-    strcpy(key, GetIniKeyString(ini, "快捷键", "quickDelScreenItem", "KEY_NONE"));
-    ptr = key;
-    ptr += 5;
-    fwb->config.hkQuickDelete[0].sym = FreewbHotkeyGetKeyList(ptr);
-
-    strcpy(key, GetIniKeyString(ini, "快捷键", "backFindCode", "CTRL_KEY_SLASH"));
-    ptr = key;
-    ptr += 5;
-    fwb->config.hkReverseCheck[0].sym = FreewbHotkeyGetKeyList(ptr);
-
-    strcpy(key, GetIniKeyString(ini, "快捷键", "onlineAddWord", "CTRL_KEY_EQUAL"));
-    ptr = key;
-    ptr += 5;
-    fwb->config.hkTableAddPhrase[0].sym = FreewbHotkeyGetKeyList(ptr);
-
-    strcpy(key, GetIniKeyString(ini, "快捷键", "onlineDelWord", "CTRL_KEY_DASH"));
-    ptr = key;
-    ptr += 5;
-    fwb->config.hkTableDelPhrase[0].sym = FreewbHotkeyGetKeyList(ptr);
-
-    strcpy(key, GetIniKeyString(ini, "快捷键", "tempPinyin", "`"));
-    fwb->config.unCommonKey[0].sym = FreewbHotkeyGetKeyList(key);
-
-    strcpy(key, GetIniKeyString(ini, "快捷键", "tempEnglish", ";"));
-    fwb->config.tempEnglishKey[0].sym = FreewbHotkeyGetKeyList(key);
-
-    strcpy(key, GetIniKeyString(ini, "快捷键", "shortcutInput", "'"));
-    fwb->config.QuickInputKey[0].sym = FreewbHotkeyGetKeyList(key);
-
-    fwb->config.bCodeRemind = GetIniKeyBool(ini, "基本设置", "codeRemind");
-    fwb->config.bAutoAdjustOrder = GetIniKeyBool(ini, "基本设置", "autoAdjustFreq");
-    fwb->config.bPhraseRemind = GetIniKeyBool(ini, "基本设置", "wordThink");
-    fwb->config.bRemindExistWords = GetIniKeyBool(ini, "基本设置", "remindExistWord");
-    fwb->config.bRecodeVoice = GetIniKeyBool(ini, "基本设置", "alertWhenEmptyCode");
-    fwb->config.bEnterClear = GetIniKeyBool(ini, "基本设置", "enterClear");
-    fwb->config.bShiftCommit = GetIniKeyBool(ini, "基本设置", "shiftCommitChar");
-
-    fwb->config.iCandidateWordNumber = GetIniKeyInt(ini, "候选项", "candiWordCount", 3);
-
-    strcpy(key, GetIniKeyString(ini, "候选项", "secondRecodeKey", ";"));
-    fwb->config.hkSecondRecode[0].sym = FreewbHotkeyGetKeyList(key);
-    fwb->config.hkSecondRecode[0].state = 0;
-
-    strcpy(key, GetIniKeyString(ini, "候选项", "thirdRecodeKey", "'"));
-    fwb->config.hkThirdRecode[0].state = 0;
-    fwb->config.hkThirdRecode[0].sym = FreewbHotkeyGetKeyList(key);
-
-    strcpy(key, GetIniKeyString(ini, "候选项", "prevPageKey", "-"));
-    fwb->config.hkAlternativePrevPage[0].sym = FreewbHotkeyGetKeyList(key);
-    fwb->config.hkAlternativePrevPage[0].state = 0;
-
-    strcpy(key, GetIniKeyString(ini, "候选项", "nextPageKey", "="));
-    fwb->config.hkAlternativeNextPage[0].sym = FreewbHotkeyGetKeyList(key);
-    fwb->config.hkAlternativeNextPage[0].state = 0;
-
-    free(ini);
-    ini = NULL;
-    return true;
-}
-
-static void InternalInit(Fcitxfreewubi *freewubi)
-{
-
-    // FcitxLog(INFO,_("InternalInit"));
-
-    LoadFreeWubiGlobalInfo(freewubi);
-    if (!freewubi->table)
-    {
-        freewubi->table = fcitx_utils_new(TableMetaData);
-        freewubi->table->autoRecord = fcitx_utils_new(AUTORECORD);
-        freewubi->table->autoRecord->recordIndex = 0;
-        freewubi->table->autoPhrase = fcitx_utils_new(AUTOPHRASE);
-        freewubi->table->insertPoint = freewubi->table->autoPhrase;
-        freewubi->table->autoPhrase->next = NULL;
-        freewubi->table->quickTable = fcitx_utils_new(QUCIK_TABLE);
-        freewubi->table->quickTable->next = NULL;
-        freewubi->table->autoEng = fcitx_utils_new(AUTO_ENG);
-        freewubi->table->autoEng->next = NULL;
-
-        freewubi->table->freeWubiConfig = &(freewubi->config);
-        LoadTableDict(freewubi->table);
-        freewubi->table->tableType = FREE_WUBI;
-    }
-    freewubi->bNeedMoveCur = false;
-    freewubi->pLastCommitRecord = NULL;
-}
-
-boolean reloadFreewb(Fcitxfreewubi *fwb)
-{
-    LoadFreeWubiGlobalInfo(fwb);
+    loadAllConfig(fwb);
     if (fwb->config.bBackUpTable)
     {
         if (fwb->table)
@@ -3057,8 +2959,6 @@ boolean reloadFreewb(Fcitxfreewubi *fwb)
         LoadUsrDict(fwb->table);
         fwb->config.bUserWordChanged = 0;
         FreeWubiServiceResetUerWordFlag(FcitxDBusGetConnection(fwb->owner));
-
-        printf("reload user dict imtype=%d", fwb->table->tableType);
     }
     if (fwb->config.bQuickTableChanged)
     {
