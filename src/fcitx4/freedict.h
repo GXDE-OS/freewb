@@ -176,6 +176,8 @@ void freeAutoEng(TableMetaData *tableMetaData);
 boolean isAutoEngStr(TableMetaData *tableMetaData, char *str);
 
 char *s2tConvers(TableMetaData *tableMetaData, const char *simpel);
+void addWordPhraseAndSaveToDict(TableMetaData *tableMetaData, TableDict *dict, int flg, char *wordText, char *wordCode);
+void deleteWordPhraseAndSaveToDict(TableMetaData *tableMetaData, TableDict *dict, int flg, char *wordText, char *wordCode);
 CONFIG_BINDING_DECLARE(TableMetaData);
 
 #endif

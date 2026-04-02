@@ -1472,7 +1472,10 @@ void adjustOrder(DBusConnection *conn, TableMetaData *tableMetaData, TableDict *
     dict->iTableChanged = 1;
     dict->iRecordCount++;
     if (!findRepeat)
-        FreeWubiServiceAddUsrParseDirect(conn, wordText, wordCode);
+    {
+        addWordPhraseAndSaveToDict(tableMetaData, dict, 1, wordText, wordCode);
+        FreeWubiServiceAddUsrParse(conn, 1, wordText, wordCode);
+    }
     SaveTableDict(tableMetaData);
 }
 
@@ -1659,4 +1662,102 @@ char *s2tConvers(TableMetaData *tableMetaData, const char *simpel)
         simpel += len;
     }
     return tradition;
+}
+
+void addWordPhraseAndSaveToDict(TableMetaData *tableMetaData, TableDict *dict, int flg, char *wordText, char *wordCode)
+{
+    if (flg == 1 && dict)
+    {
+        int i = 0;
+        if (!dict->recordHead)
+            return;
+        while (wordCode[0] != dict->recordIndex[i].cCode)
+        {
+            if (!dict->recordIndex[i].cCode)
+                break;
+            ++i;
+        }
+        RECORD *record = dict->recordIndex[i].record;
+        if (!record)
+            return;
+        while (record != dict->recordHead)
+        {
+            if (strcmp(wordCode, record->strCode) <= 0)
+                break;
+            record = record->next;
+        }
+        while (strcmp(wordCode, record->strCode) == 0)
+        {
+            if (strcmp(wordText, record->strHZ) == 0 && record->type == RECORDTYPE_CONSTRUCT)
+                return;
+            record = record->next;
+        }
+        RECORD *recTemp = (RECORD *)fcitx_memory_pool_alloc(dict->pool, sizeof(RECORD));
+        recTemp->owner = dict;
+        recTemp->strCode = (char *)fcitx_memory_pool_alloc(dict->pool, strlen(wordCode) + 1);
+        memset(recTemp->strCode, 0, strlen(wordCode) + 1);
+        strcpy(recTemp->strCode, wordCode);
+        recTemp->strHZ = (char *)fcitx_memory_pool_alloc(dict->pool, strlen(wordText) + 1);
+        memset(recTemp->strHZ, 0, strlen(wordText) + 1);
+        strcpy(recTemp->strHZ, wordText);
+        recTemp->type = RECORDTYPE_CONSTRUCT;
+        //         recTemp->iHit = 0;
+
+        recTemp->prev = record->prev;
+        record->prev->next = recTemp;
+        recTemp->next = record;
+        record->prev = recTemp;
+        dict->iTableChanged = 1;
+        dict->iRecordCount++;
+        SaveTableDict(tableMetaData);
+    }
+}
+
+void deleteWordPhraseAndSaveToDict(TableMetaData *tableMetaData, TableDict *dict, int flg, char *wordText, char *wordCode)
+{
+    if (flg == 1 && dict)
+    {
+        int i = 0;
+        if (!dict->recordHead)
+            return;
+        while (wordCode[0] != dict->recordIndex[i].cCode)
+        {
+            if (!dict->recordIndex[i].cCode)
+                break;
+            ++i;
+        }
+        RECORD *record = dict->recordIndex[i].record;
+        if (!record)
+            return;
+        while (record != dict->recordHead)
+        {
+            if (strcmp(wordCode, record->strCode) <= 0)
+                break;
+            record = record->next;
+        }
+        while (strcmp(wordCode, record->strCode) == 0)
+        {
+            if (strcmp(wordText, record->strHZ) == 0 && record->type == RECORDTYPE_CONSTRUCT)
+                return;
+            record = record->next;
+        }
+        RECORD *recTemp = (RECORD *)fcitx_memory_pool_alloc(dict->pool, sizeof(RECORD));
+        recTemp->owner = dict;
+        recTemp->strCode = (char *)fcitx_memory_pool_alloc(dict->pool, strlen(wordCode) + 1);
+        memset(recTemp->strCode, 0, strlen(wordCode) + 1);
+        strcpy(recTemp->strCode, wordCode);
+        recTemp->strHZ = (char *)fcitx_memory_pool_alloc(dict->pool, strlen(wordText) + 1);
+        memset(recTemp->strHZ, 0, strlen(wordText) + 1);
+        strcpy(recTemp->strHZ, wordText);
+        recTemp->type = RECORDTYPE_CONSTRUCT;
+        //         recTemp->iHit = 0;
+
+        recTemp->prev = record->prev;
+        record->prev->next = recTemp;
+        recTemp->next = record;
+        record->prev = recTemp;
+        dict->iTableChanged = 1;
+        dict->iRecordCount++;
+        SaveTableDict(tableMetaData);
+    }
 }
