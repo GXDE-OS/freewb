@@ -2968,7 +2968,8 @@ static void FcitxFreeWubiDestroy(void *arg)
 extern "C"
 {
 #endif
-    FCITX_DEFINE_PLUGIN(fcitx_freewubi, ime, FcitxIMClass) = {FcitxFreeWubiCreate, FcitxFreeWubiDestroy};
+    FCITX_EXPORT_API FcitxIMClass ime = {FcitxFreeWubiCreate, FcitxFreeWubiDestroy};
+    FCITX_EXPORT_API int ABI_VERSION = FCITX_ABI_VERSION;
 #ifdef __cplusplus
 }
 #endif

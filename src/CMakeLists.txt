@@ -1,5 +1,8 @@
 include_directories(${CMAKE_SOURCE_DIR}/src/)
 
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+set(CMAKE_INSTALL_RPATH "$ORIGIN;${FREEWB_INSTALL_LIBDIR};")
+
 add_subdirectory(utils)
 add_subdirectory(tools)
 add_subdirectory(panel)

@@ -1,7 +1,13 @@
 [Addon]
-Name=freewb
-_GeneralName=freewb
-_Comment=Freewb Input Method for Fcitx
+Name=fcitx-freewb
+GeneralName=Freewb Input Method
+GeneralName[zh_CN]=极点五笔输入法
+GeneralName[zh_HK]=極點五筆輸入法
+GeneralName[zh_TW]=極點五筆輸入法
+Comment=Freewb Input Method
+Comment[zh_CN]=极点五笔输入法
+Comment[zh_HK]=極點五筆輸入法
+Comment[zh_TW]=極點五筆輸入法
 Category=InputMethod
 Enabled=True
 Library=fcitx-freewb.so
