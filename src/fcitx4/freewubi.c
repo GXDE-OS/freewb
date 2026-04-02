@@ -1352,13 +1352,13 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 {
                     RECORD *recTemp = tableCandWord->candWord.record;
                     if (fwb->table->tableType == FREE_PINYIN)
-                        adjustOrder(FcitxDBusGetConnection(fwb->owner), table, table->PinyinDict, recTemp->strHZ, recTemp->strCode);
+                        adjustOrder(table, table->PinyinDict, recTemp->strHZ, recTemp->strCode);
                     else
-                        adjustOrder(FcitxDBusGetConnection(fwb->owner), table, table->WubiDict, recTemp->strHZ, strCodeInput);
+                        adjustOrder(table, table->WubiDict, recTemp->strHZ, strCodeInput);
                 }
                 else if (tableCandWord->flag == CT_AUTOPHRASE)
                 {
-                    adjustOrder(FcitxDBusGetConnection(fwb->owner), table, table->WubiDict, tableCandWord->candWord.autoPhrase->strHZ, strCodeInput);
+                    adjustOrder(table, table->WubiDict, tableCandWord->candWord.autoPhrase->strHZ, strCodeInput);
                 }
 
                 FreeWubiGetCandWords(fwb);
@@ -2049,7 +2049,7 @@ static INPUT_RETURN_VALUE FreeWubiGetCandWord(void *arg, FcitxCandidateWord *can
             table->autoRecord->recordIndex = 0;
         }
         if (fwb->pLastCommitRecord && fwb->config.bAutoAdjustOrder)
-            adjustOrder(FcitxDBusGetConnection(fwb->owner), fwb->table, fwb->pLastCommitRecord->owner, fwb->pLastCommitRecord->strHZ, fwb->pLastCommitRecord->strCode);
+            adjustOrder(fwb->table, fwb->pLastCommitRecord->owner, fwb->pLastCommitRecord->strHZ, fwb->pLastCommitRecord->strCode);
     }
     return retVal;
 }

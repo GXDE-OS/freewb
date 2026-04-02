@@ -1408,7 +1408,7 @@ unsigned int CalHZIndex(char *strHZ)
     return idx;
 }
 
-void adjustOrder(DBusConnection *conn, TableMetaData *tableMetaData, TableDict *dict, char *wordText, char *wordCode)
+void adjustOrder(TableMetaData *tableMetaData, TableDict *dict, char *wordText, char *wordCode)
 {
     int i = 0;
     boolean findRepeat = false;
@@ -1474,7 +1474,6 @@ void adjustOrder(DBusConnection *conn, TableMetaData *tableMetaData, TableDict *
     if (!findRepeat)
     {
         addWordPhraseAndSaveToDict(tableMetaData, dict, 1, wordText, wordCode);
-        FreeWubiServiceAddUsrParse(conn, 1, wordText, wordCode);
     }
     SaveTableDict(tableMetaData);
 }
