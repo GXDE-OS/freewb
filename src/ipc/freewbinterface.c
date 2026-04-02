@@ -1,4 +1,4 @@
-#include "freeinterface.h"
+#include "freewbinterface.h"
 
 #include "ipc/ipc.h"
 

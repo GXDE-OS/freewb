@@ -1,5 +1,5 @@
-#ifndef _FREE_INTERFACE_H
-#define _FREE_INTERFACE_H
+#ifndef _FREEWBINTERFACE_H_
+#define _FREEWBINTERFACE_H_
 
 #include <dbus/dbus.h>
 
