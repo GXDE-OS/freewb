@@ -1,19 +1,56 @@
+
+[Common]
+codeRemind=true
+alertWhenEmptyCode=false
+smartMark=true
+autoAdjustFreq=false
+wordThink=false
+remindExistWord=false
+spaceFullWhenCharHalf=false
+
+[Misc]
+charSet=0
+curUsedLexicon=default
+currentCharset=0
+enterClear=true
+inputMethod=1
+inputMode=0
+simpTradFlg=0
+userWordFlg=1
+vkMode=-1
+wubiTable=default/wubi.mb
+pinyinTable=default/pinyin.mb
+CoustomChar="ˉ  ，  、  ；  ：  ？  ！  …  —  •  〔  （  【  〈  “  〉  《  》  ∶  「  」  『  ［  ）  ＂  ＇  ‘  ”  〕  々  ‖  】  ’  〗  ～  〖  。  ˇ  ¨  `  |  \"  』  .  ］  中  国  "
+CoustomMark=" ）  ！  ·  #  ￥  %  …  —  *  （                                                     ` ~ － — ＝ + [ { ] } 、 ｜ ； ： ’  ，  。  、 ？ "
+
 [Advanced]
 autoWordGroupOpt=1
 recodeCalib=false
 shiftCommitChar=true
 typeEffect=false
+inputStatistic=false
+
+[Ui]
+curSkinId=default
+toolbarAutoLocate=true
+hideToolbar=false
+showRealtimeHelp=true
+toolbarAutoExpand=false
+toolbarTransparency=0
+uiAudioEffect=false
 
 [CandidateWinOptions]
-candiPageKey=0
+candiPageKey=CPSK_SUB_EQUAL
 cursorFollow=true
 hideCandiWin=false
-nextPageKey=KEY_EQUAL
 prevPageKey=KEY_DASH
+nextPageKey=KEY_EQUAL
 recodeSelectKey=1
 secondRecodeKey=KEY_SEMICOLON
-showOpRemindInfo=true
 thirdRecodeKey=KEY_QUOTE
+shiftSelectRecode=false
+showOpRemindInfo=true
+useFreewbFont=false
 
 [CandidateWinUi]
 bgColor=@Variant(\0\0\0\x43\x1\xff\xff\xff\xff\xff\xff\xff\xff\0\0)
@@ -21,7 +58,7 @@ bgImage=
 borderColor=@Variant(\0\0\0\x43\x1\xff\xff\xa4\xa4\xc1\xc1\xe2\xe2\0\0)
 candiCharCount=9
 candiPromptTextColor=@Variant(\0\0\0\x43\x1\xff\xff__[[RR\0\0)
-candiTextFont=Ubuntu 14
+candiTextFont=Noto Sans CJK SC 14
 candiWinDispMode=0
 candiWordCount=5
 candiWordTextColor=@Variant(\0\0\0\x43\x1\xff\xff__[[RR\0\0)
@@ -33,34 +70,9 @@ separateChar=@Variant(\0\0\0\a\0.)
 transparency=0
 useBgImage=false
 useGradientColor=false
-
-[Common]
-alertWhenEmptyCode=true
-autoAdjustFreq=false
-codeRemind=true
-remindExistWord=false
-smartMark=true
-spaceFullWhenCharHalf=false
-wordThink=false
-
-[CoustomChar]
-valueList="ˉ  ，  、  ；  ：  ？  ！  …  —  •  〔  （  【  〈  “  〉  《  》  ∶  「  」  『  ［  ）  ＂  ＇  ‘  ”  〕  々  ‖  】  ’  〗  ～  〖  。  ˇ  ¨  `  |  \"  』  .  ］  中  国  "
-
-[CoustomMark]
-valueList=" ）  ！  ·  #  ￥  %  …  —  *  （                                                     ` ~ － — ＝ + [ { ] } 、 ｜ ； ： ’  ，  。  、 ？ "
-
-[Misc]
-charSet=0
-curUsedLexicon=default
-currentCharset=1
-enterClear=true
-inputMethod=1
-inputMode=0
-pinyinTable=default/attach.mb
-simpTradFlg=0
-userWordFlg=1
-vkMode=-1
-wubiTable=default/freeime.mb
+showCandDictInfo=true
+candiTextFontName=Noto Sans CJK SC
+candiTextFontSize=14
 
 [Others]
 autoToEnStr=www. ftp: http mail. bbs.
@@ -76,7 +88,7 @@ onlineAddWord=CTRL+KEY_EQUAL
 onlineDelWord=CTRL+KEY_DASH
 quickDelScreenItem=CTRL+KEY_BACKSPACE
 setupOption=CTRL+KEY_COMMA
-shortcutInput=0
+shortcutInput=KEY_QUOTE
 showHideCandiWin=CTRL+KEY_RIGHT
 showHideToolbar=CTRL+KEY_LEFT
 switchCharSet=CTRL+KEY_M
@@ -85,13 +97,5 @@ switchInputMode=CTRL+KEY_BACK_SLASH
 switchLexicon=CTRL+KEY_QUOTE
 switchSkin=CTRL+KEY_NONE
 switchVKb=CTRL+KEY_ESC
-tempEnglish=0
-tempPinyin=96
-
-[Ui]
-curSkinId=default
-hideToolbar=false
-showRealtimeHelp=true
-toolbarAutoExpand=false
-toolbarTransparency=0
-uiAudioEffect=false
+tempEnglish=KEY_SEMICOLON
+tempPinyin=KEY_BACKQUOTE
