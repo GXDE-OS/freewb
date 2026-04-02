@@ -236,7 +236,6 @@ void MainProgram::slot_dbus_switch_freewb(int flag)
     {
         qDebug() << "func : " << __FUNCTION__ << ",line : " << __LINE__ << ", hide freewb ui";
         SysTrayMenu::set_extern_im(true);
-        Settings::save_simpTradSwitchEnable_to_fcitx_config_file(true);
         // m_kimAgent->ReloadConfig();//ReloadConfig信号必须在删除kimpanel面板之前发送
         m_toolbar->hide();
         m_inputWin->hide();

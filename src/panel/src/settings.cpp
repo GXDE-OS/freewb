@@ -1,17 +1,101 @@
 #include "settings.h"
 
-#include "ConfigIni.h"
 #include "commdefine.h"
+#include "utils/SimpleIni.h"
+
+#include <QByteArray>
+#include <QTemporaryFile>
+
 #define CONFIG_FILE INSTALL_DIR + "/config/config.ini"
 
-void saveSetting(const char *section, const char *key, int value)
+namespace {
+
+QByteArray configIniPathUtf8() { return (CONFIG_FILE).toUtf8(); }
+
+bool csIniLoadOrEmpty(CSimpleIniA &ini, const char *path)
 {
-    string inifile = getenv("HOME");
-    inifile += "/.config/fcitx/conf/fcitx-freewubi.config";
-    ConfigIni *ini = new ConfigIni(inifile.c_str());
-    ini->setIntValue(section, key, value);
-    delete ini;
+    SI_Error e = ini.LoadFile(path);
+    return e >= 0 || e == SI_FILE;
 }
+
+QColor csIniGetColor(const CSimpleIniA &ini, const char *sec, const char *key, const QColor &def)
+{
+    const char *v = ini.GetValue(sec, key, nullptr);
+    if (!v || !*v)
+        return def;
+    QByteArray raw(v);
+    QString s = QString::fromUtf8(raw);
+    if (s.startsWith(QLatin1Char('#'))) {
+        QColor c(s);
+        if (c.isValid())
+            return c;
+    }
+    if (s.contains(QLatin1Char(','))) {
+        QStringList p = s.split(QLatin1Char(','));
+        if (p.size() >= 3) {
+            QColor c(p[0].trimmed().toInt(), p[1].trimmed().toInt(), p[2].trimmed().toInt(),
+                     p.size() > 3 ? p[3].trimmed().toInt() : 255);
+            if (c.isValid())
+                return c;
+        }
+    }
+    if (s.startsWith(QLatin1String("@Variant"))) {
+        QTemporaryFile tf;
+        if (tf.open()) {
+            tf.write("[tmp]\nx=");
+            tf.write(raw);
+            tf.write("\n");
+            tf.flush();
+            QSettings st(tf.fileName(), QSettings::IniFormat);
+            st.setIniCodec("UTF-8");
+            st.beginGroup(QStringLiteral("tmp"));
+            QColor c = st.value(QStringLiteral("x")).value<QColor>();
+            st.endGroup();
+            if (c.isValid())
+                return c;
+        }
+    }
+    return def;
+}
+
+QString colorToIniString(const QColor &c) { return c.name(QColor::HexArgb); }
+
+void csIniSetColor(CSimpleIniA &ini, const char *sec, const char *key, const QColor &c)
+{
+    ini.SetValue(sec, key, colorToIniString(c).toUtf8().constData(), nullptr, true);
+}
+
+bool csIniSaveValue(const char *section, const char *key, const QString &value)
+{
+    QByteArray path = configIniPathUtf8();
+    CSimpleIniA ini(true, false, false);
+    if (!csIniLoadOrEmpty(ini, path.constData()))
+        return false;
+    ini.SetValue(section, key, value.toUtf8().constData(), nullptr, true);
+    return ini.SaveFile(path.constData(), false) >= 0;
+}
+
+bool csIniSaveInt(const char *section, const char *key, int value)
+{
+    QByteArray path = configIniPathUtf8();
+    CSimpleIniA ini(true, false, false);
+    if (!csIniLoadOrEmpty(ini, path.constData()))
+        return false;
+    ini.SetLongValue(section, key, value, nullptr, false, true);
+    return ini.SaveFile(path.constData(), false) >= 0;
+}
+
+bool csIniSaveBool(const char *section, const char *key, bool value)
+{
+    QByteArray path = configIniPathUtf8();
+    CSimpleIniA ini(true, false, false);
+    if (!csIniLoadOrEmpty(ini, path.constData()))
+        return false;
+    ini.SetBoolValue(section, key, value, nullptr, true);
+    return ini.SaveFile(path.constData(), false) >= 0;
+}
+
+} // namespace
 
 Settings g_settings;
 
@@ -187,18 +271,6 @@ void Settings::init_const_data_member()
     s_combineShortcutKeyName_1[CSK_EQUAL] = "KEY_EQUAL";
     s_combineShortcutKeyName_1[CSK_DASH] = "KEY_DASH";
 
-    // s_combineShortcutKeyName_1[CSK_QUOTE] = "KEY_QUOTE";
-    // s_combineShortcutKeyName_1[CSK_SEMICOLON] = "KEY_SEMICOLON";
-    // s_combineShortcutKeyName_1[CSK_BACK_SLASH] = "KEY_DASH";
-    // s_combineShortcutKeyName_1[CSK_LEFT_BRACKETS] = "KEY_LEFT_BRACKETS";
-    // s_combineShortcutKeyName_1[CSK_RIGHT_BRACKETS] = "KEY_RIGHT_BRACKETS";
-    // s_combineShortcutKeyName_1[CSK_COMMA] = "KEY_COMMA";
-    // s_combineShortcutKeyName_1[CSK_PERIOD] = "KEY_PERIOD";
-    // s_combineShortcutKeyName_1[CSK_SLASH] = "KEY_SLASH";
-    // s_combineShortcutKeyName_1[CSK_BACK_QUOTE] = "KEY_BACK_QUOTE";
-    // s_combineShortcutKeyName_1[CSK_EQUAL] = "KEY_EQUAL";
-    // s_combineShortcutKeyName_1[CSK_DASH] = "KEY_DASH";
-
     s_combineShortcutKeyName_1[CSK_F1] = "KEY_F1";
     s_combineShortcutKeyName_1[CSK_F2] = "KEY_F2";
     s_combineShortcutKeyName_1[CSK_F3] = "KEY_F3";
@@ -212,32 +284,7 @@ void Settings::init_const_data_member()
     s_combineShortcutKeyName_1[CSK_F11] = "KEY_F11";
     s_combineShortcutKeyName_1[CSK_F12] = "KEY_F12";
     s_combineShortcutKeyName_1[CSK_ESC] = "KEY_ESC";
-    // s_combineShortcutKeyName_1[CSK_a] = "KEY_A";
-    // s_combineShortcutKeyName_1[CSK_b] = "KEY_B";
-    // s_combineShortcutKeyName_1[CSK_c] = "KEY_C";
-    // s_combineShortcutKeyName_1[CSK_d] = "KEY_D";
-    // s_combineShortcutKeyName_1[CSK_e] = "KEY_E";
-    // s_combineShortcutKeyName_1[CSK_f] = "KEY_F";
-    // s_combineShortcutKeyName_1[CSK_g] = "KEY_G";
-    // s_combineShortcutKeyName_1[CSK_h] = "KEY_H";
-    // s_combineShortcutKeyName_1[CSK_i] = "KEY_I";
-    // s_combineShortcutKeyName_1[CSK_j] = "KEY_J";
-    // s_combineShortcutKeyName_1[CSK_k] = "KEY_K";
-    // s_combineShortcutKeyName_1[CSK_l] = "KEY_L";
-    // s_combineShortcutKeyName_1[CSK_m] = "KEY_M";
-    // s_combineShortcutKeyName_1[CSK_n] = "KEY_N";
-    // s_combineShortcutKeyName_1[CSK_o] = "KEY_O";
-    // s_combineShortcutKeyName_1[CSK_p] = "KEY_P";
-    // s_combineShortcutKeyName_1[CSK_q] = "KEY_Q";
-    // s_combineShortcutKeyName_1[CSK_r] = "KEY_R";
-    // s_combineShortcutKeyName_1[CSK_s] = "KEY_S";
-    // s_combineShortcutKeyName_1[CSK_t] = "KEY_T";
-    // s_combineShortcutKeyName_1[CSK_u] = "KEY_U";
-    // s_combineShortcutKeyName_1[CSK_v] = "KEY_V";
-    // s_combineShortcutKeyName_1[CSK_w] = "KEY_W";
-    // s_combineShortcutKeyName_1[CSK_x] = "KEY_X";
-    // s_combineShortcutKeyName_1[CSK_y] = "KEY_Y";
-    // s_combineShortcutKeyName_1[CSK_z] = "KEY_Z";
+
     s_combineShortcutKeyName_1[CSK_a] = "KEY_A";
     s_combineShortcutKeyName_1[CSK_b] = "KEY_B";
     s_combineShortcutKeyName_1[CSK_c] = "KEY_C";
@@ -353,159 +400,153 @@ void Settings::slot_restore_default_all_config()
 void Settings::load_all_setting_data_from_file()
 {
     QFile cfgFile(CONFIG_FILE);
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
 
     if (!cfgFile.exists())
     {
         slot_restore_default_all_config();
         s_settingDataIsChanged = true;
         save_all_setting_data_to_file();
+        return;
     }
-    else // 读取配置文件
+
+    CSimpleIniA cfgIni(true, false, false);
+    if (!csIniLoadOrEmpty(cfgIni, configIniPathUtf8().constData()))
     {
-        // for fcitx-configtool
-        string inifile = getenv("HOME");
-        inifile += "/.config/fcitx/conf/fcitx-freewubi.config";
-
-        ConfigIni *ini = new ConfigIni(inifile.c_str());
-
-        s_common.codeRemind = ini->getBoolValue("基本设置", "codeRemind", true);
-        s_common.autoAdjustFreq = ini->getBoolValue("基本设置", "autoAdjustFreq", false);
-        s_common.wordThink = ini->getBoolValue("基本设置", "wordThink", false);
-        s_common.remindExistWord = ini->getBoolValue("基本设置", "remindExistWord", false);
-        s_common.alertWhenEmptyCode = ini->getBoolValue("基本设置", "alertWhenEmptyCode", true);
-        s_miscSetting.enterClear = ini->getBoolValue("基本设置", "enterClear", true);
-        s_advance.shiftCommitChar = ini->getBoolValue("基本设置", "shiftCommitChar", true);
-
-        s_candidateWinUi.candiWordCount = ini->getIntValue("候选项", "candiWordCount", 3 );
-        s_candidateWinOption.secondRecodeKey = ini->getStringValue("候选项","secondRecodeKey",";" );
-        s_candidateWinOption.thirdRecodeKey = ini->getStringValue("候选项","thirdRecodeKey" ,"'");
-        s_candidateWinOption.prevPageKey = ini->getStringValue("候选项","prevPageKey","-" );
-        s_candidateWinOption.nextPageKey = ini->getStringValue("候选项","nextPageKey","=" );
-        s_miscSetting.useFreewbFont = ini->getBoolValue("候选项","useFreewbFont",false);
-        //ShortcutKey
-        string key = ini->getStringValue("快捷键","backFindCode", "CTRL_KEY_SLASH");
-//printf("backcode=%s\n",key.c_str());        
-        s_shortcutKey.customShortcutFunc[CSF_BACK_FIND_CODE] = convert_name_to_combineShortcutKey( key.c_str() );
-        s_shortcutKey.customShortcutFunc[CSF_ONLINE_ADD_WORD] = convert_name_to_combineShortcutKey( ini->getStringValue("快捷键","onlineAddWord", "CTRL_KEY_EQUAL") );
-        s_shortcutKey.customShortcutFunc[CSF_ONLINE_DEL_WORD] = convert_name_to_combineShortcutKey( ini->getStringValue("快捷键","onlineDelWord", "CTRL_KEY_DASH") );
-        s_shortcutKey.customShortcutFunc[CSF_SWITCH_KEYBOARD] = convert_name_to_combineShortcutKey( ini->getStringValue("快捷键","switchVKb", "CTRL_KEY_ESC") );
-        s_shortcutKey.customShortcutFunc[CSF_SWITCH_CHAR_SET] = convert_name_to_combineShortcutKey( ini->getStringValue("快捷键","switchCharSet", "CTRL_KEY_M") );
-        s_shortcutKey.customShortcutFunc[CSF_SWITCH_INPUT_MODE] = convert_name_to_combineShortcutKey( ini->getStringValue("快捷键","switchInputMode", "CTRL_KEY_BACK_SLASH") );
-        s_shortcutKey.customShortcutFunc[CSF_SWITCH_S_IN_T_OUT] = convert_name_to_combineShortcutKey( ini->getStringValue("快捷键","switchChttrans", "CTRL_KEY_J") );
-        s_shortcutKey.customShortcutFunc[CSF_SETUP_OPTION] = convert_name_to_combineShortcutKey(ini->getStringValue("快捷键","setupOption", "CTRL_KEY_COMMA"));
-        s_shortcutKey.customShortcutFunc[CSF_QUICK_DEL_SCREEN_CHAR] = convert_name_to_combineShortcutKey(ini->getStringValue("快捷键","quickDelScreenItem", "CTRL_KEY_BACKSPACE") );
-
-        s_shortcutKey.sskTmpEnglish = convert_name_to_singleShortcutKey(ini->getStringValue("快捷键", "tempEnglish", ";"));
-        s_shortcutKey.sskShortcutInput = convert_name_to_singleShortcutKey(ini->getStringValue("快捷键", "shortcutInput", "'"));
-        s_shortcutKey.sskTmpPinyin = convert_name_to_singleShortcutKey(ini->getStringValue("快捷键", "tempPinyin", "`"));
-        // s_shortcutKey.disableFullHalfSwitchShortcutkey = ini->getBoolValue("快捷键","disableFullHalfSwitch");
-        // s_shortcutKey.customShortcutFunc[CSF_SWITCH_WORD_STATE] = convert_name_to_combineShortcutKey( settings.value("switchWordState") );
-        // s_shortcutKey.ceSwitchShortcutkey = convert_name_to_cnEnSwitchShortcutKey( ini->getStringValue("快捷键","cnEnSwitch") );
-        // s_shortcutKey.customShortcutFunc[CSF_ADD_CHAR_AFTER_OUTPUT] = convert_name_to_combineShortcutKey( settings.value("addCharAfterOutput") );
-        delete ini;
-
-        settings.beginGroup("Common");
-        s_common.spaceFullWhenCharHalf = settings.value("spaceFullWhenCharHalf").toBool();
-        s_common.smartMark = settings.value("smartMark").toBool();
-        settings.endGroup();
-
-        settings.beginGroup("Advanced");
-        s_advance.typeEffect = settings.value("typeEffect").toBool();
-        s_advance.recodeCalib = settings.value("recodeCalib").toBool();
-        s_advance.autoWordGroupOpt = static_cast<AutoWordGroupOpt>(settings.value("autoWordGroupOpt").toInt());
-        settings.endGroup();
-
-        settings.beginGroup("Others");
-        s_others.autoToEnStr = settings.value("autoToEnStr").toString();
-        s_others.autoToHalfMarkFlg = settings.value("autoToHalfMarkFlg").toBool();
-        settings.endGroup();
-
-        settings.beginGroup("Misc");
-        set_custom_mark_value(settings.value("CoustomMark").toString());
-        set_custom_char_value(settings.value("CoustomChar").toString());
-        s_curUsedLexicon = settings.value("curUsedLexicon", INSTALL_DIR + "/data/mb/default").toString();
-        s_miscSetting.inputMethod = settings.value("inputMode", 1).toInt();
-        s_miscSetting.currentCharset = settings.value("currentCharset", 1).toInt();
-        s_miscSetting.simpTranFlg = settings.value("simpTradFlg", 0).toInt();
-        settings.endGroup();
-
-        settings.beginGroup("Ui");
-        s_ui.curSkinId = settings.value("curSkinId", "default").toString();
-        //        s_ui.toolbarAutoLocate = settings.value( "toolbarAutoLocate" ).toBool();
-        s_ui.toolbarAutoExpand = settings.value("toolbarAutoExpand").toBool();
-        s_ui.enableUiAudioEffect = settings.value("uiAudioEffect").toBool();
-        s_ui.showRealtimeHelp = settings.value("showRealtimeHelp").toBool();
-        s_ui.hideToolbar = settings.value("hideToolbar", false).toBool();
-        s_ui.toolbarTransparency = settings.value("toolbarTransparency").toInt();
-        settings.endGroup();
-
-        settings.beginGroup("CandidateWinUi");
-        s_candidateWinUi.show_cand_dict = settings.value("showCandDictInfo").toBool(); // 是否实时显示候选项字典
-        s_candidateWinUi.candiWinDispMode = static_cast<CandiWinDispMode>(settings.value("candiWinDispMode", CWDM_ONE_ROW).toInt());
-        s_candidateWinUi.separateChar = settings.value("separateChar").toChar().toLatin1(); // 候选词序号与词组间的分隔符
-        s_candidateWinUi.useGradientColor = settings.value("useGradientColor").toBool();    // 是否使用渐变色
-        s_candidateWinUi.useBgImage = settings.value("useBgImage").toBool();                // 是否使用背景图
-        s_candidateWinUi.enablebgImageTiled = settings.value("enableTiled").toBool();       // 使能背景图平铺
-        s_candidateWinUi.radius = settings.value("radius").toInt();                         // 圆角弧度
-        s_candidateWinUi.candiWinTransparency = settings.value("transparency").toInt();     // 透明度
-        s_candidateWinUi.candiCharCount = settings.value("candiCharCount").toInt();         // 候选词字数
-
-        QString fontName = settings.value("candiTextFontName").toString();
-        if (fontName == "")
-        {
-            fontName = "Ubuntu";
-        }
-        int fontSize = settings.value("candiTextFontSize").toInt();
-        if (fontSize < 9)
-        {
-            fontSize = 14;
-        }
-        s_candidateWinUi.candiTextFont = QFont(fontName, fontSize);
-        /*
-        QStringList fontParam = settings.value( "candiTextFont" ).toString().split(" ");
-        if ( fontParam.length() > 1 )//越界访问会导致段错误!!!!
-        {
-            s_candidateWinUi.candiTextFont = QFont( fontParam.at(0), fontParam.at(1).toInt() );//候选词字体
-        }
-        */
-
-        s_candidateWinUi.bgImage = settings.value("bgImage").toString();                                // 背景图片
-        s_candidateWinUi.bgColor = settings.value("bgColor").value<QColor>();                           // 背景色
-        s_candidateWinUi.gradientColor0 = settings.value("gradientColor0").value<QColor>();             // 渐变起始色
-        s_candidateWinUi.gradientColor1 = settings.value("gradientColor1").value<QColor>();             // 渐变结束色
-        s_candidateWinUi.borderColor = settings.value("borderColor").value<QColor>();                   // 边框颜色
-        s_candidateWinUi.candiWordTextColor = settings.value("candiWordTextColor").value<QColor>();     // 候选词颜色
-        s_candidateWinUi.candiPromptTextColor = settings.value("candiPromptTextColor").value<QColor>(); // 提示信息颜色
-        settings.endGroup();
-
-        settings.beginGroup("CandidateWinOptions");
-        s_candidateWinOption.recodeSelectKey = static_cast<RcodeSelectShortcutKey>(settings.value("recodeSelectKey", RSSK_SEMI_QUOTE).toInt());
-        s_candidateWinOption.candiPageKey = static_cast<CandiPageShortcutKey>(settings.value("candiPageKey", CPSK_SUB_EQUAL).toInt());
-
-        s_candidateWinOption.cursorFollowFlg = settings.value("cursorFollow").toBool();
-        s_candidateWinOption.hideCandiWinFlg = settings.value("hideCandiWin").toBool();
-        s_candidateWinOption.showOpRemindInfoFlg = settings.value("showOpRemindInfo").toBool();
-        s_candidateWinOption.shiftSelectRecodeFlg = settings.value("shiftSelectRecode").toBool();
-        settings.endGroup();
-
-        settings.beginGroup("ShortcutKey");
-        s_shortcutKey.customShortcutFunc[CSF_MARK_AUTO_PAIR] = convert_name_to_combineShortcutKey(settings.value("markAutoPair").toString());
-        s_shortcutKey.customShortcutFunc[CSF_SWITCH_SKIN] = convert_name_to_combineShortcutKey(settings.value("switchSkin").toString());
-        s_shortcutKey.customShortcutFunc[CSF_SHOW_HIDE_STATUS_BAR] = convert_name_to_combineShortcutKey(settings.value("showHideToolbar").toString());
-        s_shortcutKey.customShortcutFunc[CSF_SHOW_HIDE_CANDIDATE_WIN] = convert_name_to_combineShortcutKey(settings.value("showHideCandiWin").toString());
-
-        s_shortcutKey.customShortcutFunc[CSF_SWITCH_WORD_LEXICON] = convert_name_to_combineShortcutKey(settings.value("switchLexicon").toString());
-
-        s_shortcutKey.ceSwitchShortcutkey = convert_name_to_cnEnSwitchShortcutKey(settings.value("cnEnSwitch").toString());
-        s_shortcutKey.disableAllCsk = settings.value("disableAllShortcutKey").toBool();
-        s_shortcutKey.disableFullHalfSwitchShortcutkey = settings.value("disableFullHalfSwitch").toBool();
-        settings.endGroup();
+        qWarning() << "config.ini load failed (parse error or out of memory):" << CONFIG_FILE;
+        slot_restore_default_all_config();
+        save_all_setting_data_to_file();
+        copy_all_setting_data_to_buffer();
+        return;
     }
 
-    // 将某些设置写入到fcitx自带的配置文件
-    save_setting_to_fcitx_config_file();
+    s_common.codeRemind = cfgIni.GetBoolValue("Common", "codeRemind", true);
+    s_common.autoAdjustFreq = cfgIni.GetBoolValue("Common", "autoAdjustFreq", false);
+    s_common.wordThink = cfgIni.GetBoolValue("Common", "wordThink", false);
+    s_common.remindExistWord = cfgIni.GetBoolValue("Common", "remindExistWord", false);
+    s_common.alertWhenEmptyCode = cfgIni.GetBoolValue("Common", "alertWhenEmptyCode", true);
+    s_miscSetting.enterClear = cfgIni.GetBoolValue("Common", "enterClear", true);
+    s_common.spaceFullWhenCharHalf = cfgIni.GetBoolValue("Common", "spaceFullWhenCharHalf", false);
+    s_common.smartMark = cfgIni.GetBoolValue("Common", "smartMark", false);
+
+    s_advance.shiftCommitChar = cfgIni.GetBoolValue("Advanced", "shiftCommitChar", true);
+    s_advance.typeEffect = cfgIni.GetBoolValue("Advanced", "typeEffect", false);
+    s_advance.recodeCalib = cfgIni.GetBoolValue("Advanced", "recodeCalib", false);
+    s_advance.autoWordGroupOpt = static_cast<AutoWordGroupOpt>(static_cast<int>(cfgIni.GetLongValue("Advanced", "autoWordGroupOpt", 0)));
+
+    s_others.autoToEnStr = QString::fromUtf8(cfgIni.GetValue("Others", "autoToEnStr", "", nullptr));
+    s_others.autoToHalfMarkFlg = cfgIni.GetBoolValue("Others", "autoToHalfMarkFlg", false);
+
+    set_custom_mark_value(QString::fromUtf8(cfgIni.GetValue("Misc", "CoustomMark", "", nullptr)));
+    set_custom_char_value(QString::fromUtf8(cfgIni.GetValue("Misc", "CoustomChar", "", nullptr)));
+    {
+        const QByteArray defLex = (INSTALL_DIR + "/data/mb/default").toUtf8();
+        s_curUsedLexicon = QString::fromUtf8(cfgIni.GetValue("Misc", "curUsedLexicon", defLex.constData(), nullptr));
+    }
+    s_miscSetting.inputMethod = static_cast<int>(cfgIni.GetLongValue("Misc", "inputMode", 1));
+    s_miscSetting.currentCharset = static_cast<int>(cfgIni.GetLongValue("Misc", "currentCharset", 1));
+    s_miscSetting.simpTranFlg = static_cast<int>(cfgIni.GetLongValue("Misc", "simpTradFlg", 0));
+
+    s_ui.curSkinId = QString::fromUtf8(cfgIni.GetValue("Ui", "curSkinId", "default", nullptr));
+    s_ui.toolbarAutoLocate = cfgIni.GetBoolValue("Ui", "toolbarAutoLocate", false);
+    s_ui.toolbarAutoExpand = cfgIni.GetBoolValue("Ui", "toolbarAutoExpand", false);
+    s_ui.enableUiAudioEffect = cfgIni.GetBoolValue("Ui", "uiAudioEffect", false);
+    s_ui.showRealtimeHelp = cfgIni.GetBoolValue("Ui", "showRealtimeHelp", false);
+    s_ui.hideToolbar = cfgIni.GetBoolValue("Ui", "hideToolbar", false);
+    s_ui.toolbarTransparency = static_cast<int>(cfgIni.GetLongValue("Ui", "toolbarTransparency", 0));
+
+    s_candidateWinUi.show_cand_dict = cfgIni.GetBoolValue("CandidateWinUi", "showCandDictInfo", false);
+    s_candidateWinUi.candiWinDispMode =
+        static_cast<CandiWinDispMode>(static_cast<int>(cfgIni.GetLongValue("CandidateWinUi", "candiWinDispMode", static_cast<int>(CWDM_ONE_ROW))));
+    {
+        const char *sepRaw = cfgIni.GetValue("CandidateWinUi", "separateChar", " ", nullptr);
+        s_candidateWinUi.separateChar = QString::fromUtf8(sepRaw).at(0).toLatin1();
+    }
+    s_candidateWinUi.useGradientColor = cfgIni.GetBoolValue("CandidateWinUi", "useGradientColor", false);
+    s_candidateWinUi.useBgImage = cfgIni.GetBoolValue("CandidateWinUi", "useBgImage", false);
+    s_candidateWinUi.enablebgImageTiled = cfgIni.GetBoolValue("CandidateWinUi", "enableTiled", false);
+    s_candidateWinUi.radius = static_cast<int>(cfgIni.GetLongValue("CandidateWinUi", "radius", 0));
+    s_candidateWinUi.candiWinTransparency = static_cast<int>(cfgIni.GetLongValue("CandidateWinUi", "transparency", 0));
+    s_candidateWinUi.candiCharCount = static_cast<int>(cfgIni.GetLongValue("CandidateWinUi", "candiCharCount", 0));
+
+    QString fontName = QString::fromUtf8(cfgIni.GetValue("CandidateWinUi", "candiTextFontName", "", nullptr));
+    if (fontName.isEmpty())
+        fontName = QStringLiteral("Ubuntu");
+    int fontSize = static_cast<int>(cfgIni.GetLongValue("CandidateWinUi", "candiTextFontSize", 0));
+    if (fontSize < 9)
+        fontSize = 14;
+    s_candidateWinUi.candiTextFont = QFont(fontName, fontSize);
+
+    s_candidateWinUi.bgImage = QString::fromUtf8(cfgIni.GetValue("CandidateWinUi", "bgImage", "", nullptr));
+    s_candidateWinUi.bgColor = csIniGetColor(cfgIni, "CandidateWinUi", "bgColor", QColor());
+    s_candidateWinUi.gradientColor0 = csIniGetColor(cfgIni, "CandidateWinUi", "gradientColor0", QColor());
+    s_candidateWinUi.gradientColor1 = csIniGetColor(cfgIni, "CandidateWinUi", "gradientColor1", QColor());
+    s_candidateWinUi.borderColor = csIniGetColor(cfgIni, "CandidateWinUi", "borderColor", QColor());
+    s_candidateWinUi.candiWordTextColor = csIniGetColor(cfgIni, "CandidateWinUi", "candiWordTextColor", QColor());
+    s_candidateWinUi.candiPromptTextColor = csIniGetColor(cfgIni, "CandidateWinUi", "candiPromptTextColor", QColor());
+
+    s_candidateWinOption.recodeSelectKey =
+        static_cast<RcodeSelectShortcutKey>(static_cast<int>(cfgIni.GetLongValue("CandidateWinOptions", "recodeSelectKey", static_cast<int>(RSSK_SEMI_QUOTE))));
+    s_candidateWinOption.candiPageKey =
+        static_cast<CandiPageShortcutKey>(static_cast<int>(cfgIni.GetLongValue("CandidateWinOptions", "candiPageKey", static_cast<int>(CPSK_SUB_EQUAL))));
+
+    s_candidateWinOption.cursorFollowFlg = cfgIni.GetBoolValue("CandidateWinOptions", "cursorFollow", false);
+    s_candidateWinOption.hideCandiWinFlg = cfgIni.GetBoolValue("CandidateWinOptions", "hideCandiWin", false);
+    s_candidateWinOption.showOpRemindInfoFlg = cfgIni.GetBoolValue("CandidateWinOptions", "showOpRemindInfo", false);
+    s_candidateWinOption.shiftSelectRecodeFlg = cfgIni.GetBoolValue("CandidateWinOptions", "shiftSelectRecode", false);
+
+    s_candidateWinUi.candiWordCount = static_cast<int>(cfgIni.GetLongValue("CandidateWinOptions", "candiWordCount", 5));
+    s_candidateWinOption.secondRecodeKey = QString::fromUtf8(cfgIni.GetValue("CandidateWinOptions", "secondRecodeKey", "KEY_SEMICOLON", nullptr));
+    s_candidateWinOption.thirdRecodeKey = QString::fromUtf8(cfgIni.GetValue("CandidateWinOptions", "thirdRecodeKey", "KEY_QUOTE", nullptr));
+    s_candidateWinOption.prevPageKey = QString::fromUtf8(cfgIni.GetValue("CandidateWinOptions", "prevPageKey", "KEY_DASH", nullptr));
+    s_candidateWinOption.nextPageKey = QString::fromUtf8(cfgIni.GetValue("CandidateWinOptions", "nextPageKey", "KEY_EQUAL", nullptr));
+    s_miscSetting.useFreewbFont = cfgIni.GetBoolValue("CandidateWinOptions", "useFreewbFont", false);
+
+    s_shortcutKey.customShortcutFunc[CSF_BACK_FIND_CODE] = convert_name_to_combineShortcutKey(
+        QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "backFindCode", "CTRL+KEY_SLASH", nullptr)));
+    s_shortcutKey.customShortcutFunc[CSF_ONLINE_ADD_WORD] = convert_name_to_combineShortcutKey(
+        QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "onlineAddWord", "CTRL+KEY_EQUAL", nullptr)));
+    s_shortcutKey.customShortcutFunc[CSF_ONLINE_DEL_WORD] = convert_name_to_combineShortcutKey(
+        QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "onlineDelWord", "CTRL+KEY_DASH", nullptr)));
+    s_shortcutKey.customShortcutFunc[CSF_SWITCH_KEYBOARD] = convert_name_to_combineShortcutKey(
+        QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "switchVKb", "CTRL+KEY_ESC", nullptr)));
+    s_shortcutKey.customShortcutFunc[CSF_SWITCH_CHAR_SET] = convert_name_to_combineShortcutKey(
+        QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "switchCharSet", "CTRL+KEY_M", nullptr)));
+    s_shortcutKey.customShortcutFunc[CSF_SWITCH_INPUT_MODE] = convert_name_to_combineShortcutKey(
+        QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "switchInputMode", "CTRL+KEY_BACK_SLASH", nullptr)));
+    s_shortcutKey.customShortcutFunc[CSF_SWITCH_WORD_STATE] = convert_name_to_combineShortcutKey(
+        QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "switchWordState", "CTRL+KEY_INSERT", nullptr)));
+    s_shortcutKey.customShortcutFunc[CSF_SWITCH_S_IN_T_OUT] = convert_name_to_combineShortcutKey(
+        QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "switchChttrans", "CTRL+KEY_J", nullptr)));
+    s_shortcutKey.customShortcutFunc[CSF_SETUP_OPTION] = convert_name_to_combineShortcutKey(
+        QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "setupOption", "CTRL+KEY_COMMA", nullptr)));
+    s_shortcutKey.customShortcutFunc[CSF_QUICK_DEL_SCREEN_CHAR] = convert_name_to_combineShortcutKey(
+        QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "quickDelScreenItem", "CTRL+KEY_BACKSPACE", nullptr)));
+
+    s_shortcutKey.sskTmpEnglish =
+        convert_name_to_singleShortcutKey(QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "tempEnglish", ";", nullptr)));
+    s_shortcutKey.sskShortcutInput =
+        convert_name_to_singleShortcutKey(QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "shortcutInput", "'", nullptr)));
+    s_shortcutKey.sskTmpPinyin =
+        convert_name_to_singleShortcutKey(QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "tempPinyin", "`", nullptr)));
+
+    s_shortcutKey.customShortcutFunc[CSF_MARK_AUTO_PAIR] =
+        convert_name_to_combineShortcutKey(QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "markAutoPair", "", nullptr)));
+    s_shortcutKey.customShortcutFunc[CSF_SWITCH_SKIN] =
+        convert_name_to_combineShortcutKey(QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "switchSkin", "", nullptr)));
+    s_shortcutKey.customShortcutFunc[CSF_SHOW_HIDE_STATUS_BAR] =
+        convert_name_to_combineShortcutKey(QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "showHideToolbar", "", nullptr)));
+    s_shortcutKey.customShortcutFunc[CSF_SHOW_HIDE_CANDIDATE_WIN] =
+        convert_name_to_combineShortcutKey(QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "showHideCandiWin", "", nullptr)));
+
+    s_shortcutKey.customShortcutFunc[CSF_SWITCH_WORD_LEXICON] =
+        convert_name_to_combineShortcutKey(QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "switchLexicon", "", nullptr)));
+    s_shortcutKey.customShortcutFunc[CSF_ADD_CHAR_AFTER_OUTPUT] = convert_name_to_combineShortcutKey(
+        QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "addCharAfterOutput", "CTRL+KEY_NONE", nullptr)));
+
+    s_shortcutKey.ceSwitchShortcutkey =
+        convert_name_to_cnEnSwitchShortcutKey(QString::fromUtf8(cfgIni.GetValue("ShortcutKey", "cnEnSwitch", "", nullptr)));
+    s_shortcutKey.disableAllCsk = cfgIni.GetBoolValue("ShortcutKey", "disableAllShortcutKey", false);
+    s_shortcutKey.disableFullHalfSwitchShortcutkey = cfgIni.GetBoolValue("ShortcutKey", "disableFullHalfSwitch", false);
 
     // 拷贝正式配置数据到临时配置变量
     copy_all_setting_data_to_buffer();
@@ -521,165 +562,138 @@ void Settings::save_all_setting_data_to_file()
     // 将所有临时配置数据拷贝到正式配置变量中
     copy_all_buffer_to_setting_data();
 
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
+    QByteArray cfgPath = configIniPathUtf8();
+    CSimpleIniA cfgIni(true, false, false);
+    csIniLoadOrEmpty(cfgIni, cfgPath.constData());
 
-    string inifile = getenv("HOME");
-    inifile += "/.config/fcitx/conf/fcitx-freewubi.config";
-    ConfigIni *ini = new ConfigIni(inifile.c_str());
+    cfgIni.SetBoolValue("Common", "codeRemind", s_common.codeRemind, nullptr, true);
+    cfgIni.SetBoolValue("Common", "autoAdjustFreq", s_common.autoAdjustFreq, nullptr, true);
+    cfgIni.SetBoolValue("Common", "wordThink", s_common.wordThink, nullptr, true);
+    cfgIni.SetBoolValue("Common", "remindExistWord", s_common.remindExistWord, nullptr, true);
+    cfgIni.SetBoolValue("Common", "alertWhenEmptyCode", s_common.alertWhenEmptyCode, nullptr, true);
+    cfgIni.SetBoolValue("Common", "enterClear", s_miscSetting.enterClear, nullptr, true);
+    cfgIni.SetBoolValue("Common", "spaceFullWhenCharHalf", s_common.spaceFullWhenCharHalf, nullptr, true);
+    cfgIni.SetBoolValue("Common", "smartMark", s_common.smartMark, nullptr, true);
 
-    ini->setBoolValue("基本设置", "codeRemind", s_common.codeRemind);
-    ini->setBoolValue("基本设置", "autoAdjustFreq", s_common.autoAdjustFreq);
-    ini->setBoolValue("基本设置", "wordThink", s_common.wordThink);
-    ini->setBoolValue("基本设置", "remindExistWord", s_common.remindExistWord);
-    ini->setBoolValue("基本设置", "alertWhenEmptyCode", s_common.alertWhenEmptyCode);
-    ini->setBoolValue("基本设置", "enterClear", s_miscSetting.enterClear);
-    ini->setIntValue("候选项", "candiWordCount", s_candidateWinUi.candiWordCount);
-    ini->setBoolValue("基本设置", "shiftCommitChar", s_advance.shiftCommitChar);
+    cfgIni.SetBoolValue("Advanced", "shiftCommitChar", s_advance.shiftCommitChar, nullptr, true);
+    cfgIni.SetBoolValue("Advanced", "typeEffect", s_advance.typeEffect, nullptr, true);
+    cfgIni.SetBoolValue("Advanced", "recodeCalib", s_advance.recodeCalib, nullptr, true);
+    cfgIni.SetLongValue("Advanced", "autoWordGroupOpt", static_cast<int>(s_advance.autoWordGroupOpt), nullptr, false, true);
 
-    QString key = "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_BACK_FIND_CODE]];
-    ini->setStringValue("快捷键", "backFindCode", key.toUtf8().constData());
+    cfgIni.SetValue("Misc", "curUsedLexicon", (s_curUsedLexicon).toUtf8().constData(), nullptr, true);
+    cfgIni.SetValue("Misc", "wubiTable", (s_curUsedLexicon + QStringLiteral("/freeime.mb")).toUtf8().constData(), nullptr, true);
+    cfgIni.SetValue("Misc", "pinyinTable", (s_curUsedLexicon + QStringLiteral("/attach.mb")).toUtf8().constData(), nullptr, true);
+    cfgIni.SetLongValue("Misc", "inputMode", s_miscSetting.inputMethod, nullptr, false, true);
+    cfgIni.SetLongValue("Misc", "currentCharset", s_miscSetting.currentCharset, nullptr, false, true);
+    cfgIni.SetLongValue("Misc", "simpTradFlg", s_miscSetting.simpTranFlg, nullptr, false, true);
 
-    key = "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_ONLINE_ADD_WORD]];
-    ini->setStringValue("快捷键", "onlineAddWord", key.toUtf8().constData());
+    cfgIni.SetValue("Misc", "CoustomChar", (get_custom_char_value()).toUtf8().constData(), nullptr, true);
+    cfgIni.SetValue("Misc", "CoustomMark", (get_custom_mark_value()).toUtf8().constData(), nullptr, true);
 
-    key = "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_ONLINE_DEL_WORD]];
-    ini->setStringValue("快捷键", "onlineDelWord", key.toUtf8().constData());
+    cfgIni.SetValue("Others", "autoToEnStr", (s_others.autoToEnStr).toUtf8().constData(), nullptr, true);
+    cfgIni.SetBoolValue("Others", "autoToHalfMarkFlg", s_others.autoToHalfMarkFlg, nullptr, true);
 
-    key = "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_KEYBOARD]];
-    ini->setStringValue("快捷键", "switchVKb", key.toUtf8().constData());
+    cfgIni.SetValue("Ui", "curSkinId", (s_ui.curSkinId).toUtf8().constData(), nullptr, true);
+    cfgIni.SetBoolValue("Ui", "toolbarAutoLocate", s_ui.toolbarAutoLocate, nullptr, true);
+    cfgIni.SetBoolValue("Ui", "toolbarAutoExpand", s_ui.toolbarAutoExpand, nullptr, true);
+    cfgIni.SetBoolValue("Ui", "uiAudioEffect", s_ui.enableUiAudioEffect, nullptr, true);
+    cfgIni.SetBoolValue("Ui", "showRealtimeHelp", s_ui.showRealtimeHelp, nullptr, true);
+    cfgIni.SetBoolValue("Ui", "hideToolbar", s_ui.hideToolbar, nullptr, true);
+    cfgIni.SetLongValue("Ui", "toolbarTransparency", s_ui.toolbarTransparency, nullptr, false, true);
 
-    key = "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_CHAR_SET]];
-    ini->setStringValue("快捷键", "switchCharSet", key.toUtf8().constData());
+    cfgIni.SetLongValue("CandidateWinUi", "candiWinDispMode", static_cast<int>(s_candidateWinUi.candiWinDispMode), nullptr, false, true);
+    cfgIni.SetValue("CandidateWinUi", "separateChar", (QString(QChar(s_candidateWinUi.separateChar))).toUtf8().constData(), nullptr, true);
+    cfgIni.SetBoolValue("CandidateWinUi", "useGradientColor", s_candidateWinUi.useGradientColor, nullptr, true);
+    cfgIni.SetBoolValue("CandidateWinUi", "useBgImage", s_candidateWinUi.useBgImage, nullptr, true);
+    cfgIni.SetBoolValue("CandidateWinUi", "enableTiled", s_candidateWinUi.enablebgImageTiled, nullptr, true);
 
-    key = "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_INPUT_MODE]];
-    ini->setStringValue("快捷键", "switchInputMode", key.toUtf8().constData());
+    cfgIni.SetLongValue("CandidateWinUi", "radius", s_candidateWinUi.radius, nullptr, false, true);
+    cfgIni.SetLongValue("CandidateWinUi", "transparency", s_candidateWinUi.candiWinTransparency, nullptr, false, true);
+    cfgIni.SetLongValue("CandidateWinUi", "candiCharCount", s_candidateWinUi.candiCharCount, nullptr, false, true);
 
-    key = "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_S_IN_T_OUT]];
-    ini->setStringValue("快捷键", "switchChttrans", key.toUtf8().constData());
+    cfgIni.SetValue("CandidateWinUi", "candiTextFontName", (s_candidateWinUi.candiTextFont.family()).toUtf8().constData(), nullptr, true);
+    cfgIni.SetLongValue("CandidateWinUi", "candiTextFontSize", s_candidateWinUi.candiTextFont.pointSize(), nullptr, false, true);
+    cfgIni.SetBoolValue("CandidateWinUi", "showCandDictInfo", s_candidateWinUi.show_cand_dict, nullptr, true);
 
-    key = "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SETUP_OPTION]];
-    ini->setStringValue("快捷键", "setupOption", key.toUtf8().constData());
+    cfgIni.SetValue("CandidateWinUi", "bgImage", (s_candidateWinUi.bgImage).toUtf8().constData(), nullptr, true);
+    csIniSetColor(cfgIni, "CandidateWinUi", "bgColor", s_candidateWinUi.bgColor);
+    csIniSetColor(cfgIni, "CandidateWinUi", "gradientColor0", s_candidateWinUi.gradientColor0);
+    csIniSetColor(cfgIni, "CandidateWinUi", "gradientColor1", s_candidateWinUi.gradientColor1);
+    csIniSetColor(cfgIni, "CandidateWinUi", "borderColor", s_candidateWinUi.borderColor);
+    csIniSetColor(cfgIni, "CandidateWinUi", "candiWordTextColor", s_candidateWinUi.candiWordTextColor);
+    csIniSetColor(cfgIni, "CandidateWinUi", "candiPromptTextColor", s_candidateWinUi.candiPromptTextColor);
 
-    key = "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_QUICK_DEL_SCREEN_CHAR]];
-    ini->setStringValue("快捷键", "quickDelScreenItem", key.toUtf8().constData());
+    cfgIni.SetLongValue("CandidateWinOptions", "recodeSelectKey", static_cast<int>(s_candidateWinOption.recodeSelectKey), nullptr, false, true);
+    cfgIni.SetLongValue("CandidateWinOptions", "candiPageKey", static_cast<int>(s_candidateWinOption.candiPageKey), nullptr, false, true);
+    cfgIni.SetBoolValue("CandidateWinOptions", "cursorFollow", s_candidateWinOption.cursorFollowFlg, nullptr, true);
+    cfgIni.SetBoolValue("CandidateWinOptions", "hideCandiWin", s_candidateWinOption.hideCandiWinFlg, nullptr, true);
+    cfgIni.SetBoolValue("CandidateWinOptions", "showOpRemindInfo", s_candidateWinOption.showOpRemindInfoFlg, nullptr, true);
+    cfgIni.SetBoolValue("CandidateWinOptions", "shiftSelectRecode", s_candidateWinOption.shiftSelectRecodeFlg, nullptr, true);
 
-    ini->setStringValue("快捷键", "tempEnglish", s_singleShortcutKeyName_1[s_shortcutKey.sskTmpEnglish].toUtf8().constData());
-    ini->setStringValue("快捷键", "shortcutInput", s_singleShortcutKeyName_1[s_shortcutKey.sskShortcutInput].toUtf8().constData());
-    ini->setStringValue("快捷键", "tempPinyin", s_singleShortcutKeyName_1[s_shortcutKey.sskTmpPinyin].toUtf8().constData());
+    cfgIni.SetLongValue("CandidateWinOptions", "candiWordCount", s_candidateWinUi.candiWordCount, nullptr, false, true);
+    cfgIni.SetValue("CandidateWinOptions", "secondRecodeKey", (s_candidateWinOption.secondRecodeKey).toUtf8().constData(), nullptr, true);
+    cfgIni.SetValue("CandidateWinOptions", "thirdRecodeKey", (s_candidateWinOption.thirdRecodeKey).toUtf8().constData(), nullptr, true);
+    cfgIni.SetValue("CandidateWinOptions", "prevPageKey", (s_candidateWinOption.prevPageKey).toUtf8().constData(), nullptr, true);
+    cfgIni.SetValue("CandidateWinOptions", "nextPageKey", (s_candidateWinOption.nextPageKey).toUtf8().constData(), nullptr, true);
+    cfgIni.SetBoolValue("CandidateWinOptions", "useFreewbFont", s_miscSetting.useFreewbFont, nullptr, true);
 
-    ini->setStringValue("候选项", "secondRecodeKey", s_candidateWinOption.secondRecodeKey.toUtf8().constData());
-    ini->setStringValue("候选项", "thirdRecodeKey", s_candidateWinOption.thirdRecodeKey.toUtf8().constData());
-    ini->setStringValue("候选项", "prevPageKey", s_candidateWinOption.prevPageKey.toUtf8().constData());
-    ini->setStringValue("候选项", "nextPageKey", s_candidateWinOption.nextPageKey.toUtf8().constData());
+    QString key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_BACK_FIND_CODE]];
+    cfgIni.SetValue("ShortcutKey", "backFindCode", (key).toUtf8().constData(), nullptr, true);
 
-    delete ini;
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_ONLINE_ADD_WORD]];
+    cfgIni.SetValue("ShortcutKey", "onlineAddWord", (key).toUtf8().constData(), nullptr, true);
 
-    settings.beginGroup("Common");
-    settings.setValue("spaceFullWhenCharHalf", s_common.spaceFullWhenCharHalf);
-    settings.setValue("smartMark", s_common.smartMark);
-    settings.endGroup();
-    settings.sync(); // 每次设置完成一组数据都要先同步写入后再设置其他分组!!!!!!!!!!!!!
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_ONLINE_DEL_WORD]];
+    cfgIni.SetValue("ShortcutKey", "onlineDelWord", (key).toUtf8().constData(), nullptr, true);
 
-    settings.beginGroup("Advanced");
-    settings.setValue("typeEffect", s_advance.typeEffect);
-    settings.setValue("recodeCalib", s_advance.recodeCalib);
-    settings.setValue("autoWordGroupOpt", s_advance.autoWordGroupOpt);
-    settings.endGroup();
-    settings.sync();
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_KEYBOARD]];
+    cfgIni.SetValue("ShortcutKey", "switchVKb", (key).toUtf8().constData(), nullptr, true);
 
-    settings.beginGroup("Misc");
-    settings.setValue("curUsedLexicon", s_curUsedLexicon);
-    settings.setValue("wubiTable", s_curUsedLexicon + "/freeime.mb");
-    settings.setValue("pinyinTable", s_curUsedLexicon + "/attach.mb");
-    settings.setValue("inputMode", s_miscSetting.inputMethod);
-    settings.setValue("currentCharset", s_miscSetting.currentCharset);
-    settings.setValue("simpTradFlg", s_miscSetting.simpTranFlg);
-    settings.setValue("currentCharset", s_miscSetting.currentCharset);
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_CHAR_SET]];
+    cfgIni.SetValue("ShortcutKey", "switchCharSet", (key).toUtf8().constData(), nullptr, true);
 
-    settings.setValue("CoustomChar", get_custom_char_value());
-    settings.setValue("CoustomMark", get_custom_mark_value());
-    settings.endGroup();
-    settings.sync();
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_INPUT_MODE]];
+    cfgIni.SetValue("ShortcutKey", "switchInputMode", (key).toUtf8().constData(), nullptr, true);
 
-    settings.beginGroup("Others");
-    settings.setValue("autoToEnStr", s_others.autoToEnStr);
-    settings.setValue("autoToHalfMarkFlg", s_others.autoToHalfMarkFlg);
-    settings.endGroup();
-    settings.sync();
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_WORD_STATE]];
+    cfgIni.SetValue("ShortcutKey", "switchWordState", (key).toUtf8().constData(), nullptr, true);
 
-    settings.beginGroup("Ui");
-    settings.setValue("curSkinId", s_ui.curSkinId);
-    //    settings.setValue( "toolbarAutoLocate", s_ui.toolbarAutoLocate );
-    settings.setValue("toolbarAutoExpand", s_ui.toolbarAutoExpand);
-    settings.setValue("uiAudioEffect", s_ui.enableUiAudioEffect);
-    settings.setValue("showRealtimeHelp", s_ui.showRealtimeHelp);
-    settings.setValue("hideToolbar", s_ui.hideToolbar);
-    settings.setValue("toolbarTransparency", s_ui.toolbarTransparency);
-    settings.endGroup();
-    settings.sync();
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_S_IN_T_OUT]];
+    cfgIni.SetValue("ShortcutKey", "switchChttrans", (key).toUtf8().constData(), nullptr, true);
 
-    settings.beginGroup("CandidateWinUi");
-    settings.setValue("candiWinDispMode", s_candidateWinUi.candiWinDispMode);
-    settings.setValue("separateChar", QChar(s_candidateWinUi.separateChar));  // 候选词序号与词组间的分隔符
-    settings.setValue("useGradientColor", s_candidateWinUi.useGradientColor); // 是否使用渐变色
-    settings.setValue("useBgImage", s_candidateWinUi.useBgImage);             // 是否使用背景图
-    settings.setValue("enableTiled", s_candidateWinUi.enablebgImageTiled);    // 使能背景图平铺
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SETUP_OPTION]];
+    cfgIni.SetValue("ShortcutKey", "setupOption", (key).toUtf8().constData(), nullptr, true);
 
-    settings.setValue("radius", s_candidateWinUi.radius);                     // 圆角弧度
-    settings.setValue("transparency", s_candidateWinUi.candiWinTransparency); // 透明度
-    settings.setValue("candiCharCount", s_candidateWinUi.candiCharCount);
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_QUICK_DEL_SCREEN_CHAR]];
+    cfgIni.SetValue("ShortcutKey", "quickDelScreenItem", (key).toUtf8().constData(), nullptr, true);
 
-    settings.setValue("candiTextFontName", s_candidateWinUi.candiTextFont.family());
-    settings.setValue("candiTextFontSize", s_candidateWinUi.candiTextFont.pointSize());
-    settings.setValue("showCandDictInfo", s_candidateWinUi.show_cand_dict);
+    cfgIni.SetValue("ShortcutKey", "tempEnglish", (s_singleShortcutKeyName_1[s_shortcutKey.sskTmpEnglish]).toUtf8().constData(), nullptr, true);
+    cfgIni.SetValue("ShortcutKey", "shortcutInput", (s_singleShortcutKeyName_1[s_shortcutKey.sskShortcutInput]).toUtf8().constData(), nullptr, true);
+    cfgIni.SetValue("ShortcutKey", "tempPinyin", (s_singleShortcutKeyName_1[s_shortcutKey.sskTmpPinyin]).toUtf8().constData(), nullptr, true);
 
-    settings.setValue("bgImage", s_candidateWinUi.bgImage);               // 背景图片
-    settings.setValue("bgColor", s_candidateWinUi.bgColor);               // 背景色
-    settings.setValue("gradientColor0", s_candidateWinUi.gradientColor0); // 渐变起始色
-    settings.setValue("gradientColor1", s_candidateWinUi.gradientColor1); // 渐变结束色
-    settings.setValue("borderColor", s_candidateWinUi.borderColor);       // 边框颜色
-    settings.setValue("candiWordTextColor", s_candidateWinUi.candiWordTextColor);
-    settings.setValue("candiPromptTextColor", s_candidateWinUi.candiPromptTextColor);
-    settings.endGroup();
-    settings.sync();
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_WORD_LEXICON]];
+    cfgIni.SetValue("ShortcutKey", "switchLexicon", (key).toUtf8().constData(), nullptr, true);
 
-    settings.beginGroup("CandidateWinOptions");
-    settings.setValue("recodeSelectKey", s_candidateWinOption.recodeSelectKey);
-    settings.setValue("candiPageKey", s_candidateWinOption.candiPageKey);
-    settings.setValue("cursorFollow", s_candidateWinOption.cursorFollowFlg);
-    settings.setValue("hideCandiWin", s_candidateWinOption.hideCandiWinFlg);
-    settings.setValue("showOpRemindInfo", s_candidateWinOption.showOpRemindInfoFlg);
-    //    settings.setValue( "shiftSelectRecode", s_candidateWinOption.shiftSelectRecodeFlg );
-    settings.endGroup();
-    settings.sync();
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_ADD_CHAR_AFTER_OUTPUT]];
+    cfgIni.SetValue("ShortcutKey", "addCharAfterOutput", (key).toUtf8().constData(), nullptr, true);
 
-    settings.beginGroup("ShortcutKey");
-    settings.setValue("switchLexicon", "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_WORD_LEXICON]]);
-    settings.setValue("markAutoPair", "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_MARK_AUTO_PAIR]]);
-    settings.setValue("cnEnSwitch", s_cnEnSwitchShortcutKeyName[s_shortcutKey.ceSwitchShortcutkey]);
-    settings.setValue("disableAllShortcutKey", s_shortcutKey.disableAllCsk);
-    settings.setValue("disableFullHalfSwitch", s_shortcutKey.disableFullHalfSwitchShortcutkey);
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_MARK_AUTO_PAIR]];
+    cfgIni.SetValue("ShortcutKey", "markAutoPair", (key).toUtf8().constData(), nullptr, true);
 
-    key = "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_MARK_AUTO_PAIR]];
-    settings.setValue("markAutoPair", key);
+    cfgIni.SetValue("ShortcutKey", "cnEnSwitch", (s_cnEnSwitchShortcutKeyName[s_shortcutKey.ceSwitchShortcutkey]).toUtf8().constData(), nullptr, true);
+    cfgIni.SetBoolValue("ShortcutKey", "disableAllShortcutKey", s_shortcutKey.disableAllCsk, nullptr, true);
+    cfgIni.SetBoolValue("ShortcutKey", "disableFullHalfSwitch", s_shortcutKey.disableFullHalfSwitchShortcutkey, nullptr, true);
 
-    key = "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_SKIN]];
-    settings.setValue("switchSkin", key);
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_SKIN]];
+    cfgIni.SetValue("ShortcutKey", "switchSkin", (key).toUtf8().constData(), nullptr, true);
 
-    key = "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SHOW_HIDE_STATUS_BAR]];
-    settings.setValue("showHideToolbar", key);
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SHOW_HIDE_STATUS_BAR]];
+    cfgIni.SetValue("ShortcutKey", "showHideToolbar", (key).toUtf8().constData(), nullptr, true);
 
-    key = "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SHOW_HIDE_CANDIDATE_WIN]];
-    settings.setValue("showHideCandiWin", key);
+    key = "CTRL+" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SHOW_HIDE_CANDIDATE_WIN]];
+    cfgIni.SetValue("ShortcutKey", "showHideCandiWin", (key).toUtf8().constData(), nullptr, true);
 
-    settings.endGroup();
-    settings.sync();
-    // settings.setValue( "addCharAfterOutput", "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_ADD_CHAR_AFTER_OUTPUT]] );
-    // settings.setValue( "switchWordState", "CTRL_" + s_combineShortcutKeyName_1[s_shortcutKey.customShortcutFunc[CSF_SWITCH_WORD_STATE]] )
-
-    // 写入对应的配置到FCITX自带的配置文件中去
-    save_setting_to_fcitx_config_file();
+    cfgIni.SaveFile(cfgPath.constData(), false);
 
 #ifdef DEBUG
     qDebug() << "save all setting data to file!";
@@ -702,13 +716,7 @@ void Settings::save_cur_skin_id_to_file()
     // 将临时配置数据拷贝到正式配置变量中
     s_ui.curSkinId = s_uiBuf.curSkinId;
 
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-
-    settings.beginGroup("Ui");
-    settings.setValue("curSkinId", s_ui.curSkinId);
-    settings.endGroup();
-    settings.sync();
+    csIniSaveValue("Ui", "curSkinId", s_ui.curSkinId);
 
     g_settings.signal_setting_data_changed_to_local();
 }
@@ -717,26 +725,14 @@ void Settings::save_userWord_change_flg_to_file(int flg)
 {
     // qDebug() << flg;
 
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-
-    settings.beginGroup("Misc");
-    settings.setValue("userWordFlg", flg);
-    settings.endGroup();
-    settings.sync();
+    csIniSaveInt("Misc", "userWordFlg", flg);
 }
 
 void Settings::save_quickTable_change_flg_to_file(int flg)
 {
     // qDebug() <<  flg;
 
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-
-    settings.beginGroup("Misc");
-    settings.setValue("quickTableFlg", flg);
-    settings.endGroup();
-    settings.sync();
+    csIniSaveInt("Misc", "quickTableFlg", flg);
 }
 
 int Settings::get_input_method()
@@ -750,24 +746,12 @@ void Settings::save_inputmethod_flg_to_file(InputMode im)
         return;
     // qDebug() << "set inputmethod flg to file!" << im;
     s_miscSetting.inputMethod = (int)im;
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-
-    settings.beginGroup("Misc");
-    settings.setValue("inputMode", im);
-    settings.endGroup();
-    settings.sync();
+    csIniSaveInt("Misc", "inputMode", static_cast<int>(im));
 }
 
 void Settings::save_char_trad_flg_to_file(CharFontMode mode)
 {
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-
-    settings.beginGroup("Misc");
-    settings.setValue("simpTradFlg", mode);
-    settings.endGroup();
-    settings.sync();
+    csIniSaveInt("Misc", "simpTradFlg", static_cast<int>(mode));
     s_miscSetting.simpTranFlg = (int)mode;
 }
 
@@ -780,13 +764,7 @@ void Settings::save_charSet_flg_to_file(int flg)
 {
     // qDebug() << "set char set flg to file!" << flg;
 
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-
-    settings.beginGroup("Misc");
-    settings.setValue("currentCharset", flg);
-    settings.endGroup();
-    settings.sync();
+    csIniSaveInt("Misc", "currentCharset", flg);
 
     s_miscSetting.currentCharset = flg;
 }
@@ -795,13 +773,7 @@ void Settings::save_hide_toolbar_flg_to_file()
 {
     s_ui.hideToolbar = s_uiBuf.hideToolbar;
 
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-
-    settings.beginGroup("Ui");
-    settings.setValue("hideToolbar", s_ui.hideToolbar);
-    settings.endGroup();
-    settings.sync();
+    csIniSaveBool("Ui", "hideToolbar", s_ui.hideToolbar);
 
     g_settings.signal_setting_data_changed_to_local();
 }
@@ -810,13 +782,7 @@ void Settings::save_hide_candiwin_flg_to_file()
 {
     s_candidateWinOption.hideCandiWinFlg = s_candidateWinOptionBuf.hideCandiWinFlg;
 
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-
-    settings.beginGroup("CandidateWinOptions");
-    settings.setValue("hideCandiWin", s_candidateWinOption.hideCandiWinFlg);
-    settings.endGroup();
-    settings.sync();
+    csIniSaveBool("CandidateWinOptions", "hideCandiWin", s_candidateWinOption.hideCandiWinFlg);
 
     g_settings.signal_setting_data_changed_to_local();
 }
@@ -825,13 +791,7 @@ void Settings::save_smart_mark_flg_to_file()
 {
     s_common.smartMark = s_commonBuf.smartMark;
 
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-
-    settings.beginGroup("基本设置");
-    settings.setValue("smartMark", s_common.smartMark);
-    settings.endGroup();
-    settings.sync();
+    csIniSaveBool("Common", "smartMark", s_common.smartMark);
 
     //    g_settings.signal_setting_data_changed_to_local();
     //    g_settings.signal_setting_data_changed_to_fcitx();
@@ -841,13 +801,7 @@ void Settings::save_recode_calib_flg_to_file()
 {
     s_advance.recodeCalib = s_advanceBuf.recodeCalib;
 
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-
-    settings.beginGroup("更多设置");
-    settings.setValue("recodeCalib", s_advance.recodeCalib);
-    settings.endGroup();
-    settings.sync();
+    csIniSaveBool("Advanced", "recodeCalib", s_advance.recodeCalib);
 
     //    g_settings.signal_setting_data_changed_to_local();
     //    g_settings.signal_setting_data_changed_to_fcitx();
@@ -859,26 +813,14 @@ void Settings::save_ime_table_changed_flg_to_file(int flg)
     qDebug() << flg;
 #endif
 
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-
-    settings.beginGroup("Misc");
-    settings.setValue("imeTableChanged", flg);
-    settings.endGroup();
-    settings.sync();
+    csIniSaveInt("Misc", "imeTableChanged", flg);
 }
 
 void Settings::save_vk_mode_flg_to_file(int flg)
 {
     // qDebug() << flg;
 
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-
-    settings.beginGroup("Misc");
-    settings.setValue("vkMode", flg);
-    settings.endGroup();
-    settings.sync();
+    csIniSaveInt("Misc", "vkMode", flg);
 }
 
 const QStringList &Settings::get_exist_lexicon()
@@ -898,389 +840,16 @@ const QString &Settings::get_cur_used_lexicon()
 
 void Settings::save_cur_used_lexicon_to_file(const QString &lexiconName)
 {
-    // qDebug() << lexiconName;
     s_curUsedLexicon = lexiconName;
 
-    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-
-    settings.beginGroup("Misc");
-    settings.setValue("curUsedLexicon", s_curUsedLexicon);
-    settings.setValue("wubiTable", s_curUsedLexicon + "/freeime.mb");
-    settings.setValue("pinyinTable", s_curUsedLexicon + "/attach.mb");
-    settings.endGroup();
-    settings.sync();
-}
-
-void Settings::save_common_setting_to_fcitx_config_file()
-{
-    // fcitx官方自带配置文件中定义的中英文切换快捷键名称
-    const char *fcitxShortcutKeyName[CESSK_NUM] = {
-        "",                          // CESSK_NONE
-        "SHIFT_LSHIFT",              // CESSK_LEFT_SHIFT
-        "SHIFT_RSHIFT",              // CESSK_RIGHT_SHIFT
-        "SHIFT_LSHIFT SHIFT_RSHIFT", // CESSK_SHIFT
-        "CTRL_LCTRL",                // CESSK_LEFT_CTRL
-        "CTRL_RCTRL",                // CESSK_RIGHT_CTRL
-        "CTRL_LCTRL CTRL_RCTRL"      // CESSK_CTRL
-    };
-
-    const char *fcitxShortcutKeyName1[CESSK_NUM] = {
-        "Disabled",   // CESSK_NONE
-        "L_SHIFT",    // CESSK_LEFT_SHIFT
-        "R_SHIFT",    // CESSK_RIGHT_SHIFT
-        "SHIFT Both", // CESSK_SHIFT
-        "L_CTRL",     // CESSK_LEFT_CTRL
-        "R_CTRL",     // CESSK_RIGHT_CTRL
-        "CTRL Both"   // CESSK_CTRL
-    };
-
-    QString dir = QString(qgetenv("HOME") + "/.config/fcitx");
-    if (!QDir(dir).exists())
-    {
-        QDir().mkdir(dir);
-    }
-
-    QFile textFile(dir + "/config");
-    QFile bakFile(dir + "/config.bak");
-    QTextStream textStream;
-    textStream.setCodec("UTF-8");
-
-    if (textFile.exists() && textFile.size() > 0)
-    {
-        if (!textFile.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
-            qWarning() << textFile.fileName() << " open failed!";
-            return;
-        }
-        textStream.setDevice(&textFile);
-        QStringList strList = textStream.readAll().split('\n');
-        textFile.close();
-
-        if (!bakFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            qWarning() << bakFile.fileName() << " open failed!";
-            return;
-        }
-        textStream.setDevice(&bakFile);
-
-        foreach(QString str, strList)
-        {
-            // printf("[%s]=[%d]\r\n",str.toUtf8().constData(),s_shortcutKey.ceSwitchShortcutkey);
-
-            if (str.startsWith("TriggerKey=") || str.startsWith("#TriggerKey="))
-            {
-                if (s_shortcutKey.ceSwitchShortcutkey == 0)
-                    str = QString("TriggerKey=CTRL_SPACE");
-                else
-                {
-                    str = QString("TriggerKey=") + QString(fcitxShortcutKeyName[s_shortcutKey.ceSwitchShortcutkey]);
-
-                    // str = str + QString("\nActivateKey=") + QString(fcitxShortcutKeyName[s_shortcutKey.ceSwitchShortcutkey]);
-                    // str = str + QString("\nInactivateKey=") + QString(fcitxShortcutKeyName[s_shortcutKey.ceSwitchShortcutkey]);
-                }
-            }
-            else if (str.startsWith("SwitchKey=") || str.startsWith("#SwitchKey="))
-            {
-                str = QString("SwitchKey=") + QString(fcitxShortcutKeyName1[s_shortcutKey.ceSwitchShortcutkey]);
-            }
-            else if (str.contains("FullWidthSwitchKey=") || str.contains("#FullWidthSwitchKey="))
-            {
-                if (s_shortcutKey.disableFullHalfSwitchShortcutkey)
-                {
-                    str = "FullWidthSwitchKey=";
-                }
-                else
-                {
-                    str = QString("FullWidthSwitchKey=") + "SHIFT_SPACE";
-                }
-            }
-            else if (str.contains("PuncSwitchKey=") || str.contains("#PuncSwitchKey="))
-            {
-                str = "PuncSwitchKey=CTRL_.";
-            }
-            else if (str.contains("HalfPuncAfterNumber=") || str.contains("#HalfPuncAfterNumber="))
-            {
-                if (s_others.autoToHalfMarkFlg)
-                {
-                    str = "HalfPuncAfterNumber=True";
-                }
-                else
-                {
-                    str = "HalfPuncAfterNumber=False";
-                }
-            }
-            else if (str.contains("SendTextWhenSwitchEng=") || str.contains("#SendTextWhenSwitchEng="))
-            {
-                str = "SendTextWhenSwitchEng=True";
-            }
-
-            textStream << str + "\n";
-        }
-        textStream.flush();
-        bakFile.close();
-    }
-    else
-    {
-        qWarning() << textFile.fileName() << " isn't exist!";
-    }
-
-    QFile::remove(textFile.fileName());
-    QFile::copy(bakFile.fileName(), textFile.fileName());
-}
-
-void Settings::save_simpTradSwitchEnable_to_fcitx_config_file(bool enabled)
-{
-    // qDebug() << enabled;
-
-    QString dir = QString(qgetenv("HOME") + "/.config/fcitx/conf");
-    if (!QDir(dir).exists())
-    {
-        QDir().mkdir(dir);
-    }
-
-    QFile textFile(dir + "/fcitx-chttrans.config");
-    QFile bakFile(dir + "/fcitx-chttrans.config.bak");
-    QTextStream textStream;
-    textStream.setCodec("UTF-8");
-
-    if (textFile.exists() && textFile.size() > 0)
-    {
-        if (!textFile.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
-            qWarning() << textFile.fileName() << " open failed!";
-            return;
-        }
-        textStream.setDevice(&textFile);
-        QStringList strList = textStream.readAll().split('\n');
-        textFile.close();
-
-        if (!bakFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            qWarning() << bakFile.fileName() << " open failed!";
-            return;
-        }
-        textStream.setDevice(&bakFile);
-
-        foreach(QString str, strList)
-        {
-            if (str.contains("Hotkey=") || str.contains("#Hotkey="))
-            {
-                if (enabled)
-                {
-                    str = "Hotkey=CTRL_SHIFT_F";
-                }
-                else
-                {
-                    str = "Hotkey=None";
-                }
-            }
-            if (str.contains("freewb:true"))
-            {
-                str.replace("freewb:true", "freewb:false");
-            }
-            textStream << str + "\n";
-        }
-        textStream.flush();
-        bakFile.close();
-    }
-    else
-    {
-        qWarning() << textFile.fileName() << " isn't exist!";
-    }
-
-    QFile::remove(textFile.fileName());
-    QFile::copy(bakFile.fileName(), textFile.fileName());
-}
-
-void Settings::save_autoToEnglish_str_to_fcitx_config_file()
-{
-    QString dir = QString(qgetenv("HOME") + "/.config/fcitx/data");
-    if (!QDir(dir).exists())
-    {
-        QDir().mkdir(dir);
-    }
-
-    QFile textFile(dir + "/AutoEng.dat");
-    QTextStream textStream(&textFile);
-    textStream.setCodec("UTF-8");
-
-    if (!textFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
-    {
-        qWarning() << textFile.fileName() << " open failed!";
+    QByteArray path = configIniPathUtf8();
+    CSimpleIniA ini(true, false, false);
+    if (!csIniLoadOrEmpty(ini, path.constData()))
         return;
-    }
-
-    //    QStringList strList = s_others.autoToEnStr.split( ' ',  QString::SkipEmptyParts );
-    //    foreach( QString str, strList )
-    //    {
-    //        textStream << str + "\n";
-    //    }
-    textStream.flush();
-    textFile.close();
-}
-
-void Settings::save_clipboard_disable_key_to_fcitx_config_file()
-{
-    QString dir = QString(qgetenv("HOME") + "/.config/fcitx/conf");
-    if (!QDir(dir).exists())
-    {
-        QDir().mkdir(dir);
-    }
-
-    QFile textFile(dir + "/fcitx-clipboard.config");
-    QFile bakFile(dir + "/fcitx-clipboard.config.bak");
-    QTextStream textStream;
-    textStream.setCodec("UTF-8");
-
-    if (textFile.exists() && textFile.size() > 0)
-    {
-        if (!textFile.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
-            qWarning() << textFile.fileName() << " open failed!";
-            return;
-        }
-        textStream.setDevice(&textFile);
-        QStringList strList = textStream.readAll().split('\n');
-        textFile.close();
-
-        if (!bakFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            qWarning() << bakFile.fileName() << " open failed!";
-            return;
-        }
-        textStream.setDevice(&bakFile);
-
-        foreach(QString str, strList)
-        {
-            if (str.contains("TriggerKey=") || str.contains("#TriggerKey="))
-            {
-                str = "TriggerKey=";
-            }
-            textStream << str + "\n";
-        }
-        textStream.flush();
-        bakFile.close();
-    }
-    else
-    {
-        qWarning() << textFile.fileName() << " isn't exist!";
-    }
-
-    QFile::remove(textFile.fileName());
-    QFile::copy(bakFile.fileName(), textFile.fileName());
-}
-
-void Settings::save_quickEenglish_shortcutKey_to_fcitx_config_file()
-{
-    QString dir = QString(qgetenv("HOME") + "/.config/fcitx/conf");
-    if (!QDir(dir).exists())
-    {
-        QDir().mkdir(dir);
-    }
-
-    QFile textFile(dir + "/fcitx-quickphrase.config");
-    QFile bakFile(dir + "/fcitx-quickphrase.config.bak");
-    QTextStream textStream;
-    textStream.setCodec("UTF-8");
-
-    if (textFile.exists() && textFile.size() > 0)
-    {
-        if (!textFile.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
-            qWarning() << textFile.fileName() << " open failed!";
-            return;
-        }
-        textStream.setDevice(&textFile);
-        QStringList strList = textStream.readAll().split('\n');
-        textFile.close();
-
-        if (!bakFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            qWarning() << bakFile.fileName() << " open failed!";
-            return;
-        }
-        textStream.setDevice(&bakFile);
-
-        foreach(QString str, strList)
-        {
-            if (str.contains("QuickPhraseTriggerKey=") || str.contains("#QuickPhraseTriggerKey="))
-            {
-                str = "QuickPhraseTriggerKey=None";
-            }
-            textStream << str + "\n";
-        }
-        textStream.flush();
-        bakFile.close();
-    }
-    else
-    {
-        qWarning() << textFile.fileName() << " isn't exist!";
-    }
-
-    QFile::remove(textFile.fileName());
-    QFile::copy(bakFile.fileName(), textFile.fileName());
-}
-
-void Settings::save_inputMethod_to_fcitx_config_file()
-{
-    QString dir = QString(qgetenv("HOME") + "/.config/fcitx/conf");
-    if (!QDir(dir).exists())
-    {
-        QDir().mkdir(dir);
-    }
-
-    QFile textFile(dir + "/fcitx-freewubi.config");
-    QFile bakFile(dir + "/fcitx-freewubi.config.bak");
-    QTextStream textStream;
-    textStream.setCodec("UTF-8");
-
-    if (textFile.exists() && textFile.size() > 0)
-    {
-        if (!textFile.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
-            qWarning() << textFile.fileName() << " open failed!";
-            return;
-        }
-        textStream.setDevice(&textFile);
-        QStringList strList = textStream.readAll().split('\n');
-        textFile.close();
-
-        if (!bakFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            qWarning() << bakFile.fileName() << " open failed!";
-            return;
-        }
-        textStream.setDevice(&bakFile);
-
-        foreach(QString str, strList)
-        {
-            if (str.contains("inputMethod=") || str.contains("#inputMethod="))
-            {
-                str = "inputMethod=" + s_miscSetting.inputMethod;
-                // puts(str.toLatin1().data());
-            }
-            textStream << str + "\n";
-        }
-        textStream.flush();
-        bakFile.close();
-    }
-    else
-    {
-        qWarning() << textFile.fileName() << " isn't exist!";
-    }
-
-    QFile::remove(textFile.fileName());
-    QFile::copy(bakFile.fileName(), textFile.fileName());
-}
-
-void Settings::save_setting_to_fcitx_config_file()
-{
-    save_clipboard_disable_key_to_fcitx_config_file();
-    save_common_setting_to_fcitx_config_file();
-    save_autoToEnglish_str_to_fcitx_config_file();
-    save_quickEenglish_shortcutKey_to_fcitx_config_file();
-    save_simpTradSwitchEnable_to_fcitx_config_file(false);
+    ini.SetValue("Misc", "curUsedLexicon", s_curUsedLexicon.toUtf8().constData(), nullptr, true);
+    ini.SetValue("Misc", "wubiTable", (s_curUsedLexicon + "/freeime.mb").toUtf8().constData(), nullptr, true);
+    ini.SetValue("Misc", "pinyinTable", (s_curUsedLexicon + "/attach.mb").toUtf8().constData(), nullptr, true);
+    ini.SaveFile(path.constData(), false);
 }
 
 // 将正式配置数据拷贝到临时数据供设置界面临时编辑
@@ -1342,18 +911,25 @@ SingleShortcutKey Settings::convert_name_to_singleShortcutKey(const QString name
 
 CombineShortcutKey Settings::convert_name_to_combineShortcutKey(const QString name)
 {
-    CombineShortcutKey key = CSK_NONE;
-    QStringList strList = name.split("CTRL_");
+    const CombineShortcutKey none = CSK_NONE;
+    static constexpr int kPrefixLen = 5; // "CTRL+" / "CTRL_"
 
-    if (strList.size() > 1)
+    if (name.size() < kPrefixLen || !name.startsWith(QStringLiteral("CTRL")))
+        return none;
+
+    const QChar sep = name.at(4);
+    if (sep != QLatin1Char('+') && sep != QLatin1Char('_'))
+        return none;
+
+    const QString core = name.mid(kPrefixLen);
+    CombineShortcutKey key = none;
+
+    for (int i = 0; i < CSK_NUM; i++)
     {
-        for (int i = 0; i < CSK_NUM; i++)
+        if (core == s_combineShortcutKeyName_1[static_cast<CombineShortcutKey>(i)])
         {
-            if (strList.at(1) == s_combineShortcutKeyName_1[static_cast<CombineShortcutKey>(i)])
-            {
-                key = static_cast<CombineShortcutKey>(i);
-                break;
-            }
+            key = static_cast<CombineShortcutKey>(i);
+            break;
         }
     }
 
@@ -1396,7 +972,7 @@ QString Settings::get_customShortcutFunc_shortcutkey_name(CustomShortcutFunction
     }
     else
     {
-        str.insert(0, "CTRL_");
+        str.insert(0, "CTRL+");
     }
 
     return str;
@@ -1706,15 +1282,15 @@ void Settings::restore_default_shortcutkey()
     s_shortcutKeyBuf.customShortcutFunc[CSF_SWITCH_KEYBOARD] = CSK_ESC;          // 切换软键盘
     s_shortcutKeyBuf.customShortcutFunc[CSF_SWITCH_CHAR_SET] = CSK_m;            // 切换字符集
     s_shortcutKeyBuf.customShortcutFunc[CSF_SWITCH_INPUT_MODE] = CSK_BACK_SLASH; // 切换输入模式
-    // s_shortcutKeyBuf.customShortcutFunc[CSF_SWITCH_WORD_STATE] = CSK_INSERT;//切换字词状态
+    s_shortcutKeyBuf.customShortcutFunc[CSF_SWITCH_WORD_STATE] = CSK_INSERT;    // 切换字词状态
     s_shortcutKeyBuf.customShortcutFunc[CSF_SWITCH_S_IN_T_OUT] = CSK_j; // 切换简入繁出
 
     s_shortcutKeyBuf.customShortcutFunc[CSF_SETUP_OPTION] = CSK_COMMA;            // 系统设置
     s_shortcutKeyBuf.customShortcutFunc[CSF_SHOW_HIDE_STATUS_BAR] = CSK_LEFT;     // 显示/隐藏状态栏
     s_shortcutKeyBuf.customShortcutFunc[CSF_SHOW_HIDE_CANDIDATE_WIN] = CSK_RIGHT; // 显示/隐藏候选窗
     s_shortcutKeyBuf.customShortcutFunc[CSF_SWITCH_WORD_LEXICON] = CSK_QUOTE;     // 切换词库
-    //    s_shortcutKeyBuf.customShortcutFunc[CSF_ADD_CHAR_AFTER_OUTPUT] = CSK_NONE;//输出项后加字符
-    s_shortcutKeyBuf.customShortcutFunc[CSF_SWITCH_SKIN] = CSK_NONE;                // 切换皮肤
+    s_shortcutKeyBuf.customShortcutFunc[CSF_ADD_CHAR_AFTER_OUTPUT] = CSK_NONE;  // 输出项后加字符
+    s_shortcutKeyBuf.customShortcutFunc[CSF_SWITCH_SKIN] = CSK_NONE;              // 切换皮肤
     s_shortcutKeyBuf.customShortcutFunc[CSF_QUICK_DEL_SCREEN_CHAR] = CSK_BACKSPACE; // 快删上屏项
     s_shortcutKeyBuf.customShortcutFunc[CSF_MARK_AUTO_PAIR] = CSK_DEL;              // 标点自动配对
 

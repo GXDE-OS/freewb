@@ -140,14 +140,14 @@ typedef enum
     CSF_SWITCH_KEYBOARD,   // 切换软键盘
     CSF_SWITCH_CHAR_SET,   // 切换字符集
     CSF_SWITCH_INPUT_MODE, // 切换输入模式
-    // CSF_SWITCH_WORD_STATE,//切换字词状态
+    CSF_SWITCH_WORD_STATE,       // 切换字词状态
     CSF_SWITCH_S_IN_T_OUT,       // 切换简入繁出
     CSF_SETUP_OPTION,            // 系统设置
     CSF_SHOW_HIDE_STATUS_BAR,    // 显示/隐藏状态栏
     CSF_SHOW_HIDE_CANDIDATE_WIN, // 显示/隐藏候选窗
     CSF_SWITCH_WORD_LEXICON,     // 切换词库
-    // CSF_ADD_CHAR_AFTER_OUTPUT,//输出项后加字符
-    CSF_SWITCH_SKIN,           // 切换皮肤
+    CSF_ADD_CHAR_AFTER_OUTPUT,   // 输出项后加字符
+    CSF_SWITCH_SKIN,             // 切换皮肤
     CSF_QUICK_DEL_SCREEN_CHAR, // 快删上屏项
     CSF_MARK_AUTO_PAIR,        // 标点自动配对
 
@@ -328,20 +328,6 @@ public:
     static void save_exist_lexicon(const QStringList &lexiconList);
     static const QString &get_cur_used_lexicon();
     static void save_cur_used_lexicon_to_file(const QString &lexiconName);
-
-    // 将某些设置写入到fcitx自带的配置文件
-    static void save_setting_to_fcitx_config_file();
-    // 将某些配置写入到fcitx自带的配置文件中
-    static void save_common_setting_to_fcitx_config_file();
-    // 将简繁体切换快捷键写入到fcitx自带的配置文件中
-    static void save_simpTradSwitchEnable_to_fcitx_config_file(bool enbaled);
-    // 将自动转英文的字符串写入到fcitx自带的配置文件中
-    static void save_autoToEnglish_str_to_fcitx_config_file();
-    // 禁止fcitx的粘贴板功能
-    static void save_clipboard_disable_key_to_fcitx_config_file();
-    // 将快捷英文快捷键写到fcitx自带的配置文件中
-    static void save_quickEenglish_shortcutKey_to_fcitx_config_file();
-    static void save_inputMethod_to_fcitx_config_file();
 
     /********************************* 设置界面 ***********************************/
     static bool switch_group_mode();
