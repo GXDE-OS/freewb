@@ -1,0 +1,9 @@
+[Addon]
+Name=Freewb Input Method
+Name[zh_CN]=极点五笔输入法
+Name[zh_HK]=極點五筆輸入法
+Name[zh_TW]=極點五筆輸入法
+Library=libfreewb-fcitx5
+Type=SharedLibrary
+OnDemand=True
+Configurable=True
