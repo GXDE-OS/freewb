@@ -1,6 +1,13 @@
 message(STATUS "Building fcitx4 module")
 
+find_package(DBus1 REQUIRED)
+if (DBUS1_FOUND)
+    include_directories(${DBus1_INCLUDE_DIRS})
+    link_directories(${DBus1_LIBRARY_DIRS})
+endif()
+
 include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
 set(fcitx_freewubi_sources
   freewubi-config.c
@@ -8,7 +15,6 @@ set(fcitx_freewubi_sources
   ini.c
   freedict.c
   freespecial.c
-  freeinterface.c
   virtual_keyboard.c
   panelproxy.c
   inputstate.c
@@ -21,7 +27,6 @@ set(fcitx_freewubi_headers
   freedict.h
   utf8_in_gb18030.h
   freespecial.h
-  freeinterface.h
   virtual_keyboard.h
   panelproxy.h
   inputstate.h
@@ -33,6 +38,7 @@ target_link_libraries(fcitx-${PROJECT_NAME}
     ${LIBINTL_LIBRARIES}
     ${LIBICONV_LIBRARIES}
     ${DBus1_LIBRARIES}
+    ${PROJECT_NAME}-ipc
 )
 
 configure_file(freewb.conf.in ${CMAKE_CURRENT_BINARY_DIR}/freewb.conf IMMEDIATE @ONLY)

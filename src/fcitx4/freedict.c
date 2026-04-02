@@ -1,7 +1,7 @@
 
 #include "freedict.h"
 
-#include "freeinterface.h"
+#include "ipc/freewbinterface.h"
 #include "utf8_in_gb18030.h"
 
 #define WUBI_TEMP_FILE "wubi_XXXXXX"

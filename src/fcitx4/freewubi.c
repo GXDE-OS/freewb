@@ -46,7 +46,7 @@
 
 #include "config.h"
 #include "freedict.h"
-#include "freeinterface.h"
+#include "ipc/freewbinterface.h"
 #include "freespecial.h"
 #include "freewubi-config.h"
 #include "freewubi-internal.h"
@@ -420,7 +420,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                     FcitxInputStateSetIsDoInputOnly(input, false);
                     if (recTemp)
                     {
-                        FreeWubiServiceDeleteUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 1, recTemp->strHZ, recTemp->strCode);
+                        deleteWordPhraseAndSaveToDict(fwb->table, table->WubiDict, 1, recTemp->strHZ, recTemp->strCode);
+                        FreeWubiServiceDeleteUsrParse(FcitxDBusGetConnection(fwb->owner), 1, recTemp->strHZ, recTemp->strCode);
                     }
                     FreeWubiGetCandWords(fwb);
                     FreeWubiPanelProxyShowInputWindow();
@@ -921,7 +922,10 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                         }
                         strcpy(strHZ, str);
                         if (TableCalPhraseCode(table->WubiDict, strHZ, strCode))
-                            FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 0, strHZ, strCode);
+                        {
+                            addWordPhraseAndSaveToDict(table, table->WubiDict, 0, strHZ, strCode);
+                            FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), 0, strHZ, strCode);
+                        }
                     }
                     else
                         playSound(SOUND_RECODE);
@@ -939,7 +943,10 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                         strcat(strHZ, table->WubiDict->hzLastInput[i % PHRASE_MAX_LENGTH].strHZ);
                     }
                     if (TableCalPhraseCode(table->WubiDict, strHZ, strCode))
-                        FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 0, strHZ, strCode);
+                    {
+                        addWordPhraseAndSaveToDict(table, table->WubiDict, 0, strHZ, strCode);
+                        FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), 0, strHZ, strCode);
+                    }
                 }
                 else
                     playSound(SOUND_RECODE);
@@ -973,7 +980,10 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                         }
                     }
                     if (TableCalPhraseCode(table->WubiDict, strHZ, strCode))
-                        FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 0, strHZ, strCode);
+                    {
+                        addWordPhraseAndSaveToDict(table, table->WubiDict, 0, strHZ, strCode);
+                        FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), 0, strHZ, strCode);
+                    }
                 }
                 else
                     playSound(SOUND_RECODE);
@@ -1013,7 +1023,10 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                         printf("[%s] [%s] exists", strCode, strHZ);
                     }
                     else
-                        FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 1, strHZ, strCode);
+                    {
+                        addWordPhraseAndSaveToDict(table, table->WubiDict, 1, strHZ, strCode);
+                        FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), 1, strHZ, strCode);
+                    }
                 }
                 return IRV_CLEAN;
             }
@@ -1022,7 +1035,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 fwb->bIsTableAddPhrase = false;
                 fwb->bIsTableAddPhraseByClip = false;
                 FcitxInputStateSetIsDoInputOnly(input, false);
-                FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 2, "", "");
+                addWordPhraseAndSaveToDict(table, table->WubiDict, 2, "", "");
+                FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), 2, "", "");
                 return IRV_CLEAN;
             }
             else if (FcitxHotkeyIsHotKey(sym, state, FreewbCTRL_ENTER))
@@ -1053,7 +1067,10 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                     }
                 }
                 if (TableCalPhraseCode(table->WubiDict, strHZ, strCode))
-                    FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 3, strHZ, strCode);
+                {
+                    addWordPhraseAndSaveToDict(table, table->WubiDict, 3, strHZ, strCode);
+                    FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), 3, strHZ, strCode);
+                }
                 return IRV_CLEAN;
             }
             else
@@ -1068,14 +1085,18 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 fwb->bIsTableDelPhrase = false;
                 FcitxInputStateSetIsDoInputOnly(input, false);
                 if (fwb->pLastCommitRecord)
-                    FreeWubiServiceDeleteUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 1, fwb->pLastCommitRecord->strHZ, fwb->pLastCommitRecord->strCode);
+                {
+                    deleteWordPhraseAndSaveToDict(fwb->table, table->WubiDict, 1, fwb->pLastCommitRecord->strHZ, fwb->pLastCommitRecord->strCode);
+                    FreeWubiServiceDeleteUsrParse(FcitxDBusGetConnection(fwb->owner), 1, fwb->pLastCommitRecord->strHZ, fwb->pLastCommitRecord->strCode);
+                }
                 return IRV_CLEAN;
             }
             else if (FcitxHotkeyIsHotKey(sym, state, FCITX_ESCAPE))
             {
                 fwb->bIsTableDelPhrase = false;
                 FcitxInputStateSetIsDoInputOnly(input, false);
-                FreeWubiServiceDeleteUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 2, "", "");
+                deleteWordPhraseAndSaveToDict(fwb->table, table->WubiDict, 2, "", "");
+                FreeWubiServiceDeleteUsrParse(FcitxDBusGetConnection(fwb->owner), 2, "", "");
                 return IRV_CLEAN;
             }
             else
@@ -1118,11 +1139,13 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 // puts(strCode);
                 if (TableCalPhraseCode(table->WubiDict, strHZ, strCode))
                 {
-                    FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 0, strHZ, strCode);
+                    addWordPhraseAndSaveToDict(table, table->WubiDict, 0, strHZ, strCode);
+                    FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), 0, strHZ, strCode);
                 }
                 else
                 {
-                    FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 3, strHZ, strCode);
+                    addWordPhraseAndSaveToDict(table, table->WubiDict, 3, strHZ, strCode);
+                    FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), 3, strHZ, strCode);
                 }
                 retVal = IRV_DO_NOTHING;
             }
@@ -1157,7 +1180,10 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 memset(strCode, 0, 5);
 
                 if (TableCalPhraseCode(table->WubiDict, str, strCode))
-                    FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 0, str, strCode);
+                {
+                    addWordPhraseAndSaveToDict(table, table->WubiDict, 0, str, strCode);
+                    FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), 0, str, strCode);
+                }
                 retVal = IRV_DO_NOTHING;
             }
             else
@@ -1181,7 +1207,10 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
 
                 FreeWubiInputStateCleanInputWindow(input);
                 if (fwb->pLastCommitRecord)
-                    FreeWubiServiceDeleteUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 0, fwb->pLastCommitRecord->strHZ, fwb->pLastCommitRecord->strCode);
+                {
+                    deleteWordPhraseAndSaveToDict(fwb->table, table->WubiDict, 0, fwb->pLastCommitRecord->strHZ, fwb->pLastCommitRecord->strCode);
+                    FreeWubiServiceDeleteUsrParse(FcitxDBusGetConnection(fwb->owner), 0, fwb->pLastCommitRecord->strHZ, fwb->pLastCommitRecord->strCode);
+                }
                 retVal = IRV_DO_NOTHING;
             }
             else
@@ -1824,7 +1853,8 @@ INPUT_RETURN_VALUE _TableGetCandWord(Fcitxfreewubi *fwb, TABLECANDWORD *tableCan
         tableCandWord->candWord.autoPhrase->iSelected = true;
         if (fwb->config.iAutoPhraseOpt == 2)
         {
-            FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), fwb->table, 1, tableCandWord->candWord.autoPhrase->strHZ, tableCandWord->candWord.autoPhrase->strCode);
+            addWordPhraseAndSaveToDict(table, table->WubiDict, 1, tableCandWord->candWord.autoPhrase->strHZ, tableCandWord->candWord.autoPhrase->strCode);
+            FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), 1, tableCandWord->candWord.autoPhrase->strHZ, tableCandWord->candWord.autoPhrase->strCode);
         }
         if (!fwb->pLastCommitRecord)
             fwb->pLastCommitRecord = fcitx_utils_new(RECORD);
