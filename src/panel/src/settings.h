@@ -134,12 +134,12 @@ typedef struct
 // 自定义CTRL组合快捷功能
 typedef enum
 {
-    CSF_BACK_FIND_CODE,    // 反查编码
-    CSF_ONLINE_ADD_WORD,   // 在线加词
-    CSF_ONLINE_DEL_WORD,   // 在线删词
-    CSF_SWITCH_KEYBOARD,   // 切换软键盘
-    CSF_SWITCH_CHAR_SET,   // 切换字符集
-    CSF_SWITCH_INPUT_MODE, // 切换输入模式
+    CSF_BACK_FIND_CODE,          // 反查编码
+    CSF_ONLINE_ADD_WORD,         // 在线加词
+    CSF_ONLINE_DEL_WORD,         // 在线删词
+    CSF_SWITCH_KEYBOARD,         // 切换软键盘
+    CSF_SWITCH_CHAR_SET,         // 切换字符集
+    CSF_SWITCH_INPUT_MODE,       // 切换输入模式
     CSF_SWITCH_WORD_STATE,       // 切换字词状态
     CSF_SWITCH_S_IN_T_OUT,       // 切换简入繁出
     CSF_SETUP_OPTION,            // 系统设置
@@ -148,8 +148,8 @@ typedef enum
     CSF_SWITCH_WORD_LEXICON,     // 切换词库
     CSF_ADD_CHAR_AFTER_OUTPUT,   // 输出项后加字符
     CSF_SWITCH_SKIN,             // 切换皮肤
-    CSF_QUICK_DEL_SCREEN_CHAR, // 快删上屏项
-    CSF_MARK_AUTO_PAIR,        // 标点自动配对
+    CSF_QUICK_DEL_SCREEN_CHAR,   // 快删上屏项
+    CSF_MARK_AUTO_PAIR,          // 标点自动配对
 
     CSF_NUM
 } CustomShortcutFunction;

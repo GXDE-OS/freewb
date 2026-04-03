@@ -46,12 +46,12 @@
 
 #include "config.h"
 #include "freedict.h"
-#include "ipc/freewbinterface.h"
 #include "freespecial.h"
 #include "freewubi-config.h"
 #include "freewubi-internal.h"
 #include "ini.h"
 #include "inputstate.h"
+#include "ipc/freewbinterface.h"
 #include "panelproxy.h"
 #include "virtual_keyboard.h"
 
