@@ -5,8 +5,11 @@ endif()
 
 add_library(freewb-utils SHARED ConvertUTF.c log.cpp)
 
-if (spdlog_FOUND)
-    target_link_libraries(freewb-utils ${spdlog_LIBRARIES})
+if (NOT TARGET spdlog::spdlog)
+    message(FATAL_ERROR "spdlog::spdlog target not found")
 endif()
+
+target_include_directories(freewb-utils PUBLIC ${CMAKE_SOURCE_DIR}/src/utils)
+target_link_libraries(freewb-utils PUBLIC spdlog::spdlog)
 
 install(TARGETS freewb-utils LIBRARY DESTINATION ${FREEWB_INSTALL_LIBDIR})
