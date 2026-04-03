@@ -79,6 +79,7 @@ autoToEnStr=www. ftp: http mail. bbs.
 autoToHalfMarkFlg=false
 
 [ShortcutKey]
+addCharAfterOutput=CTRL+KEY_NONE
 backFindCode=CTRL+KEY_SLASH
 cnEnSwitch=KEY_SHIFT
 disableAllShortcutKey=false
@@ -94,6 +95,7 @@ showHideToolbar=CTRL+KEY_LEFT
 switchCharSet=CTRL+KEY_M
 switchChttrans=CTRL+KEY_J
 switchInputMode=CTRL+KEY_BACK_SLASH
+switchWordState=CTRL+KEY_INSERT
 switchLexicon=CTRL+KEY_QUOTE
 switchSkin=CTRL+KEY_NONE
 switchVKb=CTRL+KEY_ESC
