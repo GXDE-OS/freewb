@@ -291,6 +291,16 @@ static boolean FreeWubiInit(Fcitxfreewubi *fwb)
     if (!fwb->table)
     {
         fwb->table = fcitx_utils_new(TableMetaData);
+        fwb->table->autoRecord = fcitx_utils_new(AUTORECORD);
+        fwb->table->autoRecord->recordIndex = 0;
+        fwb->table->autoPhrase = fcitx_utils_new(AUTOPHRASE);
+        fwb->table->insertPoint = fwb->table->autoPhrase;
+        fwb->table->autoPhrase->next = NULL;
+        fwb->table->quickTable = fcitx_utils_new(QUCIK_TABLE);
+        fwb->table->quickTable->next = NULL;
+        fwb->table->autoEng = fcitx_utils_new(AUTO_ENG);
+        fwb->table->autoEng->next = NULL;
+
         fwb->table->freeWubiConfig = &(fwb->config);
         LoadTableDict(fwb->table);
         fwb->table->tableType = FREE_WUBI;
