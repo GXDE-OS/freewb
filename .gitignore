@@ -1,3 +1,4 @@
 build/**
 clang-format.sh
 CMakeLists.txt.user
+.vscode/**
