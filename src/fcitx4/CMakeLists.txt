@@ -36,9 +36,9 @@ set(fcitx_freewubi_headers
   inputstate.h
 )
 
-fcitx_add_addon(fcitx-${PROJECT_NAME} SHARED ${fcitx_freewubi_sources} ${fcitx_freewubi_headers})
+fcitx_add_addon(lib${PROJECT_NAME}-fcitx4 SHARED ${fcitx_freewubi_sources} ${fcitx_freewubi_headers})
 
-target_link_libraries(fcitx-${PROJECT_NAME}
+target_link_libraries(lib${PROJECT_NAME}-fcitx4
     ${LIBINTL_LIBRARIES}
     ${LIBICONV_LIBRARIES}
     ${PROJECT_NAME}-ipc
