@@ -1,9 +1,13 @@
 message(STATUS "Building fcitx4 module")
 
-find_package(DBus1 REQUIRED)
-if (DBUS1_FOUND)
-    include_directories(${DBus1_INCLUDE_DIRS})
-    link_directories(${DBus1_LIBRARY_DIRS})
+add_definitions(-D__FCITX4__)
+
+find_package(Fcitx 4.2.7 REQUIRED)
+if (FCITX_FOUND)
+  include_directories(${FCITX4_FCITX_INCLUDE_DIRS})
+  include_directories(${FCITX4_FCITX_CONFIG_INCLUDE_DIRS})
+  include_directories(${FCITX4_FCITX_UTILS_INCLUDE_DIRS})
+  message(STATUS "fcitx4 is found, libraries is: ${FCITX4_FCITX_LIBRARIES}")
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -37,8 +41,8 @@ fcitx_add_addon(fcitx-${PROJECT_NAME} SHARED ${fcitx_freewubi_sources} ${fcitx_f
 target_link_libraries(fcitx-${PROJECT_NAME}
     ${LIBINTL_LIBRARIES}
     ${LIBICONV_LIBRARIES}
-    ${DBus1_LIBRARIES}
     ${PROJECT_NAME}-ipc
+    ${FCITX4_FCITX_LIBRARIES}
 )
 
 configure_file(freewb.conf.in ${CMAKE_CURRENT_BINARY_DIR}/freewb.conf IMMEDIATE @ONLY)

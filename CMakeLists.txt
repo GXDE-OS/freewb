@@ -46,18 +46,6 @@ include_directories(${LIBICONV_INCLUDE_DIR})
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/include")
 include_directories("${PROJECT_BINARY_DIR}/src")
-
-if(ENABLE_FCITX4)
-    find_package(Fcitx 4.2.7 REQUIRED)
-    include_directories(${FCITX4_FCITX_INCLUDE_DIRS})
-    include_directories(${FCITX4_FCITX_CONFIG_INCLUDE_DIRS})
-    include_directories(${FCITX4_FCITX_UTILS_INCLUDE_DIRS})
-    # This will add a uninstall target. Comment out this line if other cmake packages
-    # you are using already provides such target (e.g. KDE).
-    _fcitx_add_uninstall_target()
-    add_definitions(-D__FCITX4__)
-    message(STATUS "fcitx install prefix dir is:" ${FCITX4_PREFIX})
-endif()
  
 configure_file(config.h.in ${CMAKE_SOURCE_DIR}/include/config.h IMMEDIATE @ONLY)
 
