@@ -19,9 +19,13 @@ endif()
 
 option(ENABLE_FCITX4 "enable support fcitx4" On)
 option(ENABLE_FCITX5 "enable support fcitx5" On)
+option(ENABLE_TEST "build freewb-test" Off)
 
+find_package(ECM REQUIRED 1.0.0)
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${ECM_MODULE_PATH} ${CMAKE_MODULE_PATH})
 include(FindPkgConfig)
 include(GNUInstallDirs)
+include(ECMUninstallTarget)
 
 set(FREEWB_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
 set(FREEWB_INSTALL_INCLUDEDIR ${CMAKE_INSTALL_FULL_INCLUDEDIR})
@@ -37,7 +41,6 @@ message(STATUS "FREEWB_INSTALL_DATADIR: ${FREEWB_INSTALL_DATADIR}")
 message(STATUS "FREEWB_INSTALL_PKGDATADIR: ${FREEWB_INSTALL_PKGDATADIR}")
 message(STATUS "FREEWB_INSTALL_BINDIR: ${FREEWB_INSTALL_BINDIR}")
 
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 find_package(Libintl REQUIRED)
 find_package(Libiconv REQUIRED)
 
@@ -50,6 +53,12 @@ include_directories("${PROJECT_BINARY_DIR}/src")
 configure_file(config.h.in ${CMAKE_SOURCE_DIR}/include/config.h IMMEDIATE @ONLY)
 
 add_subdirectory(src)
+
+if(ENABLE_TEST)
+    enable_testing()
+    add_subdirectory(test)
+endif()
+
 add_subdirectory(data)
 add_subdirectory(help)
 add_subdirectory(resources)
