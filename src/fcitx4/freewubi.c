@@ -148,8 +148,8 @@ static void loadAllConfig(Fcitxfreewubi *fwb)
     fwb->config.bQuickTableChanged = GetIniKeyBool(ini, "Misc", "quickFlg");
     fwb->config.iKeyboardMode = GetIniKeyInt(ini, "Misc", "vkMode", 1);
     fwb->config.bIsTraditional = GetIniKeyBool(ini, "Misc", "simpTradFlg");
-    fcitx_utils_string_swap(&fwb->config.WubiPath, GetIniKeyString(ini, "Misc", "wubiTable", "wubi.mb"));
-    fcitx_utils_string_swap(&fwb->config.PinyinPath, GetIniKeyString(ini, "Misc", "pinyinTable", "pinyin.mb"));
+    fcitx_utils_string_swap(&fwb->config.WubiPath, GetIniKeyString(ini, "Misc", "wubiTable", "default/freeime.mb"));
+    fcitx_utils_string_swap(&fwb->config.PinyinPath, GetIniKeyString(ini, "Misc", "pinyinTable", "default/attach.mb"));
     fcitx_utils_string_swap(&fwb->config.usrPath, GetIniKeyString(ini, "Misc", "UsrFile", "user_word.txt"));
 
     fcitx_utils_string_swap(&fwb->config.strUsrKeyBoard, GetIniKeyString(ini, "Misc", "CoustomChar", ""));

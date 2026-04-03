@@ -18,8 +18,8 @@ inputMode=0
 simpTradFlg=0
 userWordFlg=1
 vkMode=-1
-wubiTable=default/wubi.mb
-pinyinTable=default/pinyin.mb
+wubiTable=default/freeime.mb
+pinyinTable=default/attach.mb
 CoustomChar="ˉ  ，  、  ；  ：  ？  ！  …  —  •  〔  （  【  〈  “  〉  《  》  ∶  「  」  『  ［  ）  ＂  ＇  ‘  ”  〕  々  ‖  】  ’  〗  ～  〖  。  ˇ  ¨  `  |  \"  』  .  ］  中  国  "
 CoustomMark=" ）  ！  ·  #  ￥  %  …  —  *  （                                                     ` ~ － — ＝ + [ { ] } 、 ｜ ； ： ’  ，  。  、 ？ "
 
