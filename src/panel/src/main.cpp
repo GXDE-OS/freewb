@@ -17,6 +17,7 @@
 #include "commdefine.h"
 #include "mainprogram.h"
 #include "settings.h"
+#include "log.h"
 
 CpuType g_cpuType = CT_X86;
 DesktopType g_desktopType = DT_UBUNTU;
@@ -199,6 +200,9 @@ void qdebug_msg_handler(QtMsgType type, const QMessageLogContext &context, const
 
 int main(int argc, char *argv[])
 {
+    FreewbLog log("/tmp/freewb-ui-panel.log");
+    FREEWB_DEBUG("panel started");
+
 #ifdef BUILD_IN_CAMKE
     run_as_daemon(); // 将程序初始化为后台守护进程
 #endif

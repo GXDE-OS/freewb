@@ -43,7 +43,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Multimedia
     Qt${QT_VERSION_MAJOR}::DBus
-    ${EXTERN_LIBS})
+    ${EXTERN_LIBS}
+    freewb-utils
+    )
+
 
 #安装可执行文件
 install(TARGETS ${PROJECT_NAME} DESTINATION ${FREEWB_INSTALL_BINDIR})
