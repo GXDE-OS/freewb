@@ -53,20 +53,20 @@ showOpRemindInfo=true
 useFreewbFont=false
 
 [CandidateWinUi]
-bgColor=@Variant(\0\0\0\x43\x1\xff\xff\xff\xff\xff\xff\xff\xff\0\0)
+bgColor=#ffffffff
 bgImage=
-borderColor=@Variant(\0\0\0\x43\x1\xff\xff\xa4\xa4\xc1\xc1\xe2\xe2\0\0)
+borderColor=#ffa4c1e2
 candiCharCount=9
-candiPromptTextColor=@Variant(\0\0\0\x43\x1\xff\xff__[[RR\0\0)
+candiPromptTextColor=#ff5f5b52
 candiTextFont=Noto Sans CJK SC 14
 candiWinDispMode=0
 candiWordCount=5
-candiWordTextColor=@Variant(\0\0\0\x43\x1\xff\xff__[[RR\0\0)
+candiWordTextColor=#ff5f5b52
 enableTiled=false
-gradientColor0=@Variant(\0\0\0\x43\x1\xff\xff\xff\xff\xff\xff\xff\xff\0\0)
-gradientColor1=@Variant(\0\0\0\x43\x1\xff\xff\xff\xff\xff\xff\xff\xff\0\0)
+gradientColor0=#ffffffff
+gradientColor1=#ffffffff
 radius=5
-separateChar=@Variant(\0\0\0\a\0.)
+separateChar=.
 transparency=0
 useBgImage=false
 useGradientColor=false
