@@ -11,6 +11,13 @@
 #ifdef Bool
 #undef Bool
 #endif
+/* Xlibint.h defines min/max macros; they break std::min in later C++ headers. */
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
+#endif
 
 class X11EventMonitor : public QThread
 {
