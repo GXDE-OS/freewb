@@ -1,10 +1,9 @@
 #include "settings.h"
 
 #include <QByteArray>
-#include <QTemporaryFile>
 
 #include "commdefine.h"
-#include "utils/SimpleIni.h"
+#include "SimpleIni.h"
 
 #define CONFIG_FILE INSTALL_DIR + "/config/config.ini"
 
@@ -27,41 +26,12 @@ QColor csIniGetColor(const CSimpleIniA &ini, const char *sec, const char *key, c
     const char *v = ini.GetValue(sec, key, nullptr);
     if (!v || !*v)
         return def;
-    QByteArray raw(v);
-    QString s = QString::fromUtf8(raw);
+
+    const QString s = QString::fromUtf8(v).trimmed();
     if (s.startsWith(QLatin1Char('#')))
     {
-        QColor c(s);
-        if (c.isValid())
-            return c;
-    }
-    if (s.contains(QLatin1Char(',')))
-    {
-        QStringList p = s.split(QLatin1Char(','));
-        if (p.size() >= 3)
-        {
-            QColor c(p[0].trimmed().toInt(), p[1].trimmed().toInt(), p[2].trimmed().toInt(), p.size() > 3 ? p[3].trimmed().toInt() : 255);
-            if (c.isValid())
-                return c;
-        }
-    }
-    if (s.startsWith(QLatin1String("@Variant")))
-    {
-        QTemporaryFile tf;
-        if (tf.open())
-        {
-            tf.write("[tmp]\nx=");
-            tf.write(raw);
-            tf.write("\n");
-            tf.flush();
-            QSettings st(tf.fileName(), QSettings::IniFormat);
-            st.setIniCodec("UTF-8");
-            st.beginGroup(QStringLiteral("tmp"));
-            QColor c = st.value(QStringLiteral("x")).value<QColor>();
-            st.endGroup();
-            if (c.isValid())
-                return c;
-        }
+        const QColor c(s);
+        return c.isValid() ? c : def;
     }
     return def;
 }
@@ -467,10 +437,7 @@ void Settings::load_all_setting_data_from_file()
 
     s_candidateWinUi.show_cand_dict = cfgIni.GetBoolValue("CandidateWinUi", "showCandDictInfo", false);
     s_candidateWinUi.candiWinDispMode = static_cast<CandiWinDispMode>(static_cast<int>(cfgIni.GetLongValue("CandidateWinUi", "candiWinDispMode", static_cast<int>(CWDM_ONE_ROW))));
-    {
-        const char *sepRaw = cfgIni.GetValue("CandidateWinUi", "separateChar", " ", nullptr);
-        s_candidateWinUi.separateChar = QString::fromUtf8(sepRaw).at(0).toLatin1();
-    }
+    s_candidateWinUi.separateChar = *cfgIni.GetValue("CandidateWinUi", "separateChar", ".", nullptr);
     s_candidateWinUi.useGradientColor = cfgIni.GetBoolValue("CandidateWinUi", "useGradientColor", false);
     s_candidateWinUi.useBgImage = cfgIni.GetBoolValue("CandidateWinUi", "useBgImage", false);
     s_candidateWinUi.enablebgImageTiled = cfgIni.GetBoolValue("CandidateWinUi", "enableTiled", false);
