@@ -1,5 +1,11 @@
 message(STATUS "Building fcitx4 module")
 
+find_package(DBus1 REQUIRED)
+if (DBUS1_FOUND)
+    include_directories(${DBus1_INCLUDE_DIRS})
+    link_directories(${DBus1_LIBRARY_DIRS})
+endif()
+
 add_definitions(-D__FCITX4__)
 
 find_package(Fcitx 4.2.7 REQUIRED)
@@ -41,6 +47,7 @@ fcitx_add_addon(lib${PROJECT_NAME}-fcitx4 SHARED ${fcitx_freewubi_sources} ${fci
 target_link_libraries(lib${PROJECT_NAME}-fcitx4
     ${LIBINTL_LIBRARIES}
     ${LIBICONV_LIBRARIES}
+    ${DBus1_LIBRARY_DIRS}
     ${PROJECT_NAME}-ipc
     ${FCITX4_FCITX_LIBRARIES}
 )
