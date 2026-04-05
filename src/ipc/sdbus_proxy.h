@@ -7,7 +7,7 @@
 #include <systemd/sd-bus.h>
 
 #include "freewb.h"
-#include "idbus.h"
+#include "dbus.h"
 
 namespace freewb::ipc
 {

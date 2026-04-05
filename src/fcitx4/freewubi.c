@@ -51,7 +51,7 @@
 #include "freewubi-internal.h"
 #include "ini.h"
 #include "inputstate.h"
-#include "ipc/freewbinterface.h"
+#include "libdbus_proxy.h"
 #include "panelproxy.h"
 #include "virtual_keyboard.h"
 

@@ -1,5 +1,5 @@
-#ifndef _FREEWBINTERFACE_H_
-#define _FREEWBINTERFACE_H_
+#ifndef LIBDBUS_PROXY_H
+#define LIBDBUS_PROXY_H
 
 #include <dbus/dbus.h>
 
@@ -36,4 +36,4 @@ int FreeWubiServiceCreateFreewbPanel(DBusConnection *conn);
 char *FreeWubiServiceGetClipboard(DBusConnection *conn);
 void FreeWubiServiceSwitchCapState(DBusConnection *conn);
 
-#endif
+#endif // LIBDBUS_PROXY_H

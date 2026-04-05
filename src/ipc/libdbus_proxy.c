@@ -1,4 +1,4 @@
-#include "freewbinterface.h"
+#include "libdbus_proxy.h"
 
 #include "ipc.h"
 
