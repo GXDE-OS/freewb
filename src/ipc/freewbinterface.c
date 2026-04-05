@@ -1,6 +1,6 @@
 #include "freewbinterface.h"
 
-#include "ipc/ipc.h"
+#include "ipc.h"
 
 static DBusMessage *createSettingsMethodCallMessage(const char *methodName)
 {

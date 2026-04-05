@@ -12,7 +12,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src/utils)
 
 add_library("${PROJECT_NAME}-fcitx5" SHARED module.cpp)
 
-target_link_libraries("${PROJECT_NAME}-fcitx5" Fcitx5::Core freewb-utils)
+target_link_libraries("${PROJECT_NAME}-fcitx5" Fcitx5::Core ${PROJECT_NAME}-utils)
 
 install(TARGETS "${PROJECT_NAME}-fcitx5" DESTINATION "${FCITX_INSTALL_LIBDIR}/fcitx5")
 
