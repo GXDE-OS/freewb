@@ -15,12 +15,25 @@
 namespace
 {
 
+/** 与旧 emitUpdateCandidate 等价的调用顺序，供演示/测试。 */
+void emitCandidateFrame(freewb::ipc::SDBusProxy &proxy, const freewb::SpotRectPayload &spot, const freewb::CandidatePayload &cand,
+                        const freewb::CandidatePreeditPayload &preedit, const freewb::CandidateAuxPayload &aux)
+{
+    proxy.emitSetSpotRect(spot);
+    proxy.emitSetCandidate(cand);
+    proxy.emitUpdatePreeditText(preedit);
+    proxy.emitUpdatePreeditCaret(preedit.caret);
+    proxy.emitUpdateAux(aux);
+}
+
 struct DemoState
 {
     fcitx::EventLoop *loop = nullptr;
     freewb::ipc::SDBusProxy *proxy = nullptr;
     std::string stdinBuf;
 
+    int cbSignalCount = 0;
+    int cbUnknownCount = 0;
     int cbSelectCount = 0;
     int cbPageUpCount = 0;
     int cbPageDownCount = 0;
@@ -31,6 +44,8 @@ struct DemoState
     freewb::CandidatePreeditPayload preedit;
     freewb::CandidateAuxPayload aux;
 };
+
+DemoState *gDemoState = nullptr;
 
 void initDemoPayloads(DemoState &s)
 {
@@ -48,6 +63,50 @@ void initDemoPayloads(DemoState &s)
 
     s.aux.text = "demo aux";
     s.aux.show = true;
+}
+
+void onDBusSignalCallback(const char *member, int index)
+{
+    if (!member || !*member)
+    {
+        return;
+    }
+    DemoState *state = gDemoState;
+    if (!state)
+    {
+        return;
+    }
+    ++state->cbSignalCount;
+    if (std::strcmp(member, "SelectCandidate") == 0)
+    {
+        ++state->cbSelectCount;
+        std::cout << "[callback] SelectCandidate index=" << index << " (count=" << state->cbSelectCount << ")\n";
+        FREEWB_WARN("callback SelectCandidate index={} count={}", index, state->cbSelectCount);
+    }
+    else if (std::strcmp(member, "LookupTablePageUp") == 0)
+    {
+        ++state->cbPageUpCount;
+        std::cout << "[callback] LookupTablePageUp (count=" << state->cbPageUpCount << ")\n";
+        FREEWB_WARN("callback LookupTablePageUp count={}", state->cbPageUpCount);
+    }
+    else if (std::strcmp(member, "LookupTablePageDown") == 0)
+    {
+        ++state->cbPageDownCount;
+        std::cout << "[callback] LookupTablePageDown (count=" << state->cbPageDownCount << ")\n";
+        FREEWB_WARN("callback LookupTablePageDown count={}", state->cbPageDownCount);
+    }
+    else if (std::strcmp(member, "ReloadConfig") == 0)
+    {
+        ++state->cbReloadCount;
+        std::cout << "[callback] ReloadConfig (count=" << state->cbReloadCount << ")\n";
+        FREEWB_WARN("callback ReloadConfig count={}", state->cbReloadCount);
+    }
+    else
+    {
+        ++state->cbUnknownCount;
+        std::cout << "[callback] unknown signal: " << member << '\n';
+        FREEWB_WARN("callback unknown panel signal: {}", member);
+    }
 }
 
 bool setStdinNonBlocking()
@@ -68,13 +127,13 @@ void handleCommand(DemoState &s, const std::string &cmd)
     if (cmd == "0")
     {
         FREEWB_WARN(
-            "cmd=0 before emitUpdateCandidate: cand labels={} texts={} preedit=\"{}\" aux=\"{}\"",
+            "cmd=0 before emitCandidateFrame: cand labels={} texts={} preedit=\"{}\" aux=\"{}\"",
             s.candidate.labels.size(),
             s.candidate.texts.size(),
             s.preedit.text,
             s.aux.text);
-        proxy.emitUpdateCandidate(s.spotRect, s.candidate, s.preedit, s.aux);
-        FREEWB_WARN("cmd=0 after emitUpdateCandidate (full)");
+        emitCandidateFrame(proxy, s.spotRect, s.candidate, s.preedit, s.aux);
+        FREEWB_WARN("cmd=0 after emitCandidateFrame (full)");
         std::cout << "ok\n";
     }
     else if (cmd == "1")
@@ -84,16 +143,16 @@ void handleCommand(DemoState &s, const std::string &cmd)
         freewb::CandidateAuxPayload ax{};
         pe.show = false;
         ax.show = false;
-        proxy.emitUpdateCandidate(s.spotRect, emptyCand, pe, ax);
-        FREEWB_WARN("cmd=1 emitUpdateCandidate (hide)");
+        emitCandidateFrame(proxy, s.spotRect, emptyCand, pe, ax);
+        FREEWB_WARN("cmd=1 emitCandidateFrame (hide)");
         std::cout << "hidden\n";
     }
     else if (cmd == "2")
     {
         freewb::CandidatePreeditPayload pe{};
         freewb::CandidateAuxPayload ax{};
-        proxy.emitUpdateCandidate(s.spotRect, s.candidate, pe, ax);
-        FREEWB_WARN("cmd=2 emitUpdateCandidate (candidate only)");
+        emitCandidateFrame(proxy, s.spotRect, s.candidate, pe, ax);
+        FREEWB_WARN("cmd=2 emitCandidateFrame (candidate only)");
         std::cout << "candidate shown\n";
     }
     else if (cmd == "3")
@@ -158,8 +217,8 @@ void handleCommand(DemoState &s, const std::string &cmd)
     }
     else if (cmd == "c")
     {
-        std::cout << "[stats] onSelectCandidate=" << s.cbSelectCount << " onPageUp=" << s.cbPageUpCount << " onPageDown=" << s.cbPageDownCount << " onReloadConfig=" << s.cbReloadCount << '\n';
-        FREEWB_WARN("callback stats select={} up={} down={} reload={}", s.cbSelectCount, s.cbPageUpCount, s.cbPageDownCount, s.cbReloadCount);
+        std::cout << "[stats] onDBusSignal=" << s.cbSignalCount << " unknown=" << s.cbUnknownCount << " onSelectCandidate=" << s.cbSelectCount << " onPageUp=" << s.cbPageUpCount << " onPageDown=" << s.cbPageDownCount << " onReloadConfig=" << s.cbReloadCount << '\n';
+        FREEWB_WARN("callback stats signal={} unknown={} select={} up={} down={} reload={}", s.cbSignalCount, s.cbUnknownCount, s.cbSelectCount, s.cbPageUpCount, s.cbPageDownCount, s.cbReloadCount);
     }
     else if (cmd == "q" || cmd == "quit")
     {
@@ -239,6 +298,7 @@ int main(int argc, char **argv)
     }
 
     DemoState state;
+    gDemoState = &state;
     state.loop = &eventLoop;
 
     freewb::ipc::SDBusProxy proxy(nativeLoop, 0);
@@ -252,37 +312,11 @@ int main(int argc, char **argv)
 
     initDemoPayloads(state);
 
-    freewb::ipc::DBusCallbacks callbacks;
-    callbacks.onSelectCandidate = [&state](int index)
-    {
-        ++state.cbSelectCount;
-        std::cout << "[callback] onSelectCandidate index=" << index << " (count=" << state.cbSelectCount << ")\n";
-        FREEWB_WARN("callback onSelectCandidate index={} count={}", index, state.cbSelectCount);
-    };
-    callbacks.onPageUp = [&state]()
-    {
-        ++state.cbPageUpCount;
-        std::cout << "[callback] onPageUp (count=" << state.cbPageUpCount << ")\n";
-        FREEWB_WARN("callback onPageUp count={}", state.cbPageUpCount);
-    };
-    callbacks.onPageDown = [&state]()
-    {
-        ++state.cbPageDownCount;
-        std::cout << "[callback] onPageDown (count=" << state.cbPageDownCount << ")\n";
-        FREEWB_WARN("callback onPageDown count={}", state.cbPageDownCount);
-    };
-    // callbacks.onReloadConfig = [&state]()
-    // {
-    //     ++state.cbReloadCount;
-    //     std::cout << "[callback] onReloadConfig (count=" << state.cbReloadCount << ")\n";
-    //     FREEWB_WARN("callback onReloadConfig count={}", state.cbReloadCount);
-    // };
-
-    const bool bound = proxy.bindDBusCallbacks(callbacks);
-    FREEWB_WARN("proxy.bindDBusCallbacks = {}", bound);
-    std::cout << "proxy.bindDBusCallbacks=" << (bound ? "true" : "false") << '\n';
+    const bool bound = proxy.bindDBusSignalCallback(&onDBusSignalCallback);
+    FREEWB_WARN("proxy.bindDBusSignalCallback = {}", bound);
+    std::cout << "proxy.bindDBusSignalCallback=" << (bound ? "true" : "false") << '\n';
     std::cout << "stdin is non-blocking; same Fcitx5 EventLoop drives D-Bus (panel clicks should log without typing a command first).\n";
-    std::cout << "With panel running: pick a candidate / page keys / reload triggers the callbacks above.\n";
+    std::cout << "With panel running: panel signals are passed through to one callback; callback decides how to parse/handle.\n";
     if (!bound)
     {
         std::cout << "bind failed, panel signals may not be received.\n";
