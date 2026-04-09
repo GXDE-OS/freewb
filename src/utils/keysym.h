@@ -2106,6 +2106,30 @@ extern "C"
         FreewbKey_Sinh_kunddaliya = 0x1000df4,       /* U+0DF4 SINHALA KUNDDALIYA */
     } FreewbKeySym;
 
+    typedef enum _FreewbKeyState
+    {
+        FreewbKeyState_None = 0,
+        FreewbKeyState_Shift = 1 << 0,
+        FreewbKeyState_CapsLock = 1 << 1,
+        FreewbKeyState_Ctrl = 1 << 2,
+        FreewbKeyState_Alt = 1 << 3,
+        FreewbKeyState_Alt_Shift = FreewbKeyState_Alt | FreewbKeyState_Shift,
+        FreewbKeyState_Ctrl_Shift = FreewbKeyState_Ctrl | FreewbKeyState_Shift,
+        FreewbKeyState_Ctrl_Alt = FreewbKeyState_Ctrl | FreewbKeyState_Alt,
+        FreewbKeyState_Ctrl_Alt_Shift = FreewbKeyState_Ctrl | FreewbKeyState_Alt | FreewbKeyState_Shift,
+        FreewbKeyState_NumLock = 1 << 4,
+        FreewbKeyState_Super = 1 << 6,
+        FreewbKeyState_ScrollLock = 1 << 7,
+        FreewbKeyState_MousePressed = 1 << 8,
+        FreewbKeyState_HandledMask = 1 << 24,
+        FreewbKeyState_IgnoredMask = 1 << 25,
+        FreewbKeyState_Super2 = 1 << 26,
+        FreewbKeyState_Hyper = 1 << 27,
+        FreewbKeyState_Meta = 1 << 28,
+        FreewbKeyState_UsedMask = 0x5c001fff,
+        FreewbKeyState_SimpleMask = FreewbKeyState_Ctrl_Alt_Shift | FreewbKeyState_Super | FreewbKeyState_Super2 | FreewbKeyState_Hyper | FreewbKeyState_Meta,
+    } FreewbKeyState;
+
 #ifdef __cplusplus
 }
 #endif
