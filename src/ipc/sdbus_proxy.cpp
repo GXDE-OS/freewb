@@ -2,8 +2,7 @@
 
 #include <cerrno>
 #include <cstdarg>
-#include <string_view>
-#include <unordered_map>
+#include <string>
 
 #include <systemd/sd-bus.h>
 #include <systemd/sd-event.h>
@@ -16,46 +15,6 @@ namespace freewb::ipc
 
 namespace
 {
-
-/** @p member D-Bus signal name for logs; if @p fn empty, FREEWB_WARN and do not call. */
-template <typename F, typename... Args>
-static void callIf(const char *member, F &&fn, Args &&... args)
-{
-    if (fn)
-    {
-        std::forward<F>(fn)(std::forward<Args>(args)...);
-    }
-    else
-    {
-        FREEWB_WARN("panel signal: {} no callback", member);
-    }
-}
-
-using PanelSignalHandler = void (*)(sd_bus_message *, DBusCallbacks &);
-
-static const std::unordered_map<std::string_view, PanelSignalHandler> &panelSignalHandlers()
-{
-    static const std::unordered_map<std::string_view, PanelSignalHandler> kHandlers = {
-        {"LookupTablePageUp",
-         [](sd_bus_message *, DBusCallbacks &c) { callIf("LookupTablePageUp", c.onPageUp); }},
-        {"LookupTablePageDown",
-         [](sd_bus_message *, DBusCallbacks &c) { callIf("LookupTablePageDown", c.onPageDown); }},
-        {"ReloadConfig",
-         [](sd_bus_message *, DBusCallbacks &c) { callIf("ReloadConfig", c.onReloadConfig); }},
-        {"SelectCandidate",
-         [](sd_bus_message *msg, DBusCallbacks &c)
-         {
-             int32_t index = 0;
-             if (sd_bus_message_read(msg, "i", &index) < 0)
-             {
-                 FREEWB_WARN("panel signal: SelectCandidate read(i) failed");
-                 return;
-             }
-             callIf("SelectCandidate", c.onSelectCandidate, index);
-         }},
-    };
-    return kHandlers;
-}
 
 /** NULL-terminated strv for sd_bus; pointers only valid while @p strings and @p scratch are alive. */
 static char **makeStrv(const std::vector<std::string> &strings, std::vector<char *> &scratch)
@@ -181,9 +140,9 @@ void SDBusProxy::changeAvailable()
     available_ = !available_;
 }
 
-bool SDBusProxy::bindDBusCallbacks(const DBusCallbacks &callbacks)
+bool SDBusProxy::bindDBusSignalCallback(DBusSignalCallback callback)
 {
-    callbacks_ = callbacks;
+    onDBusSignal_ = callback;
     if (!bus_)
     {
         return false;
@@ -211,29 +170,29 @@ void SDBusProxy::emitUpdateProperties(const ToolbarPropertiesPayload &payload)
 
 void SDBusProxy::emitShowToolbar()
 {
-    emitImeSignal("UpdateProperty", "s", "/Fcitx/im:Freewb:freewb-test");
+    emitImeSignal("UpdateProperty", "s", "/Fcitx/im:Freewb");
 }
 
 void SDBusProxy::emitHideToolbar()
 {
-    emitImeSignal("UpdateProperty", "s", "/Fcitx/im:us:English");
+    emitImeSignal("UpdateProperty", "s", "/Fcitx/im:us");
 }
 
-void SDBusProxy::sendSetSpotRect(const SpotRectPayload &payload)
+void SDBusProxy::emitSetSpotRect(const SpotRectPayload &payload)
 {
-    FREEWB_DEBUG("sendSetSpotRect x={} y={} w={} h={}", payload.x, payload.y, payload.w, payload.h);
+    FREEWB_DEBUG("emitSetSpotRect x={} y={} w={} h={}", payload.x, payload.y, payload.w, payload.h);
     sendPanelMethod("SetSpotRect", "iiii", payload.x, payload.y, payload.w, payload.h);
 }
 
-void SDBusProxy::sendSetCandidate(const CandidatePayload &payload)
+void SDBusProxy::emitSetCandidate(const CandidatePayload &payload)
 {
     if (!bus_ || !available_)
     {
-        FREEWB_ERROR("sendSetCandidate skipped: bus={} available_={}", static_cast<const void *>(bus_), available_);
+        FREEWB_ERROR("emitSetCandidate skipped: bus={} available_={}", static_cast<const void *>(bus_), available_);
         return;
     }
     FREEWB_DEBUG(
-        "sendSetCandidate: labels={} texts={} attrs={} hasPrev={} hasNext={} cursor={} layout={}",
+        "emitSetCandidate: labels={} texts={} attrs={} hasPrev={} hasNext={} cursor={} layout={}",
         payload.labels.size(),
         payload.texts.size(),
         payload.attrs.size(),
@@ -246,62 +205,26 @@ void SDBusProxy::sendSetCandidate(const CandidatePayload &payload)
     const int newCallR = sd_bus_message_new_method_call(bus_, &m, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE, "SetLookupTable");
     if (newCallR < 0)
     {
-        FREEWB_ERROR("sendSetCandidate: sd_bus_message_new_method_call(SetLookupTable) failed: {} ({})", newCallR, strerror(-newCallR));
+        FREEWB_ERROR("emitSetCandidate: sd_bus_message_new_method_call(SetLookupTable) failed: {} ({})", newCallR, strerror(-newCallR));
         return;
     }
 
     const int appendR = appendSetCandidateBody(m, payload);
     if (appendR < 0)
     {
-        FREEWB_ERROR("sendSetCandidate: append candidate body failed: {} ({})", appendR, strerror(-appendR));
+        FREEWB_ERROR("emitSetCandidate: append candidate body failed: {} ({})", appendR, strerror(-appendR));
         sd_bus_message_unref(m);
         return;
     }
     const int sendR = sd_bus_send(bus_, m, nullptr);
+    sd_bus_message_unref(m);
     if (sendR < 0)
     {
-        FREEWB_ERROR("sendSetCandidate: sd_bus_send(SetLookupTable) failed: {} ({})", sendR, strerror(-sendR));
-    }
-    sd_bus_message_unref(m);
-}
-
-void SDBusProxy::emitUpdateCandidate(const SpotRectPayload &spotRect, const CandidatePayload &candidate, const CandidatePreeditPayload &preedit, const CandidateAuxPayload &aux)
-{
-    FREEWB_DEBUG(
-        "emitUpdateCandidate enter: bus={} available_={} spot=({},{} {}x{}) cand labels={} texts={} attrs={} preedit.len={} preedit.show={} aux.show={}",
-        static_cast<const void *>(bus_),
-        available_,
-        spotRect.x,
-        spotRect.y,
-        spotRect.w,
-        spotRect.h,
-        candidate.labels.size(),
-        candidate.texts.size(),
-        candidate.attrs.size(),
-        preedit.text.size(),
-        preedit.show,
-        aux.show);
-
-    if (!bus_ || !available_)
-    {
-        FREEWB_ERROR("emitUpdateCandidate aborted: no bus or unavailable");
+        FREEWB_ERROR("emitSetCandidate: sd_bus_send(SetLookupTable) failed: {} ({})", sendR, strerror(-sendR));
         return;
     }
-    sendSetSpotRect(spotRect);
-
-    const bool hasLookup = !candidate.labels.empty() || !candidate.texts.empty();
-    FREEWB_DEBUG("emitUpdateCandidate: hasLookup={} (will SetLookupTable if true, then ShowLookupTable)", hasLookup);
-    if (hasLookup)
-    {
-        sendSetCandidate(candidate);
-    }
+    const bool hasLookup = !payload.labels.empty() || !payload.texts.empty();
     emitImeSignal("ShowLookupTable", "b", hasLookup);
-
-    emitUpdatePreeditText(preedit);
-    emitUpdatePreeditCaret(preedit.caret);
-
-    emitUpdateAux(aux);
-    FREEWB_DEBUG("emitUpdateCandidate leave: ShowLookupTable hasLookup={} preedit+aux emitted", hasLookup);
 }
 
 void SDBusProxy::emitUpdatePreeditText(const CandidatePreeditPayload &payload)
@@ -364,12 +287,21 @@ int SDBusProxy::handlePanelSignal(sd_bus_message *m, void *userdata, sd_bus_erro
         return 0;
     }
 
-    DBusCallbacks &cb = self->callbacks_;
-    const auto &handlers = panelSignalHandlers();
-    if (const auto it = handlers.find(member); it != handlers.end())
+    if (self->onDBusSignal_)
     {
-        FREEWB_DEBUG("panel signal dispatch: member={}", member);
-        it->second(m, cb);
+        FREEWB_DEBUG("panel signal passthrough: member={}", member);
+        sd_bus_message_rewind(m, true);
+        int index = 0;
+        int32_t tmp = 0;
+        if (sd_bus_message_read(m, "i", &tmp) >= 0)
+        {
+            index = static_cast<int>(tmp);
+        }
+        self->onDBusSignal_(member, index);
+    }
+    else
+    {
+        FREEWB_WARN("panel signal: {} no callback", member);
     }
     return 0;
 }

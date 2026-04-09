@@ -23,16 +23,14 @@ public:
     bool available() const override;
     void changeAvailable() override;
 
-    bool bindDBusCallbacks(const DBusCallbacks &callbacks) override;
+    bool bindDBusSignalCallback(DBusSignalCallback callback) override;
 
     void emitUpdateProperties(const ToolbarPropertiesPayload &payload) override;
     void emitShowToolbar() override;
     void emitHideToolbar() override;
 
-    void sendSetSpotRect(const SpotRectPayload &payload) override;
-    void sendSetCandidate(const CandidatePayload &payload) override;
-
-    void emitUpdateCandidate(const SpotRectPayload &spotRect, const CandidatePayload &candidate, const CandidatePreeditPayload &preedit, const CandidateAuxPayload &aux) override;
+    void emitSetSpotRect(const SpotRectPayload &payload) override;
+    void emitSetCandidate(const CandidatePayload &payload) override;
 
     void emitUpdatePreeditText(const CandidatePreeditPayload &payload) override;
     void emitUpdatePreeditCaret(int caret) override;
@@ -54,7 +52,7 @@ private:
 
 private:
     sd_bus *bus_ = nullptr;
-    DBusCallbacks callbacks_;
+    DBusSignalCallback onDBusSignal_ = nullptr;
     sd_bus_slot *panelSignalSlot_ = nullptr;
     bool available_ = true;
 };
