@@ -145,9 +145,9 @@ static void loadAllConfig(Fcitxfreewubi *fwb)
     fwb->config.iImType = GetIniKeyInt(ini, "Misc", "inputMode", 1);
     fwb->config.bBackUpTable = GetIniKeyBool(ini, "Misc", "imeTableChanged");
     fwb->config.bIsGBK = GetIniKeyInt(ini, "Misc", "currentCharset", 0);
-    fwb->config.bQuickTableChanged = GetIniKeyBool(ini, "Misc", "quickFlg");
+    fwb->config.bQuickTableChanged = GetIniKeyBool(ini, "Misc", "quickTableFlg");
     fwb->config.iKeyboardMode = GetIniKeyInt(ini, "Misc", "vkMode", 1);
-    fwb->config.bIsTraditional = GetIniKeyBool(ini, "Misc", "simpTradFlg");
+    fwb->config.bIsTraditional = GetIniKeyInt(ini, "Misc", "simpTradFlg", 0);
     fcitx_utils_string_swap(&fwb->config.WubiPath, GetIniKeyString(ini, "Misc", "wubiTable", "default/freeime.mb"));
     fcitx_utils_string_swap(&fwb->config.PinyinPath, GetIniKeyString(ini, "Misc", "pinyinTable", "default/attach.mb"));
     fcitx_utils_string_swap(&fwb->config.usrPath, GetIniKeyString(ini, "Misc", "UsrFile", "user_word.txt"));
@@ -258,7 +258,7 @@ static void loadAllConfig(Fcitxfreewubi *fwb)
     strcpy(key, GetIniKeyString(ini, "ShortcutKey", "shortcutInput", "KEY_QUOTE"));
     fwb->config.QuickInputKey[0].sym = FreewbHotkeyGetKeyList(key);
 
-    fwb->config.iCandidateWordNumber = GetIniKeyInt(ini, "CandidateWinOptions", "candiWordCount", 3);
+    fwb->config.iCandidateWordNumber = GetIniKeyInt(ini, "CandidateWinUi", "candiWordCount", 5);
 
     strcpy(key, GetIniKeyString(ini, "CandidateWinOptions", "secondRecodeKey", "KEY_SEMICOLON"));
     fwb->config.hkSecondRecode[0].sym = FreewbHotkeyGetKeyList(key);
