@@ -15,6 +15,8 @@ currentCharset=0
 enterClear=true
 inputMethod=1
 inputMode=0
+quickTableFlg=0
+imeTableChanged=0
 simpTradFlg=0
 userWordFlg=1
 vkMode=-1
@@ -58,7 +60,8 @@ bgImage=
 borderColor=#ffa4c1e2
 candiCharCount=9
 candiPromptTextColor=#ff5f5b52
-candiTextFont=Noto Sans CJK SC 14
+candiTextFontName=Noto Sans CJK SC
+candiTextFontSize=14
 candiWinDispMode=0
 candiWordCount=5
 candiWordTextColor=#ff5f5b52
@@ -71,15 +74,14 @@ transparency=0
 useBgImage=false
 useGradientColor=false
 showCandDictInfo=true
-candiTextFontName=Noto Sans CJK SC
-candiTextFontSize=14
 
 [Others]
 autoToEnStr=www. ftp: http mail. bbs.
 autoToHalfMarkFlg=false
 
 [ShortcutKey]
-addCharAfterOutput=CTRL+KEY_NONE
+# legacy-reserved: kept for backward compatibility
+# addCharAfterOutput=CTRL+KEY_NONE
 backFindCode=CTRL+KEY_SLASH
 cnEnSwitch=KEY_SHIFT
 disableAllShortcutKey=false
@@ -95,7 +97,8 @@ showHideToolbar=CTRL+KEY_LEFT
 switchCharSet=CTRL+KEY_M
 switchChttrans=CTRL+KEY_J
 switchInputMode=CTRL+KEY_BACK_SLASH
-switchWordState=CTRL+KEY_INSERT
+# legacy-reserved: kept for backward compatibility
+# switchWordState=CTRL+KEY_INSERT
 switchLexicon=CTRL+KEY_QUOTE
 switchSkin=CTRL+KEY_NONE
 switchVKb=CTRL+KEY_ESC
