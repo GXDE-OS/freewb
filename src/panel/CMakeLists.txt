@@ -25,6 +25,7 @@ endif()
 #包含头文件路径
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/../tools
+    ${PROJECT_SOURCE_DIR}/src/../utils
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/src/fakekey
     ${PROJECT_BINARY_DIR} )
