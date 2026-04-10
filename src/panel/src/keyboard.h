@@ -18,6 +18,8 @@
 #include <QTimer>
 #include <QWidget>
 
+#include "settingshelper.h"
+
 namespace Ui
 {
 class Keyboard;
@@ -49,86 +51,6 @@ typedef enum
 
     VKM_NUM
 } VirtualKeyboardMode;
-
-// 用户可自定义的按键，具有上档功能
-typedef enum
-{
-    KEY_0 = 0, // 按钮组控件需要用到该枚举类型，必须从0开始连续分配数值
-    KEY_1,
-    KEY_2,
-    KEY_3,
-    KEY_4,
-    KEY_5,
-    KEY_6,
-    KEY_7,
-    KEY_8,
-    KEY_9,
-
-    KEY_A,
-    KEY_B,
-    KEY_C,
-    KEY_D,
-    KEY_E,
-    KEY_F,
-    KEY_G,
-    KEY_H,
-    KEY_I,
-    KEY_J,
-    KEY_K,
-    KEY_L,
-    KEY_M,
-    KEY_N,
-    KEY_O,
-    KEY_P,
-    KEY_Q,
-    KEY_R,
-    KEY_S,
-    KEY_T,
-    KEY_U,
-    KEY_V,
-    KEY_W,
-    KEY_X,
-    KEY_Y,
-    KEY_Z,
-
-    KEY_BACKQUOTE,     // 反引号
-    KEY_SUB,           // 减号
-    KEY_EQUAL,         // 等号
-    KEY_LEFT_BRACKET,  // 左中括号
-    KEY_RIGHT_BRACKET, // 右中括号
-    KEY_BACKSLASH,     // 反斜杠
-    KEY_SEMICOLON,     // 分号
-    KEY_QUOTE,         // 引号
-    KEY_COMMA,         // 逗号
-    KEY_PERIOD,        // 句号
-    KEY_SLASH,         // 斜杠
-
-    KEY_SYMBOL_NUM
-} SymbolKeyIdx;
-
-// 用户可不可自定义的控制类型按键，没有上档功能
-typedef enum
-{
-    KEY_BACKSAPCE = KEY_SYMBOL_NUM, // 退格
-    KEY_TAB,                        // 制表符
-    KEY_CAPS,                       // 大小写
-    KEY_ENTER,                      // Enter
-    KEY_SHIFT,                      // Shift
-    KEY_INSERT,                     // 插入
-    KEY_DEL,                        // 删除
-    KEY_SPACE,                      // 空格
-    KEY_ESC,                        // Esc
-
-    KEY_ALL_NUM // 虚拟键盘上的按键数目
-} CtrlKeyIdx;
-
-typedef struct
-{
-    QString commChar;  // 自定义正常字符
-    QString shiftChar; // 自定义上档字符
-    QString commMark;  // 自定义正常标点
-    QString shiftMark; // 自定义上档标点
-} CustomKeyValue;
 
 typedef QVector<QString> KeyValue;
 

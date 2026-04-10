@@ -2,6 +2,7 @@
 
 #include "commdefine.h"
 #include "settings.h"
+#include "settingshelper.h"
 #include "ui_backupdialog.h"
 
 #define QSS_BORDER_ACTIVE "color: rgb(255, 255, 255);background-color: rgb(10, 120, 203);"
@@ -11,8 +12,8 @@
 #define QSS_BTN_CLOSE1 "border-image: url(:/image/setting/close1.png);"
 #define QSS_BTN_CLOSE2 "border-image: url(:/image/setting/close2.png);"
 
-#define FILE_WUBI_TABLE INSTALL_DIR + "/data/mb/" + Settings::get_cur_used_lexicon() + "/freeime.mb"
-#define FILE_PINYIN_TABLE INSTALL_DIR + "/data/mb/" + Settings::get_cur_used_lexicon() + "/attach.mb"
+#define FILE_WUBI_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/freeime.mb"
+#define FILE_PINYIN_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/attach.mb"
 #define FILE_USER_TABLE INSTALL_DIR + "/data/user_word.txt"
 #define FILE_QUICK_TABLE INSTALL_DIR + "/data/quick_table.txt"
 #define FILE_SETTINGS INSTALL_DIR + "/config/config.ini"
@@ -50,7 +51,7 @@ void BackupWorker::slot_start_work()
 void BackupWorker::start_backup()
 {
 #define BUF_SIZE (1024 * 4)
-    QString curUsedLexiconName = Settings::get_cur_used_lexicon();
+    QString curUsedLexiconName = toQStringUtf8(settings::instance().get_curUsedLexicon());
     qint32 lexiconNameSize = curUsedLexiconName.toUtf8().length();
     qint32 wbTableSize = 0;
     qint32 pyTableSize = 0;
@@ -627,7 +628,7 @@ void BackupDialog::slot_progress_updated(int opFlg, int percentage)
             ui->labelDir->setText("");
             ui->stackedWidget->setCurrentWidget(ui->pagePrompt);
 
-            Settings::save_ime_table_changed_flg_to_file(1);
+            settings::instance().set_imeTableChanged(1);
             emit signal_restore_lexicon_and_settings_ok();
         }
     }

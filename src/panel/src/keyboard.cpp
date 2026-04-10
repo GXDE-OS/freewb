@@ -1,8 +1,11 @@
 #include "keyboard.h"
 
+#include <QDesktopWidget>
+
 #include "commdefine.h"
-#include "keybutton.h"
 #include "settings.h"
+#include "keybutton.h"
+#include "settingshelper.h"
 #include "sound.h"
 #include "ui_keyboard.h"
 
@@ -97,7 +100,7 @@ Keyboard::Keyboard(VirtualKeyboardMode mode, QWidget *parent) : QWidget(parent),
         QDesktopWidget *d = QApplication::desktop();
         m_vkDefaultPos = QPoint((d->width() - size().width()) / 2, d->height() - size().height() - 100);
 
-        Settings::save_vk_mode_flg_to_file(-1);
+        settings::instance().set_vkMode(-1);
 
         // 虚拟键盘输入模式连接X11服务器
         init_virtual_keyboard_x11();
@@ -998,19 +1001,31 @@ void Keyboard::update_keyboard_button()
         }
         else if (m_vkWorkMode == VKM_INPUT_USER_CHAR)
         {
-            customKeyValue = Settings::get_custom_key_info_(static_cast<SymbolKeyIdx>(i));
+            customKeyValue = customKeyToQt(
+                freewb_custom_key_info_from_values(settings::instance().get_CoustomChar(),
+                                                   settings::instance().get_CoustomMark(),
+                                                   i,
+                                                   KEY_SYMBOL_NUM));
             btn->set_custom_symbol(customKeyValue.commChar, customKeyValue.shiftChar);
         }
 
         // 自定义模式
         else if (m_vkWorkMode == VKM_CUSTOM_CHAR)
         {
-            customKeyValue = Settings::get_custom_key_info(static_cast<SymbolKeyIdx>(i));
+            customKeyValue = customKeyToQt(
+                freewb_custom_key_info_from_values(settings::instance().get_CoustomChar(),
+                                                   settings::instance().get_CoustomMark(),
+                                                   i,
+                                                   KEY_SYMBOL_NUM));
             btn->set_custom_symbol(customKeyValue.commChar, customKeyValue.shiftChar);
         }
         else if (m_vkWorkMode == VKM_CUSTOM_MARK)
         {
-            customKeyValue = Settings::get_custom_key_info(static_cast<SymbolKeyIdx>(i));
+            customKeyValue = customKeyToQt(
+                freewb_custom_key_info_from_values(settings::instance().get_CoustomChar(),
+                                                   settings::instance().get_CoustomMark(),
+                                                   i,
+                                                   KEY_SYMBOL_NUM));
             btn->set_custom_symbol(customKeyValue.commMark, customKeyValue.shiftMark);
         }
 
@@ -1125,12 +1140,12 @@ void Keyboard::slot_virtual_keyboard_clicked(int keyIdx)
 {
     if (keyIdx == KEY_ESC)
     {
-        if (Settings::get_ui_audio_effect_flg())
+        if (settings::instance().get_uiAudioEffect())
         {
             Sound::play_sound(SOUND_BACK);
         }
         hide();
-        Settings::save_vk_mode_flg_to_file(-1);
+        settings::instance().set_vkMode(-1);
         emit signal_vk_flg_changed();
         return;
     }
@@ -1161,7 +1176,11 @@ void Keyboard::handle_custom_keyboard_clicked(SymbolKeyIdx keyIdx, const QString
 
     if (keyIdx < KEY_SYMBOL_NUM)
     {
-        customKeyValue = Settings::get_custom_key_info(keyIdx);
+        customKeyValue = customKeyToQt(
+            freewb_custom_key_info_from_values(settings::instance().get_CoustomChar(),
+                                               settings::instance().get_CoustomMark(),
+                                               static_cast<int>(keyIdx),
+                                               KEY_SYMBOL_NUM));
     }
 
     emit signal_custom_key_clicked(keyIdx, keyName, customKeyValue);
@@ -1256,12 +1275,12 @@ void Keyboard::handle_userChar_keyboard_input_clicked(int keyIdx)
     {
         if (m_shiftFlag)
         {
-            // stdKeyValue = Settings::get_custom_key_info_(static_cast<SymbolKeyIdx>(keyIdx)).shiftChar;
+            // stdKeyValue = settings::instance().get_custom_key_info_(static_cast<SymbolKeyIdx>(keyIdx)).shiftChar;
             stdKeyValue = m_pcKeyValue[keyIdx].at(1);
         }
         else
         {
-            // stdKeyValue = Settings::get_custom_key_info_(static_cast<SymbolKeyIdx>(keyIdx)).commChar;
+            // stdKeyValue = settings::instance().get_custom_key_info_(static_cast<SymbolKeyIdx>(keyIdx)).commChar;
             stdKeyValue = m_pcKeyValue[keyIdx].at(0);
         }
     }
@@ -1287,7 +1306,7 @@ void Keyboard::slot_toggle_win()
 {
     if (isHidden())
     {
-        if (Settings::get_ui_audio_effect_flg())
+        if (settings::instance().get_uiAudioEffect())
         {
             Sound::play_sound(SOUND_ENTER);
         }
@@ -1302,16 +1321,16 @@ void Keyboard::slot_toggle_win()
         {
             ui->btnCaps->setStyleSheet("");
         }
-        Settings::save_vk_mode_flg_to_file(m_vkWorkMode);
+        settings::instance().set_vkMode(m_vkWorkMode);
     }
     else
     {
-        if (Settings::get_ui_audio_effect_flg())
+        if (settings::instance().get_uiAudioEffect())
         {
             Sound::play_sound(SOUND_BACK);
         }
         hide();
-        Settings::save_vk_mode_flg_to_file(-1);
+        settings::instance().set_vkMode(-1);
     }
 
     emit signal_vk_flg_changed();
@@ -1329,7 +1348,7 @@ void Keyboard::slot_open_win(VirtualKeyboardMode mode)
 
     if (isHidden())
     {
-        if (Settings::get_ui_audio_effect_flg())
+        if (settings::instance().get_uiAudioEffect())
         {
             Sound::play_sound(SOUND_ENTER);
         }
@@ -1345,7 +1364,7 @@ void Keyboard::slot_open_win(VirtualKeyboardMode mode)
         }
     }
 
-    Settings::save_vk_mode_flg_to_file(m_vkWorkMode);
+    settings::instance().set_vkMode(m_vkWorkMode);
     emit signal_vk_flg_changed();
 }
 

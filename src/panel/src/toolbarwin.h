@@ -23,20 +23,12 @@
 
 #include "contextmenu.h"
 #include "keyboard.h"
+#include "settingshelper.h"
 
 namespace Ui
 {
 class ToolbarWin;
 }
-
-typedef enum
-{
-    IM_OTHER = -1,  // 其他输入法(非极点五笔)
-    IM_WUBI_FONT,   // 五笔字形
-    IM_WUBI_PINYIN, // 五笔拼音
-    IM_STD_PINYIN,  // 标准拼音
-    IM_ENGLISH      // 英文
-} InputMode;
 
 typedef enum
 {
@@ -49,12 +41,6 @@ typedef enum
     MARK_CN, // 中文标点
     MARK_EN  // 英文标点
 } MarkMode;
-
-typedef enum
-{
-    CHAR_SIMPLIFIED, // 中文简体
-    CHAR_TRADITIONAL // 繁体
-} CharFontMode;
 
 typedef enum
 {
@@ -238,9 +224,9 @@ public:
 
 public:
     // 静态成员函数
-    static void set_input_mode(InputMode inputMode);
-    static InputMode get_input_mode();
-    static InputMode get_input_mode_bak();
+    static void set_inputMode(InputMode inputMode);
+    static InputMode get_inputMode();
+    static InputMode get_inputMode_bak();
     static void set_char_width_mode(CharWidthMode charMode);
     static CharWidthMode get_char_width_mode();
     static void set_mark_mode(MarkMode markMode);

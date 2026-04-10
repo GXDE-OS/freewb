@@ -1,7 +1,10 @@
 #include "contextmenu.h"
 
+#include <vector>
+
 #include "commdefine.h"
 #include "settings.h"
+#include "settingshelper.h"
 
 // 一级菜单
 #define STR_MENU1 "输入法设置"
@@ -230,8 +233,8 @@ void ContextMenu::on_action15_clicked()
     delete msgBox;
     if (ret == QMessageBox::Yes)
     {
-        Settings::slot_restore_default_all_config();
-        Settings::save_all_setting_data_to_file();
+        settings::instance().restoreAllDefaults();
+        (void)settings::instance().save();
 
         emit signal_restore_all_settings();
     }
@@ -329,10 +332,13 @@ void ContextMenu::on_action213_clicked()
 void ContextMenu::on_actionGrpLexicon_clicked(QAction *action)
 {
     close();
-    if (Settings::get_cur_used_lexicon() != action->text())
+    if (toQStringUtf8(settings::instance().get_curUsedLexicon()) != action->text())
     {
-        Settings::save_cur_used_lexicon_to_file(action->text());
-        Settings::save_ime_table_changed_flg_to_file(1);
+        const std::string lexicon = fromStdUtf8(action->text());
+        settings::instance().set_curUsedLexicon(lexicon);
+        settings::instance().set_wubiTable(lexicon + "/freeime.mb");
+        settings::instance().set_pinyinTable(lexicon + "/attach.mb");
+        settings::instance().set_imeTableChanged(1);
         emit signal_ime_table_changed();
 
         update_lexicon_checked_ico();
@@ -368,7 +374,11 @@ void ContextMenu::slot_update_lexicon_list()
             m_actGrpLexicon->addAction(act);
         }
     }
-    Settings::save_exist_lexicon(lexiconList);
+    std::vector<std::string> lexiconVec;
+    lexiconVec.reserve(static_cast<size_t>(lexiconList.size()));
+    for (const QString &id : lexiconList)
+        lexiconVec.push_back(fromStdUtf8(id));
+    (void)freewb_runtime_set_lexicon_list(lexiconVec);
 
     update_lexicon_checked_ico();
 
@@ -380,7 +390,7 @@ void ContextMenu::slot_update_lexicon_list()
 
 void ContextMenu::update_lexicon_checked_ico()
 {
-    m_curUsedLexicon = Settings::get_cur_used_lexicon();
+    m_curUsedLexicon = toQStringUtf8(settings::instance().get_curUsedLexicon());
 
     QList<QAction *> acts = m_actGrpLexicon->actions();
     foreach(QAction * act, acts)

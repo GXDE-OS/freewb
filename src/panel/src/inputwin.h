@@ -27,18 +27,12 @@
 #include "contextmenu.h"
 #include "dictquery.h"
 #include "kimagent.h"
+#include "settingshelper.h"
 
 namespace Ui
 {
 class InputWin;
 }
-
-// 候选框显示模式
-typedef enum
-{
-    CWDM_ONE_ROW,   // 候选词单行显示模式
-    CWDM_MULTI_ROW, // 候选词多行显示模式
-} CandiWinDispMode;
 
 // 操作提示信息项
 typedef enum

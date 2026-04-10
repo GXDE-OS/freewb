@@ -1,9 +1,11 @@
 #include "toolbarwin.h"
 
+#include <QLabel>
 #include <QDebug>
 
 #include "commdefine.h"
 #include "settings.h"
+#include "settingshelper.h"
 #include "sound.h"
 #include "systraymenu.h"
 #include "ui_toolbarwin.h"
@@ -58,7 +60,7 @@ CharSetMode ToolbarWin::s_charSetMode = CHAR_GB;
 int ToolbarWin::s_capsFlg;
 
 // 设置输入模式
-void ToolbarWin::set_input_mode(InputMode inputMode)
+void ToolbarWin::set_inputMode(InputMode inputMode)
 {
     s_inputMode = inputMode;
     if (inputMode != IM_ENGLISH)
@@ -68,13 +70,13 @@ void ToolbarWin::set_input_mode(InputMode inputMode)
 }
 
 // 获取输入模式
-InputMode ToolbarWin::get_input_mode()
+InputMode ToolbarWin::get_inputMode()
 {
     return s_inputMode;
 }
 
 // 获取输入模式备份
-InputMode ToolbarWin::get_input_mode_bak()
+InputMode ToolbarWin::get_inputMode_bak()
 {
     return s_inputModeBak;
 }
@@ -111,7 +113,7 @@ CharFontMode ToolbarWin::get_char_font_mode()
 void ToolbarWin::switch_char_set_mode()
 {
     s_charSetMode = (s_charSetMode == CHAR_GB) ? CHAR_GBK : CHAR_GB;
-    Settings::save_charSet_flg_to_file(s_charSetMode);
+    settings::instance().set_currentCharset(s_charSetMode);
 }
 
 CharSetMode ToolbarWin::get_char_set_mode()
@@ -145,8 +147,8 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_extendMenuOpenState = true;
     m_mouseMoveFlag = false;
 
-    s_inputMode = (InputMode)Settings::get_input_method();
-    s_charSetMode = (CharSetMode)Settings::get_charset();
+    s_inputMode = (InputMode)settings::instance().get_inputMethod();
+    s_charSetMode = (CharSetMode)settings::instance().get_charSet();
 
     // 初始化虚拟键盘的输入模式选择菜单
     m_keyboardMenu.setStyleSheet(QSS_MENU);
@@ -204,9 +206,9 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_hideDelayTimer.setSingleShot(true);
     connect(&m_hideDelayTimer, &QTimer::timeout, this, &ToolbarWin::slot_hide_toolbar);
 
-    Settings::save_inputmethod_flg_to_file(s_inputMode);
-    Settings::save_char_trad_flg_to_file(s_charFontMode);
-    Settings::save_charSet_flg_to_file(s_charSetMode);
+    settings::instance().set_inputMode(s_inputMode);
+    settings::instance().set_simpTradFlg(s_charFontMode);
+    settings::instance().set_currentCharset(s_charSetMode);
 
     s_capsFlg = Keyboard::get_caps_flg();
     // printf("执行Freewb时加载slot-open-toolbar\n");
@@ -219,13 +221,13 @@ ToolbarWin::~ToolbarWin()
 
 void ToolbarWin::slot_load_setting_data()
 {
-    m_autoLocate = Settings::get_toolbar_auto_locate_flg(); // 工具条自动定位
+    m_autoLocate = settings::instance().get_toolbarAutoLocate(); // 工具条自动定位
     // if ( !m_autoLocate )
     // {
     //     move( m_defaultPosition );
     // }
 
-    m_autoMenuExpand = Settings::get_toolbar_auto_expand_flg(); // 工具条菜单自动扩展
+    m_autoMenuExpand = settings::instance().get_toolbarAutoExpand(); // 工具条菜单自动扩展
     if (m_autoMenuExpand)
     {
         update_extend_menu(false);
@@ -235,24 +237,24 @@ void ToolbarWin::slot_load_setting_data()
         update_extend_menu(true);
     }
 
-    m_useUiAudioEffect = Settings::get_ui_audio_effect_flg();    // 是否使用界面音效
-    m_showRealtimeHelp = Settings::get_show_realtime_help_flg(); // 是否显示实时帮助
+    m_useUiAudioEffect = settings::instance().get_uiAudioEffect();    // 是否使用界面音效
+    m_showRealtimeHelp = settings::instance().get_showRealtimeHelp(); // 是否显示实时帮助
 
-    m_hideToolbar = Settings::get_hide_toolbar_flg(); // 是否隐藏工具条
+    m_hideToolbar = settings::instance().get_hideToolbar(); // 是否隐藏工具条
     if (m_hideToolbar)
     {
         hide();
     }
 
-    m_transparency = Settings::get_toolbar_transparency(); // 工具条透明度
+    m_transparency = settings::instance().get_toolbarTransparency(); // 工具条透明度
     setWindowOpacity(1 - m_transparency / 100.0);
 
     update_mouse_hover_tips();
 
     // 载入皮肤
-    if (m_curSkinId != Settings::get_cur_skin_id())
+    if (m_curSkinId != toQStringUtf8(settings::instance().get_curSkinId()))
     {
-        slot_load_skin(Settings::get_cur_skin_id());
+        slot_load_skin(toQStringUtf8(settings::instance().get_curSkinId()));
     }
 }
 
@@ -371,7 +373,7 @@ void ToolbarWin::update_skin()
     {
         ui->btnMode->setGeometry(m_skinData.stbModeBtn.rect);
         ui->btnMode->setStyleSheet(QSS_INPUT_MODE);
-        ui->btnMode->setFont(Settings::get_candidate_text_font());
+        ui->btnMode->setFont(freewb_candi_text_qfont(settings::instance()));
         slot_update_input_mode_ico();
     }
     else
@@ -497,15 +499,21 @@ void ToolbarWin::update_extend_menu(bool state)
 void ToolbarWin::update_mouse_hover_tips()
 {
     m_tipsTextMap.insert(ui->btnMenuExtend, "扩展菜单栏切换按钮");
-    m_tipsTextMap.insert(ui->btnMode, QString("输入模式切换按钮\n快捷键：") + Settings::get_customShortcutFunc_shortcutkey_name(CSF_SWITCH_INPUT_MODE));
-    m_tipsTextMap.insert(ui->btnGenerate, QString("在线造词功能按钮\n快捷键：") + Settings::get_customShortcutFunc_shortcutkey_name(CSF_ONLINE_ADD_WORD));
-    m_tipsTextMap.insert(ui->btnSearch, QString("查询编码与释义按钮\n快捷键：") + Settings::get_customShortcutFunc_shortcutkey_name(CSF_BACK_FIND_CODE));
+    m_tipsTextMap.insert(ui->btnMode, QString("输入模式切换按钮\n快捷键：")
+                                      + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_INPUT_MODE))));
+    m_tipsTextMap.insert(ui->btnGenerate, QString("在线造词功能按钮\n快捷键：")
+                                           + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_ONLINE_ADD_WORD))));
+    m_tipsTextMap.insert(ui->btnSearch, QString("查询编码与释义按钮\n快捷键：")
+                                         + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_BACK_FIND_CODE))));
     m_tipsTextMap.insert(ui->btnCharWidth, QString("字符全半角切换按钮\n快捷键：Shift+空格"));
     m_tipsTextMap.insert(ui->btnMark, QString("中英文标点切换按钮\n快捷键：Ctrl+句号"));
-    m_tipsTextMap.insert(ui->btnKeyboard, QString("开关或切换软件盘按钮\n快捷键：") + Settings::get_customShortcutFunc_shortcutkey_name(CSF_SWITCH_KEYBOARD));
+    m_tipsTextMap.insert(ui->btnKeyboard, QString("开关或切换软件盘按钮\n快捷键：")
+                                           + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_KEYBOARD))));
     m_tipsTextMap.insert(ui->btnSetting, "打开设置界面按钮");
-    m_tipsTextMap.insert(ui->btnCharFont, QString("简繁体输出切换按钮\n快捷键：") + Settings::get_customShortcutFunc_shortcutkey_name(CSF_SWITCH_S_IN_T_OUT));
-    m_tipsTextMap.insert(ui->btnCharSet, QString("字符集切换按钮\n快捷键：") + Settings::get_customShortcutFunc_shortcutkey_name(CSF_SWITCH_CHAR_SET));
+    m_tipsTextMap.insert(ui->btnCharFont, QString("简繁体输出切换按钮\n快捷键：")
+                                           + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_S_IN_T_OUT))));
+    m_tipsTextMap.insert(ui->btnCharSet, QString("字符集切换按钮\n快捷键：")
+                                        + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_CHAR_SET))));
 }
 
 void ToolbarWin::show_mouse_hover_tips(QWidget *widget)
@@ -616,7 +624,7 @@ bool ToolbarWin::eventFilter(QObject *obj, QEvent *event)
     {
         if (obj == ui->frameToolbar && m_autoMenuExpand)
         {
-            if (Settings::get_ui_audio_effect_flg())
+            if (settings::instance().get_uiAudioEffect())
             {
                 Sound::play_sound(SOUND_ENTER);
             }
@@ -638,7 +646,7 @@ bool ToolbarWin::eventFilter(QObject *obj, QEvent *event)
     }
     else if (event->type() == QEvent::ToolTip && m_tipsTextMap.contains(qobject_cast<QWidget *>(obj)))
     {
-        if (Settings::get_show_realtime_help_flg())
+        if (settings::instance().get_showRealtimeHelp())
         {
             show_mouse_hover_tips(qobject_cast<QWidget *>(obj));
         }
@@ -748,19 +756,19 @@ void ToolbarWin::slot_update_input_mode_ico()
     {
         ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "大写字母" : "大寫字母");
     }
-    else if (get_input_mode() == IM_WUBI_FONT)
+    else if (get_inputMode() == IM_WUBI_FONT)
     {
         ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "五笔字型" : "五筆字型");
     }
-    else if (get_input_mode() == IM_WUBI_PINYIN)
+    else if (get_inputMode() == IM_WUBI_PINYIN)
     {
         ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "五笔拼音" : "五筆拼音");
     }
-    else if (get_input_mode() == IM_STD_PINYIN)
+    else if (get_inputMode() == IM_STD_PINYIN)
     {
         ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "拼音输入" : "拼音輸入");
     }
-    else if (get_input_mode() == IM_ENGLISH)
+    else if (get_inputMode() == IM_ENGLISH)
     {
         ui->btnMode->setText("英文");
     }
@@ -876,7 +884,7 @@ void ToolbarWin::on_btnLogo_clicked()
 
 void ToolbarWin::on_btnMenuExtend_clicked()
 {
-    if (Settings::get_ui_audio_effect_flg())
+    if (settings::instance().get_uiAudioEffect())
     {
         Sound::play_sound(SOUND_LETTER);
     }
@@ -894,34 +902,34 @@ void ToolbarWin::on_btnMenuExtend_clicked()
 void ToolbarWin::on_btnMode_clicked()
 {
     // qDebug() << "$$$$$$$$DBG_TRACE";
-    if (Settings::get_ui_audio_effect_flg())
+    if (settings::instance().get_uiAudioEffect())
     {
         Sound::play_sound(SOUND_LETTER);
     }
 
-    InputMode curIm = get_input_mode();
+    InputMode curIm = get_inputMode();
     if (curIm == IM_WUBI_FONT)
     {
         update_input_mode_ico(IM_WUBI_PINYIN);
-        Settings::save_inputmethod_flg_to_file(IM_WUBI_PINYIN);
+        settings::instance().set_inputMode(IM_WUBI_PINYIN);
         emit signal_fcitx_switch_inputmethod_1();
     }
     else if (curIm == IM_WUBI_PINYIN)
     {
         update_input_mode_ico(IM_STD_PINYIN);
-        Settings::save_inputmethod_flg_to_file(IM_STD_PINYIN);
+        settings::instance().set_inputMode(IM_STD_PINYIN);
         emit signal_fcitx_switch_inputmethod_1();
     }
     else if (curIm == IM_STD_PINYIN)
     {
         update_input_mode_ico(IM_WUBI_FONT);
-        Settings::save_inputmethod_flg_to_file(IM_WUBI_FONT);
+        settings::instance().set_inputMode(IM_WUBI_FONT);
         emit signal_fcitx_switch_inputmethod_1();
     }
     else if (curIm == IM_ENGLISH)
     {
         update_input_mode_ico(s_inputModeBak);
-        Settings::save_inputmethod_flg_to_file(s_inputModeBak);
+        settings::instance().set_inputMode(s_inputModeBak);
         emit signal_fcitx_switch_inputmethod("/Fcitx/im/freewb");
         emit signal_fcitx_switch_inputmethod_1();
     }
@@ -934,16 +942,16 @@ void ToolbarWin::fcitx_inputmethod_updated(const QString &param)
 #endif
     if (param.contains("Freewb") || param.contains("极点五笔") || param.contains("五笔拼音") || param.contains("拼音输入"))
     {
-        set_input_mode(s_inputModeBak);
-        Settings::save_inputmethod_flg_to_file(s_inputModeBak);
+        set_inputMode(s_inputModeBak);
+        settings::instance().set_inputMode(s_inputModeBak);
 
         slot_update_input_mode_ico();
         show(); //+ 2023-11-6 15:36
     }
     else if (param.contains("Keyboard") || param.contains("键盘"))
     {
-        set_input_mode(IM_ENGLISH);
-        Settings::save_inputmethod_flg_to_file(IM_ENGLISH);
+        set_inputMode(IM_ENGLISH);
+        settings::instance().set_inputMode(IM_ENGLISH);
         slot_update_input_mode_ico();
         hide(); //+ 2023-11-6 15:36
     }
@@ -997,13 +1005,13 @@ void ToolbarWin::fcitx_charMark_updated(const QString &param)
 
 void ToolbarWin::on_btnGenerate_clicked()
 {
-    //    if ( get_input_mode() == IM_ENGLISH )
+    //    if ( get_inputMode() == IM_ENGLISH )
     //    {
     //        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
     //        return;
     //    }
 
-    if (Settings::get_ui_audio_effect_flg())
+    if (settings::instance().get_uiAudioEffect())
     {
         Sound::play_sound(SOUND_LETTER);
     }
@@ -1012,13 +1020,13 @@ void ToolbarWin::on_btnGenerate_clicked()
 
 void ToolbarWin::on_btnSearch_clicked()
 {
-    //    if ( get_input_mode() == IM_ENGLISH )
+    //    if ( get_inputMode() == IM_ENGLISH )
     //    {
     //        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
     //        return;
     //    }
 
-    if (Settings::get_ui_audio_effect_flg())
+    if (settings::instance().get_uiAudioEffect())
     {
         Sound::play_sound(SOUND_LETTER);
     }
@@ -1027,12 +1035,12 @@ void ToolbarWin::on_btnSearch_clicked()
 
 void ToolbarWin::on_btnCharWidth_clicked()
 {
-    //    if ( get_input_mode() == IM_ENGLISH )
+    //    if ( get_inputMode() == IM_ENGLISH )
     //    {
     //        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
     //        return;
     //    }
-    if (Settings::get_ui_audio_effect_flg())
+    if (settings::instance().get_uiAudioEffect())
     {
         Sound::play_sound(SOUND_LETTER);
     }
@@ -1059,7 +1067,7 @@ void ToolbarWin::update_char_width_mode_ico(CharWidthMode charWidth)
 
 void ToolbarWin::on_btnMark_clicked()
 {
-    if (Settings::get_ui_audio_effect_flg())
+    if (settings::instance().get_uiAudioEffect())
     {
         Sound::play_sound(SOUND_LETTER);
     }
@@ -1089,7 +1097,7 @@ void ToolbarWin::update_mark_mode_ico(MarkMode markMode)
 
 void ToolbarWin::switch_char_font_mode(CharFontMode charFont)
 {
-    Settings::save_char_trad_flg_to_file(charFont);
+    settings::instance().set_simpTradFlg(charFont);
     s_charFontMode = charFont;
     update_char_font_ico();
     update_input_mode_ico(s_inputMode);
@@ -1103,13 +1111,13 @@ void ToolbarWin::switch_char_set()
 
 void ToolbarWin::on_btnCharFont_clicked()
 {
-    //    if ( get_input_mode() == IM_ENGLISH )
+    //    if ( get_inputMode() == IM_ENGLISH )
     //    {
     //        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
     //        return;
     //    }
 
-    if (Settings::get_ui_audio_effect_flg())
+    if (settings::instance().get_uiAudioEffect())
     {
         Sound::play_sound(SOUND_LETTER);
     }
@@ -1124,18 +1132,18 @@ void ToolbarWin::on_btnCharFont_clicked()
     }
 
     emit signal_char_font_changed(s_charFontMode);
-    // emit signal_fcitx_switch_char_font( "/Fcitx/chttrans" );
+    emit signal_fcitx_switch_char_font("/Fcitx/chttrans");
 }
 
 void ToolbarWin::on_btnCharSet_clicked()
 {
-    //    if ( get_input_mode() == IM_ENGLISH )
+    //    if ( get_inputMode() == IM_ENGLISH )
     //    {
     //        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
     //        return;
     //    }
 
-    if (Settings::get_ui_audio_effect_flg())
+    if (settings::instance().get_uiAudioEffect())
     {
         Sound::play_sound(SOUND_LETTER);
     }
@@ -1147,7 +1155,7 @@ void ToolbarWin::on_btnCharSet_clicked()
 
 void ToolbarWin::on_btnKeyboard_clicked()
 {
-    //    if ( get_input_mode() == IM_ENGLISH )
+    //    if ( get_inputMode() == IM_ENGLISH )
     //    {
     //        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
     //        return;
@@ -1159,7 +1167,7 @@ void ToolbarWin::on_btnKeyboard_clicked()
 // 弹出设置界面
 void ToolbarWin::on_btnSetting_clicked()
 {
-    if (Settings::get_ui_audio_effect_flg())
+    if (settings::instance().get_uiAudioEffect())
     {
         Sound::play_sound(SOUND_LETTER);
     }

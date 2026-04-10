@@ -4,6 +4,7 @@
 
 #include "../../ipc/ipc.h"
 #include "commdefine.h"
+#include "settings.h"
 
 #define DEBUG
 
@@ -149,14 +150,10 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
     connect(m_backupDialog, &BackupDialog::signal_restore_lexicon_and_settings_ok, m_kimAgent, &KimAgent::ReloadConfig);
 
     // 配置数据改变发送的信号
-    // g_settings --> m_kimAgent
-    connect(&g_settings, &Settings::signal_setting_data_changed_to_fcitx, m_kimAgent, &KimAgent::ReloadConfig);
-    // g_settings --> m_toolbar
-    connect(&g_settings, &Settings::signal_setting_data_changed_to_local, m_toolbar, &ToolbarWin::slot_load_setting_data);
-    // g_settings --> m_virtualKeyboard
-    connect(&g_settings, &Settings::signal_setting_data_changed_to_local, m_virtualKeyboard, &Keyboard::slot_load_setting_data);
-    // g_settings --> m_inputWin
-    connect(&g_settings, &Settings::signal_setting_data_changed_to_local, m_inputWin, &InputWin::slot_load_setting_data);
+    connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_fcitx, m_kimAgent, &KimAgent::ReloadConfig);
+    connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_toolbar, &ToolbarWin::slot_load_setting_data);
+    connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_virtualKeyboard, &Keyboard::slot_load_setting_data);
+    connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_inputWin, &InputWin::slot_load_setting_data);
 }
 
 MainProgram::~MainProgram()
@@ -204,7 +201,7 @@ void MainProgram::create_host_dbus_service()
 
 void MainProgram::slot_create_freewb_panel()
 {
-    if (!Settings::get_hide_toolbar_flg())
+    if (!settings::instance().get_hideToolbar())
     {
         m_toolbar->show();
     }
@@ -252,30 +249,30 @@ void MainProgram::slot_dbus_switch_internal_input_method(int im)
         return;
     }
 
-    if ((ToolbarWin::get_input_mode() == IM_ENGLISH && im != IM_ENGLISH) || (ToolbarWin::get_input_mode() != IM_ENGLISH && im != IM_ENGLISH))
+    if ((ToolbarWin::get_inputMode() == IM_ENGLISH && im != IM_ENGLISH) || (ToolbarWin::get_inputMode() != IM_ENGLISH && im != IM_ENGLISH))
     {
         m_virtualKeyboard->switch_caps_flg(0);
     }
-    Settings::save_inputmethod_flg_to_file(static_cast<InputMode>(im));
+    settings::instance().set_inputMode(static_cast<InputMode>(im));
 
     // 光标处提示极点五笔子输入法
     QString childIm;
-    if (im == IM_WUBI_FONT && im != ToolbarWin::get_input_mode())
+    if (im == IM_WUBI_FONT && im != ToolbarWin::get_inputMode())
     {
         childIm = "五笔字型";
     }
-    else if (im == IM_WUBI_PINYIN && im != ToolbarWin::get_input_mode())
+    else if (im == IM_WUBI_PINYIN && im != ToolbarWin::get_inputMode())
     {
         childIm = "五笔拼音";
     }
-    if (im == IM_STD_PINYIN && im != ToolbarWin::get_input_mode())
+    if (im == IM_STD_PINYIN && im != ToolbarWin::get_inputMode())
     {
         childIm = "拼音输入";
     }
     m_inputWin->slot_kim_UpdateAux(childIm, "");
     m_inputWin->slot_kim_ShowAux(true);
 
-    ToolbarWin::set_input_mode(static_cast<InputMode>(im));
+    ToolbarWin::set_inputMode(static_cast<InputMode>(im));
     m_toolbar->slot_update_input_mode_ico();
 }
 
@@ -341,13 +338,13 @@ void MainProgram::slot_dbus_delete_usr_word(int flg, const QString &wordText, co
 // 输入法引擎载入用户词组文件完成
 void MainProgram::slot_dbus_usr_word_load_ok()
 {
-    Settings::save_userWord_change_flg_to_file(0);
+    settings::instance().set_userWordFlg(0);
 }
 
 // 快捷码表加载完成
 void MainProgram::slot_dbus_quick_table_load_ok()
 {
-    Settings::save_quickTable_change_flg_to_file(0);
+    settings::instance().set_quickTableFlg(0);
 }
 
 // 切换虚拟键盘
@@ -385,7 +382,7 @@ void MainProgram::slot_dbus_switch_caps_state()
 void MainProgram::slot_dbus_switch_toolbar_hide_flg()
 {
 
-    bool flg = Settings::get_hide_toolbar_flg() ? false : true;
+    bool flg = settings::instance().get_hideToolbar() ? false : true;
 
 #ifdef DEBUG
     printf("显/隐状态栏=%d\n", flg);
@@ -398,39 +395,40 @@ void MainProgram::slot_dbus_switch_toolbar_hide_flg()
     {
         m_toolbar->show();
     }
-    Settings::set_hide_toolbar_flg(flg);
-    Settings::save_hide_toolbar_flg_to_file();
+    settings::instance().set_hideToolbar(flg);
 }
 
 // 显/隐候选框
 void MainProgram::slot_dbus_switch_candiwin_hide_flg()
 {
-    bool flg = Settings::get_hide_candiWin_flg() ? false : true;
-    Settings::set_hide_candiWin_flg(flg);
-    Settings::save_hide_candiwin_flg_to_file();
+    bool flg = settings::instance().get_hideCandiWin() ? false : true;
+    settings::instance().set_hideCandiWin(flg);
 }
 
 // 切换词库
 void MainProgram::slot_dbus_switch_lexicon()
 {
-    QStringList lexiconList = Settings::get_exist_lexicon();
-    QString curlexicon = Settings::get_cur_used_lexicon();
+    const std::vector<std::string> &lexiconList = freewb_runtime_lexicon_list();
+    const std::string &curlexicon = settings::instance().get_curUsedLexicon();
 
-    if (lexiconList.length() < 2)
+    if (lexiconList.size() < 2)
         return;
 
-    int i = 0;
-    while (i < lexiconList.length())
+    size_t i = 0;
+    while (i < lexiconList.size())
     {
         if (lexiconList.at(i++) == curlexicon)
         {
-            if (i >= lexiconList.length())
+            if (i >= lexiconList.size())
             {
                 i = 0;
             }
 
-            Settings::save_cur_used_lexicon_to_file(lexiconList.at(i));
-            Settings::save_ime_table_changed_flg_to_file(1);
+            const std::string &lexicon = lexiconList.at(i);
+            settings::instance().set_curUsedLexicon(lexicon);
+            settings::instance().set_wubiTable(lexicon + "/freeime.mb");
+            settings::instance().set_pinyinTable(lexicon + "/attach.mb");
+            settings::instance().set_imeTableChanged(1);
             m_contextmenu->update_lexicon_checked_ico();
             m_kimAgent->ReloadConfig();
             break;
@@ -445,24 +443,23 @@ void MainProgram::slot_dbus_switch_skin()
     puts("******** change skin ********\n");
 #endif
 
-    QStringList skinList = Settings::get_exist_skin();
-    QString curSkin = Settings::get_cur_skin_id();
+    const std::vector<std::string> &skinList = freewb_runtime_skin_list();
+    const std::string &curSkin = settings::instance().get_curSkinId();
 
-    if (skinList.length() < 2)
+    if (skinList.size() < 2)
         return;
 
-    int i = 0;
-    while (i < skinList.length())
+    size_t i = 0;
+    while (i < skinList.size())
     {
         if (skinList.at(i++) == curSkin)
         {
-            if (i >= skinList.length())
+            if (i >= skinList.size())
             {
                 i = 0;
             }
 
-            Settings::set_cur_skin_id(skinList.at(i));
-            Settings::save_cur_skin_id_to_file();
+            settings::instance().set_curSkinId(skinList.at(i));
             break;
         }
     }
@@ -471,14 +468,13 @@ void MainProgram::slot_dbus_switch_skin()
 // 标点自动配对
 void MainProgram::slot_dbus_set_mark_auto_pairs_flg(int flg)
 {
-    Settings::set_smartMark_flg(flg);
-    Settings::save_smart_mark_flg_to_file();
+    settings::instance().set_smartMark(flg != 0);
 }
 
 // 输入法词库加载完成
 void MainProgram::slot_dbus_ime_table_load_ok()
 {
-    Settings::save_ime_table_changed_flg_to_file(0);
+    settings::instance().set_imeTableChanged(0);
 }
 
 void MainProgram::slot_dbus_set_charWidth_and_markMode(int charWidth, int markMode)
@@ -578,8 +574,7 @@ void MainProgram::slot_dbus_edit_quick_table() // 编辑快捷码表
 
 void MainProgram::slot_dbus_set_recode_calib_flg(int flg) // 切换重码上屏校对模式
 {
-    Settings::set_recodeCalib_flg(flg);
-    Settings::save_recode_calib_flg_to_file();
+    settings::instance().set_recodeCalib(flg != 0);
 }
 
 /*****************************************************************************************************/

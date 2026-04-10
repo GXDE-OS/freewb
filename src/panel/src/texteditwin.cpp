@@ -3,10 +3,11 @@
 #include "../../tools/freewbConversionTool.h"
 #include "commdefine.h"
 #include "settings.h"
+#include "settingshelper.h"
 #include "ui_texteditwin.h"
 
-#define WUBI_TABLE_FILE INSTALL_DIR + "/data/mb/" + Settings::get_cur_used_lexicon() + "/freeime.mb"
-#define PINYIN_TABLE_FILE INSTALL_DIR + "/data/mb/" + Settings::get_cur_used_lexicon() + "/attach.mb"
+#define WUBI_TABLE_FILE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/freeime.mb"
+#define PINYIN_TABLE_FILE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/attach.mb"
 
 TextEditWin::TextEditWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::TextEditWin)
 {
@@ -332,7 +333,7 @@ bool TextEditWin::save_text_to_file()
 
     if (m_textEditMode == TEM_SETTING_FILE)
     {
-        Settings::load_all_setting_data_from_file();
+        settings::instance().reload();
         emit signal_setting_file_changed();
     }
     else if (m_textEditMode == TEM_USER_WORD)
@@ -342,12 +343,12 @@ bool TextEditWin::save_text_to_file()
     }
     else if (m_textEditMode == TEM_QUICK_TABLE)
     {
-        Settings::save_quickTable_change_flg_to_file(1);
+        settings::instance().set_quickTableFlg(1);
         emit signal_quickTable_file_saved();
     }
     else if (m_textEditMode == TEM_WUBI_TABLE || m_textEditMode == TEM_PINYIN_TABLE)
     {
-        Settings::save_ime_table_changed_flg_to_file(1);
+        settings::instance().set_imeTableChanged(1);
         emit signal_imTable_file_changed();
     }
 

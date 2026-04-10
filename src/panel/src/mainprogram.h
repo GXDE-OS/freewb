@@ -29,7 +29,7 @@
 #include "keyboard.h"
 #include "kimagent.h"
 #include "lexicontoolwin.h"
-#include "settings.h"
+#include "settingshelper.h"
 #include "settingwin.h"
 #include "systraymenu.h"
 #include "texteditwin.h"

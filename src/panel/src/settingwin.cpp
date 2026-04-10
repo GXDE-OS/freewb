@@ -1,10 +1,40 @@
 #include "settingwin.h"
 
 #include <QDateTime>
+#include <QFont>
+#include <vector>
 
 #include "commdefine.h"
 #include "settings.h"
+#include "settingshelper.h"
 #include "ui_settingwin.h"
+
+namespace
+{
+QColor swQColorFromSpec(const std::string &s)
+{
+    return QColor(toQStringUtf8(s));
+}
+
+void swBuildSingleShortcutCombo(QComboBox *combo, int selectedIdx, int forbiddenA, int forbiddenB)
+{
+    combo->clear();
+    for (int i = 0; i < SSK_NUM; ++i)
+    {
+        if (i != SSK_NONE && (i == forbiddenA || i == forbiddenB))
+            continue;
+        combo->addItem(toQStringUtf8(freewb_single_shortcut_display_name(i)), i);
+    }
+
+    int target = selectedIdx;
+    if (target != SSK_NONE && (target == forbiddenA || target == forbiddenB))
+        target = SSK_NONE;
+
+    const int pos = combo->findData(target);
+    combo->setCurrentIndex(pos >= 0 ? pos : 0);
+}
+
+} // namespace
 
 // 设置窗口样式表
 #define QSS_FILE ":/qss/settingwin.qss"
@@ -98,7 +128,7 @@ void SettingWin::init_window_appearance()
 
     setWindowIcon(QIcon(":/image/setting/logo.png"));
     setWindowTitle("极点设置");
-    // setFont(Settings::get_candidate_text_font());
+    // setFont(freewb_candi_text_qfont(settings::instance()));
 
     ui->labelVersionNum->setText(QString("v3.0  %1").arg(buildDateTime));
     ui->labelVersion->setText("极点五笔麒麟版");
@@ -399,7 +429,6 @@ bool SettingWin::eventFilter(QObject *obj, QEvent *event)
 
 void SettingWin::slot_open_win()
 {
-    Settings::copy_all_setting_data_to_buffer();
     slot_init_all_setting_page();
 
     show();
@@ -425,7 +454,6 @@ void SettingWin::slot_init_all_setting_page()
 
 void SettingWin::slot_show_version_info()
 {
-    Settings::copy_all_setting_data_to_buffer();
     slot_init_all_setting_page();
     show();
     activateWindow();
@@ -442,7 +470,6 @@ void SettingWin::slot_show_version_info()
 
 void SettingWin::slot_open_advanced_settting_page()
 {
-    Settings::copy_all_setting_data_to_buffer();
     slot_init_all_setting_page();
     show();
     activateWindow();
@@ -460,7 +487,7 @@ void SettingWin::update_listwidget_item()
     m_listItemAdvance = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "高级选项", ui->listWidget);
     m_listItemOthers = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "其他设置", ui->listWidget);
 
-    if (Settings::is_show_all_group())
+    if (freewb_runtime_show_all_group())
     {
         m_listItemUi = new QListWidgetItem("界面设置", ui->listWidget);
         m_listItemCandidateWinUi = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "候选窗界面", ui->listWidget);
@@ -483,27 +510,27 @@ void SettingWin::update_listwidget_item()
 // 初始化常用选项设置页面
 void SettingWin::init_common_page()
 {
-    ui->ckbCodeRemind->setChecked(Settings::get_codeRemind_flg());
-    ui->ckbSpaceFullWhenCharHalf->setChecked(Settings::get_spaceFullWhenCharHalf_flg());
-    ui->ckbWordThink->setChecked(Settings::get_wordThink_flg());
-    ui->ckbSmartMark->setChecked(Settings::get_smartMark_flg());
-    ui->ckbRemindExistWord->setChecked(Settings::get_remindExistWord_flg());
-    ui->ckbAlertWhenEmptyCode->setChecked(Settings::get_alertWhenEmptyCode_flg());
-    ui->ckbUseAudioFile->setChecked(Settings::get_useAudioFile_flg());
+    ui->ckbCodeRemind->setChecked(settings::instance().get_codeRemind());
+    ui->ckbSpaceFullWhenCharHalf->setChecked(settings::instance().get_spaceFullWhenCharHalf());
+    ui->ckbWordThink->setChecked(settings::instance().get_wordThink());
+    ui->ckbSmartMark->setChecked(settings::instance().get_smartMark());
+    ui->ckbRemindExistWord->setChecked(settings::instance().get_remindExistWord());
+    ui->ckbAlertWhenEmptyCode->setChecked(settings::instance().get_alertWhenEmptyCode());
+    ui->ckbUseAudioFile->setChecked(freewb_runtime_use_audio_file());
     ui->labelUseAudioFile->hide();
     ui->ckbUseAudioFile->hide(); ///////////////
-    ui->ckbAutoAdjustFreq->setChecked(Settings::get_autoAdjustFreq_flg());
+    ui->ckbAutoAdjustFreq->setChecked(settings::instance().get_autoAdjustFreq());
 }
 
 // 初始化高级设置页面
 void SettingWin::init_advance_page()
 {
-    ui->ckbShiftCommitChar->setChecked(Settings::get_shiftCommitChar_flg());
-    ui->ckbInputStatistic->setChecked(Settings::get_inputStatistic_flg());
-    ui->ckbTypeEffect->setChecked(Settings::get_typeEffect_flg());
-    ui->ckbRepeatCalib->setChecked(Settings::get_recodetCalib_flg());
+    ui->ckbShiftCommitChar->setChecked(settings::instance().get_shiftCommitChar());
+    ui->ckbInputStatistic->setChecked(settings::instance().get_inputStatistic());
+    ui->ckbTypeEffect->setChecked(settings::instance().get_typeEffect());
+    ui->ckbRepeatCalib->setChecked(settings::instance().get_recodeCalib());
 
-    AutoWordGroupOpt opt = Settings::get_autoWordGroupOpt_flg();
+    AutoWordGroupOpt opt = static_cast<AutoWordGroupOpt>(settings::instance().get_autoWordGroupOpt());
     if (opt == AWGO_FORBID)
     {
         ui->ckbAutoWordGroup->setCurrentIndex(0);
@@ -521,10 +548,10 @@ void SettingWin::init_advance_page()
 // 初始化其它选项设置页面
 void SettingWin::init_others_page()
 {
-    ui->ledtAutoToEnStr->setText(Settings::get_autoToEn_str());
-    // ui->ledtAutoToHalf->setText( Settings::get_autoToHalf_mark() );
+    ui->ledtAutoToEnStr->setText(toQStringUtf8(settings::instance().get_autoToEnStr()));
+    // ui->ledtAutoToHalf->setText( settings::instance().get_CoustomMark() );
     ui->ledtAutoToHalf->hide();
-    ui->ckbAutoHalfMarkAfterNum->setChecked(Settings::get_autoToHalfMark_flg());
+    ui->ckbAutoHalfMarkAfterNum->setChecked(settings::instance().get_autoToHalfMarkFlg());
 }
 
 // 初始化快捷键设置页
@@ -535,16 +562,13 @@ void SettingWin::init_shortcutkey_page()
     update_short_input_cmb();
     update_tmp_pinyin_cmb();
 
-    ui->ckbDisableFullHalfKey->setChecked(Settings::get_disableFullHalfSwitchShortcutkey_flg());
-    ui->ckbDisableAllShortcutKey->setChecked(Settings::get_disableAllCsk_flg());
-    ui->cmbSwitchCnEn->setCurrentIndex(Settings::get_ceSwitchShortcutkey_shortcutkey());
+    ui->ckbDisableFullHalfKey->setChecked(settings::instance().get_disableFullHalfSwitch());
+    ui->ckbDisableAllShortcutKey->setChecked(settings::instance().get_disableAllShortcutKey());
+    // 该项依赖 fcitx 全局配置，不再由本页提供设置
+    ui->labelCnEn->hide();
+    ui->cmbSwitchCnEn->hide();
 }
 
-/*******************************************************************************************
-** update_tmp_engish_cmb(),update_short_input_cmb()update_tmp_pinyin_cmb()
-** update_custom_shortkey_cmb()这四个函数用到了静态数据成员Settings::singleShortcutKeyName，
-** 必须在初始化函数Settings::init_const_data_member()执行完毕后才能调用！否则会出现显示内容为空的现象。
-*******************************************************************************************/
 // 设置界面--更新自定义功能快捷键选择框
 void SettingWin::update_custom_shortkey_cmb()
 {
@@ -555,7 +579,8 @@ void SettingWin::update_custom_shortkey_cmb()
         bool isUsed = false;
         for (int j = 0; j < CSF_NUM; j++)
         {
-            if (i != CSK_NONE && (j != ui->cmbFunction->currentIndex()) && (Settings::get_customShortcutFunc_shortcutkey(static_cast<CustomShortcutFunction>(j)) == i))
+            if (i != CSK_NONE && (j != ui->cmbFunction->currentIndex())
+                && (freewb_custom_shortcut_get_combine_index(settings::instance(), j) == i))
             {
                 isUsed = true;
             }
@@ -563,13 +588,14 @@ void SettingWin::update_custom_shortkey_cmb()
 
         if (!isUsed)
         {
-            ui->cmbShortcutKey->addItem(Settings::s_combineShortcutKeyName[static_cast<CombineShortcutKey>(i)]);
+            ui->cmbShortcutKey->addItem(toQStringUtf8(freewb_combine_shortcut_display_name(i)));
         }
     }
 
     for (int i = 0; i < ui->cmbShortcutKey->count(); i++)
     {
-        if (ui->cmbShortcutKey->itemText(i) == Settings::s_combineShortcutKeyName[Settings::get_customShortcutFunc_shortcutkey(static_cast<CustomShortcutFunction>(ui->cmbFunction->currentIndex()))])
+        if (ui->cmbShortcutKey->itemText(i)
+            == toQStringUtf8(freewb_custom_shortcut_key_display(settings::instance(), ui->cmbFunction->currentIndex())))
         {
             ui->cmbShortcutKey->setCurrentIndex(i);
             break;
@@ -580,88 +606,43 @@ void SettingWin::update_custom_shortkey_cmb()
 // 设置界面--更新临时英文选项框
 void SettingWin::update_tmp_engish_cmb()
 {
-    ui->cmbTmpEnglish->clear();
-
-    for (int i = 0; i < SSK_NUM; i++)
-    {
-        if (i != SSK_NONE && (i == Settings::get_quick_input_shortcutkey() || i == Settings::get_tmp_pinyin_shortcutkey()))
-        {
-            continue;
-        }
-
-        ui->cmbTmpEnglish->addItem(Settings::s_singleShortcutKeyName[static_cast<SingleShortcutKey>(i)]);
-    }
-
-    for (int i = 0; i < ui->cmbTmpEnglish->count(); i++)
-    {
-        if (ui->cmbTmpEnglish->itemText(i) == Settings::s_singleShortcutKeyName[Settings::get_tmp_english_shortcutkey()])
-        {
-            ui->cmbTmpEnglish->setCurrentIndex(i);
-            break;
-        }
-    }
+    swBuildSingleShortcutCombo(
+        ui->cmbTmpEnglish,
+        freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish()),
+        freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput()),
+        freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin()));
 }
 
 // 设置界面--更新快捷输入选项框
 void SettingWin::update_short_input_cmb()
 {
-    ui->cmbShortcutInput->clear();
-
-    for (int i = 0; i < SSK_NUM; i++)
-    {
-        if (i != SSK_NONE && (i == Settings::get_tmp_english_shortcutkey() || i == Settings::get_tmp_pinyin_shortcutkey()))
-        {
-            continue;
-        }
-
-        ui->cmbShortcutInput->addItem(Settings::s_singleShortcutKeyName[static_cast<SingleShortcutKey>(i)]);
-    }
-
-    for (int i = 0; i < ui->cmbShortcutInput->count(); i++)
-    {
-        if (ui->cmbShortcutInput->itemText(i) == Settings::s_singleShortcutKeyName[Settings::get_quick_input_shortcutkey()])
-        {
-            ui->cmbShortcutInput->setCurrentIndex(i);
-            break;
-        }
-    }
+    swBuildSingleShortcutCombo(
+        ui->cmbShortcutInput,
+        freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput()),
+        freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish()),
+        freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin()));
 }
 
 // 设置界面--更新临时拼音选项框
 void SettingWin::update_tmp_pinyin_cmb()
 {
-    ui->cmbTmpPinyin->clear();
-
-    for (int i = 0; i < SSK_NUM; i++)
-    {
-        if (i != SSK_NONE && (i == Settings::get_tmp_english_shortcutkey() || i == Settings::get_quick_input_shortcutkey()))
-        {
-            continue;
-        }
-
-        ui->cmbTmpPinyin->addItem(Settings::s_singleShortcutKeyName[static_cast<SingleShortcutKey>(i)]);
-    }
-
-    for (int i = 0; i < ui->cmbTmpPinyin->count(); i++)
-    {
-        if (ui->cmbTmpPinyin->itemText(i) == Settings::s_singleShortcutKeyName[Settings::get_tmp_pinyin_shortcutkey()])
-        {
-            ui->cmbTmpPinyin->setCurrentIndex(i);
-            break;
-        }
-    }
+    swBuildSingleShortcutCombo(
+        ui->cmbTmpPinyin,
+        freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin()),
+        freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish()),
+        freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput()));
 }
 
 void SettingWin::init_ui_setting_page()
 {
     init_skin_select_cmb();
-    ui->ckbAutoLocate->setChecked(Settings::get_toolbar_auto_locate_flg());
-    ui->ckbAutoExtend->setChecked(Settings::get_toolbar_auto_expand_flg());
-    ui->ckbEnableUiAudioEffect->setChecked(Settings::get_ui_audio_effect_flg());
-    ui->ckbDispRealHelp->setChecked(Settings::get_show_realtime_help_flg());
-    ui->ckbHideToolbar->setChecked(Settings::get_hide_toolbar_flg());
-    ui->ckbDispRealHelp->setChecked(Settings::get_show_realtime_help_flg());
-    ui->spbToolbarTransparency->setValue(Settings::get_toolbar_transparency());
+    ui->ckbAutoLocate->setChecked(settings::instance().get_toolbarAutoLocate());
+    ui->ckbAutoExtend->setChecked(settings::instance().get_toolbarAutoExpand());
+    ui->ckbEnableUiAudioEffect->setChecked(settings::instance().get_uiAudioEffect());
+    ui->ckbDispRealHelp->setChecked(settings::instance().get_showRealtimeHelp());
+    ui->ckbHideToolbar->setChecked(settings::instance().get_hideToolbar());
+    ui->ckbDispRealHelp->setChecked(settings::instance().get_showRealtimeHelp());
+    ui->spbToolbarTransparency->setValue(settings::instance().get_toolbarTransparency());
     // ui->labelToolbar->setWindowOpacity( 1 - ui->spbToolbarTransparency->value()/100.0 ); ?无效
 }
 
@@ -683,11 +664,15 @@ void SettingWin::init_skin_select_cmb()
             ui->cmbSkinSelect->addItem(skinId);
         }
     }
-    Settings::save_exist_skin(skinIdList);
+    std::vector<std::string> skinVec;
+    skinVec.reserve(static_cast<size_t>(skinIdList.size()));
+    for (const QString &id : skinIdList)
+        skinVec.push_back(fromStdUtf8(id));
+    freewb_runtime_set_skin_list(skinVec);
 
     for (int i = 0; i < ui->cmbSkinSelect->count(); i++)
     {
-        if (ui->cmbSkinSelect->itemText(i) == Settings::get_cur_skin_id())
+        if (ui->cmbSkinSelect->itemText(i) == toQStringUtf8(settings::instance().get_curSkinId()))
         {
             ui->cmbSkinSelect->setCurrentIndex(i);
             break;
@@ -705,27 +690,28 @@ void SettingWin::update_toolbar_preview(const QString &skinId)
 
 void SettingWin::init_candidate_ui_page()
 {
-    if (Settings::get_candidate_win_disp_mode() == CWDM_ONE_ROW)
+    if (static_cast<CandiWinDispMode>(settings::instance().get_candiWinDispMode()) == CWDM_ONE_ROW)
     {
         ui->cmbCandiWinMode->setCurrentIndex(0);
     }
-    else if (Settings::get_candidate_win_disp_mode() == CWDM_MULTI_ROW)
+    else if (static_cast<CandiWinDispMode>(settings::instance().get_candiWinDispMode()) == CWDM_MULTI_ROW)
     {
         ui->cmbCandiWinMode->setCurrentIndex(1);
     }
-    ui->ledtSeparateChar->setText(QString(Settings::get_separate_char()));
+    const char separateChar = freewb_separate_char_from_string(settings::instance().get_separateChar());
+    ui->ledtSeparateChar->setText(separateChar == 0 ? QString() : QString(QChar(separateChar)));
 
-    ui->ckbUseGradientBgColor->setChecked(Settings::get_use_gradient_color_flg());
-    ckb_useGradientBgColor_updated(Settings::get_use_gradient_color_flg());
-    ui->ckbUseBgImage->setChecked(Settings::get_use_bg_image_flg());
-    ckb_useBgImage_updated(Settings::get_use_bg_image_flg());
-    ui->ckbUseTile->setChecked(Settings::get_bg_image_tiled_flg());
-    if (Settings::get_cur_skin_id() == "default")
+    ui->ckbUseGradientBgColor->setChecked(settings::instance().get_useGradientColor());
+    ckb_useGradientBgColor_updated(settings::instance().get_useGradientColor());
+    ui->ckbUseBgImage->setChecked(settings::instance().get_useBgImage());
+    ckb_useBgImage_updated(settings::instance().get_useBgImage());
+    ui->ckbUseTile->setChecked(settings::instance().get_enableTiled());
+    if (settings::instance().get_curSkinId() == std::string("default"))
     {
         ui->spbCornerRadian->setEnabled(true);
         ui->ckbUseGradientBgColor->setEnabled(true);
         ui->ckbUseBgImage->setEnabled(true);
-        if (Settings::get_use_bg_image_flg())
+        if (settings::instance().get_useBgImage())
         {
             ui->ckbUseTile->setEnabled(true);
         }
@@ -738,10 +724,10 @@ void SettingWin::init_candidate_ui_page()
         ui->ckbUseTile->setEnabled(false);
     }
 
-    ui->spbCornerRadian->setValue(Settings::get_radius());
-    ui->spbCandiTransparency->setValue(Settings::get_candi_win_transparency());
-    ui->spbCandiItemNum->setValue(Settings::get_candidate_word_count());
-    ui->spbCandiCharNum->setValue(Settings::get_candi_char_count());
+    ui->spbCornerRadian->setValue(settings::instance().get_radius());
+    ui->spbCandiTransparency->setValue(settings::instance().get_transparency());
+    ui->spbCandiItemNum->setValue(settings::instance().get_candiWordCount());
+    ui->spbCandiCharNum->setValue(settings::instance().get_candiCharCount());
 
     update_fram_candidate_win();
 }
@@ -790,17 +776,17 @@ void SettingWin::update_fram_candidate_win()
 {
     QString style;
 
-    if (Settings::get_cur_skin_id() == "default")
+    if (settings::instance().get_curSkinId() == std::string("default"))
     {
-        int boederRadius = Settings::get_radius();
-        QColor boderColor = Settings::get_border_color();
-        QColor bgColor = Settings::get_bg_color();
-        QColor gradienColor0 = Settings::get_gradient_color0();
-        QColor gradienColor1 = Settings::get_gradient_color1();
+        int boederRadius = settings::instance().get_radius();
+        QColor boderColor = swQColorFromSpec(settings::instance().get_borderColor());
+        QColor bgColor = swQColorFromSpec(settings::instance().get_bgColor());
+        QColor gradienColor0 = swQColorFromSpec(settings::instance().get_gradientColor0());
+        QColor gradienColor1 = swQColorFromSpec(settings::instance().get_gradientColor1());
 
         QString borderColorStyle = QString("border-color:rgb(%1,%2,%3);").arg(boderColor.red()).arg(boderColor.green()).arg(boderColor.blue());
 
-        if (Settings::get_use_gradient_color_flg())
+        if (settings::instance().get_useGradientColor())
         {
             QString gradienColorStyle =
                 QString("background-color:qlineargradient(spread:pad,x1:0, y1:0, x2:0, y2:1,stop:0 rgb(%1,%2,%3),stop:1 rgb(%4,%5,%6));").arg(gradienColor0.red()).arg(gradienColor0.green()).arg(gradienColor0.blue()).arg(gradienColor1.red()).arg(gradienColor1.green()).arg(gradienColor1.blue());
@@ -815,9 +801,9 @@ void SettingWin::update_fram_candidate_win()
                         .arg(borderColorStyle)
                         .arg(gradienColorStyle);
         }
-        else if (Settings::get_use_bg_image_flg())
+        else if (settings::instance().get_useBgImage())
         {
-            QString bgImageStyle = QString("%1:url(%2);").arg(Settings::get_bg_image_tiled_flg() ? "background-image" : "border-image").arg(Settings::get_bg_image());
+            QString bgImageStyle = QString("%1:url(%2);").arg(settings::instance().get_enableTiled() ? "background-image" : "border-image").arg(toQStringUtf8(settings::instance().get_bgImage()));
 
             style = QString("#framCandidateWin{"
                             "border-width:1px;"
@@ -846,7 +832,7 @@ void SettingWin::update_fram_candidate_win()
                         .arg(bgColor.blue());
         }
 
-        if (Settings::get_use_gradient_color_flg())
+        if (settings::instance().get_useGradientColor())
         {
             ui->btnCandiBgColor0->show();
             ui->btnCandiBgColor1->show();
@@ -868,27 +854,29 @@ void SettingWin::update_fram_candidate_win()
 
     ui->framCandidateWin->setStyleSheet(style);
 
-    QColor color = Settings::get_candidate_word_text_color();
+    QColor color = swQColorFromSpec(settings::instance().get_candiWordTextColor());
     ui->btnCandiAutoWord->setStyleSheet(QString("color:rgb(%1,%2,%3);").arg(color.red()).arg(color.green()).arg(color.blue()));
 
-    color = Settings::get_candidate_prompt_text_color();
+    color = swQColorFromSpec(settings::instance().get_candiPromptTextColor());
     ui->btnCandiPrompt->setStyleSheet(QString("color:rgb(%1,%2,%3);").arg(color.red()).arg(color.green()).arg(color.blue()));
+
+    g_settingsNotifier.notifySettingDataChangedToLocal();
 }
 
 void SettingWin::init_candidate_option_page()
 {
-    ui->cmb23RecodeSelect->setCurrentIndex(Settings::get_recode_select_key());
-    ui->cmbPrevNextPage->setCurrentIndex(Settings::get_candi_page_key());
-    // ui->ledt2ndRecode->setText( QChar(Settings::get_second_recode_key()) );
-    // ui->ledt3rdRecode->setText( QChar(Settings::get_third_recode_key()) );
-    ui->ckbCursorFollow->setChecked(Settings::get_cursor_follow_flg());
-    ui->ckbHideCandiChinese->setChecked(Settings::get_hide_candiWin_flg());
-    ui->ckbDispOpPrompt->setChecked(Settings::get_show_op_remind_info_flg());
-    ui->ckbDispOpDict->setChecked(Settings::get_show_cand_dict());
+    ui->cmb23RecodeSelect->setCurrentIndex(settings::instance().get_recodeSelectKey());
+    ui->cmbPrevNextPage->setCurrentIndex(freewb_candi_page_index_from_token(settings::instance().get_candiPageKey()));
+    // ui->ledt2ndRecode->setText( QChar(settings::instance().get_second_recode_key()) );
+    // ui->ledt3rdRecode->setText( QChar(settings::instance().get_third_recode_key()) );
+    ui->ckbCursorFollow->setChecked(settings::instance().get_cursorFollow());
+    ui->ckbHideCandiChinese->setChecked(settings::instance().get_hideCandiWin());
+    ui->ckbDispOpPrompt->setChecked(settings::instance().get_showOpRemindInfo());
+    ui->ckbDispOpDict->setChecked(settings::instance().get_showCandDictInfo());
 
-    // ui->ledtPrecPage->setText( QChar(Settings::get_prevPage_key()) );
-    // ui->ledtNextPage->setText( QChar(Settings::get_nextPage_key()) );
-    ui->ckbShiftSelectRecode->setChecked(Settings::get_shift_select_recode_flg());
+    // ui->ledtPrecPage->setText( QChar(settings::instance().get_prevPage_key()) );
+    // ui->ledtNextPage->setText( QChar(settings::instance().get_nextPage_key()) );
+    ui->ckbShiftSelectRecode->setChecked(settings::instance().get_shiftSelectRecode());
 }
 
 // 切换设置界面右侧选项页
@@ -946,8 +934,8 @@ void SettingWin::on_listWidget_currentItemChanged(QListWidgetItem *current, QLis
 
 void SettingWin::on_btnSettingOption_clicked()
 {
-    Settings::switch_group_mode();
-    if (Settings::is_show_all_group())
+    freewb_runtime_toggle_show_all_group();
+    if (freewb_runtime_show_all_group())
     {
         ui->btnSettingOption->setText("显示【常用】选项");
     }
@@ -965,7 +953,8 @@ void SettingWin::on_btnOk_clicked()
     close();
     move(m_defaultPopPosition);
     puts("win seting");
-    Settings::save_all_setting_data_to_file();
+    settings::instance().save();
+    g_settingsNotifier.notifySettingDataChangedToFcitx();
 }
 
 void SettingWin::on_btnCancel_clicked()
@@ -985,112 +974,112 @@ void SettingWin::on_ckbCodeRemind_stateChanged(int arg1)
 
     if (arg1 == Qt::Checked)
     {
-        Settings::set_codeRemind_flg(true);
+        settings::instance().set_codeRemind(true);
     }
     else if (arg1 == Qt::Unchecked)
     {
-        Settings::set_codeRemind_flg(false);
+        settings::instance().set_codeRemind(false);
     }
 }
 
 void SettingWin::on_ckbSpaceFullWhenCharHalf_toggled(bool checked)
 {
-    Settings::set_spaceFullWhenCharHalf_flg(checked);
+    settings::instance().set_spaceFullWhenCharHalf(checked);
 }
 
 void SettingWin::on_ckbWordThink_toggled(bool checked)
 {
-    Settings::set_wordThink_flg(checked);
+    settings::instance().set_wordThink(checked);
 }
 
 void SettingWin::on_ckbSmartMark_stateChanged(int arg1)
 {
     if (arg1 == Qt::Checked)
     {
-        Settings::set_smartMark_flg(true);
+        settings::instance().set_smartMark(true);
     }
     else if (arg1 == Qt::Unchecked)
     {
-        Settings::set_smartMark_flg(false);
+        settings::instance().set_smartMark(false);
     }
 }
 
 void SettingWin::on_ckbRemindExistWord_toggled(bool checked)
 {
-    Settings::set_remindExistWord_flg(checked);
+    settings::instance().set_remindExistWord(checked);
 }
 
 void SettingWin::on_ckbAlertWhenEmptyCode_toggled(bool checked)
 {
-    Settings::set_alertWhenEmptyCode_flg(checked);
+    settings::instance().set_alertWhenEmptyCode(checked);
 }
 
 void SettingWin::on_ckbUseAudioFile_stateChanged(int arg1)
 {
     if (arg1 == Qt::Checked)
     {
-        Settings::set_useAudioFile_flg(true);
+        freewb_runtime_set_use_audio_file(true);
     }
     else if (arg1 == Qt::Unchecked)
     {
-        Settings::set_useAudioFile_flg(false);
+        freewb_runtime_set_use_audio_file(false);
     }
 }
 
 void SettingWin::on_ckbAutoAdjustFreq_toggled(bool checked)
 {
-    Settings::set_autoAdjustFreq_flg(checked);
+    settings::instance().set_autoAdjustFreq(checked);
 }
 
 void SettingWin::on_ckbShiftCommitChar_toggled(bool checked)
 {
-    Settings::set_shiftCommitChar_flg(checked);
+    settings::instance().set_shiftCommitChar(checked);
 }
 
 void SettingWin::on_ckbInputStatistic_toggled(bool checked)
 {
-    Settings::set_inputStatistic_flg(checked);
+    settings::instance().set_inputStatistic(checked);
 }
 
 void SettingWin::on_ckbRepeatCalib_toggled(bool checked)
 {
-    Settings::set_recodeCalib_flg(checked);
+    settings::instance().set_recodeCalib(checked);
 }
 
 void SettingWin::on_ckbTypeEffect_toggled(bool checked)
 {
-    Settings::set_typeEffect_flg(checked);
+    settings::instance().set_typeEffect(checked);
 }
 
 void SettingWin::on_ckbAutoWordGroup_activated(int index)
 {
     if (index == 0)
     {
-        Settings::set_autoWordGroupOpt_flg(AWGO_LOSS);
+        settings::instance().set_autoWordGroupOpt(AWGO_LOSS);
     }
     else if (index == 1)
     {
-        Settings::set_autoWordGroupOpt_flg(AWGO_FORBID);
+        settings::instance().set_autoWordGroupOpt(AWGO_FORBID);
     }
     else if (index == 2)
     {
-        Settings::set_autoWordGroupOpt_flg(AWGO_SAVE);
+        settings::instance().set_autoWordGroupOpt(AWGO_SAVE);
     }
 }
 
 void SettingWin::on_ledtAutoToEnStr_textChanged(const QString &arg1)
 {
-    Settings::set_autoToEn_str(arg1);
+    settings::instance().set_autoToEnStr(fromStdUtf8(arg1));
 }
 
 void SettingWin::on_ledtAutoToHalf_textChanged(const QString &arg1)
 {
-    Settings::set_autoToHalf_mark(arg1);
+    settings::instance().set_CoustomMark(fromStdUtf8(arg1));
 }
 
 void SettingWin::on_ckbAutoHalfMarkAfterNum_toggled(bool checked)
 {
-    Settings::set_autoToHalfMark_flg(checked);
+    settings::instance().set_autoToHalfMarkFlg(checked);
 }
 
 void SettingWin::on_cmbFunction_activated(int index)
@@ -1103,9 +1092,9 @@ void SettingWin::on_cmbShortcutKey_activated(int index)
 {
     for (int i = 0; i < CSK_NUM; i++)
     {
-        if (ui->cmbShortcutKey->itemText(index) == Settings::s_combineShortcutKeyName[static_cast<CombineShortcutKey>(i)])
+        if (ui->cmbShortcutKey->itemText(index) == toQStringUtf8(freewb_combine_shortcut_display_name(i)))
         {
-            Settings::set_customShortcutFunc_shortcutkey(static_cast<CustomShortcutFunction>(ui->cmbFunction->currentIndex()), static_cast<CombineShortcutKey>(i));
+            freewb_custom_shortcut_set_combine_index(settings::instance(), ui->cmbFunction->currentIndex(), i);
         }
     }
 }
@@ -1114,13 +1103,13 @@ void SettingWin::on_ckbDisableAllShortcutKey_stateChanged(int arg1)
 {
     if (arg1 == Qt::Checked)
     {
-        Settings::set_disableAllCsk_flg(true);
+        settings::instance().set_disableAllShortcutKey(true);
         ui->cmbFunction->setEnabled(false);
         ui->cmbShortcutKey->setEnabled(false);
     }
     else if (arg1 == Qt::Unchecked)
     {
-        Settings::set_disableAllCsk_flg(false);
+        settings::instance().set_disableAllShortcutKey(false);
         ui->cmbFunction->setEnabled(true);
         ui->cmbShortcutKey->setEnabled(true);
     }
@@ -1128,12 +1117,12 @@ void SettingWin::on_ckbDisableAllShortcutKey_stateChanged(int arg1)
 
 void SettingWin::on_ckbDisableFullHalfKey_toggled(bool checked)
 {
-    Settings::set_disableFullHalfSwitchShortcutkey_flg(checked);
+    settings::instance().set_disableFullHalfSwitch(checked);
 }
 
 void SettingWin::on_cmbSwitchCnEn_activated(int index)
 {
-    RcodeSelectShortcutKey rssk = Settings::get_recode_select_key();
+    RcodeSelectShortcutKey rssk = static_cast<RcodeSelectShortcutKey>(settings::instance().get_recodeSelectKey());
     CnEnSwitchShortcutKey key = static_cast<CnEnSwitchShortcutKey>(index);
     if ((rssk == RSSK_CTRL && (key == CESSK_CTRL || key == CESSK_LEFT_CTRL || key == CESSK_RIGHT_CTRL)) || (rssk == RSSK_SHIFT && (key == CESSK_SHIFT || key == CESSK_LEFT_SHIFT || key == CESSK_RIGHT_SHIFT)))
     {
@@ -1151,18 +1140,20 @@ void SettingWin::on_cmbSwitchCnEn_activated(int index)
         delete m_msgBox;
         if (ret == QMessageBox::No)
         {
-            ui->cmbSwitchCnEn->setCurrentIndex(Settings::get_ceSwitchShortcutkey_shortcutkey());
+            ui->cmbSwitchCnEn->setCurrentIndex(freewb_cn_en_switch_index_from_token(settings::instance().get_cnEnSwitch()));
             return;
         }
     }
 
-    Settings::set_ceSwitchShortcutkey_shortcutkey(key);
+    settings::instance().set_cnEnSwitch(freewb_cn_en_switch_token_from_index(key));
 }
 
 void SettingWin::on_cmbTmpEnglish_activated(const QString &arg1)
 {
-    //    qDebug() << DBG_TRACE << arg1;
-    Settings::set_tmp_english_shortcutkey(arg1);
+    Q_UNUSED(arg1);
+    const int idx = ui->cmbTmpEnglish->currentData().toInt();
+    settings::instance().set_tempEnglish(
+        freewb_single_shortcut_ini_token(idx));
 
     update_short_input_cmb();
     update_tmp_pinyin_cmb();
@@ -1170,8 +1161,10 @@ void SettingWin::on_cmbTmpEnglish_activated(const QString &arg1)
 
 void SettingWin::on_cmbShortcutInput_activated(const QString &arg1)
 {
-    //    qDebug() << DBG_TRACE << arg1;
-    Settings::set_shortcut_input_shortcutkey(arg1);
+    Q_UNUSED(arg1);
+    const int idx = ui->cmbShortcutInput->currentData().toInt();
+    settings::instance().set_shortcutInput(
+        freewb_single_shortcut_ini_token(idx));
 
     update_tmp_engish_cmb();
     update_tmp_pinyin_cmb();
@@ -1179,8 +1172,10 @@ void SettingWin::on_cmbShortcutInput_activated(const QString &arg1)
 
 void SettingWin::on_cmbTmpPinyin_activated(const QString &arg1)
 {
-    //    qDebug() << DBG_TRACE << arg1;
-    Settings::set_tmp_pinyin_shortcutkey(arg1);
+    Q_UNUSED(arg1);
+    const int idx = ui->cmbTmpPinyin->currentData().toInt();
+    settings::instance().set_tempPinyin(
+        freewb_single_shortcut_ini_token(idx));
 
     update_tmp_engish_cmb();
     update_short_input_cmb();
@@ -1203,7 +1198,7 @@ void SettingWin::on_btnRestoreShortcutKey_clicked()
     delete m_msgBox;
     if (ret == QMessageBox::Yes)
     {
-        Settings::restore_default_shortcutkey();
+        settings::instance().restore_default_shortcutkey();
         init_shortcutkey_page();
     }
 }
@@ -1251,44 +1246,54 @@ void SettingWin::slot_custom_btn_ok_clicked(const QString &commSymbol, const QSt
 #ifdef DEBUG
     qDebug() << m_curCustomKeyValue.commChar << m_curCustomKeyValue.shiftChar << m_curCustomKeyValue.commMark << m_curCustomKeyValue.shiftMark;
 #endif
-    Settings::set_custom_key_info(m_curSymbolKeyIdx, m_curCustomKeyValue);
+    std::string chars = settings::instance().get_CoustomChar();
+    std::string marks = settings::instance().get_CoustomMark();
+    if (freewb_custom_key_info_apply_to_values(chars,
+                                               marks,
+                                               static_cast<int>(m_curSymbolKeyIdx),
+                                               KEY_SYMBOL_NUM,
+                                               customKeyFromQt(m_curCustomKeyValue)))
+    {
+        settings::instance().set_CoustomChar(chars);
+        settings::instance().set_CoustomMark(marks);
+    }
 }
 
 void SettingWin::on_cmbSkinSelect_activated(const QString &arg1)
 {
-    Settings::set_cur_skin_id(arg1);
+    settings::instance().set_curSkinId(fromStdUtf8(arg1));
     update_toolbar_preview(arg1);
     init_candidate_ui_page();
 }
 
 void SettingWin::on_ckbAutoLocate_toggled(bool checked)
 {
-    Settings::set_toolbar_auto_locate_flg(checked);
+    settings::instance().set_toolbarAutoLocate(checked);
 }
 
 void SettingWin::on_ckbAutoExtend_toggled(bool checked)
 {
-    Settings::set_toolbar_auto_expand_flg(checked);
+    settings::instance().set_toolbarAutoExpand(checked);
 }
 
 void SettingWin::on_ckbEnableUiAudioEffect_toggled(bool checked)
 {
-    Settings::set_ui_audio_effect_flg(checked);
+    settings::instance().set_uiAudioEffect(checked);
 }
 
 void SettingWin::on_ckbDispRealHelp_toggled(bool checked)
 {
-    Settings::set_show_realtime_help_flg(checked);
+    settings::instance().set_showRealtimeHelp(checked);
 }
 
 void SettingWin::on_ckbHideToolbar_toggled(bool checked)
 {
-    Settings::set_hide_toolbar_flg(checked);
+    settings::instance().set_hideToolbar(checked);
 }
 
 void SettingWin::on_spbToolbarTransparency_valueChanged(int arg1)
 {
-    Settings::set_toolbar_transparency(arg1);
+    settings::instance().set_toolbarTransparency(arg1);
     // ui->labelToolbar->setWindowOpacity( 1 - arg1/100.0 );
 }
 
@@ -1296,32 +1301,34 @@ void SettingWin::on_cmbCandiWinMode_activated(int index)
 {
     if (index == 0)
     {
-        Settings::set_candidate_win_disp_mode(CWDM_ONE_ROW);
+        settings::instance().set_candiWinDispMode(CWDM_ONE_ROW);
     }
     else if (index == 1)
     {
-        Settings::set_candidate_win_disp_mode(CWDM_MULTI_ROW);
+        settings::instance().set_candiWinDispMode(CWDM_MULTI_ROW);
     }
+    g_settingsNotifier.notifySettingDataChangedToLocal();
 }
 
 void SettingWin::on_ledtSeparateChar_textChanged(const QString &arg1)
 {
     if (!arg1.length())
     {
-        Settings::set_separate_char(0);
+        settings::instance().set_separateChar(freewb_separate_char_to_string(0));
     }
     else
     {
-        Settings::set_separate_char(arg1.toLatin1().at(0));
+        settings::instance().set_separateChar(freewb_separate_char_to_string(arg1.toLatin1().at(0)));
     }
+    g_settingsNotifier.notifySettingDataChangedToLocal();
 }
 
 void SettingWin::on_ckbUseGradientBgColor_toggled(bool checked)
 {
-    Settings::set_use_gradient_color_flg(checked);
+    settings::instance().set_useGradientColor(checked);
     if (checked)
     {
-        Settings::set_use_bg_image_flg(false);
+        settings::instance().set_useBgImage(false);
     }
     ckb_useGradientBgColor_updated(checked);
     update_fram_candidate_win();
@@ -1329,10 +1336,10 @@ void SettingWin::on_ckbUseGradientBgColor_toggled(bool checked)
 
 void SettingWin::on_ckbUseBgImage_toggled(bool checked)
 {
-    Settings::set_use_bg_image_flg(checked);
+    settings::instance().set_useBgImage(checked);
     if (checked)
     {
-        Settings::set_use_gradient_color_flg(false);
+        settings::instance().set_useGradientColor(false);
     }
     ckb_useBgImage_updated(checked);
     update_fram_candidate_win();
@@ -1340,60 +1347,64 @@ void SettingWin::on_ckbUseBgImage_toggled(bool checked)
 
 void SettingWin::on_ckbUseTile_toggled(bool checked)
 {
-    Settings::set_bg_image_tiled_flg(checked);
+    settings::instance().set_enableTiled(checked);
     update_fram_candidate_win();
 }
 
 // 通过setValue函数设置值时也会出发该槽函数!!!!!!!!
 void SettingWin::on_spbCandiItemNum_valueChanged(int arg1)
 {
-    Settings::set_candidate_word_count(arg1);
+    settings::instance().set_candiWordCount(arg1);
+    g_settingsNotifier.notifySettingDataChangedToLocal();
 }
 
 void SettingWin::on_spbCornerRadian_valueChanged(int arg1)
 {
-    Settings::set_radius(arg1);
+    settings::instance().set_radius(arg1);
     update_fram_candidate_win();
 }
 
 void SettingWin::on_spbCandiTransparency_valueChanged(int arg1)
 {
-    Settings::set_candi_win_transparency(arg1);
+    settings::instance().set_transparency(arg1);
+    g_settingsNotifier.notifySettingDataChangedToLocal();
 }
 
 void SettingWin::on_spbCandiCharNum_valueChanged(int arg1)
 {
-    Settings::set_candi_char_count(arg1);
+    settings::instance().set_candiCharCount(arg1);
+    g_settingsNotifier.notifySettingDataChangedToLocal();
 }
 
 void SettingWin::on_btnCandiFont_clicked()
 {
     QFontDialog dialog(this);
 
-    dialog.setCurrentFont(Settings::get_candidate_text_font());
+    dialog.setCurrentFont(freewb_candi_text_qfont(settings::instance()));
     if (dialog.exec() == QFontDialog::Accepted)
     {
-        Settings::set_candidate_text_font(dialog.selectedFont());
+        freewb_candi_text_font_apply_qfont(settings::instance(), dialog.selectedFont());
+        g_settingsNotifier.notifySettingDataChangedToLocal();
         // ui->btnCandiFont->setFont( dialog.selectedFont() );
     }
 }
 
 void SettingWin::on_btnCandiBg_clicked()
 {
-    if (Settings::get_use_bg_image_flg())
+    if (settings::instance().get_useBgImage())
     {
         QString file = QFileDialog::getOpenFileName(this, "选择背景图片", qgetenv("HOME"), "Images(*.png *.bmp *.jpg)");
-        Settings::set_bg_image(file);
+        settings::instance().set_bgImage(fromStdUtf8(file));
         update_fram_candidate_win();
     }
     else
     {
         QColorDialog dialog(this);
 
-        dialog.setCurrentColor(Settings::get_bg_color());
+        dialog.setCurrentColor(swQColorFromSpec(settings::instance().get_bgColor()));
         if (dialog.exec() == QColorDialog::Accepted)
         {
-            Settings::set_bg_color(dialog.selectedColor());
+            settings::instance().set_bgColor(fromStdUtf8(dialog.selectedColor().name(QColor::HexArgb)));
             update_fram_candidate_win();
         }
     }
@@ -1403,10 +1414,10 @@ void SettingWin::on_btnCandiBgColor0_clicked()
 {
     QColorDialog dialog(this);
 
-    dialog.setCurrentColor(Settings::get_gradient_color0());
+    dialog.setCurrentColor(swQColorFromSpec(settings::instance().get_gradientColor0()));
     if (dialog.exec() == QColorDialog::Accepted)
     {
-        Settings::set_gradient_color0(dialog.selectedColor());
+        settings::instance().set_gradientColor0(fromStdUtf8(dialog.selectedColor().name(QColor::HexArgb)));
         update_fram_candidate_win();
     }
 }
@@ -1415,10 +1426,10 @@ void SettingWin::on_btnCandiBgColor1_clicked()
 {
     QColorDialog dialog(this);
 
-    dialog.setCurrentColor(Settings::get_gradient_color1());
+    dialog.setCurrentColor(swQColorFromSpec(settings::instance().get_gradientColor1()));
     if (dialog.exec() == QColorDialog::Accepted)
     {
-        Settings::set_gradient_color1(dialog.selectedColor());
+        settings::instance().set_gradientColor1(fromStdUtf8(dialog.selectedColor().name(QColor::HexArgb)));
         update_fram_candidate_win();
     }
 }
@@ -1427,10 +1438,10 @@ void SettingWin::on_btnCandiBorderColor_clicked()
 {
     QColorDialog dialog(this);
 
-    dialog.setCurrentColor(Settings::get_border_color());
+    dialog.setCurrentColor(swQColorFromSpec(settings::instance().get_borderColor()));
     if (dialog.exec() == QColorDialog::Accepted)
     {
-        Settings::set_border_color(dialog.selectedColor());
+        settings::instance().set_borderColor(fromStdUtf8(dialog.selectedColor().name(QColor::HexArgb)));
         update_fram_candidate_win();
     }
 }
@@ -1439,12 +1450,13 @@ void SettingWin::on_btnCandiAutoWord_clicked()
 {
     QColorDialog dialog(this);
 
-    dialog.setCurrentColor(Settings::get_candidate_word_text_color());
+    dialog.setCurrentColor(swQColorFromSpec(settings::instance().get_candiWordTextColor()));
     if (dialog.exec() == QColorDialog::Accepted)
     {
         QColor color = dialog.selectedColor();
-        Settings::set_candidate_word_text_color(color);
+        settings::instance().set_candiWordTextColor(fromStdUtf8(color.name(QColor::HexArgb)));
         ui->btnCandiAutoWord->setStyleSheet(QString("color:rgb(%1,%2,%3);").arg(color.red()).arg(color.green()).arg(color.blue()));
+        g_settingsNotifier.notifySettingDataChangedToLocal();
     }
 }
 
@@ -1452,12 +1464,13 @@ void SettingWin::on_btnCandiPrompt_clicked()
 {
     QColorDialog dialog(this);
 
-    dialog.setCurrentColor(Settings::get_candidate_prompt_text_color());
+    dialog.setCurrentColor(swQColorFromSpec(settings::instance().get_candiPromptTextColor()));
     if (dialog.exec() == QColorDialog::Accepted)
     {
         QColor color = dialog.selectedColor();
-        Settings::set_candidate_prompt_text_color(color);
+        settings::instance().set_candiPromptTextColor(fromStdUtf8(color.name(QColor::HexArgb)));
         ui->btnCandiPrompt->setStyleSheet(QString("color:rgb(%1,%2,%3);").arg(color.red()).arg(color.green()).arg(color.blue()));
+        g_settingsNotifier.notifySettingDataChangedToLocal();
     }
 }
 
@@ -1466,7 +1479,7 @@ void SettingWin::on_btnCandiPrompt_clicked()
 //{
 //     if ( !arg1.isEmpty() )
 //     {
-//         Settings::set_second_recode_key( arg1.at(0).toLatin1() );
+//         settings::instance().set_second_recode_key( arg1.at(0).toLatin1() );
 //     }
 // }
 
@@ -1474,58 +1487,62 @@ void SettingWin::on_btnCandiPrompt_clicked()
 //{
 //     if ( !arg1.isEmpty() )
 //     {
-//         Settings::set_third_recode_key( arg1.at(0).toLatin1() );
+//         settings::instance().set_third_recode_key( arg1.at(0).toLatin1() );
 //     }
 // }
 
 void SettingWin::on_ckbShiftSelectRecode_toggled(bool checked)
 {
-    Settings::set_shift_select_recode_flg(checked);
+    settings::instance().set_shiftSelectRecode(checked);
 }
 
 void SettingWin::on_ckbCursorFollow_stateChanged(int arg1)
 {
     if (arg1 == Qt::Checked)
     {
-        Settings::set_candiWin_follow_flg(true);
+        settings::instance().set_cursorFollow(true);
     }
     else if (arg1 == Qt::Unchecked)
     {
-        Settings::set_candiWin_follow_flg(false);
+        settings::instance().set_cursorFollow(false);
     }
+    g_settingsNotifier.notifySettingDataChangedToLocal();
 }
 
 void SettingWin::on_ckbHideCandiChinese_stateChanged(int arg1)
 {
     if (arg1 == Qt::Checked)
     {
-        Settings::set_hide_candiWin_flg(true);
+        settings::instance().set_hideCandiWin(true);
     }
     else if (arg1 == Qt::Unchecked)
     {
-        Settings::set_hide_candiWin_flg(false);
+        settings::instance().set_hideCandiWin(false);
     }
+    g_settingsNotifier.notifySettingDataChangedToLocal();
 }
 
 void SettingWin::on_ckbDispOpPrompt_toggled(bool checked)
 {
-    Settings::set_show_op_remind_info_flg(checked);
+    settings::instance().set_showOpRemindInfo(checked);
+    g_settingsNotifier.notifySettingDataChangedToLocal();
 }
 
 void SettingWin::on_ckbDispOpDict_toggled(bool checked)
 {
     // printf("dict=%d\n",checked);
-    Settings::set_show_cand_dict(checked);
+    settings::instance().set_showCandDictInfo(checked);
+    g_settingsNotifier.notifySettingDataChangedToLocal();
 }
 
 void SettingWin::on_cmb23RecodeSelect_activated(int index)
 {
     QString conflictInfo;
     int conflictFlg = 0;
-    CnEnSwitchShortcutKey cnEnSwitchShortcutKey = Settings::get_ceSwitchShortcutkey_shortcutkey();
+    CnEnSwitchShortcutKey cnEnSwitchShortcutKey = static_cast<CnEnSwitchShortcutKey>(freewb_cn_en_switch_index_from_token(settings::instance().get_cnEnSwitch()));
 
     RcodeSelectShortcutKey key = static_cast<RcodeSelectShortcutKey>(index);
-    if (key == RSSK_COMMA_PERIOD && Settings::get_candi_page_key() == CPSK_COMMA_PERIOD)
+    if (key == RSSK_COMMA_PERIOD && static_cast<CandiPageShortcutKey>(freewb_candi_page_index_from_token(settings::instance().get_candiPageKey())) == CPSK_COMMA_PERIOD)
     {
         conflictFlg = 1;
         conflictInfo = "您设置的快捷键将与上下翻页键冲突，确认设置？";
@@ -1553,18 +1570,19 @@ void SettingWin::on_cmb23RecodeSelect_activated(int index)
         delete m_msgBox;
         if (ret == QMessageBox::No)
         {
-            ui->cmb23RecodeSelect->setCurrentIndex(Settings::get_recode_select_key());
+            ui->cmb23RecodeSelect->setCurrentIndex(settings::instance().get_recodeSelectKey());
             return;
         }
     }
 
-    Settings::set_recode_select_key(key);
+    settings::instance().set_recodeSelectKey(key);
+    freewb_apply_recode_select_pair(settings::instance(), key);
 }
 
 void SettingWin::on_cmbPrevNextPage_activated(int index)
 {
     CandiPageShortcutKey key = static_cast<CandiPageShortcutKey>(index);
-    if (key == CPSK_COMMA_PERIOD && Settings::get_recode_select_key() == RSSK_COMMA_PERIOD)
+    if (key == CPSK_COMMA_PERIOD && static_cast<RcodeSelectShortcutKey>(settings::instance().get_recodeSelectKey()) == RSSK_COMMA_PERIOD)
     {
         m_msgBox = new QMessageBox(this);
         // m_msgBox->setWindowFlag( Qt::FramelessWindowHint );
@@ -1580,10 +1598,11 @@ void SettingWin::on_cmbPrevNextPage_activated(int index)
         delete m_msgBox;
         if (ret == QMessageBox::No)
         {
-            ui->cmbPrevNextPage->setCurrentIndex(Settings::get_candi_page_key());
+            ui->cmbPrevNextPage->setCurrentIndex(freewb_candi_page_index_from_token(settings::instance().get_candiPageKey()));
             return;
         }
     }
 
-    Settings::set_candi_page_key(key);
+    settings::instance().set_candiPageKey(freewb_candi_page_token_from_index(key));
+    freewb_apply_candidate_page_hotkeys(settings::instance(), key);
 }

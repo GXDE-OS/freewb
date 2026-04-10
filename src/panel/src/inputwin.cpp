@@ -2,10 +2,20 @@
 
 #include "commdefine.h"
 #include "settings.h"
+#include "settingshelper.h"
 #include "sound.h"
 #include "systraymenu.h"
 #include "toolbarwin.h"
 #include "ui_inputwin.h"
+
+namespace
+{
+QColor fwbcQColorFromSpec(const std::string &spec)
+{
+    return QColor(toQStringUtf8(spec));
+}
+
+} // namespace
 
 #define MIN_WIN_WIDTH 250           // 最小候选窗口宽度
 #define MAX_CANDIDATE_WORD_COUNT 10 // 能够显示候选词组的最多个数
@@ -95,16 +105,16 @@ void InputWin::init_im_prompt_lable()
 
 void InputWin::slot_load_setting_data()
 {
-    m_separateChar = Settings::get_separate_char();
-    m_candiCharCount = Settings::get_candi_char_count();
-    m_cursorFollow = Settings::get_cursor_follow_flg();
-    m_hideCandiWin = Settings::get_hide_candiWin_flg();
-    m_radius = Settings::get_radius();
+    m_separateChar = freewb_separate_char_from_string(settings::instance().get_separateChar());
+    m_candiCharCount = settings::instance().get_candiCharCount();
+    m_cursorFollow = settings::instance().get_cursorFollow();
+    m_hideCandiWin = settings::instance().get_hideCandiWin();
+    m_radius = settings::instance().get_radius();
 
-    m_transparency = Settings::get_candi_win_transparency();
+    m_transparency = settings::instance().get_transparency();
     setWindowOpacity(1 - m_transparency / 100.0);
 
-    m_showOpRemindInfo = Settings::get_show_op_remind_info_flg();
+    m_showOpRemindInfo = settings::instance().get_showOpRemindInfo();
     if (m_showOpRemindInfo && m_displayMode == CWDM_MULTI_ROW)
     {
         ui->labelPrompt->show();
@@ -114,12 +124,12 @@ void InputWin::slot_load_setting_data()
         ui->labelPrompt->hide();
     }
 
-    m_displayMode = Settings::get_candidate_win_disp_mode();
+    m_displayMode = static_cast<CandiWinDispMode>(settings::instance().get_candiWinDispMode());
     set_display_mode(m_displayMode);
 
-    QFont font = Settings::get_candidate_text_font();
-    QColor wordCcolor = Settings::get_candidate_word_text_color();
-    QColor promptColor = Settings::get_candidate_prompt_text_color();
+    QFont font = freewb_candi_text_qfont(settings::instance());
+    QColor wordCcolor = fwbcQColorFromSpec(settings::instance().get_candiWordTextColor());
+    QColor promptColor = fwbcQColorFromSpec(settings::instance().get_candiPromptTextColor());
 
     m_labelImPrompt->setFont(font);
     ui->labelPreEdit->setFont(font);
@@ -169,9 +179,9 @@ void InputWin::slot_load_setting_data()
     }
 
     // 载入皮肤
-    if (m_curSkinId != Settings::get_cur_skin_id())
+    if (m_curSkinId != toQStringUtf8(settings::instance().get_curSkinId()))
     {
-        slot_load_skin(Settings::get_cur_skin_id());
+        slot_load_skin(toQStringUtf8(settings::instance().get_curSkinId()));
     }
     else
     {
@@ -267,14 +277,14 @@ void InputWin::update_skin()
         ui->labelRight->setFixedWidth(0);
 
         QString style;
-        QColor boderColor = Settings::get_border_color();
-        QColor bgColor = Settings::get_bg_color();
-        QColor gradienColor0 = Settings::get_gradient_color0();
-        QColor gradienColor1 = Settings::get_gradient_color1();
+        QColor boderColor = fwbcQColorFromSpec(settings::instance().get_borderColor());
+        QColor bgColor = fwbcQColorFromSpec(settings::instance().get_bgColor());
+        QColor gradienColor0 = fwbcQColorFromSpec(settings::instance().get_gradientColor0());
+        QColor gradienColor1 = fwbcQColorFromSpec(settings::instance().get_gradientColor1());
 
         QString borderColorStyle = QString("border-color:rgb(%1,%2,%3);").arg(boderColor.red()).arg(boderColor.green()).arg(boderColor.blue());
 
-        if (Settings::get_use_gradient_color_flg())
+        if (settings::instance().get_useGradientColor())
         {
             QString gradienColorStyle =
                 QString("background-color:qlineargradient(spread:pad,x1:0, y1:0, x2:0, y2:1,stop:0 rgb(%1,%2,%3),stop:1 rgb(%4,%5,%6));").arg(gradienColor0.red()).arg(gradienColor0.green()).arg(gradienColor0.blue()).arg(gradienColor1.red()).arg(gradienColor1.green()).arg(gradienColor1.blue());
@@ -289,9 +299,9 @@ void InputWin::update_skin()
                         .arg(borderColorStyle)
                         .arg(gradienColorStyle);
         }
-        else if (Settings::get_use_bg_image_flg())
+        else if (settings::instance().get_useBgImage())
         {
-            QString bgImageStyle = QString("%1:url(%2);").arg(Settings::get_bg_image_tiled_flg() ? "background-image" : "border-image").arg(Settings::get_bg_image());
+            QString bgImageStyle = QString("%1:url(%2);").arg(settings::instance().get_enableTiled() ? "background-image" : "border-image").arg(toQStringUtf8(settings::instance().get_bgImage()));
 
             style = QString("#frameBg{"
                             "border-width:1px;"
@@ -358,7 +368,7 @@ void InputWin::set_extern_im_skin()
     m_displayMode = CWDM_ONE_ROW;
     set_display_mode(m_displayMode);
 
-    QFont font = Settings::get_candidate_text_font();
+    QFont font = freewb_candi_text_qfont(settings::instance());
     QColor wordCcolor = qRgb(255, 255, 255);
 
     m_labelImPrompt->setFont(font);
@@ -506,7 +516,7 @@ void InputWin::adjust_candi_win_width()
     int lenPreEdtLine = 0, lenTable = 0, lenPrompt = 0, len = 0;
     int tableColumn = ui->tableWidget->columnCount();
 
-    // int fontWidth = QFontMetrics( Settings::get_candidate_text_font() ).width("中");
+    // int fontWidth = QFontMetrics( freewb_candi_text_qfont(settings::instance()) ).width("中");
     lenPreEdtLine = ui->labelPreEdit->sizeHint().width() + ui->btnCharWidth->width() + ui->btnMark->width() + ui->btnLogo->width();
     for (int i = 0; i < tableColumn; i++)
     {
@@ -534,7 +544,7 @@ void InputWin::adjust_candi_win_width()
 
 void InputWin::adjust_candi_win_height()
 {
-    int fontHeight = QFontMetrics(Settings::get_candidate_text_font()).height() * 1.2;
+    int fontHeight = QFontMetrics(freewb_candi_text_qfont(settings::instance())).height() * 1.2;
 
     m_winHeight = fontHeight > ui->btnCharWidth->height() ? fontHeight : ui->btnCharWidth->height();
 
@@ -608,7 +618,7 @@ void InputWin::auto_adjust_candi_win_geometry()
 
 void InputWin::show_dict_find_win()
 {
-    if (!Settings::get_show_cand_dict())
+    if (!settings::instance().get_showCandDictInfo())
         return;
 
     QPoint position = QCursor::pos();
@@ -844,7 +854,7 @@ void InputWin::set_candidate_text(int idx, const QString &label, const QString &
     else
         width += promptText.length();
 
-    QFont font = Settings::get_candidate_text_font();
+    QFont font = freewb_candi_text_qfont(settings::instance());
 
     QSize sz(width * font.pointSize(), 20);
     item->setMinimumSize(sz);
@@ -872,7 +882,7 @@ void InputWin::clear_candidate_text(int idx)
 
 void InputWin::handle_candiwin_op_help_info()
 {
-    if (m_displayMode == CWDM_MULTI_ROW && Settings::get_show_op_remind_info_flg())
+    if (m_displayMode == CWDM_MULTI_ROW && settings::instance().get_showOpRemindInfo())
     {
         if (!SysTrayMenu::is_extern_im())
         {
@@ -902,7 +912,10 @@ void InputWin::set_candiwin_op_help_info()
     if (m_preEidtText.isEmpty())
         return;
 
-    if (m_preEidtText.at(0).toLatin1() == Settings::get_singleShortcutKey_name_1(Settings::get_tmp_english_shortcutkey()).toInt())
+    if (m_preEidtText.at(0).toLatin1()
+        == toQStringUtf8(
+               freewb_single_shortcut_ini_from_stored(settings::instance().get_tempEnglish()))
+               .toInt())
     {
         if (m_preEidtText.length() > 1 && m_candiWordCount)
         {
@@ -921,11 +934,19 @@ void InputWin::set_candiwin_op_help_info()
     {
         oti = OTI_TEMP_ENGLISH;
     }
-    else if (m_preEidtText.length() == 1 && m_preEidtText.at(0).toLatin1() == Settings::get_singleShortcutKey_name_1(Settings::get_quick_input_shortcutkey()).toInt())
+    else if (m_preEidtText.length() == 1
+             && m_preEidtText.at(0).toLatin1()
+                    == toQStringUtf8(
+                           freewb_single_shortcut_ini_from_stored(settings::instance().get_shortcutInput()))
+                           .toInt())
     {
         oti = OTI_QUICK_INPUT;
     }
-    else if (m_preEidtText.length() == 1 && m_preEidtText.at(0).toLatin1() == Settings::get_singleShortcutKey_name_1(Settings::get_tmp_pinyin_shortcutkey()).toInt())
+    else if (m_preEidtText.length() == 1
+             && m_preEidtText.at(0).toLatin1()
+                    == toQStringUtf8(
+                           freewb_single_shortcut_ini_from_stored(settings::instance().get_tempPinyin()))
+                           .toInt())
     {
         oti = OTI_TEMP_PINYIN;
     }
@@ -960,7 +981,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_BACK_FIND_CODE)
     {
-        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name(CSF_BACK_FIND_CODE);
+        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_BACK_FIND_CODE)));
         if (keyName != "无")
         {
             tips = QString("【%1 反查编码】").arg(keyName);
@@ -968,7 +989,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_ONLINE_ADD_WORD)
     {
-        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name(CSF_ONLINE_ADD_WORD);
+        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_ONLINE_ADD_WORD)));
         if (keyName != "无")
         {
             tips = QString("【%1 在线加词】").arg(keyName);
@@ -976,7 +997,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_ONLINE_DEL_WORD)
     {
-        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name(CSF_ONLINE_DEL_WORD);
+        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_ONLINE_DEL_WORD)));
         if (keyName != "无")
         {
             tips = QString("【%1 在线删词】").arg(keyName);
@@ -984,7 +1005,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_SWITCH_KEYBOARD)
     {
-        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name(CSF_SWITCH_KEYBOARD);
+        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_KEYBOARD)));
         if (keyName != "无")
         {
             tips = QString("【%1 切换软键盘】").arg(keyName);
@@ -992,7 +1013,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_SWITCH_CHAR_SET)
     {
-        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name(CSF_SWITCH_CHAR_SET);
+        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_CHAR_SET)));
         if (keyName != "无")
         {
             tips = QString("【%1 切换字符集】").arg(keyName);
@@ -1000,7 +1021,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_SWITCH_INPUT_MODE)
     {
-        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name(CSF_SWITCH_INPUT_MODE);
+        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_INPUT_MODE)));
         if (keyName != "无")
         {
             tips = QString("【%1 切换输入模式】").arg(keyName);
@@ -1008,7 +1029,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     //    else if ( oti == OTI_SK_SWITCH_WORD_STATE )
     //    {
-    //        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name( CSF_SWITCH_WORD_STATE );
+    //        QString keyName = settings::instance().get_customShortcutFunc_shortcutkey_name( CSF_SWITCH_WORD_STATE );
     //        if ( keyName != "无" )
     //        {
     //            tips = QString("【%1 切换字词状态】").arg( keyName );
@@ -1016,7 +1037,7 @@ void InputWin::set_candiwin_op_help_info()
     //    }
     else if (oti == OTI_SK_SWITCH_S_IN_T_OUT)
     {
-        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name(CSF_SWITCH_S_IN_T_OUT);
+        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_S_IN_T_OUT)));
         if (keyName != "无")
         {
             tips = QString("【%1 切换简入繁出】").arg(keyName);
@@ -1024,7 +1045,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_SHOW_HIDE_STATUS_BAR)
     {
-        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name(CSF_SHOW_HIDE_STATUS_BAR);
+        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SHOW_HIDE_STATUS_BAR)));
         if (keyName != "无")
         {
             tips = QString("【%1 显/隐状态栏】").arg(keyName);
@@ -1032,7 +1053,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_SHOW_HIDE_CANDIDATE_WIN)
     {
-        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name(CSF_SHOW_HIDE_CANDIDATE_WIN);
+        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SHOW_HIDE_CANDIDATE_WIN)));
         if (keyName != "无")
         {
             tips = QString("【%1 显/隐候选窗】").arg(keyName);
@@ -1040,7 +1061,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_SWITCH_WORD_LEXICON)
     {
-        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name(CSF_SWITCH_WORD_LEXICON);
+        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_WORD_LEXICON)));
         if (keyName != "无")
         {
             tips = QString("【%1 切换词库】").arg(keyName);
@@ -1048,7 +1069,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     //    else if ( oti == OTI_SK_ADD_CHAR_AFTER_OUTPUT )
     //    {
-    //        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name( CSF_ADD_CHAR_AFTER_OUTPUT );
+    //        QString keyName = settings::instance().get_customShortcutFunc_shortcutkey_name( CSF_ADD_CHAR_AFTER_OUTPUT );
     //        if ( keyName != "无" )
     //        {
     //            tips = QString("【%1 输出项后加字符】").arg( keyName );
@@ -1056,7 +1077,7 @@ void InputWin::set_candiwin_op_help_info()
     //    }
     else if (oti == OTI_SK_SWITCH_SKIN)
     {
-        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name(CSF_SWITCH_SKIN);
+        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_SKIN)));
         if (keyName != "无")
         {
             tips = QString("【%1 切换皮肤】").arg(keyName);
@@ -1064,7 +1085,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_QUICK_DEL_SCREEN_CHAR)
     {
-        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name(CSF_QUICK_DEL_SCREEN_CHAR);
+        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_QUICK_DEL_SCREEN_CHAR)));
         if (keyName != "无")
         {
             tips = QString("【%1 快删上屏项】").arg(keyName);
@@ -1072,7 +1093,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_MARK_AUTO_PAIR)
     {
-        QString keyName = Settings::get_customShortcutFunc_shortcutkey_name(CSF_MARK_AUTO_PAIR);
+        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_MARK_AUTO_PAIR)));
         if (keyName != "无")
         {
             tips = QString("【%1 标点自动配对】").arg(keyName);
@@ -1081,31 +1102,34 @@ void InputWin::set_candiwin_op_help_info()
 
     else if (oti == OTI_SK_TEMP_ENGLISH)
     {
-        SingleShortcutKey key = Settings::get_tmp_english_shortcutkey();
-        if (key != SSK_NONE)
+        const int idx = freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish());
+        if (idx != SSK_NONE)
         {
-            tips = QString("【%1 临时英文输入】").arg(Settings::get_singleShortcutKey_name(key));
+            tips = QString("【%1 临时英文输入】").arg(
+                toQStringUtf8(freewb_single_shortcut_display_name(idx)));
         }
     }
     else if (oti == OTI_SK_QUICK_INPUT)
     {
-        SingleShortcutKey key = Settings::get_quick_input_shortcutkey();
-        if (key != SSK_NONE)
+        const int idx = freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput());
+        if (idx != SSK_NONE)
         {
-            tips = QString("【%1 快捷短语输入】").arg(Settings::get_singleShortcutKey_name(key));
+            tips = QString("【%1 快捷短语输入】").arg(
+                toQStringUtf8(freewb_single_shortcut_display_name(idx)));
         }
     }
     else if (oti == OTI_SK_TEMP_PINYIN)
     {
-        SingleShortcutKey key = Settings::get_tmp_pinyin_shortcutkey();
-        if (key != SSK_NONE)
+        const int idx = freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin());
+        if (idx != SSK_NONE)
         {
-            tips = QString("【%1  临时拼音/生癖字输入】").arg(Settings::get_singleShortcutKey_name(key));
+            tips = QString("【%1  临时拼音/生癖字输入】").arg(
+                toQStringUtf8(freewb_single_shortcut_display_name(idx)));
         }
     }
     else if (oti == OTI_SK_SWITCH_CN_EN)
     {
-        CnEnSwitchShortcutKey key = Settings::get_ceSwitchShortcutkey_shortcutkey();
+        CnEnSwitchShortcutKey key = static_cast<CnEnSwitchShortcutKey>(freewb_cn_en_switch_index_from_token(settings::instance().get_cnEnSwitch()));
         if (key == CESSK_LEFT_SHIFT)
         {
             tips = "【左Shift 切换中/英文】";
@@ -1133,7 +1157,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_RECODE_SELECT)
     {
-        RcodeSelectShortcutKey key = Settings::get_recode_select_key();
+        RcodeSelectShortcutKey key = static_cast<RcodeSelectShortcutKey>(settings::instance().get_recodeSelectKey());
         if (key == RSSK_SEMI_QUOTE)
         {
             tips = "【;/' 选择二三重码】";
@@ -1153,7 +1177,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_CANDI_PAGE)
     {
-        CandiPageShortcutKey key = Settings::get_candi_page_key();
+        CandiPageShortcutKey key = static_cast<CandiPageShortcutKey>(freewb_candi_page_index_from_token(settings::instance().get_candiPageKey()));
         if (key == CPSK_SUB_EQUAL)
         {
             tips = "【-/= 候选词上下翻页】";
@@ -1190,7 +1214,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_TEMP_ENGLISH_SELECT)
     {
-        RcodeSelectShortcutKey key = Settings::get_recode_select_key();
+        RcodeSelectShortcutKey key = static_cast<RcodeSelectShortcutKey>(settings::instance().get_recodeSelectKey());
         if (key == RSSK_SEMI_QUOTE)
         {
             tips = "[ 空格选1, ;选2, '选3 ]";
@@ -1409,13 +1433,13 @@ void InputWin::slot_kim_UpdateLookupTable(const QStringList &label, const QStrin
     {
         qWarning() << "candidate word number is over " << MAX_CANDIDATE_WORD_COUNT << "!";
     }
-    else if (len >= Settings::get_candidate_word_count() || SysTrayMenu::is_extern_im())
+    else if (len >= settings::instance().get_candiWordCount() || SysTrayMenu::is_extern_im())
     {
         m_candiWordItem = len;
     }
     else
     {
-        m_candiWordItem = Settings::get_candidate_word_count();
+        m_candiWordItem = settings::instance().get_candiWordCount();
     }
 
     for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; i++)
@@ -1494,7 +1518,7 @@ void InputWin::slot_kim_UpdateLookupTable(const QStringList &label, const QStrin
         }
     }
 
-    if (m_displayMode == CWDM_MULTI_ROW && Settings::get_show_op_remind_info_flg())
+    if (m_displayMode == CWDM_MULTI_ROW && settings::instance().get_showOpRemindInfo())
     {
         if (!SysTrayMenu::is_extern_im())
         {

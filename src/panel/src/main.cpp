@@ -232,8 +232,7 @@ int main(int argc, char *argv[])
     app.setQuitOnLastWindowClosed(false);
     app.setApplicationName("Freewb");
 
-    Settings::init_const_data_member();
-    Settings::load_all_setting_data_from_file();
+    settings::instance().reload();
 
     MainProgram w;
 

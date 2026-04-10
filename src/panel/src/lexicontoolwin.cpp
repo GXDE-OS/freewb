@@ -3,6 +3,7 @@
 #include "../../tools/freewbConversionTool.h"
 #include "commdefine.h"
 #include "settings.h"
+#include "settingshelper.h"
 #include "ui_lexicontoolwin.h"
 
 // 设置窗口样式表
@@ -15,8 +16,8 @@
 #define QSS_BTN_CLOSE1 "border-image: url(:/image/setting/close1.png);"
 #define QSS_BTN_CLOSE2 "border-image: url(:/image/setting/close2.png);"
 
-#define CUR_USED_WUBI_TABLE INSTALL_DIR + "/data/mb/" + Settings::get_cur_used_lexicon() + "/freeime.mb"
-#define CUR_USED_PINYIN_TABLE INSTALL_DIR + "/data/mb/" + Settings::get_cur_used_lexicon() + "/attach.mb"
+#define CUR_USED_WUBI_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/freeime.mb"
+#define CUR_USED_PINYIN_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/attach.mb"
 
 LexiconWorker::LexiconWorker(QObject *parent) : QObject(parent)
 {
@@ -364,7 +365,7 @@ void LexiconToolWin::on_btnMakeSysLexicon_clicked()
             QString cmd = QString("cp %1 %2").arg(m_tmpSysTable).arg(CUR_USED_WUBI_TABLE);
             system(cmd.toUtf8().data());
 
-            Settings::save_ime_table_changed_flg_to_file(1);
+            settings::instance().set_imeTableChanged(1);
             emit signal_ime_table_changed();
         }
         else if (ret == QMessageBox::No)
@@ -416,7 +417,7 @@ void LexiconToolWin::on_btnMarkRareWord_clicked()
         }
         else if (ret == QMessageBox::Ok)
         {
-            //            Settings::save_ime_table_changed_flg_to_file( 1 );
+            //            settings::instance().set_imeTableChanged( 1 );
             //            emit signal_ime_table_changed();
         }
     }
@@ -443,7 +444,7 @@ void LexiconToolWin::on_btnMarkThinkWord_clicked()
         }
         else if (ret == QMessageBox::Ok)
         {
-            //            Settings::save_ime_table_changed_flg_to_file( 1 );
+            //            settings::instance().set_imeTableChanged( 1 );
             //            emit signal_ime_table_changed();
         }
     }
@@ -510,7 +511,7 @@ void LexiconToolWin::on_btnMakePinyinLexicon_clicked()
             QString cmd = QString("cp %1 %2").arg(m_tmpPinyinTable).arg(CUR_USED_PINYIN_TABLE);
             system(cmd.toUtf8().data());
 
-            Settings::save_ime_table_changed_flg_to_file(1);
+            settings::instance().set_imeTableChanged(1);
             emit signal_ime_table_changed();
         }
         else if (ret == QMessageBox::No)
@@ -737,7 +738,7 @@ void LexiconToolWin::add_del_user_word_from_file(int op, const QString &fileName
 
         if (count)
         {
-            Settings::save_userWord_change_flg_to_file(1);
+            settings::instance().set_userWordFlg(1);
             emit signal_user_word_file_changed();
         }
     }
