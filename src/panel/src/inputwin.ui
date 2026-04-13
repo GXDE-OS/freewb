@@ -209,7 +209,7 @@
                      <string notr="true"/>
                     </property>
                     <property name="text">
-                     <string>8888</string>
+                     <string/>
                     </property>
                     <property name="textFormat">
                      <enum>Qt::AutoText</enum>

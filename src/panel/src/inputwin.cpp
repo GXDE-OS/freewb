@@ -7,6 +7,7 @@
 #include "systraymenu.h"
 #include "toolbarwin.h"
 #include "ui_inputwin.h"
+#include "log.h"
 
 namespace
 {
@@ -1420,69 +1421,46 @@ void InputWin::slot_kim_ShowLookupTable(bool enable)
 
 void InputWin::slot_kim_UpdateLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev, bool hasNext)
 {
+    Q_UNUSED(label);
     Q_UNUSED(attr);
-    // qDebug() << text;
 
-    QStringList wordAndPrompt;
-    QString word, prompt;
-
-    m_candiWordCount = label.length();
+    m_candiWordCount = text.length();
 
     int len = m_candiWordCount;
     if (len > MAX_CANDIDATE_WORD_COUNT)
     {
-        qWarning() << "candidate word number is over " << MAX_CANDIDATE_WORD_COUNT << "!";
+        FREEWB_DEBUG("slot_kim_UpdateLookupTable: len > MAX_CANDIDATE_WORD_COUNT, len={}, MAX_CANDIDATE_WORD_COUNT={}", len, MAX_CANDIDATE_WORD_COUNT);
+        len = MAX_CANDIDATE_WORD_COUNT;
     }
-    else if (len >= settings::instance().get_candiWordCount() || SysTrayMenu::is_extern_im())
-    {
-        m_candiWordItem = len;
-    }
-    else
-    {
-        m_candiWordItem = settings::instance().get_candiWordCount();
-    }
+
+    m_candiWordItem = len;
 
     for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; i++)
     {
-        if (i < len)
+        const bool visible = (i < len);
+        if (visible)
         {
-            // puts(text.at(i).toUtf8().constData());
-            wordAndPrompt = text.at(i).split(':');
-            word = wordAndPrompt.at(0);
-            if (wordAndPrompt.size() > 1)
-            {
-                prompt = wordAndPrompt.at(1);
-            }
-            else
-            {
-                word.replace(':', "");
-            }
-            QString str = label[i];
-            str.replace('.', m_separateChar);
+            const QString candidate = text.value(i);
+            const int splitPos = candidate.indexOf(':');
+            QString word = (splitPos >= 0) ? candidate.left(splitPos) : candidate;
+            const QString prompt = (splitPos >= 0) ? candidate.mid(splitPos + 1) : QString();
+            const QString indexLabel = QString::number(i + 1) + m_separateChar;
 
-            word = word.remove(QRegExp("\s* +$"));
-            set_candidate_text(i, str, word, prompt);
-
-            if (m_displayMode == CWDM_ONE_ROW)
-            {
-                ui->tableWidget->setColumnHidden(i, false);
-            }
-            else
-            {
-                ui->tableWidget->setRowHidden(i, false);
-            }
+            word.remove(QRegExp("\\s* +$"));
+            set_candidate_text(i, indexLabel, word, prompt);
         }
         else
         {
             clear_candidate_text(i);
-            if (m_displayMode == CWDM_ONE_ROW)
-            {
-                ui->tableWidget->setColumnHidden(i, true);
-            }
-            else
-            {
-                ui->tableWidget->setRowHidden(i, true);
-            }
+        }
+
+        if (m_displayMode == CWDM_ONE_ROW)
+        {
+            ui->tableWidget->setColumnHidden(i, !visible);
+        }
+        else
+        {
+            ui->tableWidget->setRowHidden(i, !visible);
         }
     }
 
