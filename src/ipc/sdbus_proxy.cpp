@@ -178,41 +178,33 @@ void SDBusProxy::emitHideToolbar()
     emitImeSignal("UpdateProperty", "s", "/Fcitx/im:us");
 }
 
-void SDBusProxy::emitSetSpotRect(const SpotRectPayload &payload)
+void SDBusProxy::emitUpdateSpotRect(const SpotRectPayload &payload)
 {
-    FREEWB_DEBUG("emitSetSpotRect x={} y={} w={} h={}", payload.x, payload.y, payload.w, payload.h);
+    FREEWB_DEBUG("emitUpdateSpotRect x={} y={} w={} h={}", payload.x, payload.y, payload.w, payload.h);
     sendPanelMethod("SetSpotRect", "iiii", payload.x, payload.y, payload.w, payload.h);
 }
 
-void SDBusProxy::emitSetCandidate(const CandidatePayload &payload)
+void SDBusProxy::emitUpdateCandidate(const CandidatePayload &payload)
 {
     if (!bus_ || !available_)
     {
-        FREEWB_ERROR("emitSetCandidate skipped: bus={} available_={}", static_cast<const void *>(bus_), available_);
+        FREEWB_ERROR("emitUpdateCandidate skipped: bus={} available_={}", static_cast<const void *>(bus_), available_);
         return;
     }
-    FREEWB_DEBUG(
-        "emitSetCandidate: labels={} texts={} attrs={} hasPrev={} hasNext={} cursor={} layout={}",
-        payload.labels.size(),
-        payload.texts.size(),
-        payload.attrs.size(),
-        payload.hasPrev,
-        payload.hasNext,
-        payload.cursor,
-        static_cast<int>(payload.layout));
+    FREEWB_DEBUG("emitUpdateCandidate: labels={} texts={} attrs={} hasPrev={} hasNext={} cursor={} layout={}", payload.labels.size(), payload.texts.size(), payload.attrs.size(), payload.hasPrev, payload.hasNext, payload.cursor, static_cast<int>(payload.layout));
 
     sd_bus_message *m = nullptr;
     const int newCallR = sd_bus_message_new_method_call(bus_, &m, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE, "SetLookupTable");
     if (newCallR < 0)
     {
-        FREEWB_ERROR("emitSetCandidate: sd_bus_message_new_method_call(SetLookupTable) failed: {} ({})", newCallR, strerror(-newCallR));
+        FREEWB_ERROR("emitUpdateCandidate: sd_bus_message_new_method_call(SetLookupTable) failed: {} ({})", newCallR, strerror(-newCallR));
         return;
     }
 
     const int appendR = appendSetCandidateBody(m, payload);
     if (appendR < 0)
     {
-        FREEWB_ERROR("emitSetCandidate: append candidate body failed: {} ({})", appendR, strerror(-appendR));
+        FREEWB_ERROR("emitUpdateCandidate: append candidate body failed: {} ({})", appendR, strerror(-appendR));
         sd_bus_message_unref(m);
         return;
     }
@@ -220,7 +212,7 @@ void SDBusProxy::emitSetCandidate(const CandidatePayload &payload)
     sd_bus_message_unref(m);
     if (sendR < 0)
     {
-        FREEWB_ERROR("emitSetCandidate: sd_bus_send(SetLookupTable) failed: {} ({})", sendR, strerror(-sendR));
+        FREEWB_ERROR("emitUpdateCandidate: sd_bus_send(SetLookupTable) failed: {} ({})", sendR, strerror(-sendR));
         return;
     }
     const bool hasLookup = !payload.labels.empty() || !payload.texts.empty();
@@ -244,6 +236,131 @@ void SDBusProxy::emitUpdateAux(const CandidateAuxPayload &payload)
     static const char *const kEmptyAttr = "";
     emitImeSignal("UpdateAux", "ss", payload.text.c_str(), kEmptyAttr);
     emitImeSignal("ShowAux", "b", payload.show);
+}
+
+void SDBusProxy::callAddUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText)
+{
+    callSettingsMethod("slot_dbus_generate_usr_word", "iss", flg, wordText.c_str(), wordCode.c_str());
+}
+
+void SDBusProxy::callDeleteUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText)
+{
+    callSettingsMethod("slot_dbus_delete_usr_word", "iss", flg, wordText.c_str(), wordCode.c_str());
+}
+
+void SDBusProxy::callDictQueryMethod(const std::string &wordText)
+{
+    callSettingsMethod("slot_dbus_dict_query", "s", wordText.c_str());
+}
+
+void SDBusProxy::callSwitchInputModeMethod(int inputMode)
+{
+    callSettingsMethod("slot_dbus_switch_internal_input_method", "i", inputMode);
+}
+
+void SDBusProxy::callSwitchSkinMethod()
+{
+    callSettingsMethod("slot_dbus_switch_skin", "");
+}
+
+void SDBusProxy::callSwitchVirtualKeyboardModeMethod(int flg)
+{
+    callSettingsMethod("slot_dbus_switch_vk", "i", flg);
+}
+
+void SDBusProxy::callSwitchSmartPuncMethod()
+{
+    callSettingsMethod("slot_dbus_set_mark_auto_pairs_flg", "i", 0);
+}
+
+void SDBusProxy::callSwitchCharSetMethod()
+{
+    callSettingsMethod("slot_dbus_switch_char_set", "");
+}
+
+void SDBusProxy::callSwitchRecodeProofMethod()
+{
+    callSettingsMethod("slot_dbus_set_recode_calib_flg", "i", 0);
+}
+
+void SDBusProxy::callSwitchUncommonParseStateMethod(const std::string &wordText, int flg)
+{
+    callSettingsMethod("slot_dbus_word_freq_switch_ok", "is", flg, wordText.c_str());
+}
+
+void SDBusProxy::callSwitchChttransMethod()
+{
+    callSettingsMethod("slot_dbus_switch_simp_or_trad", "i", 0);
+}
+
+void SDBusProxy::callOpenUiSettingMethod()
+{
+    callSettingsMethod("slot_dbus_open_ui_setting", "");
+}
+
+void SDBusProxy::callShowVersionInfoMethod()
+{
+    callSettingsMethod("slot_dbus_show_version_info", "");
+}
+
+void SDBusProxy::callOpenProfessionalSettingMethod()
+{
+    callSettingsMethod("slot_dbus_open_advanced_setting", "");
+}
+
+void SDBusProxy::callModQuickTableMethod()
+{
+    callSettingsMethod("slot_dbus_edit_quick_table", "");
+}
+
+void SDBusProxy::callModUserTableMethod()
+{
+    callSettingsMethod("slot_dbus_edit_usr_table", "");
+}
+
+void SDBusProxy::callModWubiTableMethod()
+{
+    callSettingsMethod("slot_dbus_edit_wubi_table", "");
+}
+
+void SDBusProxy::callModPinyinTableMethod()
+{
+    callSettingsMethod("slot_dbus_edit_pinyin_table", "");
+}
+
+void SDBusProxy::callOpenConfDirMethod()
+{
+    callSettingsMethod("slot_dbus_open_freewb_dir", "");
+}
+
+void SDBusProxy::callCloseVkBoardMethod()
+{
+    callSettingsMethod("slot_dbus_close_vk", "");
+}
+
+void SDBusProxy::callSwitchTableMethod()
+{
+    callSettingsMethod("slot_dbus_switch_lexicon", "");
+}
+
+void SDBusProxy::callSwitchCharWidthModeMethod()
+{
+    callSettingsMethod("slot_dbus_set_charWidth_and_markMode", "ii", 0, 0);
+}
+
+void SDBusProxy::callSwitchPuncModeMethod()
+{
+    callSettingsMethod("slot_dbus_set_charWidth_and_markMode", "ii", 0, 0);
+}
+
+std::string SDBusProxy::callGetClipboardMethod()
+{
+    return callSettingsMethodReplyString("slot_dbus_get_clipboard_text");
+}
+
+void SDBusProxy::callToggleCapsStateMethod()
+{
+    callSettingsMethod("slot_dbus_switch_caps_state", "");
 }
 
 void SDBusProxy::emitRegisterPropertiesSignal(const std::vector<std::string> &props)
@@ -358,6 +475,70 @@ void SDBusProxy::emitImeSignal(const char *member, const char *types, ...) const
     }
     sd_bus_send(bus_, m, nullptr);
     sd_bus_message_unref(m);
+}
+
+void SDBusProxy::callSettingsMethod(const char *member, const char *types, ...) const
+{
+    if (!bus_ || !available_ || !member)
+    {
+        FREEWB_WARN("callSettingsMethod skipped: bus={} available_={} member={}", static_cast<const void *>(bus_), available_, member ? member : "(null)");
+        return;
+    }
+
+    FREEWB_DEBUG("callSettingsMethod: member={} types={}", member, (types && types[0] != '\0') ? types : "(none)");
+
+    sd_bus_message *m = nullptr;
+    const int newCallR = sd_bus_message_new_method_call(bus_, &m, FREEWUBI_SETTINGS_SERVICENAME, FREEWUBI_SETTINGS_OBJECTPATH, FREEWUBI_SETTINGS_INTERFACE, member);
+    if (newCallR < 0)
+    {
+        FREEWB_ERROR("callSettingsMethod: new_method_call({}) failed: {} ({})", member, newCallR, strerror(-newCallR));
+        return;
+    }
+    if (types && types[0] != '\0')
+    {
+        va_list ap;
+        va_start(ap, types);
+        const int r = sd_bus_message_appendv(m, types, ap);
+        va_end(ap);
+        if (r < 0)
+        {
+            FREEWB_ERROR("callSettingsMethod: appendv member={} types={} failed: {} ({})", member, types, r, strerror(-r));
+            sd_bus_message_unref(m);
+            return;
+        }
+    }
+    const int sendR = sd_bus_send(bus_, m, nullptr);
+    if (sendR < 0)
+    {
+        FREEWB_ERROR("callSettingsMethod: send member={} failed: {} ({})", member, sendR, strerror(-sendR));
+    }
+    else
+    {
+        FREEWB_DEBUG("callSettingsMethod: send member={} ok", member);
+    }
+    sd_bus_message_unref(m);
+}
+
+std::string SDBusProxy::callSettingsMethodReplyString(const char *member) const
+{
+    if (!bus_ || !available_ || !member)
+    {
+        return {};
+    }
+    sd_bus_error err = SD_BUS_ERROR_NULL;
+    sd_bus_message *reply = nullptr;
+    const int callR = sd_bus_call_method(bus_, FREEWUBI_SETTINGS_SERVICENAME, FREEWUBI_SETTINGS_OBJECTPATH, FREEWUBI_SETTINGS_INTERFACE, member, &err, &reply, "");
+    if (callR < 0)
+    {
+        sd_bus_error_free(&err);
+        return {};
+    }
+    const char *value = nullptr;
+    const int readR = sd_bus_message_read(reply, "s", &value);
+    std::string result = (readR < 0 || !value) ? std::string() : std::string(value);
+    sd_bus_message_unref(reply);
+    sd_bus_error_free(&err);
+    return result;
 }
 
 bool SDBusProxy::registerPanelMatches()

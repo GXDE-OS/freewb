@@ -27,8 +27,8 @@ public:
     virtual void emitHideToolbar() = 0;
 
     // candidate
-    virtual void emitSetSpotRect(const SpotRectPayload &payload) = 0;
-    virtual void emitSetCandidate(const CandidatePayload &payload) = 0;
+    virtual void emitUpdateSpotRect(const SpotRectPayload &payload) = 0;
+    virtual void emitUpdateCandidate(const CandidatePayload &payload) = 0;
 
     virtual void emitUpdatePreeditText(const CandidatePreeditPayload &payload) = 0;
     virtual void emitUpdatePreeditCaret(int caret) = 0;

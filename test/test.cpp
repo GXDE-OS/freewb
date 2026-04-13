@@ -19,8 +19,8 @@ namespace
 void emitCandidateFrame(freewb::ipc::SDBusProxy &proxy, const freewb::SpotRectPayload &spot, const freewb::CandidatePayload &cand,
                         const freewb::CandidatePreeditPayload &preedit, const freewb::CandidateAuxPayload &aux)
 {
-    proxy.emitSetSpotRect(spot);
-    proxy.emitSetCandidate(cand);
+    proxy.emitUpdateSpotRect(spot);
+    proxy.emitUpdateCandidate(cand);
     proxy.emitUpdatePreeditText(preedit);
     proxy.emitUpdatePreeditCaret(preedit.caret);
     proxy.emitUpdateAux(aux);
