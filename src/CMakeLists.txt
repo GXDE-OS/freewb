@@ -6,6 +6,7 @@ add_subdirectory(tools)
 add_subdirectory(panel)
 add_subdirectory(core)
 add_subdirectory(ipc)
+add_subdirectory(engine)
 
 if("${OS_TYPE}" STREQUAL "Linux" AND ENABLE_FCITX4)
     add_subdirectory(fcitx4)
