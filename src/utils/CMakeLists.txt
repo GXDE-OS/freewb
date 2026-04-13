@@ -3,7 +3,7 @@ if (NOT spdlog_FOUND)
     message(FATAL_ERROR "spdlog not found")
 endif()
 
-add_library(${PROJECT_NAME}-utils SHARED ConvertUTF.c log.cpp settings.cpp key.cpp)
+add_library(${PROJECT_NAME}-utils SHARED ConvertUTF.c log.cpp settings.cpp key.cpp utils.cpp)
 
 if (NOT TARGET spdlog::spdlog)
     message(FATAL_ERROR "spdlog::spdlog target not found")
