@@ -1,11 +1,15 @@
-#ifndef _FREEWB_H_
-#define _FREEWB_H_
+#ifndef FREEWB_H
+#define FREEWB_H
 
-#include <memory>
+#include "candidatelist.h"
+#include "enginemanager.h"
+#include "freewb.h"
+#include "keysym.h"
+#include "log.h"
+#include "sdbus_proxy.h"
 
 namespace freewb
 {
-
 class Freewb
 {
 public:
@@ -13,6 +17,17 @@ public:
     ~Freewb();
     void activate();
     void deactivate();
+    void processKey(FreewbKeySym keysym, FreewbKeyState state);
+    void reset();
+
+    ipc::SDBusProxy *sdbusProxy() const;
+
+private:
+    FreewbLog log_;
+    ipc::SDBusProxy *sdbusProxy_ = nullptr;
+    EngineManager *engineManager_ = nullptr;
+    CandidateList *candidateList_ = nullptr;
 };
 } // namespace freewb
+
 #endif

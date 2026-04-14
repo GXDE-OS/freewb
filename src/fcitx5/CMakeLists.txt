@@ -9,10 +9,11 @@ if (NOT Fcitx5Core_FOUND)
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/src/utils)
+include_directories(${CMAKE_SOURCE_DIR}/src/core)
 
 add_library("${PROJECT_NAME}-fcitx5" SHARED module.cpp)
 
-target_link_libraries("${PROJECT_NAME}-fcitx5" Fcitx5::Core ${PROJECT_NAME}-utils)
+target_link_libraries("${PROJECT_NAME}-fcitx5" Fcitx5::Core ${PROJECT_NAME}-utils ${PROJECT_NAME}-core)
 
 install(TARGETS "${PROJECT_NAME}-fcitx5" DESTINATION "${FCITX_INSTALL_LIBDIR}/fcitx5")
 

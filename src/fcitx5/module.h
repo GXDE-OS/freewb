@@ -10,6 +10,8 @@
 #include <fcitx/inputmethodengine.h>
 #include <fcitx/instance.h>
 
+#include "freewb.h"
+
 class FreewbIMModule final : public fcitx::InputMethodEngineV3
 {
 public:
@@ -26,6 +28,7 @@ public:
 
 private:
     fcitx::Instance *instance_;
+    std::unique_ptr<freewb::Freewb> freewb_;
 };
 
 class FreewbIMModuleFactory : public fcitx::AddonFactory
