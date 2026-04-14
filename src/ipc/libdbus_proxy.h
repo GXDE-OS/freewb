@@ -11,7 +11,6 @@ void FreeWubiServiceResetTableFlag(DBusConnection *conn);
 void FreeWubiServiceExitFreewbPanel(DBusConnection *conn);
 void FreeWubiServiceDictQuery(DBusConnection *conn, char *wordText);
 void FreeWubiServiceSwitchFreeIm(DBusConnection *conn, int imState);
-void FreeWubiServiceSwitchImState(DBusConnection *conn, int imState); // 切换输入法状态  0-进入极点五笔   1-切换至英文  2- 退出极点五笔
 void FreeWubiServiceSwitchToolbarState(DBusConnection *conn);
 void FreeWubiServiceSwitchCandiwinState(DBusConnection *conn);
 void FreeWubiServiceSwitchSkin(DBusConnection *conn);

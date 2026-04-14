@@ -153,26 +153,6 @@ void FreeWubiServiceSwitchFreeIm(DBusConnection *conn, int imState)
     dbus_message_unref(msg);
 }
 
-void FreeWubiServiceSwitchImState(DBusConnection *conn, int imState)
-{
-    DBusMessage *msg;
-    DBusMessageIter args;
-    dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = createSettingsMethodCallMessage("slot_dbus_switch_freewb");
-    if (NULL == msg)
-    {
-        return;
-    }
-    dbus_message_iter_init_append(msg, &args);
-    dbus_message_append_args(msg, DBUS_TYPE_INT32, &imState, DBUS_TYPE_INVALID);
-    if (!dbus_connection_send(conn, msg, &serial))
-    {
-        return;
-    }
-    dbus_message_unref(msg);
-    return;
-}
-
 void FreeWubiServiceSwitchToolbarState(DBusConnection *conn)
 {
     DBusMessage *msg;
