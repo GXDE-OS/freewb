@@ -219,7 +219,7 @@ void SDBusProxy::emitUpdateCandidate(const CandidatePayload &payload)
     emitImeSignal("ShowLookupTable", "b", hasLookup);
 }
 
-void SDBusProxy::emitUpdatePreeditText(const CandidatePreeditPayload &payload)
+void SDBusProxy::emitUpdatePreeditText(const PreeditPayload &payload)
 {
     static const char *const kEmptyAttr = "";
     emitImeSignal("UpdatePreeditText", "ss", payload.text.c_str(), kEmptyAttr);

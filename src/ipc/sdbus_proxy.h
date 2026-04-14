@@ -48,7 +48,7 @@ public:
     /** @brief 更新候选框文本
      * @param payload 候选框文本。
      */
-    void emitUpdatePreeditText(const CandidatePreeditPayload &payload) override;
+    void emitUpdatePreeditText(const PreeditPayload &payload) override;
     
     /** @brief 更新候选框光标位置
      * @param caret 光标位置。

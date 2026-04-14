@@ -19,7 +19,8 @@ namespace
 {
 
 /** 与旧 emitUpdateCandidate 等价的调用顺序，供演示/测试。 */
-void emitCandidateFrame(freewb::ipc::SDBusProxy &proxy, const freewb::SpotRectPayload &spot, const freewb::CandidatePayload &cand, const freewb::CandidatePreeditPayload &preedit, const freewb::CandidateAuxPayload &aux)
+void emitCandidateFrame(freewb::ipc::SDBusProxy &proxy, const freewb::SpotRectPayload &spot, const freewb::CandidatePayload &cand,
+                        const freewb::PreeditPayload &preedit, const freewb::CandidateAuxPayload &aux)
 {
     proxy.emitUpdateSpotRect(spot);
     proxy.emitUpdateCandidate(cand);
@@ -43,7 +44,7 @@ struct DemoState
 
     freewb::SpotRectPayload spotRect{100, 100, 1, 1};
     freewb::CandidatePayload candidate;
-    freewb::CandidatePreeditPayload preedit;
+    freewb::PreeditPayload preedit;
     freewb::CandidateAuxPayload aux;
 };
 
@@ -249,7 +250,7 @@ void handleCommand(DemoState &s, const std::string &cmd)
     else if (cmd == "1")
     {
         freewb::CandidatePayload emptyCand;
-        freewb::CandidatePreeditPayload pe{};
+        freewb::PreeditPayload pe{};
         freewb::CandidateAuxPayload ax{};
         pe.show = false;
         ax.show = false;
@@ -259,7 +260,7 @@ void handleCommand(DemoState &s, const std::string &cmd)
     }
     else if (cmd == "2")
     {
-        freewb::CandidatePreeditPayload pe{};
+        freewb::PreeditPayload pe{};
         freewb::CandidateAuxPayload ax{};
         emitCandidateFrame(proxy, s.spotRect, s.candidate, pe, ax);
         FREEWB_WARN("cmd=2 emitCandidateFrame (candidate only)");

@@ -32,7 +32,7 @@ struct CandidatePayload
     LayoutType layout = Horizontal;
 };
 
-struct CandidatePreeditPayload
+struct PreeditPayload
 {
     std::string text;
     int caret = 0;

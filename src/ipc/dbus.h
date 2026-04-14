@@ -8,7 +8,7 @@ namespace freewb::ipc
 
 using SpotRectPayload = ::freewb::SpotRectPayload;
 using CandidatePayload = ::freewb::CandidatePayload;
-using CandidatePreeditPayload = ::freewb::CandidatePreeditPayload;
+using PreeditPayload = ::freewb::PreeditPayload;
 using CandidateAuxPayload = ::freewb::CandidateAuxPayload;
 using ToolbarPropertiesPayload = ::freewb::ToolbarPropertiesPayload;
 
@@ -30,7 +30,7 @@ public:
     virtual void emitUpdateSpotRect(const SpotRectPayload &payload) = 0;
     virtual void emitUpdateCandidate(const CandidatePayload &payload) = 0;
 
-    virtual void emitUpdatePreeditText(const CandidatePreeditPayload &payload) = 0;
+    virtual void emitUpdatePreeditText(const PreeditPayload &payload) = 0;
     virtual void emitUpdatePreeditCaret(int caret) = 0;
     virtual void emitUpdateAux(const CandidateAuxPayload &payload) = 0;
 };
