@@ -27,6 +27,9 @@ public:
     void save();
 
 private:
+    void updateCursorPosition();
+
+private:
     fcitx::Instance *instance_;
     std::unique_ptr<freewb::Freewb> freewb_;
 };
