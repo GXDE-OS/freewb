@@ -1967,12 +1967,14 @@ static void FreeWubiOnClose(void *arg, FcitxIMCloseEventType event_type)
     FcitxInputState *input = FreeWubiGetInputState();
     if (event_type == CET_SwitchIM)
     {
-        FreeWubiServiceSwitchImState(FcitxDBusGetConnection(fwb->owner), IM_CLOSE_FREEWB);
+        FreeWubiPanelProxyOnTriggerOff();
+        FreeWubiPanelProxyCloseInputWindow();
         //		printf("freewb close\n");
     }
     else if (event_type == CET_ChangeByInactivate)
     {
-        FreeWubiServiceSwitchImState(FcitxDBusGetConnection(fwb->owner), IM_TO_ENGLISH);
+        FreeWubiPanelProxyOnTriggerOff();
+        FreeWubiPanelProxyCloseInputWindow();
         //		printf("CET_ChangeByInactivate close\n");
         char *strCodeInput = FcitxInputStateGetRawInputBuffer(input);
         FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), strCodeInput);
@@ -2948,14 +2950,15 @@ static void Fcitx4IMOnChanged(void *arg)
     if (strncmp(im_name, "freewb", sizeof("freewb")) == 0)
     {
         FcitxLog(INFO, "should activate freewb.");
-        FreeWubiServiceSwitchImState(FcitxDBusGetConnection(freewubi->owner), IM_INTO_FREEWB);
+        FreeWubiPanelProxyOnTriggerOn();
         FcitxUISetStatusVisable(freewubi->owner, _("属性设置"), true);
         FreeWubiPanelProxyRegisterAllStatus();
     }
     else
     {
         FcitxLog(INFO, "should deactivate freewb.");
-        FreeWubiServiceSwitchImState(FcitxDBusGetConnection(freewubi->owner), IM_CLOSE_FREEWB);
+        FreeWubiPanelProxyOnTriggerOff();
+        FreeWubiPanelProxyCloseInputWindow();
         FcitxUISetStatusVisable(freewubi->owner, _("属性设置"), false);
     }
 }
