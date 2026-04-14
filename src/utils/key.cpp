@@ -1,0 +1,81 @@
+#include "key.h"
+
+#include <cstddef>
+#include <cstring>
+
+namespace freewb
+{
+FreewbKeySym Key::keySymFromString(const char *keyString)
+{
+    if (!keyString)
+    {
+        return FreewbKey_None;
+    }
+    const auto n = sizeof(FreewbKeyNameList) / sizeof(FreewbKeyNameList[0]);
+    for (std::size_t i = 0; i < n; ++i)
+    {
+        if (std::strcmp(keyString, FreewbKeyNameList[i].name) == 0)
+        {
+            return FreewbKeyNameList[i].sym;
+        }
+    }
+    return FreewbKey_None;
+}
+
+const char *Key::keySymToString(FreewbKeySym sym)
+{
+    const auto n = sizeof(FreewbKeyNameList) / sizeof(FreewbKeyNameList[0]);
+    for (std::size_t i = 0; i < n; ++i)
+    {
+        if (FreewbKeyNameList[i].sym == sym)
+        {
+            return FreewbKeyNameList[i].name;
+        }
+    }
+    return "";
+}
+
+bool Key::isModifierKeySym(FreewbKeySym sym)
+{
+    switch (sym)
+    {
+    case FreewbKey_Shift_L:
+    case FreewbKey_Shift_R:
+    case FreewbKey_Control_L:
+    case FreewbKey_Control_R:
+    case FreewbKey_Meta_L:
+    case FreewbKey_Meta_R:
+    case FreewbKey_Alt_L:
+    case FreewbKey_Alt_R:
+    case FreewbKey_Super_L:
+    case FreewbKey_Super_R:
+    case FreewbKey_Hyper_L:
+    case FreewbKey_Hyper_R:
+    case FreewbKey_Shift_Lock:
+    case FreewbKey_Caps_Lock:
+    case FreewbKey_Num_Lock:
+    case FreewbKey_Scroll_Lock:
+    case FreewbKey_ISO_Level3_Shift:
+    case FreewbKey_ISO_Level5_Shift:
+    case FreewbKey_ISO_Group_Shift:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool Key::isKeyAZ(FreewbKeySym sym, FreewbKeyState state)
+{
+    return (!state && sym >= FreewbKey_A && sym <= FreewbKey_Z);
+}
+
+bool Key::isKeyaz(FreewbKeySym sym, FreewbKeyState state)
+{
+    return (!state && sym >= FreewbKey_a && sym <= FreewbKey_z);
+}
+
+bool Key::isKey09(FreewbKeySym sym, FreewbKeyState state)
+{
+    return !state && ((sym >= FreewbKey_0 && sym <= FreewbKey_9) || (state && sym >= FreewbKey_KP_0 && sym <= FreewbKey_KP_9));
+}
+} // namespace freewb
