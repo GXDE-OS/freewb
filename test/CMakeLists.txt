@@ -1,7 +1,11 @@
-find_package(Fcitx5Utils REQUIRED)
+message(STATUS "will build test cases")
 
-add_executable(freewb-sdbus-proxy-test sdbus_proxy_test.cpp)
-target_link_libraries(freewb-sdbus-proxy-test PRIVATE freewb-ipc Fcitx5::Utils)
+if (ENABLE_FCITX5)
+    find_package(Fcitx5Utils REQUIRED)
+    add_executable(freewb-sdbus-proxy-test sdbus_proxy_test.cpp)
+    target_link_libraries(freewb-sdbus-proxy-test PRIVATE ${PROJECT_NAME}-ipc Fcitx5::Utils)
+    add_test(NAME freewb-sdbus-proxy-test COMMAND freewb-sdbus-proxy-test)
+endif()
 
 add_executable(freewb-key-test key_test.cpp ${CMAKE_SOURCE_DIR}/src/utils/key.cpp)
 target_include_directories(freewb-key-test PRIVATE ${CMAKE_SOURCE_DIR}/src/core)
