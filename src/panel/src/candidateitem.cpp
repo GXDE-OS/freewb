@@ -70,12 +70,9 @@ void CandidateItem::set_text(const QString &label, const QString &wordText, cons
     m_wordText = wordText;
     QString tmp = wordText;
 
-    if (!SysTrayMenu::is_extern_im())
+    if (tmp.length() > m_maxCharCount + 3)
     {
-        if (tmp.length() > m_maxCharCount + 3)
-        {
-            tmp = tmp.left(m_maxCharCount - 2) + "…" + tmp.right(2);
-        }
+        tmp = tmp.left(m_maxCharCount - 2) + "…" + tmp.right(2);
     }
     // puts(tmp.toUtf8().constData());
     ui->labelWord->setText(label + tmp);

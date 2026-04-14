@@ -220,35 +220,11 @@ QString MainProgram::slot_dbus_test(const QString &text)
     return text;
 }
 
-void MainProgram::slot_dbus_switch_freewb(int flag)
-{
-    qDebug() << "func : " << __FUNCTION__ << ",line : " << __LINE__ << ",flag : " << flag;
-    if (flag == 0 && SysTrayMenu::is_extern_im()) // 极点五笔
-    {
-        qDebug() << "func : " << __FUNCTION__ << ",line : " << __LINE__ << ", show freewb ui";
-        SysTrayMenu::set_extern_im(false);
-        m_toolbar->show();
-    }
-    else if ((flag == 1) || (flag == 2)) // 退出极点五笔
-    {
-        qDebug() << "func : " << __FUNCTION__ << ",line : " << __LINE__ << ", hide freewb ui";
-        SysTrayMenu::set_extern_im(true);
-        // m_kimAgent->ReloadConfig();//ReloadConfig信号必须在删除kimpanel面板之前发送
-        m_toolbar->hide();
-        m_inputWin->hide();
-    }
-}
-
 // 切换输入法
 void MainProgram::slot_dbus_switch_internal_input_method(int im)
 {
 
     // printf("slot_dbus_switch_internal_input_method=%d\n",im);
-    if (SysTrayMenu::is_extern_im())
-    {
-        return;
-    }
-
     if ((ToolbarWin::get_inputMode() == IM_ENGLISH && im != IM_ENGLISH) || (ToolbarWin::get_inputMode() != IM_ENGLISH && im != IM_ENGLISH))
     {
         m_virtualKeyboard->switch_caps_flg(0);

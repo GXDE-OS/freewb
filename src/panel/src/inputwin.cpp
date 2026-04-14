@@ -463,11 +463,8 @@ bool InputWin::eventFilter(QObject *obj, QEvent *event)
     }
     else if (event->type() == QEvent::ContextMenu)
     {
-        if (!SysTrayMenu::is_extern_im())
-        {
-            isProcessed = true;
-            emit signal_open_context_menu();
-        }
+        isProcessed = true;
+        emit signal_open_context_menu();
     }
     else if (event->type() == QEvent::MouseButtonPress)
     {
@@ -885,20 +882,10 @@ void InputWin::handle_candiwin_op_help_info()
 {
     if (m_displayMode == CWDM_MULTI_ROW && settings::instance().get_showOpRemindInfo())
     {
-        if (!SysTrayMenu::is_extern_im())
+        set_candiwin_op_help_info();
+        if (ui->labelPrompt->isHidden())
         {
-            set_candiwin_op_help_info();
-            if (ui->labelPrompt->isHidden())
-            {
-                ui->labelPrompt->show();
-            }
-        }
-
-        // 外部输入法状态下不显示极点五笔相关操作提示信息
-        else if (!ui->labelPrompt->isHidden())
-        {
-            ui->labelPrompt->setText("");
-            ui->labelPrompt->hide();
+            ui->labelPrompt->show();
         }
     }
 }
@@ -1269,9 +1256,6 @@ void InputWin::slot_dict_find(const QString &wordText)
 {
     QString findInfo;
 
-    if (SysTrayMenu::is_extern_im())
-        return;
-
     findInfo = m_dictquery.dict_query_word_paraphrase(wordText);
     if (findInfo.isEmpty())
     {
@@ -1498,20 +1482,10 @@ void InputWin::slot_kim_UpdateLookupTable(const QStringList &label, const QStrin
 
     if (m_displayMode == CWDM_MULTI_ROW && settings::instance().get_showOpRemindInfo())
     {
-        if (!SysTrayMenu::is_extern_im())
+        set_candiwin_op_help_info();
+        if (ui->labelPrompt->isHidden())
         {
-            set_candiwin_op_help_info();
-            if (ui->labelPrompt->isHidden())
-            {
-                ui->labelPrompt->show();
-            }
-        }
-
-        // 外部输入法状态下不显示极点五笔相关操作提示信息
-        else if (!ui->labelPrompt->isHidden())
-        {
-            ui->labelPrompt->setText("");
-            ui->labelPrompt->hide();
+            ui->labelPrompt->show();
         }
     }
 
@@ -1539,7 +1513,7 @@ void InputWin::slot_kim_UpdatePreeditCaret(int position)
             str.replace("<", "&lt;");
             str.replace(">", "&gt;");
         }
-        if (str.contains(" ") && !SysTrayMenu::is_extern_im())
+        if (str.contains(" "))
         {
             QString stmStr = str.left(position);
             position += stmStr.count(" ") * 6;
@@ -1547,10 +1521,7 @@ void InputWin::slot_kim_UpdatePreeditCaret(int position)
         }
         str = str.insert(position, "<font color=\"#377EEC\"> |</font>");
         ui->labelPreEdit->setText(str);
-        if (!SysTrayMenu::is_extern_im())
-        {
-            m_caretBlinkTimer.start(1000);
-        }
+        m_caretBlinkTimer.start(1000);
         m_caretPos = position;
         m_caretPhase = 1;
     }
@@ -1565,7 +1536,7 @@ void InputWin::slot_kim_ShowPreedit(bool enable)
 {
     if (enable)
     {
-        if (isHidden() && !m_hideCandiWin && !SysTrayMenu::is_extern_im())
+        if (isHidden() && !m_hideCandiWin)
         {
             show();
         }
@@ -1596,7 +1567,7 @@ void InputWin::slot_kim_UpdatePreeditText(const QString &text, const QString &at
         str = str.remove(0, 1);
     }
     ui->labelPreEdit->setText(str);
-    if (!m_caretBlinkTimer.isActive() && !SysTrayMenu::is_extern_im())
+    if (!m_caretBlinkTimer.isActive())
     {
         m_caretBlinkTimer.start(1000);
         m_caretPhase = 0;

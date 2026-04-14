@@ -50,7 +50,6 @@ public:
 
 public slots:                                                                                    // 提供给外部进程调用的DBUS方法接口
     QString slot_dbus_test(const QString &text);                                                 // 测试使用
-    void slot_dbus_switch_freewb(int flag);                                                      // 切换输入法： 0-极点五笔， 1-英文， 2-非极点五笔
     void slot_dbus_switch_internal_input_method(int im);                                         // 切换极点五笔子输入法
     void slot_dbus_dict_query(const QString &text);                                              // 字典查询
     void slot_dbus_generate_usr_word(int flg, const QString &wordText, const QString &wordCode); // 用户造词

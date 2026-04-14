@@ -9,6 +9,7 @@
 #include "sound.h"
 #include "systraymenu.h"
 #include "ui_toolbarwin.h"
+#include "log.h"
 
 // 桌面工具条按钮样式表
 #define QSS_BG0 QString("border-image: url(%1);").arg(m_skinData.bg0ImagePath)
@@ -1203,34 +1204,26 @@ void ToolbarWin::slot_kim_RegisterProperties(const QStringList &prop)
 // prop: 切换输入法时提示的输入法本身描述信息
 void ToolbarWin::slot_kim_UpdateProperty(const QString &prop)
 {
+    FREEWB_DEBUG("ToolbarWin::slot_kim_UpdateProperty: prop={}", prop.toUtf8().constData());
     if (prop.contains("/Fcitx/im:"))
     {
         fcitx_inputmethod_updated(prop);
     }
-    qDebug() << "switch ime: " << prop << "\n";
-    // show();
+    FREEWB_DEBUG("switch ime: {}", prop.toUtf8().constData());
     if (prop.contains("/Fcitx/im:Freewb") || prop.contains("/Fcitx/im:极点五笔"))
     {
-        //        if ( m_hideDelayTimer.isActive() )
-        //        {
-        //            m_hideDelayTimer.stop();
-        //        }
         if (!m_hideToolbar)
         {
-
-            // if ( m_autoLocate )
             {
                 move(m_defaultPosition);
             }
-            if (!SysTrayMenu::is_extern_im())
-            {
-                show();
-            }
+            FREEWB_DEBUG("show toolbar for freewb im");
+            show();
         }
     }
-    else if (prop.contains("/Fcitx/im:us") || prop.contains("/Fcitx/im:无输入窗口") || prop.contains("/Fcitx/im:No input window"))
+    else if (prop.contains("/Fcitx/im:"))
     {
-        // show();
+        FREEWB_DEBUG("hide toolbar for non-freewb im");
         hide();
     }
 }
