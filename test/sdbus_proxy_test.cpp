@@ -185,8 +185,6 @@ void handleCommand(DemoState &s, const std::string &cmd)
             proxy.callSwitchSkinMethod();
         else if (action == "switch_vk" && tokens.size() >= 3)
             proxy.callSwitchVirtualKeyboardModeMethod(toInt(tokens[2]));
-        else if (action == "switch_smart_punc")
-            proxy.callSwitchSmartPuncMethod();
         else if (action == "switch_charset")
             proxy.callSwitchCharSetMethod();
         else if (action == "switch_recode_proof")
@@ -352,7 +350,6 @@ void handleCommand(DemoState &s, const std::string &cmd)
         proxy.callDictQueryMethod(u8"\u6d4b\u8bd5");
         proxy.callSwitchInputModeMethod(1);
         proxy.callSwitchVirtualKeyboardModeMethod(0);
-        proxy.callSwitchSmartPuncMethod();
         proxy.callSwitchRecodeProofMethod();
         proxy.callSwitchUncommonParseStateMethod(u8"\u6d4b\u8bd5\u8bcd", 1);
         proxy.callSwitchChttransMethod();

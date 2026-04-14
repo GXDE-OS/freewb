@@ -268,11 +268,6 @@ void SDBusProxy::callSwitchVirtualKeyboardModeMethod(int flg)
     callSettingsMethod("slot_dbus_switch_vk", "i", flg);
 }
 
-void SDBusProxy::callSwitchSmartPuncMethod()
-{
-    callSettingsMethod("slot_dbus_set_mark_auto_pairs_flg", "i", 0);
-}
-
 void SDBusProxy::callSwitchCharSetMethod()
 {
     callSettingsMethod("slot_dbus_switch_char_set", "");

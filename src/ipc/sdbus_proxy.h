@@ -92,12 +92,6 @@ public: // settings 通过 D-Bus 调用 freewb-settings 服务的方法
     /** @brief 切换皮肤。 */
     void callSwitchSkinMethod();
 
-    /**
-     * @brief 启用/禁用标点自动配对
-     * @param flg 0-关闭，1-开启。
-     */
-    void callSwitchSmartPuncMethod();
-
     /** @brief 切换字符集（GB/GBK）。 */
     void callSwitchCharSetMethod();
 
