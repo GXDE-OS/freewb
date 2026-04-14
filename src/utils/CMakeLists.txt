@@ -1,3 +1,5 @@
+message(STATUS "building utils module")
+
 find_package(spdlog REQUIRED)
 if (NOT spdlog_FOUND)
     message(FATAL_ERROR "spdlog not found")
