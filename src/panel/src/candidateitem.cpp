@@ -1,7 +1,8 @@
 #include "candidateitem.h"
 
-#include <QTimer>
 #include <iostream>
+
+#include <QTimer>
 
 #include "systraymenu.h"
 #include "ui_candidateitem.h"

@@ -39,13 +39,7 @@ void Freewb::deactivate()
     candidateList_->clear();
     sdbusProxy_->emitHideToolbar();
     sdbusProxy_->emitUpdatePreeditText({.text = "", .caret = 0, .show = false});
-    sdbusProxy_->emitUpdateCandidate({.labels = {},
-                                   .texts = {},
-                                   .attrs = {},
-                                   .hasPrev = false,
-                                   .hasNext = false,
-                                   .cursor = -1,
-                                   .layout = Horizontal});
+    sdbusProxy_->emitUpdateCandidate({.labels = {}, .texts = {}, .attrs = {}, .hasPrev = false, .hasNext = false, .cursor = -1, .layout = Horizontal});
 }
 
 ipc::SDBusProxy *Freewb::sdbusProxy() const
@@ -59,13 +53,7 @@ void Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
     std::pair<PreeditPayload, CandidatePayload> result = engineManager_->getResult();
     candidateList_->setCandidateTexts(result.second.texts);
     sdbusProxy_->emitUpdatePreeditText(result.first);
-    sdbusProxy_->emitUpdateCandidate({.labels = {},
-                                   .texts = candidateList_->candidateTexts(),
-                                   .attrs = {},
-                                   .hasPrev = candidateList_->hasPrev(),
-                                   .hasNext = candidateList_->hasNext(),
-                                   .cursor = candidateList_->cursor(),
-                                   .layout = Horizontal});
+    sdbusProxy_->emitUpdateCandidate({.labels = {}, .texts = candidateList_->candidateTexts(), .attrs = {}, .hasPrev = candidateList_->hasPrev(), .hasNext = candidateList_->hasNext(), .cursor = candidateList_->cursor(), .layout = Horizontal});
 }
 
 void Freewb::reset()

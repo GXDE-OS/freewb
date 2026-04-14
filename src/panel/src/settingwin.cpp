@@ -1,8 +1,9 @@
 #include "settingwin.h"
 
+#include <vector>
+
 #include <QDateTime>
 #include <QFont>
-#include <vector>
 
 #include "commdefine.h"
 #include "settings.h"
@@ -63,11 +64,11 @@ void swBuildSingleShortcutCombo(QComboBox *combo, int selectedIdx, int forbidden
 #define VERSION_X86                                                                                                                                                                                                                                                                                        \
     ""                                                                                                                                                                                                                                                                                                     \
     "<html><head/><body><font style='font-family:Ubuntu;font-size:13px;'>"                                                                                                                                                                                                                                 \
-    "－感谢极点五笔的开创者杜志民先生，设计出属于输入人员"                                                                                                                                                                                                                       \
-    "<br/>&nbsp;&nbsp;&nbsp;&nbsp;自己的输入法"                                                                                                                                                                                                                                                      \
-    "<br/>－感谢鹏城实验室自主可控方向对项目开发提供的大力支持"                                                                                                                                                                                                                  \
-    "<br/>－感谢北弓智能的开发人员为项目付出的努力"                                                                                                                                                                                                                                    \
-    "<br/>－感谢openKylin InputMethod SIG的开发支持"                                                                                                                                                                                                                                               \
+    "－感谢极点五笔的开创者杜志民先生，设计出属于输入人员"                                                                                                                                                                                                                                                 \
+    "<br/>&nbsp;&nbsp;&nbsp;&nbsp;自己的输入法"                                                                                                                                                                                                                                                            \
+    "<br/>－感谢鹏城实验室自主可控方向对项目开发提供的大力支持"                                                                                                                                                                                                                                            \
+    "<br/>－感谢北弓智能的开发人员为项目付出的努力"                                                                                                                                                                                                                                                        \
+    "<br/>－感谢openKylin InputMethod SIG的开发支持"                                                                                                                                                                                                                                                       \
     "<br/>－感谢银河麒麟操作系统团队的技术支持</font></body></html>"
 
 SettingWin::SettingWin(QWidget *parent) : QWidget(parent), ui(new Ui::SettingWin)
@@ -579,8 +580,7 @@ void SettingWin::update_custom_shortkey_cmb()
         bool isUsed = false;
         for (int j = 0; j < CSF_NUM; j++)
         {
-            if (i != CSK_NONE && (j != ui->cmbFunction->currentIndex())
-                && (freewb_custom_shortcut_get_combine_index(settings::instance(), j) == i))
+            if (i != CSK_NONE && (j != ui->cmbFunction->currentIndex()) && (freewb_custom_shortcut_get_combine_index(settings::instance(), j) == i))
             {
                 isUsed = true;
             }
@@ -594,8 +594,7 @@ void SettingWin::update_custom_shortkey_cmb()
 
     for (int i = 0; i < ui->cmbShortcutKey->count(); i++)
     {
-        if (ui->cmbShortcutKey->itemText(i)
-            == toQStringUtf8(freewb_custom_shortcut_key_display(settings::instance(), ui->cmbFunction->currentIndex())))
+        if (ui->cmbShortcutKey->itemText(i) == toQStringUtf8(freewb_custom_shortcut_key_display(settings::instance(), ui->cmbFunction->currentIndex())))
         {
             ui->cmbShortcutKey->setCurrentIndex(i);
             break;
@@ -606,31 +605,19 @@ void SettingWin::update_custom_shortkey_cmb()
 // 设置界面--更新临时英文选项框
 void SettingWin::update_tmp_engish_cmb()
 {
-    swBuildSingleShortcutCombo(
-        ui->cmbTmpEnglish,
-        freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish()),
-        freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput()),
-        freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin()));
+    swBuildSingleShortcutCombo(ui->cmbTmpEnglish, freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish()), freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput()), freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin()));
 }
 
 // 设置界面--更新快捷输入选项框
 void SettingWin::update_short_input_cmb()
 {
-    swBuildSingleShortcutCombo(
-        ui->cmbShortcutInput,
-        freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput()),
-        freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish()),
-        freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin()));
+    swBuildSingleShortcutCombo(ui->cmbShortcutInput, freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput()), freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish()), freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin()));
 }
 
 // 设置界面--更新临时拼音选项框
 void SettingWin::update_tmp_pinyin_cmb()
 {
-    swBuildSingleShortcutCombo(
-        ui->cmbTmpPinyin,
-        freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin()),
-        freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish()),
-        freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput()));
+    swBuildSingleShortcutCombo(ui->cmbTmpPinyin, freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin()), freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish()), freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput()));
 }
 
 void SettingWin::init_ui_setting_page()
@@ -1152,8 +1139,7 @@ void SettingWin::on_cmbTmpEnglish_activated(const QString &arg1)
 {
     Q_UNUSED(arg1);
     const int idx = ui->cmbTmpEnglish->currentData().toInt();
-    settings::instance().set_tempEnglish(
-        freewb_single_shortcut_ini_token(idx));
+    settings::instance().set_tempEnglish(freewb_single_shortcut_ini_token(idx));
 
     update_short_input_cmb();
     update_tmp_pinyin_cmb();
@@ -1163,8 +1149,7 @@ void SettingWin::on_cmbShortcutInput_activated(const QString &arg1)
 {
     Q_UNUSED(arg1);
     const int idx = ui->cmbShortcutInput->currentData().toInt();
-    settings::instance().set_shortcutInput(
-        freewb_single_shortcut_ini_token(idx));
+    settings::instance().set_shortcutInput(freewb_single_shortcut_ini_token(idx));
 
     update_tmp_engish_cmb();
     update_tmp_pinyin_cmb();
@@ -1174,8 +1159,7 @@ void SettingWin::on_cmbTmpPinyin_activated(const QString &arg1)
 {
     Q_UNUSED(arg1);
     const int idx = ui->cmbTmpPinyin->currentData().toInt();
-    settings::instance().set_tempPinyin(
-        freewb_single_shortcut_ini_token(idx));
+    settings::instance().set_tempPinyin(freewb_single_shortcut_ini_token(idx));
 
     update_tmp_engish_cmb();
     update_short_input_cmb();
@@ -1248,11 +1232,7 @@ void SettingWin::slot_custom_btn_ok_clicked(const QString &commSymbol, const QSt
 #endif
     std::string chars = settings::instance().get_CoustomChar();
     std::string marks = settings::instance().get_CoustomMark();
-    if (freewb_custom_key_info_apply_to_values(chars,
-                                               marks,
-                                               static_cast<int>(m_curSymbolKeyIdx),
-                                               KEY_SYMBOL_NUM,
-                                               customKeyFromQt(m_curCustomKeyValue)))
+    if (freewb_custom_key_info_apply_to_values(chars, marks, static_cast<int>(m_curSymbolKeyIdx), KEY_SYMBOL_NUM, customKeyFromQt(m_curCustomKeyValue)))
     {
         settings::instance().set_CoustomChar(chars);
         settings::instance().set_CoustomMark(marks);

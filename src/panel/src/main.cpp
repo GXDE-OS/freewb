@@ -15,9 +15,9 @@
 #include <QMutex>
 
 #include "commdefine.h"
+#include "log.h"
 #include "mainprogram.h"
 #include "settings.h"
-#include "log.h"
 
 CpuType g_cpuType = CT_X86;
 DesktopType g_desktopType = DT_UBUNTU;

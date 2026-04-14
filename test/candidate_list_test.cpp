@@ -19,13 +19,13 @@ void fail(const char *msg)
     std::abort();
 }
 
-#define REQUIRE(cond, msg)                                                                                             \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        if (!(cond))                                                                                                   \
-        {                                                                                                              \
-            fail(msg);                                                                                                 \
-        }                                                                                                              \
+#define REQUIRE(cond, msg)                                                                                                                                                                                                                                                                                 \
+    do                                                                                                                                                                                                                                                                                                     \
+    {                                                                                                                                                                                                                                                                                                      \
+        if (!(cond))                                                                                                                                                                                                                                                                                       \
+        {                                                                                                                                                                                                                                                                                                  \
+            fail(msg);                                                                                                                                                                                                                                                                                     \
+        }                                                                                                                                                                                                                                                                                                  \
     } while (0)
 
 } // namespace

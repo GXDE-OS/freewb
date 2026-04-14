@@ -1,8 +1,8 @@
+#include <iostream>
+
 #include "log.h"
 #include "py.h"
 #include "utils.h"
-
-#include <iostream>
 
 int main()
 {

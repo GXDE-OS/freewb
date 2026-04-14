@@ -1,9 +1,10 @@
 #include "settingshelper.h"
-#include "settings.h"
 
 #include <array>
 #include <utility>
 #include <vector>
+
+#include "settings.h"
 
 namespace
 {
@@ -19,38 +20,88 @@ UiRuntimeState g_uiRuntimeState;
 
 const std::array<std::string, SSK_NUM> &singleShortcutIniTokens()
 {
-    static const std::array<std::string, SSK_NUM> k = {{
-        "KEY_NONE", ";", "'", ",", ".", "`", "[", "]", "\\", "/", "u", "i", "v", "z"}};
+    static const std::array<std::string, SSK_NUM> k = {{"KEY_NONE", ";", "'", ",", ".", "`", "[", "]", "\\", "/", "u", "i", "v", "z"}};
     return k;
 }
 
 const std::array<const char *, CSK_NUM> &combineShortcutTokenCStrs()
 {
-    static const std::array<const char *, CSK_NUM> k = {{
-        "KEY_NONE", "KEY_INSERT", "KEY_DEL", "KEY_ESC", "KEY_BACKSPACE", "KEY_HOME", "KEY_END", "KEY_LEFT", "KEY_RIGHT",
-        "KEY_UP", "KEY_DOWN", "KEY_QUOTE", "KEY_SEMICOLON", "KEY_BACK_SLASH", "KEY_LEFT_BRACKET", "KEY_RIGHT_BRACKET",
-        "KEY_COMMA", "KEY_PERIOD", "KEY_SLASH", "KEY_BACKQUOTE", "KEY_EQUAL", "KEY_DASH", "KEY_F1", "KEY_F2", "KEY_F3",
-        "KEY_F4", "KEY_F5", "KEY_F6", "KEY_F7", "KEY_F8", "KEY_F9", "KEY_F10", "KEY_F11", "KEY_F12", "KEY_A", "KEY_B",
-        "KEY_C", "KEY_D", "KEY_E", "KEY_F", "KEY_G", "KEY_H", "KEY_I", "KEY_J", "KEY_K", "KEY_L", "KEY_M", "KEY_N",
-        "KEY_O", "KEY_P", "KEY_Q", "KEY_R", "KEY_S", "KEY_T", "KEY_U", "KEY_V", "KEY_W", "KEY_X", "KEY_Y", "KEY_Z"}};
+    static const std::array<const char *, CSK_NUM> k = {{"KEY_NONE",
+                                                         "KEY_INSERT",
+                                                         "KEY_DEL",
+                                                         "KEY_ESC",
+                                                         "KEY_BACKSPACE",
+                                                         "KEY_HOME",
+                                                         "KEY_END",
+                                                         "KEY_LEFT",
+                                                         "KEY_RIGHT",
+                                                         "KEY_UP",
+                                                         "KEY_DOWN",
+                                                         "KEY_QUOTE",
+                                                         "KEY_SEMICOLON",
+                                                         "KEY_BACK_SLASH",
+                                                         "KEY_LEFT_BRACKET",
+                                                         "KEY_RIGHT_BRACKET",
+                                                         "KEY_COMMA",
+                                                         "KEY_PERIOD",
+                                                         "KEY_SLASH",
+                                                         "KEY_BACKQUOTE",
+                                                         "KEY_EQUAL",
+                                                         "KEY_DASH",
+                                                         "KEY_F1",
+                                                         "KEY_F2",
+                                                         "KEY_F3",
+                                                         "KEY_F4",
+                                                         "KEY_F5",
+                                                         "KEY_F6",
+                                                         "KEY_F7",
+                                                         "KEY_F8",
+                                                         "KEY_F9",
+                                                         "KEY_F10",
+                                                         "KEY_F11",
+                                                         "KEY_F12",
+                                                         "KEY_A",
+                                                         "KEY_B",
+                                                         "KEY_C",
+                                                         "KEY_D",
+                                                         "KEY_E",
+                                                         "KEY_F",
+                                                         "KEY_G",
+                                                         "KEY_H",
+                                                         "KEY_I",
+                                                         "KEY_J",
+                                                         "KEY_K",
+                                                         "KEY_L",
+                                                         "KEY_M",
+                                                         "KEY_N",
+                                                         "KEY_O",
+                                                         "KEY_P",
+                                                         "KEY_Q",
+                                                         "KEY_R",
+                                                         "KEY_S",
+                                                         "KEY_T",
+                                                         "KEY_U",
+                                                         "KEY_V",
+                                                         "KEY_W",
+                                                         "KEY_X",
+                                                         "KEY_Y",
+                                                         "KEY_Z"}};
     return k;
 }
 
 const std::array<std::string, CSK_NUM> &combineShortcutDisplayNames()
 {
-    static const std::array<std::string, CSK_NUM> k = {{
-        "禁止", "Insert", "Del", "Esc", "Backspace", "Home", "End", "←", "→", "↑", "↓", "引号( ' )", "分号( ; )",
-        "反斜杠( \\ )", "左中( [ )", "右中( ] )", "逗号( , )", "句号( . )", "除号( / )", "反引号( ` )", "=", "-",
-        "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "A", "B", "C", "D", "E", "F", "G",
-        "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}};
+    static const std::array<std::string, CSK_NUM> k = {{"禁止",      "Insert",    "Del",       "Esc",       "Backspace", "Home",        "End", "←", "→",  "↑",  "↓",  "引号( ' )", "分号( ; )", "反斜杠( \\ )",
+                                                        "左中( [ )", "右中( ] )", "逗号( , )", "句号( . )", "除号( / )", "反引号( ` )", "=",   "-", "F1", "F2", "F3", "F4",        "F5",        "F6",
+                                                        "F7",        "F8",        "F9",        "F10",       "F11",       "F12",         "A",   "B", "C",  "D",  "E",  "F",         "G",         "H",
+                                                        "I",         "J",         "K",         "L",         "M",         "N",           "O",   "P", "Q",  "R",  "S",  "T",         "U",         "V",
+                                                        "W",         "X",         "Y",         "Z"}};
     return k;
 }
 
 const std::array<std::string, SSK_NUM> &singleShortcutDisplayNames()
 {
-    static const std::array<std::string, SSK_NUM> k = {{
-        "禁止", "分号( ; )", "引号( ' )", "逗号( , )", "句号( . )", "反引号( ` )", "左中( [ )", "右中( ] )",
-        "反斜( \\ )", "除号( / )", "u", "i", "v", "z"}};
+    static const std::array<std::string, SSK_NUM> k = {{"禁止", "分号( ; )", "引号( ' )", "逗号( , )", "句号( . )", "反引号( ` )", "左中( [ )", "右中( ] )", "反斜( \\ )", "除号( / )", "u", "i", "v", "z"}};
     return k;
 }
 
@@ -116,7 +167,9 @@ const std::array<std::pair<const char *, const char *>, static_cast<size_t>(RSSK
 
 } // namespace
 
-SettingsNotifier::SettingsNotifier(QObject *parent) : QObject(parent) {}
+SettingsNotifier::SettingsNotifier(QObject *parent) : QObject(parent)
+{
+}
 
 void SettingsNotifier::notifySettingDataChangedToLocal()
 {
@@ -416,6 +469,7 @@ namespace
 {
 using CustomShortcutGetter = const std::string &(settings::Settings::*)() const;
 using CustomShortcutSetter = void (settings::Settings::*)(const std::string &);
+
 struct CustomShortcutAccessor
 {
     const char *entryName;
@@ -425,21 +479,20 @@ struct CustomShortcutAccessor
 
 const CustomShortcutAccessor *freewb_custom_shortcut_accessor(int funcIndex)
 {
-    static const CustomShortcutAccessor kAccessors[] = {
-        {"backFindCode", &settings::Settings::get_backFindCode, &settings::Settings::set_backFindCode},
-        {"onlineAddWord", &settings::Settings::get_onlineAddWord, &settings::Settings::set_onlineAddWord},
-        {"onlineDelWord", &settings::Settings::get_onlineDelWord, &settings::Settings::set_onlineDelWord},
-        {"switchVKb", &settings::Settings::get_switchVKb, &settings::Settings::set_switchVKb},
-        {"switchCharSet", &settings::Settings::get_switchCharSet, &settings::Settings::set_switchCharSet},
-        {"switchInputMode", &settings::Settings::get_switchInputMode, &settings::Settings::set_switchInputMode},
-        {"switchChttrans", &settings::Settings::get_switchChttrans, &settings::Settings::set_switchChttrans},
-        {"setupOption", &settings::Settings::get_setupOption, &settings::Settings::set_setupOption},
-        {"showHideToolbar", &settings::Settings::get_showHideToolbar, &settings::Settings::set_showHideToolbar},
-        {"showHideCandiWin", &settings::Settings::get_showHideCandiWin, &settings::Settings::set_showHideCandiWin},
-        {"switchLexicon", &settings::Settings::get_switchLexicon, &settings::Settings::set_switchLexicon},
-        {"switchSkin", &settings::Settings::get_switchSkin, &settings::Settings::set_switchSkin},
-        {"quickDelScreenItem", &settings::Settings::get_quickDelScreenItem, &settings::Settings::set_quickDelScreenItem},
-        {"markAutoPair", &settings::Settings::get_markAutoPair, &settings::Settings::set_markAutoPair}};
+    static const CustomShortcutAccessor kAccessors[] = {{"backFindCode", &settings::Settings::get_backFindCode, &settings::Settings::set_backFindCode},
+                                                        {"onlineAddWord", &settings::Settings::get_onlineAddWord, &settings::Settings::set_onlineAddWord},
+                                                        {"onlineDelWord", &settings::Settings::get_onlineDelWord, &settings::Settings::set_onlineDelWord},
+                                                        {"switchVKb", &settings::Settings::get_switchVKb, &settings::Settings::set_switchVKb},
+                                                        {"switchCharSet", &settings::Settings::get_switchCharSet, &settings::Settings::set_switchCharSet},
+                                                        {"switchInputMode", &settings::Settings::get_switchInputMode, &settings::Settings::set_switchInputMode},
+                                                        {"switchChttrans", &settings::Settings::get_switchChttrans, &settings::Settings::set_switchChttrans},
+                                                        {"setupOption", &settings::Settings::get_setupOption, &settings::Settings::set_setupOption},
+                                                        {"showHideToolbar", &settings::Settings::get_showHideToolbar, &settings::Settings::set_showHideToolbar},
+                                                        {"showHideCandiWin", &settings::Settings::get_showHideCandiWin, &settings::Settings::set_showHideCandiWin},
+                                                        {"switchLexicon", &settings::Settings::get_switchLexicon, &settings::Settings::set_switchLexicon},
+                                                        {"switchSkin", &settings::Settings::get_switchSkin, &settings::Settings::set_switchSkin},
+                                                        {"quickDelScreenItem", &settings::Settings::get_quickDelScreenItem, &settings::Settings::set_quickDelScreenItem},
+                                                        {"markAutoPair", &settings::Settings::get_markAutoPair, &settings::Settings::set_markAutoPair}};
     if (funcIndex < 0 || funcIndex >= CSF_NUM)
         return nullptr;
     return &kAccessors[funcIndex];
@@ -489,7 +542,8 @@ std::vector<CustomKeyStrings> freewb_build_custom_key_table(const std::string &c
 {
     std::vector<CustomKeyStrings> table(static_cast<size_t>(keyCount));
 
-    auto splitSpacesPreserveEmptyBetween = [](const std::string &value) {
+    auto splitSpacesPreserveEmptyBetween = [](const std::string &value)
+    {
         std::vector<std::string> out;
         std::string token;
         for (size_t i = 0; i < value.size(); ++i)
@@ -571,4 +625,3 @@ bool freewb_custom_key_info_apply_to_values(std::string &chars, std::string &mar
     marks = freewb_flatten_custom_mark_value(table);
     return true;
 }
-

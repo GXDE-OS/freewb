@@ -19,8 +19,7 @@ namespace
 {
 
 /** 与旧 emitUpdateCandidate 等价的调用顺序，供演示/测试。 */
-void emitCandidateFrame(freewb::ipc::SDBusProxy &proxy, const freewb::SpotRectPayload &spot, const freewb::CandidatePayload &cand,
-                        const freewb::PreeditPayload &preedit, const freewb::CandidateAuxPayload &aux)
+void emitCandidateFrame(freewb::ipc::SDBusProxy &proxy, const freewb::SpotRectPayload &spot, const freewb::CandidatePayload &cand, const freewb::PreeditPayload &preedit, const freewb::CandidateAuxPayload &aux)
 {
     proxy.emitUpdateSpotRect(spot);
     proxy.emitUpdateCandidate(cand);

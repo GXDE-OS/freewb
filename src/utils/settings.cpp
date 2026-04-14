@@ -9,10 +9,8 @@
 namespace settings
 {
 
-const char kDefaultCoustomChar[] =
-    u8R"cc(ˉ  ，  、  ；  ：  ？  ！  …  —  •  〔  （  【  〈  “  〉  《  》  ∶  「  」  『  ［  ）  ＂  ＇  ‘  ”  〕  々  ‖  】  ’  〗  ～  〖  。  ˇ  ¨  `  |  "  』  .  ］  中  国  )cc";
-const char kDefaultCoustomMark[] =
-    u8R"cc( ）  ！  ·  #  ￥  %  …  —  *  （                                                     ` ~ － — ＝ + [ { ] } 、 ｜ ； ： ’  ，  。  、 ？ )cc";
+const char kDefaultCoustomChar[] = u8R"cc(ˉ  ，  、  ；  ：  ？  ！  …  —  •  〔  （  【  〈  “  〉  《  》  ∶  「  」  『  ［  ）  ＂  ＇  ‘  ”  〕  々  ‖  】  ’  〗  ～  〖  。  ˇ  ¨  `  |  "  』  .  ］  中  国  )cc";
+const char kDefaultCoustomMark[] = u8R"cc( ）  ！  ·  #  ￥  %  …  —  *  （                                                     ` ~ － — ＝ + [ { ] } 、 ｜ ； ： ’  ，  。  、 ？ )cc";
 
 namespace
 {

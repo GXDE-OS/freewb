@@ -32,107 +32,124 @@ enum class ValueType
     String,
 };
 
-#define FREEWB_CFG_Int_APPLY(id, GetFn, SetFn)                                                                           \
-    int GetFn() const { return readInt(#id); }                                                                           \
-    void SetFn(int v) { writeInt(#id, v); }
+#define FREEWB_CFG_Int_APPLY(id, GetFn, SetFn)                                                                                                                                                                                                                                                             \
+    int GetFn() const                                                                                                                                                                                                                                                                                      \
+    {                                                                                                                                                                                                                                                                                                      \
+        return readInt(#id);                                                                                                                                                                                                                                                                               \
+    }                                                                                                                                                                                                                                                                                                      \
+    void SetFn(int v)                                                                                                                                                                                                                                                                                      \
+    {                                                                                                                                                                                                                                                                                                      \
+        writeInt(#id, v);                                                                                                                                                                                                                                                                                  \
+    }
 
-#define FREEWB_CFG_Bool_APPLY(id, GetFn, SetFn)                                                                          \
-    bool GetFn() const { return readBool(#id); }                                                                         \
-    void SetFn(bool v) { writeBool(#id, v); }
+#define FREEWB_CFG_Bool_APPLY(id, GetFn, SetFn)                                                                                                                                                                                                                                                            \
+    bool GetFn() const                                                                                                                                                                                                                                                                                     \
+    {                                                                                                                                                                                                                                                                                                      \
+        return readBool(#id);                                                                                                                                                                                                                                                                              \
+    }                                                                                                                                                                                                                                                                                                      \
+    void SetFn(bool v)                                                                                                                                                                                                                                                                                     \
+    {                                                                                                                                                                                                                                                                                                      \
+        writeBool(#id, v);                                                                                                                                                                                                                                                                                 \
+    }
 
-#define FREEWB_CFG_String_APPLY(id, GetFn, SetFn)                                                                        \
-    const std::string &GetFn() const { return readString(#id); }                                                         \
-    void SetFn(const std::string &v) { writeString(#id, v); }
+#define FREEWB_CFG_String_APPLY(id, GetFn, SetFn)                                                                                                                                                                                                                                                          \
+    const std::string &GetFn() const                                                                                                                                                                                                                                                                       \
+    {                                                                                                                                                                                                                                                                                                      \
+        return readString(#id);                                                                                                                                                                                                                                                                            \
+    }                                                                                                                                                                                                                                                                                                      \
+    void SetFn(const std::string &v)                                                                                                                                                                                                                                                                       \
+    {                                                                                                                                                                                                                                                                                                      \
+        writeString(#id, v);                                                                                                                                                                                                                                                                               \
+    }
 
-
-#define FREEWB_AUTO_ACCESSOR_ENTRY_LIST(X)                                                                               \
-    X(charSet, Misc, Int, "0", Misc, "")                                                                                 \
-    X(currentCharset, Misc, Int, "0", Misc, "")                                                                          \
-    X(enterClear, Misc, Bool, "true", Misc, "")                                                                          \
-    X(inputMethod, Misc, Int, "1", Misc, "")                                                                             \
-    X(inputMode, Misc, Int, "0", Misc, "")                                                                               \
-    X(quickTableFlg, Misc, Int, "0", Misc, "")                                                                           \
-    X(imeTableChanged, Misc, Int, "0", Misc, "")                                                                         \
-    X(simpTradFlg, Misc, Int, "0", Misc, "")                                                                             \
-    X(userWordFlg, Misc, Int, "1", Misc, "")                                                                             \
-    X(vkMode, Misc, Int, "-1", Misc, "")                                                                                 \
-    X(separateChar, CandidateWinUi, String, ".", CandidateWinUi, "")                                                     \
-    X(candiPageKey, CandidateWinOptions, String, "CPSK_SUB_EQUAL", CandidateWinOptions, "")                             \
-    X(cnEnSwitch, ShortcutKey, String, "KEY_SHIFT", ShortcutKey, "")                                                     \
-    X(curUsedLexicon, Misc, String, "default", Misc, "")                                                                 \
-    X(CoustomChar, Misc, String, kDefaultCoustomChar, Misc, "")                                                          \
-    X(CoustomMark, Misc, String, kDefaultCoustomMark, Misc, "")                                                          \
-    X(wubiTable, Misc, String, "default/freeime.mb", Misc, "")                                                           \
-    X(pinyinTable, Misc, String, "default/attach.mb", Misc, "")                                                          \
-    X(candiWinDispMode, CandidateWinUi, Int, "0", CandidateWinUi, "")                                                    \
-    X(candiCharCount, CandidateWinUi, Int, "9", CandidateWinUi, "")                                                      \
-    X(candiWordCount, CandidateWinUi, Int, "5", CandidateWinUi, "")                                                      \
-    X(radius, CandidateWinUi, Int, "5", CandidateWinUi, "")                                                              \
-    X(transparency, CandidateWinUi, Int, "0", CandidateWinUi, "")                                                        \
-    X(candiTextFontName, CandidateWinUi, String, "Noto Sans CJK SC", CandidateWinUi, "")                                 \
-    X(candiTextFontSize, CandidateWinUi, Int, "14", CandidateWinUi, "")                                                \
-    X(bgColor, CandidateWinUi, String, "#ffffffff", CandidateWinUi, "")                                                  \
-    X(bgImage, CandidateWinUi, String, "", CandidateWinUi, "")                                                           \
-    X(borderColor, CandidateWinUi, String, "#ffa4c1e2", CandidateWinUi, "")                                              \
-    X(gradientColor0, CandidateWinUi, String, "#ffffffff", CandidateWinUi, "")                                           \
-    X(gradientColor1, CandidateWinUi, String, "#ffffffff", CandidateWinUi, "")                                           \
-    X(candiWordTextColor, CandidateWinUi, String, "#ff5f5b52", CandidateWinUi, "")                                      \
-    X(candiPromptTextColor, CandidateWinUi, String, "#ff5f5b52", CandidateWinUi, "")                                    \
-    X(enableTiled, CandidateWinUi, Bool, "false", CandidateWinUi, "")                                                    \
-    X(useGradientColor, CandidateWinUi, Bool, "false", CandidateWinUi, "")                                               \
-    X(useBgImage, CandidateWinUi, Bool, "false", CandidateWinUi, "")                                                     \
-    X(showCandDictInfo, CandidateWinUi, Bool, "true", CandidateWinUi, "")                                                \
-    X(recodeSelectKey, CandidateWinOptions, Int, "1", CandidateWinOptions, "")                                           \
-    X(hideCandiWin, CandidateWinOptions, Bool, "false", CandidateWinOptions, "")                                         \
-    X(cursorFollow, CandidateWinOptions, Bool, "true", CandidateWinOptions, "")                                          \
-    X(showOpRemindInfo, CandidateWinOptions, Bool, "true", CandidateWinOptions, "")                                      \
-    X(shiftSelectRecode, CandidateWinOptions, Bool, "false", CandidateWinOptions, "")                                    \
-    X(secondRecodeKey, CandidateWinOptions, String, "KEY_SEMICOLON", CandidateWinOptions, "")                            \
-    X(thirdRecodeKey, CandidateWinOptions, String, "KEY_QUOTE", CandidateWinOptions, "")                                 \
-    X(prevPageKey, CandidateWinOptions, String, "KEY_DASH", CandidateWinOptions, "")                                     \
-    X(nextPageKey, CandidateWinOptions, String, "KEY_EQUAL", CandidateWinOptions, "")                                    \
-    X(codeRemind, Common, Bool, "true", Common, "")                                                                      \
-    X(spaceFullWhenCharHalf, Common, Bool, "false", Common, "")                                                          \
-    X(wordThink, Common, Bool, "false", Common, "")                                                                      \
-    X(smartMark, Common, Bool, "true", Common, "")                                                                       \
-    X(remindExistWord, Common, Bool, "false", Common, "")                                                                \
-    X(alertWhenEmptyCode, Common, Bool, "false", Common, "")                                                             \
-    X(autoAdjustFreq, Common, Bool, "false", Common, "")                                                                 \
-    X(shiftCommitChar, Advanced, Bool, "true", Advanced, "")                                                             \
-    X(inputStatistic, Advanced, Bool, "false", Advanced, "")                                                             \
-    X(typeEffect, Advanced, Bool, "false", Advanced, "")                                                                 \
-    X(recodeCalib, Advanced, Bool, "false", Advanced, "")                                                                \
-    X(autoWordGroupOpt, Advanced, Int, "1", Advanced, "")                                                                \
-    X(autoToEnStr, Others, String, "www. ftp: http mail. bbs.", Others, "")                                              \
-    X(autoToHalfMarkFlg, Others, Bool, "false", Others, "")                                                              \
-    X(curSkinId, Ui, String, "default", Ui, "")                                                                          \
-    X(toolbarAutoLocate, Ui, Bool, "true", Ui, "")                                                                       \
-    X(toolbarAutoExpand, Ui, Bool, "false", Ui, "")                                                                      \
-    X(uiAudioEffect, Ui, Bool, "false", Ui, "")                                                                          \
-    X(useFreewbFont, CandidateWinOptions, Bool, "false", CandidateWinOptions, "")                                        \
-    X(showRealtimeHelp, Ui, Bool, "true", Ui, "")                                                                        \
-    X(hideToolbar, Ui, Bool, "false", Ui, "")                                                                            \
-    X(toolbarTransparency, Ui, Int, "0", Ui, "")                                                                         \
-    X(disableFullHalfSwitch, ShortcutKey, Bool, "false", ShortcutKey, "")                                                \
-    X(disableAllShortcutKey, ShortcutKey, Bool, "false", ShortcutKey, "")                                                \
-    X(addCharAfterOutput, ShortcutKey, String, "CTRL+KEY_NONE", ShortcutKey, "")                                         \
-    X(backFindCode, ShortcutKey, String, "CTRL+KEY_SLASH", ShortcutKey, "")                                              \
-    X(markAutoPair, ShortcutKey, String, "CTRL+KEY_DEL", ShortcutKey, "")                                                \
-    X(onlineAddWord, ShortcutKey, String, "CTRL+KEY_EQUAL", ShortcutKey, "")                                             \
-    X(onlineDelWord, ShortcutKey, String, "CTRL+KEY_DASH", ShortcutKey, "")                                              \
-    X(quickDelScreenItem, ShortcutKey, String, "CTRL+KEY_BACKSPACE", ShortcutKey, "")                                   \
-    X(setupOption, ShortcutKey, String, "CTRL+KEY_COMMA", ShortcutKey, "")                                               \
-    X(shortcutInput, ShortcutKey, String, "KEY_QUOTE", ShortcutKey, "")                                                  \
-    X(showHideCandiWin, ShortcutKey, String, "CTRL+KEY_RIGHT", ShortcutKey, "")                                          \
-    X(showHideToolbar, ShortcutKey, String, "CTRL+KEY_LEFT", ShortcutKey, "")                                            \
-    X(switchCharSet, ShortcutKey, String, "CTRL+KEY_M", ShortcutKey, "")                                                 \
-    X(switchChttrans, ShortcutKey, String, "CTRL+KEY_J", ShortcutKey, "")                                                \
-    X(switchInputMode, ShortcutKey, String, "CTRL+KEY_BACK_SLASH", ShortcutKey, "")                                      \
-    X(switchWordState, ShortcutKey, String, "CTRL+KEY_INSERT", ShortcutKey, "")                                          \
-    X(switchLexicon, ShortcutKey, String, "CTRL+KEY_QUOTE", ShortcutKey, "")                                             \
-    X(switchSkin, ShortcutKey, String, "CTRL+KEY_NONE", ShortcutKey, "")                                                 \
-    X(switchVKb, ShortcutKey, String, "CTRL+KEY_ESC", ShortcutKey, "")                                                   \
-    X(tempEnglish, ShortcutKey, String, "KEY_SEMICOLON", ShortcutKey, "")                                                \
+#define FREEWB_AUTO_ACCESSOR_ENTRY_LIST(X)                                                                                                                                                                                                                                                                 \
+    X(charSet, Misc, Int, "0", Misc, "")                                                                                                                                                                                                                                                                   \
+    X(currentCharset, Misc, Int, "0", Misc, "")                                                                                                                                                                                                                                                            \
+    X(enterClear, Misc, Bool, "true", Misc, "")                                                                                                                                                                                                                                                            \
+    X(inputMethod, Misc, Int, "1", Misc, "")                                                                                                                                                                                                                                                               \
+    X(inputMode, Misc, Int, "0", Misc, "")                                                                                                                                                                                                                                                                 \
+    X(quickTableFlg, Misc, Int, "0", Misc, "")                                                                                                                                                                                                                                                             \
+    X(imeTableChanged, Misc, Int, "0", Misc, "")                                                                                                                                                                                                                                                           \
+    X(simpTradFlg, Misc, Int, "0", Misc, "")                                                                                                                                                                                                                                                               \
+    X(userWordFlg, Misc, Int, "1", Misc, "")                                                                                                                                                                                                                                                               \
+    X(vkMode, Misc, Int, "-1", Misc, "")                                                                                                                                                                                                                                                                   \
+    X(separateChar, CandidateWinUi, String, ".", CandidateWinUi, "")                                                                                                                                                                                                                                       \
+    X(candiPageKey, CandidateWinOptions, String, "CPSK_SUB_EQUAL", CandidateWinOptions, "")                                                                                                                                                                                                                \
+    X(cnEnSwitch, ShortcutKey, String, "KEY_SHIFT", ShortcutKey, "")                                                                                                                                                                                                                                       \
+    X(curUsedLexicon, Misc, String, "default", Misc, "")                                                                                                                                                                                                                                                   \
+    X(CoustomChar, Misc, String, kDefaultCoustomChar, Misc, "")                                                                                                                                                                                                                                            \
+    X(CoustomMark, Misc, String, kDefaultCoustomMark, Misc, "")                                                                                                                                                                                                                                            \
+    X(wubiTable, Misc, String, "default/freeime.mb", Misc, "")                                                                                                                                                                                                                                             \
+    X(pinyinTable, Misc, String, "default/attach.mb", Misc, "")                                                                                                                                                                                                                                            \
+    X(candiWinDispMode, CandidateWinUi, Int, "0", CandidateWinUi, "")                                                                                                                                                                                                                                      \
+    X(candiCharCount, CandidateWinUi, Int, "9", CandidateWinUi, "")                                                                                                                                                                                                                                        \
+    X(candiWordCount, CandidateWinUi, Int, "5", CandidateWinUi, "")                                                                                                                                                                                                                                        \
+    X(radius, CandidateWinUi, Int, "5", CandidateWinUi, "")                                                                                                                                                                                                                                                \
+    X(transparency, CandidateWinUi, Int, "0", CandidateWinUi, "")                                                                                                                                                                                                                                          \
+    X(candiTextFontName, CandidateWinUi, String, "Noto Sans CJK SC", CandidateWinUi, "")                                                                                                                                                                                                                   \
+    X(candiTextFontSize, CandidateWinUi, Int, "14", CandidateWinUi, "")                                                                                                                                                                                                                                    \
+    X(bgColor, CandidateWinUi, String, "#ffffffff", CandidateWinUi, "")                                                                                                                                                                                                                                    \
+    X(bgImage, CandidateWinUi, String, "", CandidateWinUi, "")                                                                                                                                                                                                                                             \
+    X(borderColor, CandidateWinUi, String, "#ffa4c1e2", CandidateWinUi, "")                                                                                                                                                                                                                                \
+    X(gradientColor0, CandidateWinUi, String, "#ffffffff", CandidateWinUi, "")                                                                                                                                                                                                                             \
+    X(gradientColor1, CandidateWinUi, String, "#ffffffff", CandidateWinUi, "")                                                                                                                                                                                                                             \
+    X(candiWordTextColor, CandidateWinUi, String, "#ff5f5b52", CandidateWinUi, "")                                                                                                                                                                                                                         \
+    X(candiPromptTextColor, CandidateWinUi, String, "#ff5f5b52", CandidateWinUi, "")                                                                                                                                                                                                                       \
+    X(enableTiled, CandidateWinUi, Bool, "false", CandidateWinUi, "")                                                                                                                                                                                                                                      \
+    X(useGradientColor, CandidateWinUi, Bool, "false", CandidateWinUi, "")                                                                                                                                                                                                                                 \
+    X(useBgImage, CandidateWinUi, Bool, "false", CandidateWinUi, "")                                                                                                                                                                                                                                       \
+    X(showCandDictInfo, CandidateWinUi, Bool, "true", CandidateWinUi, "")                                                                                                                                                                                                                                  \
+    X(recodeSelectKey, CandidateWinOptions, Int, "1", CandidateWinOptions, "")                                                                                                                                                                                                                             \
+    X(hideCandiWin, CandidateWinOptions, Bool, "false", CandidateWinOptions, "")                                                                                                                                                                                                                           \
+    X(cursorFollow, CandidateWinOptions, Bool, "true", CandidateWinOptions, "")                                                                                                                                                                                                                            \
+    X(showOpRemindInfo, CandidateWinOptions, Bool, "true", CandidateWinOptions, "")                                                                                                                                                                                                                        \
+    X(shiftSelectRecode, CandidateWinOptions, Bool, "false", CandidateWinOptions, "")                                                                                                                                                                                                                      \
+    X(secondRecodeKey, CandidateWinOptions, String, "KEY_SEMICOLON", CandidateWinOptions, "")                                                                                                                                                                                                              \
+    X(thirdRecodeKey, CandidateWinOptions, String, "KEY_QUOTE", CandidateWinOptions, "")                                                                                                                                                                                                                   \
+    X(prevPageKey, CandidateWinOptions, String, "KEY_DASH", CandidateWinOptions, "")                                                                                                                                                                                                                       \
+    X(nextPageKey, CandidateWinOptions, String, "KEY_EQUAL", CandidateWinOptions, "")                                                                                                                                                                                                                      \
+    X(codeRemind, Common, Bool, "true", Common, "")                                                                                                                                                                                                                                                        \
+    X(spaceFullWhenCharHalf, Common, Bool, "false", Common, "")                                                                                                                                                                                                                                            \
+    X(wordThink, Common, Bool, "false", Common, "")                                                                                                                                                                                                                                                        \
+    X(smartMark, Common, Bool, "true", Common, "")                                                                                                                                                                                                                                                         \
+    X(remindExistWord, Common, Bool, "false", Common, "")                                                                                                                                                                                                                                                  \
+    X(alertWhenEmptyCode, Common, Bool, "false", Common, "")                                                                                                                                                                                                                                               \
+    X(autoAdjustFreq, Common, Bool, "false", Common, "")                                                                                                                                                                                                                                                   \
+    X(shiftCommitChar, Advanced, Bool, "true", Advanced, "")                                                                                                                                                                                                                                               \
+    X(inputStatistic, Advanced, Bool, "false", Advanced, "")                                                                                                                                                                                                                                               \
+    X(typeEffect, Advanced, Bool, "false", Advanced, "")                                                                                                                                                                                                                                                   \
+    X(recodeCalib, Advanced, Bool, "false", Advanced, "")                                                                                                                                                                                                                                                  \
+    X(autoWordGroupOpt, Advanced, Int, "1", Advanced, "")                                                                                                                                                                                                                                                  \
+    X(autoToEnStr, Others, String, "www. ftp: http mail. bbs.", Others, "")                                                                                                                                                                                                                                \
+    X(autoToHalfMarkFlg, Others, Bool, "false", Others, "")                                                                                                                                                                                                                                                \
+    X(curSkinId, Ui, String, "default", Ui, "")                                                                                                                                                                                                                                                            \
+    X(toolbarAutoLocate, Ui, Bool, "true", Ui, "")                                                                                                                                                                                                                                                         \
+    X(toolbarAutoExpand, Ui, Bool, "false", Ui, "")                                                                                                                                                                                                                                                        \
+    X(uiAudioEffect, Ui, Bool, "false", Ui, "")                                                                                                                                                                                                                                                            \
+    X(useFreewbFont, CandidateWinOptions, Bool, "false", CandidateWinOptions, "")                                                                                                                                                                                                                          \
+    X(showRealtimeHelp, Ui, Bool, "true", Ui, "")                                                                                                                                                                                                                                                          \
+    X(hideToolbar, Ui, Bool, "false", Ui, "")                                                                                                                                                                                                                                                              \
+    X(toolbarTransparency, Ui, Int, "0", Ui, "")                                                                                                                                                                                                                                                           \
+    X(disableFullHalfSwitch, ShortcutKey, Bool, "false", ShortcutKey, "")                                                                                                                                                                                                                                  \
+    X(disableAllShortcutKey, ShortcutKey, Bool, "false", ShortcutKey, "")                                                                                                                                                                                                                                  \
+    X(addCharAfterOutput, ShortcutKey, String, "CTRL+KEY_NONE", ShortcutKey, "")                                                                                                                                                                                                                           \
+    X(backFindCode, ShortcutKey, String, "CTRL+KEY_SLASH", ShortcutKey, "")                                                                                                                                                                                                                                \
+    X(markAutoPair, ShortcutKey, String, "CTRL+KEY_DEL", ShortcutKey, "")                                                                                                                                                                                                                                  \
+    X(onlineAddWord, ShortcutKey, String, "CTRL+KEY_EQUAL", ShortcutKey, "")                                                                                                                                                                                                                               \
+    X(onlineDelWord, ShortcutKey, String, "CTRL+KEY_DASH", ShortcutKey, "")                                                                                                                                                                                                                                \
+    X(quickDelScreenItem, ShortcutKey, String, "CTRL+KEY_BACKSPACE", ShortcutKey, "")                                                                                                                                                                                                                      \
+    X(setupOption, ShortcutKey, String, "CTRL+KEY_COMMA", ShortcutKey, "")                                                                                                                                                                                                                                 \
+    X(shortcutInput, ShortcutKey, String, "KEY_QUOTE", ShortcutKey, "")                                                                                                                                                                                                                                    \
+    X(showHideCandiWin, ShortcutKey, String, "CTRL+KEY_RIGHT", ShortcutKey, "")                                                                                                                                                                                                                            \
+    X(showHideToolbar, ShortcutKey, String, "CTRL+KEY_LEFT", ShortcutKey, "")                                                                                                                                                                                                                              \
+    X(switchCharSet, ShortcutKey, String, "CTRL+KEY_M", ShortcutKey, "")                                                                                                                                                                                                                                   \
+    X(switchChttrans, ShortcutKey, String, "CTRL+KEY_J", ShortcutKey, "")                                                                                                                                                                                                                                  \
+    X(switchInputMode, ShortcutKey, String, "CTRL+KEY_BACK_SLASH", ShortcutKey, "")                                                                                                                                                                                                                        \
+    X(switchWordState, ShortcutKey, String, "CTRL+KEY_INSERT", ShortcutKey, "")                                                                                                                                                                                                                            \
+    X(switchLexicon, ShortcutKey, String, "CTRL+KEY_QUOTE", ShortcutKey, "")                                                                                                                                                                                                                               \
+    X(switchSkin, ShortcutKey, String, "CTRL+KEY_NONE", ShortcutKey, "")                                                                                                                                                                                                                                   \
+    X(switchVKb, ShortcutKey, String, "CTRL+KEY_ESC", ShortcutKey, "")                                                                                                                                                                                                                                     \
+    X(tempEnglish, ShortcutKey, String, "KEY_SEMICOLON", ShortcutKey, "")                                                                                                                                                                                                                                  \
     X(tempPinyin, ShortcutKey, String, "KEY_BACKQUOTE", ShortcutKey, "")
 
 #define FREEWB_CFG_AUTO_FROM_ENTRY(id, cat, vtype, def, sect, desc) FREEWB_CFG_##vtype##_APPLY(id, get_##id, set_##id)
@@ -182,12 +199,11 @@ private:
     {
         entries_.clear();
         entries_.reserve(96);
-#define FREEWB_CONFIG(id, cat, vtype, def, sect, desc)                                                                 \
-    entries_.emplace(#id,                                                                                                \
-                     ConfigEntry{#id, ValueType::vtype, makeValueSlots(ValueType::vtype, def), #sect, makeValueSlots(ValueType::vtype, def)});
+#define FREEWB_CONFIG(id, cat, vtype, def, sect, desc) entries_.emplace(#id, ConfigEntry{#id, ValueType::vtype, makeValueSlots(ValueType::vtype, def), #sect, makeValueSlots(ValueType::vtype, def)});
         FREEWB_AUTO_ACCESSOR_ENTRY_LIST(FREEWB_CONFIG)
 #undef FREEWB_CONFIG
     }
+
     ConfigEntry *findEntryByName(const std::string &uniquename);
     void persistEntry(const ConfigEntry &entry);
     bool readBool(const std::string &uniquename) const;

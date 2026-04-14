@@ -1,8 +1,8 @@
-#include "key.h"
-
 #include <cstring>
 #include <iomanip>
 #include <iostream>
+
+#include "key.h"
 
 namespace
 {
@@ -12,14 +12,14 @@ bool streq(const char *a, const char *b)
     return std::strcmp(a, b) == 0;
 }
 
-#define CHECK(cond, msg)                                                                               \
-    do                                                                                                 \
-    {                                                                                                  \
-        if (!(cond))                                                                                   \
-        {                                                                                              \
-            std::cerr << "FAIL " << __FILE__ << ':' << __LINE__ << ": " << (msg) << '\n';             \
-            return false;                                                                              \
-        }                                                                                              \
+#define CHECK(cond, msg)                                                                                                                                                                                                                                                                                   \
+    do                                                                                                                                                                                                                                                                                                     \
+    {                                                                                                                                                                                                                                                                                                      \
+        if (!(cond))                                                                                                                                                                                                                                                                                       \
+        {                                                                                                                                                                                                                                                                                                  \
+            std::cerr << "FAIL " << __FILE__ << ':' << __LINE__ << ": " << (msg) << '\n';                                                                                                                                                                                                                  \
+            return false;                                                                                                                                                                                                                                                                                  \
+        }                                                                                                                                                                                                                                                                                                  \
     } while (0)
 
 bool test_keySymFromString()
@@ -86,8 +86,7 @@ bool test_roundTrip()
 
     const auto sym = FreewbKey_Page_Down;
     const char *name = freewb::Key::keySymToString(sym);
-    std::cout << "  [info] sym=FreewbKey_Page_Down (0x" << std::hex << std::uppercase << static_cast<unsigned long>(sym) << std::dec
-              << ") name=\"" << (name ? name : "(null)") << "\"\n";
+    std::cout << "  [info] sym=FreewbKey_Page_Down (0x" << std::hex << std::uppercase << static_cast<unsigned long>(sym) << std::dec << ") name=\"" << (name ? name : "(null)") << "\"\n";
 
     CHECK(name && *name, "Page_Down has a name in table");
     const auto back = freewb::Key::keySymFromString(name);
@@ -114,7 +113,6 @@ int main()
         return 0;
     }
 
-    std::cerr << "\nkey_test: failed (keySymFromString=" << (a ? "ok" : "FAIL") << ", keySymToString=" << (b ? "ok" : "FAIL")
-              << ", roundTrip=" << (c ? "ok" : "FAIL") << ")\n";
+    std::cerr << "\nkey_test: failed (keySymFromString=" << (a ? "ok" : "FAIL") << ", keySymToString=" << (b ? "ok" : "FAIL") << ", roundTrip=" << (c ? "ok" : "FAIL") << ")\n";
     return 1;
 }

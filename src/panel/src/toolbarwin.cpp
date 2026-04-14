@@ -1,7 +1,7 @@
 #include "toolbarwin.h"
 
-#include <QLabel>
 #include <QDebug>
+#include <QLabel>
 
 #include "commdefine.h"
 #include "settings.h"
@@ -500,21 +500,15 @@ void ToolbarWin::update_extend_menu(bool state)
 void ToolbarWin::update_mouse_hover_tips()
 {
     m_tipsTextMap.insert(ui->btnMenuExtend, "扩展菜单栏切换按钮");
-    m_tipsTextMap.insert(ui->btnMode, QString("输入模式切换按钮\n快捷键：")
-                                      + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_INPUT_MODE))));
-    m_tipsTextMap.insert(ui->btnGenerate, QString("在线造词功能按钮\n快捷键：")
-                                           + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_ONLINE_ADD_WORD))));
-    m_tipsTextMap.insert(ui->btnSearch, QString("查询编码与释义按钮\n快捷键：")
-                                         + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_BACK_FIND_CODE))));
+    m_tipsTextMap.insert(ui->btnMode, QString("输入模式切换按钮\n快捷键：") + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_INPUT_MODE))));
+    m_tipsTextMap.insert(ui->btnGenerate, QString("在线造词功能按钮\n快捷键：") + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_ONLINE_ADD_WORD))));
+    m_tipsTextMap.insert(ui->btnSearch, QString("查询编码与释义按钮\n快捷键：") + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_BACK_FIND_CODE))));
     m_tipsTextMap.insert(ui->btnCharWidth, QString("字符全半角切换按钮\n快捷键：Shift+空格"));
     m_tipsTextMap.insert(ui->btnMark, QString("中英文标点切换按钮\n快捷键：Ctrl+句号"));
-    m_tipsTextMap.insert(ui->btnKeyboard, QString("开关或切换软件盘按钮\n快捷键：")
-                                           + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_KEYBOARD))));
+    m_tipsTextMap.insert(ui->btnKeyboard, QString("开关或切换软件盘按钮\n快捷键：") + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_KEYBOARD))));
     m_tipsTextMap.insert(ui->btnSetting, "打开设置界面按钮");
-    m_tipsTextMap.insert(ui->btnCharFont, QString("简繁体输出切换按钮\n快捷键：")
-                                           + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_S_IN_T_OUT))));
-    m_tipsTextMap.insert(ui->btnCharSet, QString("字符集切换按钮\n快捷键：")
-                                        + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_CHAR_SET))));
+    m_tipsTextMap.insert(ui->btnCharFont, QString("简繁体输出切换按钮\n快捷键：") + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_S_IN_T_OUT))));
+    m_tipsTextMap.insert(ui->btnCharSet, QString("字符集切换按钮\n快捷键：") + toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_CHAR_SET))));
 }
 
 void ToolbarWin::show_mouse_hover_tips(QWidget *widget)

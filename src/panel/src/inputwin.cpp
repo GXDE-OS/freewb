@@ -1,13 +1,13 @@
 #include "inputwin.h"
 
 #include "commdefine.h"
+#include "log.h"
 #include "settings.h"
 #include "settingshelper.h"
 #include "sound.h"
 #include "systraymenu.h"
 #include "toolbarwin.h"
 #include "ui_inputwin.h"
-#include "log.h"
 
 namespace
 {
@@ -900,10 +900,7 @@ void InputWin::set_candiwin_op_help_info()
     if (m_preEidtText.isEmpty())
         return;
 
-    if (m_preEidtText.at(0).toLatin1()
-        == toQStringUtf8(
-               freewb_single_shortcut_ini_from_stored(settings::instance().get_tempEnglish()))
-               .toInt())
+    if (m_preEidtText.at(0).toLatin1() == toQStringUtf8(freewb_single_shortcut_ini_from_stored(settings::instance().get_tempEnglish())).toInt())
     {
         if (m_preEidtText.length() > 1 && m_candiWordCount)
         {
@@ -922,19 +919,11 @@ void InputWin::set_candiwin_op_help_info()
     {
         oti = OTI_TEMP_ENGLISH;
     }
-    else if (m_preEidtText.length() == 1
-             && m_preEidtText.at(0).toLatin1()
-                    == toQStringUtf8(
-                           freewb_single_shortcut_ini_from_stored(settings::instance().get_shortcutInput()))
-                           .toInt())
+    else if (m_preEidtText.length() == 1 && m_preEidtText.at(0).toLatin1() == toQStringUtf8(freewb_single_shortcut_ini_from_stored(settings::instance().get_shortcutInput())).toInt())
     {
         oti = OTI_QUICK_INPUT;
     }
-    else if (m_preEidtText.length() == 1
-             && m_preEidtText.at(0).toLatin1()
-                    == toQStringUtf8(
-                           freewb_single_shortcut_ini_from_stored(settings::instance().get_tempPinyin()))
-                           .toInt())
+    else if (m_preEidtText.length() == 1 && m_preEidtText.at(0).toLatin1() == toQStringUtf8(freewb_single_shortcut_ini_from_stored(settings::instance().get_tempPinyin())).toInt())
     {
         oti = OTI_TEMP_PINYIN;
     }
@@ -1093,8 +1082,7 @@ void InputWin::set_candiwin_op_help_info()
         const int idx = freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish());
         if (idx != SSK_NONE)
         {
-            tips = QString("【%1 临时英文输入】").arg(
-                toQStringUtf8(freewb_single_shortcut_display_name(idx)));
+            tips = QString("【%1 临时英文输入】").arg(toQStringUtf8(freewb_single_shortcut_display_name(idx)));
         }
     }
     else if (oti == OTI_SK_QUICK_INPUT)
@@ -1102,8 +1090,7 @@ void InputWin::set_candiwin_op_help_info()
         const int idx = freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput());
         if (idx != SSK_NONE)
         {
-            tips = QString("【%1 快捷短语输入】").arg(
-                toQStringUtf8(freewb_single_shortcut_display_name(idx)));
+            tips = QString("【%1 快捷短语输入】").arg(toQStringUtf8(freewb_single_shortcut_display_name(idx)));
         }
     }
     else if (oti == OTI_SK_TEMP_PINYIN)
@@ -1111,8 +1098,7 @@ void InputWin::set_candiwin_op_help_info()
         const int idx = freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin());
         if (idx != SSK_NONE)
         {
-            tips = QString("【%1  临时拼音/生癖字输入】").arg(
-                toQStringUtf8(freewb_single_shortcut_display_name(idx)));
+            tips = QString("【%1  临时拼音/生癖字输入】").arg(toQStringUtf8(freewb_single_shortcut_display_name(idx)));
         }
     }
     else if (oti == OTI_SK_SWITCH_CN_EN)
