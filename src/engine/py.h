@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "engine.h"
-#include "freewb.h"
+#include "ifreewb.h"
 
 namespace freewb
 {

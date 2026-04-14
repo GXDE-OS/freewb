@@ -6,8 +6,8 @@
 
 #include <systemd/sd-bus.h>
 
+#include "ifreewb.h"
 #include "dbus.h"
-#include "freewb.h"
 
 namespace freewb::ipc
 {
