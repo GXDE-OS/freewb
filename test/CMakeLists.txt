@@ -7,3 +7,8 @@ add_executable(freewb-key-test key_test.cpp ${CMAKE_SOURCE_DIR}/src/utils/key.cp
 target_include_directories(freewb-key-test PRIVATE ${CMAKE_SOURCE_DIR}/src/core)
 target_link_libraries(freewb-key-test PRIVATE ${PROJECT_NAME}-utils)
 add_test(NAME freewb-key-test COMMAND freewb-key-test)
+
+add_executable(freewb-candidate-list-test candidate_list_test.cpp)
+target_include_directories(freewb-candidate-list-test PRIVATE ${CMAKE_SOURCE_DIR}/src/core ${CMAKE_SOURCE_DIR}/src/utils)
+target_link_libraries(freewb-candidate-list-test PRIVATE ${PROJECT_NAME}-core ${PROJECT_NAME}-utils)
+add_test(NAME freewb-candidate-list-test COMMAND freewb-candidate-list-test)
