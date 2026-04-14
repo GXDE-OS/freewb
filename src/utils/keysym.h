@@ -2198,7 +2198,10 @@ extern "C"
         {"X", FreewbKey_X},
         {"Y", FreewbKey_Y},
         {"Z", FreewbKey_Z},
+        {"KEY_J", FreewbKey_J},
+        {"KEY_M", FreewbKey_M},
         {"KEY_BACKSPACE", FreewbKey_BackSpace},
+        {"KEY_BACK_SLASH", FreewbKey_backslash},
         {"KEY_TAB", FreewbKey_Tab},
         {"KEY_CAPS", FreewbKey_Caps_Lock},
         {"KEY_ENTER", FreewbKey_Return},
@@ -2217,6 +2220,10 @@ extern "C"
         {"KEY_DOWN", FreewbKey_Down},
         {"KEY_LEFT", FreewbKey_Left},
         {"KEY_RIGHT", FreewbKey_Right},
+        {"KEY_COMMA", FreewbKey_comma},
+        {"KEY_SLASH", FreewbKey_slash},
+        {"KEY_QUOTE", FreewbKey_quotedbl},
+        {"KEY_DEL", FreewbKey_Delete},
     };
 
 #ifdef __cplusplus

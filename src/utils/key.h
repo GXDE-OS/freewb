@@ -14,6 +14,8 @@ public:
     static bool isKeyAZ(FreewbKeySym sym, FreewbKeyState state);
     static bool isKeyaz(FreewbKeySym sym, FreewbKeyState state);
     static bool isKey09(FreewbKeySym sym, FreewbKeyState state);
+    static const char *readKeyString(const char *str);
+    static bool isSpecialCommitCharacter(FreewbKeySym sym, FreewbKeyState state);
 };
 } // namespace freewb
 

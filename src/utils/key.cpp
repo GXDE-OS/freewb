@@ -78,4 +78,35 @@ bool Key::isKey09(FreewbKeySym sym, FreewbKeyState state)
 {
     return !state && ((sym >= FreewbKey_0 && sym <= FreewbKey_9) || (state && sym >= FreewbKey_KP_0 && sym <= FreewbKey_KP_9));
 }
+
+const char *Key::readKeyString(const char *str)
+{
+    const char *ctrl = strstr(str, "CTRL+");
+    if (ctrl != NULL)
+    {
+        return ctrl + 5;
+    }
+    const char *alt = strstr(str, "ALT+");
+    if (alt != NULL)
+    {
+        return alt + 4;
+    }
+    const char *shift = strstr(str, "SHIFT+");
+    if (shift != NULL)
+    {
+        return shift + 6;
+    }
+    const char *super = strstr(str, "SUPER+");
+    if (super != NULL)
+    {
+        return super + 6;
+    }
+    return str;
+}
+
+bool Key::isSpecialCommitCharacter(FreewbKeySym sym, FreewbKeyState state)
+{
+    return (!state && (sym == FreewbKey_comma || sym == FreewbKey_period || sym == FreewbKey_slash
+        || sym == FreewbKey_semicolon || sym == FreewbKey_quoteright || sym == FreewbKey_bracketleft || sym == FreewbKey_bracketright || sym == FreewbKey_backslash));
+}
 } // namespace freewb
