@@ -6,14 +6,6 @@
 namespace freewb::ipc
 {
 
-using SpotRectPayload = ::freewb::SpotRectPayload;
-using CandidatePayload = ::freewb::CandidatePayload;
-using PreeditPayload = ::freewb::PreeditPayload;
-using CandidateAuxPayload = ::freewb::CandidateAuxPayload;
-using ToolbarPropertiesPayload = ::freewb::ToolbarPropertiesPayload;
-
-using DBusSignalCallback = void (*)(const char *member, int index);
-
 class IDBus
 {
 public:
