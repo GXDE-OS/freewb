@@ -5181,9 +5181,6 @@
         <bold>true</bold>
        </font>
       </property>
-      <property name="text">
-       <string>致谢</string>
-      </property>
       <property name="wordWrap">
        <bool>true</bool>
       </property>
@@ -5203,9 +5200,6 @@
         <weight>50</weight>
         <bold>false</bold>
        </font>
-      </property>
-      <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;font style = &quot;font-family:Ubuntu;font-size:13px;&quot;&gt;&lt;span&gt;－感谢极点五笔的开创者杜志民先生，设计出属于输入人员&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;自己的输入法&lt;/span&gt;&lt;span &gt;&lt;br/&gt;－感谢鹏城实验室自主可控方向对项目开发提供的大力支持&lt;/span&gt;&lt;br/&gt;－感谢北弓智能的开发人员为项目付出的努力&lt;br/&gt;－感谢银河麒麟操作系统团队的技术支持&lt;/font&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

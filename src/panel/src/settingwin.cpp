@@ -60,17 +60,6 @@ void swBuildSingleShortcutCombo(QComboBox *combo, int selectedIdx, int forbidden
 // 设置组子分组图标
 #define ICO_SETTING_GROUP ":/image/setting/group.png"
 
-#define VERSION_ARM "本产品基于极点五笔Windows版本开发，极点五笔版权归杜志民先生所有。"
-#define VERSION_X86                                                                                                                                                                                                                                                                                        \
-    ""                                                                                                                                                                                                                                                                                                     \
-    "<html><head/><body><font style='font-family:Ubuntu;font-size:13px;'>"                                                                                                                                                                                                                                 \
-    "－感谢极点五笔的开创者杜志民先生，设计出属于输入人员"                                                                                                                                                                                                                                                 \
-    "<br/>&nbsp;&nbsp;&nbsp;&nbsp;自己的输入法"                                                                                                                                                                                                                                                            \
-    "<br/>－感谢鹏城实验室自主可控方向对项目开发提供的大力支持"                                                                                                                                                                                                                                            \
-    "<br/>－感谢北弓智能的开发人员为项目付出的努力"                                                                                                                                                                                                                                                        \
-    "<br/>－感谢openKylin InputMethod SIG的开发支持"                                                                                                                                                                                                                                                       \
-    "<br/>－感谢银河麒麟操作系统团队的技术支持</font></body></html>"
-
 SettingWin::SettingWin(QWidget *parent) : QWidget(parent), ui(new Ui::SettingWin)
 {
     ui->setupUi(this);
@@ -124,16 +113,14 @@ SettingWin::~SettingWin()
 
 void SettingWin::init_window_appearance()
 {
-    const QString buildDateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
 
     setWindowIcon(QIcon(":/image/setting/logo.png"));
-    setWindowTitle("极点设置");
+    setWindowTitle("属性设置");
     // setFont(freewb_candi_text_qfont(settings::instance()));
 
-    ui->labelVersionNum->setText(QString("v3.0  %1").arg(buildDateTime));
-    ui->labelVersion->setText("极点五笔麒麟版");
-    ui->labelCopyright2->setText(VERSION_X86);
+    ui->labelVersionNum->setText(FREEWB_VERSION);
+    ui->labelVersion->setText("极点五笔输入法");
 
     // 载入窗口全局UI样式表
     QFile qssFile(QSS_FILE);
