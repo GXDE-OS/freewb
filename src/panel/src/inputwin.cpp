@@ -5,7 +5,6 @@
 #include "settings.h"
 #include "settingshelper.h"
 #include "sound.h"
-#include "systraymenu.h"
 #include "toolbarwin.h"
 #include "ui_inputwin.h"
 

@@ -1,10 +1,8 @@
 #include "candidateitem.h"
 
+#include <QTimer>
 #include <iostream>
 
-#include <QTimer>
-
-#include "systraymenu.h"
 #include "ui_candidateitem.h"
 
 CandidateItem::CandidateItem(int row, int column, QWidget *parent) : QWidget(parent), ui(new Ui::CandidateItem)

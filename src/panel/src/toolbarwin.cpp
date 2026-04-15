@@ -7,7 +7,6 @@
 #include "settings.h"
 #include "settingshelper.h"
 #include "sound.h"
-#include "systraymenu.h"
 #include "ui_toolbarwin.h"
 #include "log.h"
 

@@ -31,7 +31,6 @@
 #include "lexicontoolwin.h"
 #include "settingshelper.h"
 #include "settingwin.h"
-#include "systraymenu.h"
 #include "texteditwin.h"
 #include "toolbarwin.h"
 #include "usrgenworddialog.h"
@@ -99,7 +98,6 @@ private:
     InputWin *m_inputWin;                 // 输入候选框
     SettingWin *m_settingWin;             // 设置窗口
     LexiconToolWin *m_lexicontoolWin;     // 词库工具箱
-    SysTrayMenu *m_sysTrayMenu;           // 系统托盘菜单
     UsrGenWordDialog *m_usrGenWordDialog; // 用户词组编辑对话框
     TextEditWin *m_textEditWin;           // 文本编辑框
     DictQueryWin *m_dictQueryWin;         // 字典查询窗口
