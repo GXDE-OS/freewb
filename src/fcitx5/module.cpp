@@ -3,8 +3,9 @@
 #include <fcitx-utils/event.h>
 #include "types.h"
 
-FreewbIMModule::FreewbIMModule(fcitx::Instance *instance) : instance_(instance), freewb_(std::make_unique<freewb::Freewb>(instance->eventLoop().nativeHandle()))
+FreewbIMModule::FreewbIMModule(fcitx::Instance *instance) : instance_(instance)
 {
+    freewb_ = std::make_unique<freewb::Freewb>(instance->eventLoop().nativeHandle(), &commitString);
 }
 
 FreewbIMModule::~FreewbIMModule()
@@ -70,13 +71,17 @@ void FreewbIMModule::updateCursorPosition()
         return;
     }
 
-
     fcitx::Rect rect = inputContext->cursorRect();
     spotRect.x = rect.left();
     spotRect.y = rect.top();
     spotRect.w = rect.width();
     spotRect.h = rect.height();
     freewb_->sdbusProxy()->emitUpdateSpotRect(spotRect);
+}
+
+void FreewbIMModule::commitString(const std::string &text) const
+{
+    instance_->lastFocusedInputContext()->commitString(text.c_str());
 }
 
 FCITX_ADDON_FACTORY(FreewbIMModuleFactory)

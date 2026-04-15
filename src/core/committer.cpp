@@ -1,0 +1,101 @@
+#include "committer.h"
+
+#include <utility>
+
+#include "settings.h"
+#include "log.h"
+
+namespace freewb
+{
+Committer::Committer(CommitCallback commitCallback, CandidateList *candidateList, EngineManager *engineManager) : commitCallback_(std::move(commitCallback)), candidateList_(candidateList), engineManager_(engineManager)
+{
+    loadSettings();
+}
+
+Committer::~Committer() = default;
+
+void Committer::loadSettings()
+{
+    secondRecodeKey_ = Key::keySymFromString(settings::instance().get_secondRecodeKey().c_str());
+    thirdRecodeKey_ = Key::keySymFromString(settings::instance().get_thirdRecodeKey().c_str());
+
+    prevPageKey_ = Key::keySymFromString(settings::instance().get_prevPageKey().c_str());
+    nextPageKey_ = Key::keySymFromString(settings::instance().get_nextPageKey().c_str());
+}
+
+bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
+{
+    if (!commitCallback_ || (candidateList_->size() == 0))
+    {
+        return false;
+    }
+
+    // 上下翻页按键不支持上屏
+    if ((keysym == prevPageKey_ && state == FreewbKeyState_None) || (keysym == nextPageKey_ && state == FreewbKeyState_None))
+    {
+        return false;
+    }
+
+    // 数字键支持上屏
+    if (Key::isKey09(keysym, state))
+    {
+        int index = keysym - FreewbKey_1;
+        if (index < 0)
+        {
+            candidateList_->clear();
+            engineManager_->reset();
+            return false;
+        }
+        else if (index >= candidateList_->size())
+        {
+            commitCallback_(candidateList_->selectCandidateText(0));
+        }
+        else
+        {
+            commitCallback_(candidateList_->selectCandidateText(index));
+        }
+        
+        candidateList_->clear();
+        engineManager_->reset();
+        return true;
+    }
+
+    // 二三重码上屏
+    if ((keysym == secondRecodeKey_ && state == FreewbKeyState_None) || (keysym == thirdRecodeKey_ && state == FreewbKeyState_None))
+    {
+        commitCallback_(candidateList_->selectCandidateText(keysym == secondRecodeKey_ ? 1 : 2));
+        candidateList_->clear();
+        engineManager_->reset();
+        return true;
+    }
+
+    // 空格上屏
+    if (keysym == FreewbKey_space && state == FreewbKeyState_None)
+    {
+        commitCallback_(candidateList_->selectCandidateText(0));
+        candidateList_->clear();
+        engineManager_->reset();
+        return true;
+    }
+
+    // 回车上屏
+    if (keysym == FreewbKey_Return && state == FreewbKeyState_None)
+    {
+        commitCallback_(candidateList_->preeditText());
+        candidateList_->clear();
+        engineManager_->reset();
+        return true;
+    }
+
+    //顶字上屏,上屏效果与普通上屏不同。如："你好,"
+    if (Key::isSpecialCommitCharacter(keysym, state))
+    {
+        commitCallback_(candidateList_->selectCandidateText(0));
+        candidateList_->clear();
+        engineManager_->reset();
+        return false;
+    }
+
+    return false;
+}
+} // namespace freewb

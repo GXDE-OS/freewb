@@ -1,12 +1,19 @@
 #include "freewb.h"
 
+#include <utility>
+
+#include "key.h"
+#include "settings.h"
+
 namespace freewb
 {
-Freewb::Freewb(void *sd_event_handle) : log_("/tmp/freewb-engine.log")
+
+Freewb::Freewb(void *sd_event_handle, CommitCallback commitCallback) : log_("/tmp/freewb-engine.log")
 {
     sdbusProxy_ = new ipc::SDBusProxy(sd_event_handle);
     engineManager_ = new EngineManager();
     candidateList_ = new CandidateList();
+    committer_ = new Committer(std::move(commitCallback), candidateList_);
 }
 
 Freewb::~Freewb()
@@ -49,6 +56,15 @@ ipc::SDBusProxy *Freewb::sdbusProxy() const
 
 void Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
 {
+    FREEWB_DEBUG("keysym: {}, state: {}", static_cast<int>(keysym), static_cast<int>(state));
+    handleGlobalKey(keysym, state);
+
+    bool processed = committer_->processKey(keysym, state);
+    if (processed)
+    {
+        return;
+    }
+
     engineManager_->processKey(keysym, state);
     std::pair<PreeditPayload, CandidatePayload> result = engineManager_->getResult();
     candidateList_->setCandidateTexts(result.second.texts);
@@ -60,6 +76,120 @@ void Freewb::reset()
 {
     engineManager_->reset();
     candidateList_->clear();
+}
+
+void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
+{
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_backFindCode().c_str());
+        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        {
+            sdbusProxy_->callDictQueryMethod("freewb");
+            return;
+        }
+    }
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_markAutoPair().c_str());
+        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        {
+            //make mark auto pair
+            return;
+        }
+
+    }
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_onlineAddWord().c_str());
+        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        {
+            sdbusProxy_->callAddUsrParseMethod(0, "", "");
+            return;
+        }
+    }
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_onlineDelWord().c_str());
+        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        {
+            sdbusProxy_->callDeleteUsrParseMethod(0, "", "");
+            return;
+        }
+    }
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_quickDelScreenItem().c_str());
+        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        {
+            // 暂时不实现
+            return;
+        }
+    }
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_setupOption().c_str());
+        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        {
+            sdbusProxy_->callOpenUiSettingMethod();
+            return;
+        }
+    }
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_switchCharSet().c_str());
+        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        {
+            sdbusProxy_->callSwitchCharSetMethod();
+            return;
+        }
+    }
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_switchChttrans().c_str());
+        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        {
+            sdbusProxy_->callSwitchChttransMethod();
+            return;
+        }
+    }
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_switchInputMode().c_str());
+        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        {
+            sdbusProxy_->callSwitchInputModeMethod(0);
+            return;
+        }
+    }
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_switchLexicon().c_str());
+        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        {
+            sdbusProxy_->callSwitchTableMethod();
+            return;
+        }
+    }
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_switchSkin().c_str());
+        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        {
+            sdbusProxy_->callSwitchSkinMethod();
+            return;
+        }
+    }
+    
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_switchVKb().c_str());
+        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        {
+            sdbusProxy_->callSwitchVirtualKeyboardModeMethod(0);
+            return;
+        }
+    }
 }
 
 } // namespace freewb

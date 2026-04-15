@@ -1,6 +1,7 @@
 #ifndef _FREEWB_UTILS_TYPES_H_
 #define _FREEWB_UTILS_TYPES_H_
 
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -56,7 +57,7 @@ struct ToolbarPropertiesPayload
 };
 
 using DBusSignalCallback = void (*)(const char *member, int index);
-using CommitCallback = void (*)(const std::string &text);
+using CommitCallback = std::function<void(const std::string &text)>;
 
 } // namespace freewb
 

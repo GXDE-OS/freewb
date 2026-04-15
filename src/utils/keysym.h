@@ -2222,8 +2222,9 @@ extern "C"
         {"KEY_RIGHT", FreewbKey_Right},
         {"KEY_COMMA", FreewbKey_comma},
         {"KEY_SLASH", FreewbKey_slash},
-        {"KEY_QUOTE", FreewbKey_quotedbl},
+        // {"KEY_QUOTE", FreewbKey_quote},
         {"KEY_DEL", FreewbKey_Delete},
+        {"KEY_SEMICOLON", FreewbKey_semicolon},
     };
 
 #ifdef __cplusplus

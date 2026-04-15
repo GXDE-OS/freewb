@@ -3,17 +3,18 @@
 
 #include "candidatelist.h"
 #include "enginemanager.h"
-#include "freewb.h"
 #include "keysym.h"
 #include "log.h"
 #include "sdbus_proxy.h"
+#include "committer.h"
+#include "types.h"
 
 namespace freewb
 {
 class Freewb
 {
 public:
-    explicit Freewb(void *sd_event_handle = nullptr);
+    Freewb(void *sd_event_handle, CommitCallback commitCallback);
     ~Freewb();
     void activate();
     void deactivate();
@@ -23,10 +24,14 @@ public:
     ipc::SDBusProxy *sdbusProxy() const;
 
 private:
+    void handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state);
+
+private:
     FreewbLog log_;
     ipc::SDBusProxy *sdbusProxy_ = nullptr;
     EngineManager *engineManager_ = nullptr;
     CandidateList *candidateList_ = nullptr;
+    Committer *committer_ = nullptr;
 };
 } // namespace freewb
 

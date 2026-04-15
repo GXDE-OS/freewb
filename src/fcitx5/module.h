@@ -28,6 +28,7 @@ public:
 
 private:
     void updateCursorPosition();
+    void commitString(const std::string &text) const;
 
 private:
     fcitx::Instance *instance_;
