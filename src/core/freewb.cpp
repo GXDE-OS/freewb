@@ -11,9 +11,9 @@ namespace freewb
 Freewb::Freewb(void *sd_event_handle, CommitCallback commitCallback) : log_("/tmp/freewb-engine.log")
 {
     sdbusProxy_ = new ipc::SDBusProxy(sd_event_handle);
-    engineManager_ = new EngineManager();
     candidateList_ = new CandidateList();
-    committer_ = new Committer(std::move(commitCallback), candidateList_);
+    engineManager_ = new EngineManager(candidateList_);
+    committer_ = new Committer(std::move(commitCallback), candidateList_, engineManager_);
 }
 
 Freewb::~Freewb()
@@ -54,22 +54,27 @@ ipc::SDBusProxy *Freewb::sdbusProxy() const
     return sdbusProxy_;
 }
 
-void Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
+bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
 {
     FREEWB_DEBUG("keysym: {}, state: {}", static_cast<int>(keysym), static_cast<int>(state));
     handleGlobalKey(keysym, state);
 
-    bool processed = committer_->processKey(keysym, state);
+    bool processed = engineManager_->processKey(keysym, state);
     if (processed)
     {
-        return;
+        updateCandidateAndPreeditToUI();
+        return true;
     }
 
-    engineManager_->processKey(keysym, state);
-    std::pair<PreeditPayload, CandidatePayload> result = engineManager_->getResult();
-    candidateList_->setCandidateTexts(result.second.texts);
-    sdbusProxy_->emitUpdatePreeditText(result.first);
-    sdbusProxy_->emitUpdateCandidate({.labels = {}, .texts = candidateList_->candidateTexts(), .attrs = {}, .hasPrev = candidateList_->hasPrev(), .hasNext = candidateList_->hasNext(), .cursor = candidateList_->cursor(), .layout = Horizontal});
+    processed = committer_->processKey(keysym, state);
+    if (processed)
+    {
+        updateCandidateAndPreeditToUI();
+        return true;
+    }
+    
+    updateCandidateAndPreeditToUI();
+    return false;
 }
 
 void Freewb::reset()
@@ -190,6 +195,12 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
             return;
         }
     }
+}
+
+void Freewb::updateCandidateAndPreeditToUI()
+{
+    sdbusProxy_->emitUpdatePreeditText({.text = candidateList_->preeditText(), .caret = static_cast<int>(candidateList_->preeditText().length()), .show = !candidateList_->preeditText().empty()});
+    sdbusProxy_->emitUpdateCandidate({.labels = {}, .texts = candidateList_->candidateTexts(), .attrs = {}, .hasPrev = candidateList_->hasPrev(), .hasNext = candidateList_->hasNext(), .cursor = candidateList_->cursor(), .layout = Horizontal});
 }
 
 } // namespace freewb

@@ -5,7 +5,9 @@
 
 FreewbIMModule::FreewbIMModule(fcitx::Instance *instance) : instance_(instance)
 {
-    freewb_ = std::make_unique<freewb::Freewb>(instance->eventLoop().nativeHandle(), &commitString);
+    freewb_ = std::make_unique<freewb::Freewb>(instance->eventLoop().nativeHandle(), [this](const std::string &text) {
+        commitString(text);
+    });
 }
 
 FreewbIMModule::~FreewbIMModule()
@@ -22,9 +24,11 @@ void FreewbIMModule::keyEvent(const fcitx::InputMethodEntry &entry, fcitx::KeyEv
 
     updateCursorPosition();
 
-    const fcitx::Key &key = keyEvent.key();
-    const uint32_t stateBits = key.states().toInteger();
-    freewb_->processKey(static_cast<FreewbKeySym>(key.sym()), static_cast<FreewbKeyState>(stateBits));
+    bool processed = freewb_->processKey(static_cast<FreewbKeySym>(keyEvent.key().sym()), static_cast<FreewbKeyState>(keyEvent.key().states().toInteger()));
+    if (processed)
+    {
+        keyEvent.filterAndAccept();
+    }
 }
 
 void FreewbIMModule::activate(const fcitx::InputMethodEntry &entry, fcitx::InputContextEvent &event)
@@ -81,7 +85,14 @@ void FreewbIMModule::updateCursorPosition()
 
 void FreewbIMModule::commitString(const std::string &text) const
 {
-    instance_->lastFocusedInputContext()->commitString(text.c_str());
+    fcitx::InputContext *inputContext = instance_->lastFocusedInputContext();
+    if (inputContext == nullptr)
+    {
+        return;
+    }
+
+    FREEWB_DEBUG("will commit string: {}", text);
+    inputContext->commitString(text.c_str());
 }
 
 FCITX_ADDON_FACTORY(FreewbIMModuleFactory)

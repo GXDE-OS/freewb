@@ -18,13 +18,14 @@ public:
     ~Freewb();
     void activate();
     void deactivate();
-    void processKey(FreewbKeySym keysym, FreewbKeyState state);
+    bool processKey(FreewbKeySym keysym, FreewbKeyState state);
     void reset();
 
     ipc::SDBusProxy *sdbusProxy() const;
 
 private:
     void handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state);
+    void updateCandidateAndPreeditToUI();
 
 private:
     FreewbLog log_;
