@@ -1,6 +1,6 @@
 #include "keybutton.h"
 
-#include "commdefine.h"
+#include "config.h"
 #include "keybutton.h"
 
 KeyButton::KeyButton(QWidget *parent) : QPushButton(parent)

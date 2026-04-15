@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 #include "../../ipc/ipc.h"
-#include "commdefine.h"
+#include "config.h"
 
 KimAgent::KimAgent(QObject *parent) : QObject(parent)
 {

@@ -5,7 +5,7 @@
 #include <QDateTime>
 #include <QFont>
 
-#include "commdefine.h"
+#include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
 #include "ui_settingwin.h"
@@ -486,10 +486,7 @@ void SettingWin::update_listwidget_item()
     m_listItemCustomKeyChar = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "定义软键盘", ui->listWidget);
     m_listItemCustomKeyMark = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "自定义标点", ui->listWidget);
     m_listItemVersionInfo = new QListWidgetItem("版本信息", ui->listWidget);
-    if (g_cpuType == CT_X86)
-    {
-        // m_listItemBug = new QListWidgetItem( "问题反馈", ui->listWidget );
-    }
+    // m_listItemBug = new QListWidgetItem( "问题反馈", ui->listWidget );
 
     ui->stackedWidget->setCurrentWidget(ui->pageCommon);
     ui->listWidget->setCurrentRow(0);

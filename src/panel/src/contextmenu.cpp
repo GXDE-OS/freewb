@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "commdefine.h"
+#include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
 
@@ -102,10 +102,7 @@ ContextMenu::ContextMenu(QWidget *parent) : QMenu(parent)
     m_menu4.addAction(&m_action31);
     m_menu4.addAction(&m_action32);
     m_menu4.addAction(&m_action33);
-    if (g_cpuType == CT_ARM)
-    {
-        m_menu4.addAction(&m_action34);
-    }
+    m_menu4.addAction(&m_action34);
 
     // 三级菜单
     m_action211.setText(STR_ACTION211);

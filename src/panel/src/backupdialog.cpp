@@ -1,6 +1,6 @@
 #include "backupdialog.h"
 
-#include "commdefine.h"
+#include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
 #include "ui_backupdialog.h"
@@ -695,26 +695,7 @@ void BackupDialog::on_btnClose_clicked()
 void BackupDialog::on_btnYes_clicked()
 {
     char cmd[128] = {0};
-    if (g_desktopType == DT_MATE) // 银河麒麟系统
-    {
-        sprintf(cmd, "caja %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data());
-    }
-    else if (g_desktopType == DT_UKUI) // 优麒麟系统
-    {
-        sprintf(cmd, "peony %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data());
-    }
-    else if (g_desktopType == DT_DEEPIN) // 深度系统
-    {
-        sprintf(cmd, "pcmanfm %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data());
-    }
-    else if (g_desktopType == DT_UBUNTU) // Ubuntu
-    {
-        sprintf(cmd, "nautilus -s %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data());
-    }
-    else
-    {
-        sprintf(cmd, "xdg-open %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data());
-    }
+    sprintf(cmd, "xdg-open %s > /dev/null 2>&1 &", m_backupFile.toUtf8().data());
     system(cmd);
 
     accept();

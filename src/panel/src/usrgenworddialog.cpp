@@ -1,6 +1,6 @@
 #include "usrgenworddialog.h"
 
-#include "commdefine.h"
+#include "config.h"
 #include "settings.h"
 #include "ui_usrgenworddialog.h"
 

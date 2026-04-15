@@ -1,6 +1,6 @@
 #include "dictquerywin.h"
 
-#include "commdefine.h"
+#include "config.h"
 #include "ui_dictquerywin.h"
 
 DictQueryWin::DictQueryWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::DictQueryWin)

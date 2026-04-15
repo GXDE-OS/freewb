@@ -1,6 +1,6 @@
 #include "textfinddialog.h"
 
-#include "commdefine.h"
+#include "config.h"
 #include "ui_textfinddialog.h"
 
 TextFindDialog::TextFindDialog(QWidget *parent) : QDialog(parent), ui(new Ui::TextFindDialog)

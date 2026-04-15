@@ -1,6 +1,6 @@
 #include "inputwin.h"
 
-#include "commdefine.h"
+#include "config.h"
 #include "log.h"
 #include "settings.h"
 #include "settingshelper.h"

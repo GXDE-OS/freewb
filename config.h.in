@@ -10,4 +10,6 @@
 #define FREEWB_INSTALL_PKGDATADIR "@FREEWB_INSTALL_PKGDATADIR@"
 #define FREEWB_INSTALL_BINDIR "@FREEWB_INSTALL_BINDIR@"
 
+#define INSTALL_DIR QString(qgetenv("HOME")) + "/.local/freewb"
+
 #endif //_CONFIG_H_

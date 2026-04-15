@@ -3,7 +3,7 @@
 #include <QDebug>
 
 #include "../../ipc/ipc.h"
-#include "commdefine.h"
+#include "config.h"
 #include "settings.h"
 
 #define DEBUG
@@ -478,26 +478,7 @@ void MainProgram::slot_dbus_open_freewb_dir() // 进入极点目录
 {
     char cmd[128] = {0};
 
-    if (g_desktopType == DT_MATE) // 银河麒麟系统
-    {
-        sprintf(cmd, "caja %s > /dev/null 2>&1 &", QString(INSTALL_DIR).toUtf8().data());
-    }
-    else if (g_desktopType == DT_UKUI) // 优麒麟系统
-    {
-        sprintf(cmd, "peony %s > /dev/null 2>&1 &", QString(INSTALL_DIR).toUtf8().data());
-    }
-    else if (g_desktopType == DT_DEEPIN) // 深度系统
-    {
-        sprintf(cmd, "pcmanfm %s > /dev/null 2>&1 &", QString(INSTALL_DIR).toUtf8().data());
-    }
-    else if (g_desktopType == DT_UBUNTU) // Ubuntu
-    {
-        sprintf(cmd, "nautilus %s > /dev/null 2>&1 &", QString(INSTALL_DIR).toUtf8().data());
-    }
-    else
-    {
-        sprintf(cmd, "xdg-open %s > /dev/null 2>&1 &", QString(INSTALL_DIR).toUtf8().data());
-    }
+    sprintf(cmd, "xdg-open %s > /dev/null 2>&1 &", QString(INSTALL_DIR).toUtf8().data());
     system(cmd);
 }
 

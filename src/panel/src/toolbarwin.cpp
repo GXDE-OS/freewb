@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QLabel>
 
-#include "commdefine.h"
+#include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
 #include "sound.h"
@@ -126,15 +126,7 @@ CharSetMode ToolbarWin::get_char_set_mode()
 ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin)
 {
     ui->setupUi(this);
-
-    if (g_desktopType == DT_MATE)
-    {
-        setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::WindowStaysOnTopHint);
-    }
-    else
-    {
-        setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint);
-    }
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint);
 
     setAttribute(Qt::WA_TranslucentBackground, true);
     setAttribute(Qt::WA_AlwaysShowToolTips, true); // Enables tooltips for inactive windows

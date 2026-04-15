@@ -1,7 +1,7 @@
 #include "lexicontoolwin.h"
 
 #include "../../tools/freewbConversionTool.h"
-#include "commdefine.h"
+#include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
 #include "ui_lexicontoolwin.h"
@@ -371,26 +371,7 @@ void LexiconToolWin::on_btnMakeSysLexicon_clicked()
         else if (ret == QMessageBox::No)
         {
             QString cmd;
-            if (g_desktopType == DT_MATE) // 银河麒麟系统
-            {
-                cmd = QString("caja %1 > /dev/null 2>&1 &").arg(QString(qgetenv("HOME")));
-            }
-            else if (g_desktopType == DT_UKUI) // 优麒麟系统
-            {
-                cmd = QString("peony %1 > /dev/null 2>&1 &").arg(QString(qgetenv("HOME")));
-            }
-            else if (g_desktopType == DT_DEEPIN) // 深度系统
-            {
-                cmd = QString("pcmanfm %1 > /dev/null 2>&1 &").arg(QString(qgetenv("HOME")));
-            }
-            else if (g_desktopType == DT_UBUNTU) // Ubuntu
-            {
-                cmd = QString("nautilus -s %1 > /dev/null 2>&1 &").arg(m_tmpSysTable);
-            }
-            else
-            {
-                cmd = QString("xdg-open %1 > /dev/null 2>&1 &").arg(m_tmpSysTable);
-            }
+            cmd = QString("xdg-open %1 > /dev/null 2>&1 &").arg(m_tmpSysTable);
             system(cmd.toUtf8().data());
         }
     }
@@ -516,28 +497,9 @@ void LexiconToolWin::on_btnMakePinyinLexicon_clicked()
         }
         else if (ret == QMessageBox::No)
         {
-            QString cmd;
-            if (g_desktopType == DT_MATE) // 银河麒麟系统
-            {
-                cmd = QString("caja %1 > /dev/null 2>&1 &").arg(QString(qgetenv("HOME")));
-            }
-            else if (g_desktopType == DT_UKUI)
-            {
-                cmd = QString("peony %1 > /dev/null 2>&1 &").arg(QString(qgetenv("HOME")));
-            }
-            else if (g_desktopType == DT_DEEPIN) // 深度系统
-            {
-                cmd = QString("pcmanfm %1 > /dev/null 2>&1 &").arg(QString(qgetenv("HOME")));
-            }
-            else if (g_desktopType == DT_UBUNTU) // Ubuntu
-            {
-                cmd = QString("nautilus -s %1 > /dev/null 2>&1 &").arg(m_tmpPinyinTable);
-            }
-            else
-            {
-                cmd = QString("xdg-open %1 > /dev/null 2>&1 &").arg(m_tmpPinyinTable);
-            }
-            system(cmd.toUtf8().data());
+            char cmd[128] = {0};
+            sprintf(cmd, "xdg-open %s > /dev/null 2>&1 &", m_tmpPinyinTable.toUtf8().data());
+            system(cmd);
         }
     }
 }
@@ -564,26 +526,7 @@ void LexiconToolWin::on_btnDumpUserLexicon_clicked()
     if (ret == QMessageBox::Yes)
     {
         char cmd[128] = {0};
-        if (g_desktopType == DT_MATE) // 麒麟系统
-        {
-            sprintf(cmd, "caja ~/user_word.txt > /dev/null 2>&1 &");
-        }
-        else if (g_desktopType == DT_UKUI) //
-        {
-            sprintf(cmd, "peony ~/user_word.txt > /dev/null 2>&1 &");
-        }
-        else if (g_desktopType == DT_DEEPIN) // 深度系统
-        {
-            sprintf(cmd, "gedit ~/user_word.txt > /dev/null 2>&1 &");
-        }
-        else if (g_desktopType == DT_UBUNTU) // Ubuntu
-        {
-            sprintf(cmd, "nautilus -s ~/user_word.txt > /dev/null 2>&1 &");
-        }
-        else
-        {
-            sprintf(cmd, "xdg-open ~/user_word.txt > /dev/null 2>&1 &");
-        }
+        sprintf(cmd, "xdg-open ~/user_word.txt > /dev/null 2>&1 &");
         system(cmd);
     }
 }

@@ -2,7 +2,7 @@
 
 #include <QDesktopWidget>
 
-#include "commdefine.h"
+#include "config.h"
 #include "keybutton.h"
 #include "settings.h"
 #include "settingshelper.h"

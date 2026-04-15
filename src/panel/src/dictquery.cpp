@@ -1,6 +1,6 @@
 #include "dictquery.h"
 
-#include "commdefine.h"
+#include "config.h"
 #include "wbpy.cpp"
 
 DictQuery::DictQuery(QObject *parent) : QObject(parent)

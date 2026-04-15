@@ -1,7 +1,7 @@
 #include "texteditwin.h"
 
 #include "../../tools/freewbConversionTool.h"
-#include "commdefine.h"
+#include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
 #include "ui_texteditwin.h"
