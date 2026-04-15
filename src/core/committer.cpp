@@ -48,10 +48,12 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
         }
         else if (index >= candidateList_->size())
         {
+            lastCommitString_ = candidateList_->selectCandidateText(0);
             commitCallback_(candidateList_->selectCandidateText(0));
         }
         else
         {
+            lastCommitString_ = candidateList_->selectCandidateText(index);
             commitCallback_(candidateList_->selectCandidateText(index));
         }
         
@@ -63,6 +65,7 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     // 二三重码上屏
     if ((keysym == secondRecodeKey_ && state == FreewbKeyState_None) || (keysym == thirdRecodeKey_ && state == FreewbKeyState_None))
     {
+        lastCommitString_ = candidateList_->selectCandidateText(keysym == secondRecodeKey_ ? 1 : 2);
         commitCallback_(candidateList_->selectCandidateText(keysym == secondRecodeKey_ ? 1 : 2));
         candidateList_->clear();
         engineManager_->reset();
@@ -72,6 +75,7 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     // 空格上屏
     if (keysym == FreewbKey_space && state == FreewbKeyState_None)
     {
+        lastCommitString_ = candidateList_->selectCandidateText(0);
         commitCallback_(candidateList_->selectCandidateText(0));
         candidateList_->clear();
         engineManager_->reset();
@@ -82,6 +86,7 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     if (keysym == FreewbKey_Return && state == FreewbKeyState_None)
     {
         commitCallback_(candidateList_->preeditText());
+        lastCommitString_.clear();
         candidateList_->clear();
         engineManager_->reset();
         return true;
@@ -90,6 +95,7 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     //顶字上屏,上屏效果与普通上屏不同。如："你好,"
     if (Key::isSpecialCommitCharacter(keysym, state))
     {
+        lastCommitString_ = candidateList_->selectCandidateText(0);
         commitCallback_(candidateList_->selectCandidateText(0));
         candidateList_->clear();
         engineManager_->reset();
@@ -97,5 +103,10 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     return false;
+}
+
+const std::string &Committer::lastCommitString() const
+{
+    return lastCommitString_;
 }
 } // namespace freewb

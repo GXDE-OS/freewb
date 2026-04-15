@@ -90,7 +90,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromString(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            sdbusProxy_->callDictQueryMethod("freewb");
+            sdbusProxy_->callDictQueryMethod(committer_->lastCommitString());
             return;
         }
     }
