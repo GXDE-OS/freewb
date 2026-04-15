@@ -379,6 +379,7 @@ void MainProgram::slot_dbus_switch_candiwin_hide_flg()
 {
     bool flg = settings::instance().get_hideCandiWin() ? false : true;
     settings::instance().set_hideCandiWin(flg);
+    g_settingsNotifier.notifySettingDataChangedToLocal();
 }
 
 // 切换词库
@@ -436,6 +437,7 @@ void MainProgram::slot_dbus_switch_skin()
             }
 
             settings::instance().set_curSkinId(skinList.at(i));
+            g_settingsNotifier.notifySettingDataChangedToLocal();
             break;
         }
     }
