@@ -1128,10 +1128,7 @@ void Keyboard::slot_virtual_keyboard_clicked(int keyIdx)
 {
     if (keyIdx == KEY_ESC)
     {
-        if (settings::instance().get_uiAudioEffect())
-        {
-            Sound::play_sound(SOUND_BACK);
-        }
+        Sound::play(SOUND_BACK);
         hide();
         settings::instance().set_vkMode(-1);
         emit signal_vk_flg_changed();
@@ -1290,10 +1287,7 @@ void Keyboard::slot_toggle_win()
 {
     if (isHidden())
     {
-        if (settings::instance().get_uiAudioEffect())
-        {
-            Sound::play_sound(SOUND_ENTER);
-        }
+        Sound::play(SOUND_ENTER);
         move(m_vkDefaultPos);
         update_keyboard_button();
         show();
@@ -1309,10 +1303,7 @@ void Keyboard::slot_toggle_win()
     }
     else
     {
-        if (settings::instance().get_uiAudioEffect())
-        {
-            Sound::play_sound(SOUND_BACK);
-        }
+        Sound::play(SOUND_BACK);
         hide();
         settings::instance().set_vkMode(-1);
     }
@@ -1332,10 +1323,7 @@ void Keyboard::slot_open_win(VirtualKeyboardMode mode)
 
     if (isHidden())
     {
-        if (settings::instance().get_uiAudioEffect())
-        {
-            Sound::play_sound(SOUND_ENTER);
-        }
+        Sound::play(SOUND_ENTER);
         move(m_vkDefaultPos);
         show();
         if (m_capsFlag)

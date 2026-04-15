@@ -618,10 +618,7 @@ bool ToolbarWin::eventFilter(QObject *obj, QEvent *event)
     {
         if (obj == ui->frameToolbar && m_autoMenuExpand)
         {
-            if (settings::instance().get_uiAudioEffect())
-            {
-                Sound::play_sound(SOUND_ENTER);
-            }
+            Sound::play(SOUND_ENTER);
             update_extend_menu(true);
         }
     }
@@ -878,10 +875,7 @@ void ToolbarWin::on_btnLogo_clicked()
 
 void ToolbarWin::on_btnMenuExtend_clicked()
 {
-    if (settings::instance().get_uiAudioEffect())
-    {
-        Sound::play_sound(SOUND_LETTER);
-    }
+    Sound::play(SOUND_LETTER);
 
     if (m_extendMenuOpenState)
     {
@@ -895,11 +889,7 @@ void ToolbarWin::on_btnMenuExtend_clicked()
 
 void ToolbarWin::on_btnMode_clicked()
 {
-    // qDebug() << "$$$$$$$$DBG_TRACE";
-    if (settings::instance().get_uiAudioEffect())
-    {
-        Sound::play_sound(SOUND_LETTER);
-    }
+    Sound::play(SOUND_LETTER);
 
     InputMode curIm = get_inputMode();
     if (curIm == IM_WUBI_FONT)
@@ -1005,10 +995,7 @@ void ToolbarWin::on_btnGenerate_clicked()
     //        return;
     //    }
 
-    if (settings::instance().get_uiAudioEffect())
-    {
-        Sound::play_sound(SOUND_LETTER);
-    }
+    Sound::play(SOUND_LETTER);
     emit signal_open_generate_word_dialog("", "");
 }
 
@@ -1020,10 +1007,7 @@ void ToolbarWin::on_btnSearch_clicked()
     //        return;
     //    }
 
-    if (settings::instance().get_uiAudioEffect())
-    {
-        Sound::play_sound(SOUND_LETTER);
-    }
+    Sound::play(SOUND_LETTER);
     emit signal_open_dict_query_win("");
 }
 
@@ -1034,10 +1018,7 @@ void ToolbarWin::on_btnCharWidth_clicked()
     //        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
     //        return;
     //    }
-    if (settings::instance().get_uiAudioEffect())
-    {
-        Sound::play_sound(SOUND_LETTER);
-    }
+    Sound::play(SOUND_LETTER);
     update_char_width_mode_ico(s_charWidthMode);
     emit signal_fcitx_switch_char_width("/Fcitx/fullwidth");
 }
@@ -1061,10 +1042,7 @@ void ToolbarWin::update_char_width_mode_ico(CharWidthMode charWidth)
 
 void ToolbarWin::on_btnMark_clicked()
 {
-    if (settings::instance().get_uiAudioEffect())
-    {
-        Sound::play_sound(SOUND_LETTER);
-    }
+    Sound::play(SOUND_LETTER);
 
     update_mark_mode_ico(s_markMode);
     emit signal_fcitx_switch_mark("/Fcitx/punc");
@@ -1111,10 +1089,7 @@ void ToolbarWin::on_btnCharFont_clicked()
     //        return;
     //    }
 
-    if (settings::instance().get_uiAudioEffect())
-    {
-        Sound::play_sound(SOUND_LETTER);
-    }
+    Sound::play(SOUND_LETTER);
 
     if (s_charFontMode == CHAR_SIMPLIFIED)
     {
@@ -1137,10 +1112,7 @@ void ToolbarWin::on_btnCharSet_clicked()
     //        return;
     //    }
 
-    if (settings::instance().get_uiAudioEffect())
-    {
-        Sound::play_sound(SOUND_LETTER);
-    }
+    Sound::play(SOUND_LETTER);
     switch_char_set_mode();
     update_char_set_ico();
 
@@ -1161,10 +1133,7 @@ void ToolbarWin::on_btnKeyboard_clicked()
 // 弹出设置界面
 void ToolbarWin::on_btnSetting_clicked()
 {
-    if (settings::instance().get_uiAudioEffect())
-    {
-        Sound::play_sound(SOUND_LETTER);
-    }
+    Sound::play(SOUND_LETTER);
     emit signal_open_setting_win();
 }
 
