@@ -66,8 +66,7 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
 
     // 工具条发送的信号
     // m_toolbar --> m_kimAgent
-    connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_inputmethod_1, m_kimAgent, &KimAgent::ReloadConfig);
-    connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_inputmethod, m_kimAgent, &KimAgent::TriggerProperty);
+    connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_inputmethod, m_kimAgent, &KimAgent::ReloadConfig);
     connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_char_font, m_kimAgent, &KimAgent::TriggerProperty);
 
     connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_char_width, m_kimAgent, &KimAgent::SwitchFullWidth);
@@ -163,7 +162,7 @@ MainProgram::~MainProgram()
     if (m_toolbar)
         delete m_toolbar;
     if (m_virtualKeyboard)
-        delete m_toolbar;
+        delete m_virtualKeyboard;
     if (m_inputWin)
         delete m_inputWin;
     if (m_settingWin)

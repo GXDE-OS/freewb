@@ -52,7 +52,6 @@
 /**********************************************　静态成员　************************************************/
 // 工具条按钮默认状态值
 InputMode ToolbarWin::s_inputMode = IM_WUBI_PINYIN;
-InputMode ToolbarWin::s_inputModeBak = IM_WUBI_FONT;
 CharWidthMode ToolbarWin::s_charWidthMode = WIDTH_HALF;
 MarkMode ToolbarWin::s_markMode = MARK_CN;
 CharFontMode ToolbarWin::s_charFontMode = CHAR_SIMPLIFIED;
@@ -63,22 +62,12 @@ int ToolbarWin::s_capsFlg;
 void ToolbarWin::set_inputMode(InputMode inputMode)
 {
     s_inputMode = inputMode;
-    if (inputMode != IM_ENGLISH)
-    {
-        s_inputModeBak = inputMode;
-    }
 }
 
 // 获取输入模式
 InputMode ToolbarWin::get_inputMode()
 {
     return s_inputMode;
-}
-
-// 获取输入模式备份
-InputMode ToolbarWin::get_inputMode_bak()
-{
-    return s_inputModeBak;
 }
 
 // 获取全/半角模式
@@ -139,7 +128,7 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_extendMenuOpenState = true;
     m_mouseMoveFlag = false;
 
-    s_inputMode = (InputMode)settings::instance().get_inputMethod();
+    set_inputMode(static_cast<InputMode>(settings::instance().get_inputMode()));
     s_charSetMode = (CharSetMode)settings::instance().get_charSet();
 
     // 初始化虚拟键盘的输入模式选择菜单
@@ -198,7 +187,7 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_hideDelayTimer.setSingleShot(true);
     connect(&m_hideDelayTimer, &QTimer::timeout, this, &ToolbarWin::slot_hide_toolbar);
 
-    settings::instance().set_inputMode(s_inputMode);
+    settings::instance().set_inputMode(get_inputMode());
     settings::instance().set_simpTradFlg(s_charFontMode);
     settings::instance().set_currentCharset(s_charSetMode);
 
@@ -751,10 +740,6 @@ void ToolbarWin::slot_update_input_mode_ico()
     {
         ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "拼音输入" : "拼音輸入");
     }
-    else if (get_inputMode() == IM_ENGLISH)
-    {
-        ui->btnMode->setText("英文");
-    }
 }
 
 // 更新工具条上的输入模式指示图标
@@ -776,10 +761,6 @@ void ToolbarWin::update_input_mode_ico(InputMode im)
     else if (im == IM_STD_PINYIN)
     {
         ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "拼音输入" : "拼音輸入");
-    }
-    else if (im == IM_ENGLISH)
-    {
-        ui->btnMode->setText("英文");
     }
 }
 
@@ -886,51 +867,37 @@ void ToolbarWin::on_btnMode_clicked()
     InputMode curIm = get_inputMode();
     if (curIm == IM_WUBI_FONT)
     {
-        update_input_mode_ico(IM_WUBI_PINYIN);
+        set_inputMode(IM_WUBI_PINYIN);
         settings::instance().set_inputMode(IM_WUBI_PINYIN);
-        emit signal_fcitx_switch_inputmethod_1();
+        slot_update_input_mode_ico();
+        emit signal_fcitx_switch_inputmethod();
     }
     else if (curIm == IM_WUBI_PINYIN)
     {
-        update_input_mode_ico(IM_STD_PINYIN);
+        set_inputMode(IM_STD_PINYIN);
         settings::instance().set_inputMode(IM_STD_PINYIN);
-        emit signal_fcitx_switch_inputmethod_1();
+        slot_update_input_mode_ico();
+        emit signal_fcitx_switch_inputmethod();
     }
     else if (curIm == IM_STD_PINYIN)
     {
-        update_input_mode_ico(IM_WUBI_FONT);
+        set_inputMode(IM_WUBI_FONT);
         settings::instance().set_inputMode(IM_WUBI_FONT);
-        emit signal_fcitx_switch_inputmethod_1();
+        slot_update_input_mode_ico();
+        emit signal_fcitx_switch_inputmethod();
     }
-    else if (curIm == IM_ENGLISH)
+    else if (curIm != IM_ENGLISH)
     {
-        update_input_mode_ico(s_inputModeBak);
-        settings::instance().set_inputMode(s_inputModeBak);
-        emit signal_fcitx_switch_inputmethod("/Fcitx/im/freewb");
-        emit signal_fcitx_switch_inputmethod_1();
+        FREEWB_WARN("ToolbarWin::on_btnMode_clicked: unhandled InputMode {}", static_cast<int>(curIm));
     }
 }
 
 void ToolbarWin::fcitx_inputmethod_updated(const QString &param)
 {
-#ifdef DEBUG
-    qDebug() << "ToolbarWin::fcitx_inputmethod_updated" << param;
-#endif
-    if (param.contains("Freewb") || param.contains("极点五笔") || param.contains("五笔拼音") || param.contains("拼音输入"))
-    {
-        set_inputMode(s_inputModeBak);
-        settings::instance().set_inputMode(s_inputModeBak);
-
-        slot_update_input_mode_ico();
-        show(); //+ 2023-11-6 15:36
-    }
-    else if (param.contains("Keyboard") || param.contains("键盘"))
-    {
-        set_inputMode(IM_ENGLISH);
-        settings::instance().set_inputMode(IM_ENGLISH);
-        slot_update_input_mode_ico();
-        hide(); //+ 2023-11-6 15:36
-    }
+    FREEWB_DEBUG("param={}", param.toUtf8().constData());
+    InputMode im = static_cast<InputMode>(settings::instance().get_inputMode());
+    set_inputMode(im);
+    slot_update_input_mode_ico();
 }
 
 void ToolbarWin::fcitx_charFont_updated(const QString &param)
@@ -981,35 +948,18 @@ void ToolbarWin::fcitx_charMark_updated(const QString &param)
 
 void ToolbarWin::on_btnGenerate_clicked()
 {
-    //    if ( get_inputMode() == IM_ENGLISH )
-    //    {
-    //        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
-    //        return;
-    //    }
-
     Sound::play(SOUND_LETTER);
     emit signal_open_generate_word_dialog("", "");
 }
 
 void ToolbarWin::on_btnSearch_clicked()
 {
-    //    if ( get_inputMode() == IM_ENGLISH )
-    //    {
-    //        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
-    //        return;
-    //    }
-
     Sound::play(SOUND_LETTER);
     emit signal_open_dict_query_win("");
 }
 
 void ToolbarWin::on_btnCharWidth_clicked()
 {
-    //    if ( get_inputMode() == IM_ENGLISH )
-    //    {
-    //        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
-    //        return;
-    //    }
     Sound::play(SOUND_LETTER);
     update_char_width_mode_ico(s_charWidthMode);
     emit signal_fcitx_switch_char_width("/Fcitx/fullwidth");
@@ -1075,12 +1025,6 @@ void ToolbarWin::switch_char_set()
 
 void ToolbarWin::on_btnCharFont_clicked()
 {
-    //    if ( get_inputMode() == IM_ENGLISH )
-    //    {
-    //        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
-    //        return;
-    //    }
-
     Sound::play(SOUND_LETTER);
 
     if (s_charFontMode == CHAR_SIMPLIFIED)
@@ -1098,12 +1042,6 @@ void ToolbarWin::on_btnCharFont_clicked()
 
 void ToolbarWin::on_btnCharSet_clicked()
 {
-    //    if ( get_inputMode() == IM_ENGLISH )
-    //    {
-    //        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
-    //        return;
-    //    }
-
     Sound::play(SOUND_LETTER);
     switch_char_set_mode();
     update_char_set_ico();
@@ -1113,12 +1051,6 @@ void ToolbarWin::on_btnCharSet_clicked()
 
 void ToolbarWin::on_btnKeyboard_clicked()
 {
-    //    if ( get_inputMode() == IM_ENGLISH )
-    //    {
-    //        emit signal_fcitx_switch_inputmethod( "/Fcitx/im/freewb" );
-    //        return;
-    //    }
-
     emit signal_toggle_vk();
 }
 

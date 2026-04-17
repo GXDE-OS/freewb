@@ -190,8 +190,7 @@ signals:
     void signal_btn_mark_clicked();
 
     // 以下信号发给fcitx
-    void signal_fcitx_switch_inputmethod(const QString &param);
-    void signal_fcitx_switch_inputmethod_1();
+    void signal_fcitx_switch_inputmethod();
     void signal_fcitx_switch_char_font(const QString &param);
     void signal_fcitx_switch_char_width(const QString &param);
     void signal_fcitx_switch_mark(const QString &param);
@@ -226,7 +225,6 @@ public:
     // 静态成员函数
     static void set_inputMode(InputMode inputMode);
     static InputMode get_inputMode();
-    static InputMode get_inputMode_bak();
     static void set_char_width_mode(CharWidthMode charMode);
     static CharWidthMode get_char_width_mode();
     static void set_mark_mode(MarkMode markMode);
@@ -276,7 +274,6 @@ private slots:
 private:
     // 静态数据成员
     static InputMode s_inputMode;         // 输入法模式
-    static InputMode s_inputModeBak;      // 内部输入法模式备份
     static CharWidthMode s_charWidthMode; // 字符宽度
     static MarkMode s_markMode;           // 标点模式
     static CharFontMode s_charFontMode;   // 简体繁体

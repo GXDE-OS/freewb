@@ -920,12 +920,12 @@ void SettingWin::on_btnSettingOption_clicked()
 
 void SettingWin::on_btnOk_clicked()
 {
-
     close();
     move(m_defaultPopPosition);
     puts("win seting");
     settings::instance().save();
     g_settingsNotifier.notifySettingDataChangedToFcitx();
+    g_settingsNotifier.notifySettingDataChangedToLocal();
 }
 
 void SettingWin::on_btnCancel_clicked()
