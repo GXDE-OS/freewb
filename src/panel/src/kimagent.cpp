@@ -58,7 +58,8 @@ void KimAgent::create_freewubi_panel_service()
         return;
     }
 
-    auto result = QDBusConnection::connectToBus(QDBusConnection::SessionBus, FREEWUBI_SESSION_BUSNAME).registerObject(FREEWUBI_PANEL_OBJECTPATH, this, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals);
+    auto result = QDBusConnection::connectToBus(QDBusConnection::SessionBus, FREEWUBI_SESSION_BUSNAME)
+                      .registerObject(FREEWUBI_PANEL_OBJECTPATH, this, QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals);
     qDebug() << "result = " << result;
 }
 

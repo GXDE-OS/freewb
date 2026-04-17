@@ -39,15 +39,15 @@ public:
 
 Q_SIGNALS:
     // signals listened by fcitx's dbus service
-    void Configure();
-    void Exit();
-    void LookupTablePageDown();
-    void LookupTablePageUp();
-    void ReloadConfig();
-    void SelectCandidate(int index);
-    void TriggerProperty(const QString &key);
-    void SwitchPunctuation();
-    void SwitchFullWidth();
+    Q_SCRIPTABLE void Configure();
+    Q_SCRIPTABLE void Exit();
+    Q_SCRIPTABLE void LookupTablePageDown();
+    Q_SCRIPTABLE void LookupTablePageUp();
+    Q_SCRIPTABLE void ReloadConfig();
+    Q_SCRIPTABLE void SelectCandidate(int index);
+    Q_SCRIPTABLE void TriggerProperty(const QString &key);
+    Q_SCRIPTABLE void SwitchPunctuation();
+    Q_SCRIPTABLE void SwitchFullWidth();
 
     // 以下信号是接收到fcitx对应的信号后转发出去的程序内部信号
     void signal_Enable(bool);
@@ -79,8 +79,8 @@ private:
 
     // METHODS(暴露给DBUS提供给外界进程调用的方法)
 public Q_SLOTS:
-    void SetLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev, bool hasNext, int cursor, int layout);
+    Q_SCRIPTABLE void SetLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev, bool hasNext, int cursor, int layout);
 
-    void SetSpotRect(int x, int y, int w, int h);
+    Q_SCRIPTABLE void SetSpotRect(int x, int y, int w, int h);
 };
 #endif
