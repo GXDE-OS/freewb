@@ -13,7 +13,6 @@ charSet=0
 curUsedLexicon=default
 currentCharset=0
 enterClear=true
-inputMethod=1
 inputMode=0
 quickTableFlg=0
 imeTableChanged=0
