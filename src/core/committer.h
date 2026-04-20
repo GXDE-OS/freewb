@@ -1,12 +1,11 @@
-#ifndef COMMITER_H
-#define COMMITER_H
+#ifndef COMMITTER_H
+#define COMMITTER_H
 
 #include <string>
 
 #include "candidatelist.h"
 #include "enginemanager.h"
 #include "key.h"
-#include "sdbus_proxy.h"
 
 namespace freewb
 {
@@ -37,4 +36,4 @@ private:
 };
 } // namespace freewb
 
-#endif // COMMITER_H
+#endif // COMMITTER_H
