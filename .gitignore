@@ -3,3 +3,4 @@ clang-format.sh
 CMakeLists.txt.user
 .vscode/**
 include/config.h
+.cursor/**
