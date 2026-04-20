@@ -8,6 +8,7 @@
 
 #include "engine.h"
 #include "ifreewb.h"
+#include "userdict.h"
 
 namespace freewb
 {
@@ -36,6 +37,7 @@ private:
 private:
     std::unordered_map<std::string, std::vector<std::string>> singleChardict_;
     std::unordered_map<std::string, std::vector<std::string>> multiChardict_;
+    UserDict userDict_;
 
     std::string tableName_;
     std::string tableInfo_;

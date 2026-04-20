@@ -69,14 +69,29 @@ void WbzxEngine::changeAvailable()
 
 void WbzxEngine::putKey(const char *strCode)
 {
-    const std::string &prefix = strCode;
-    std::vector<std::string> texts;
-    collectCandidatesForPrefix(prefix, singleChardict_, texts);
-    collectCandidatesForPrefix(prefix, multiChardict_, texts);
-
     result_.labels.clear();
     result_.attrs.clear();
-    result_.texts = std::move(texts);
+    result_.texts.clear();
+
+    if (strCode == nullptr)
+    {
+        return;
+    }
+
+    const std::string prefix(strCode);
+
+    // 1. 用户词库：仅做精确编码匹配，命中后排在最前。
+    if (userDict_.contains(prefix))
+    {
+        const std::vector<std::string> &userTexts = userDict_.lookup(prefix);
+        result_.texts.insert(result_.texts.end(), userTexts.begin(), userTexts.end());
+    }
+
+    // 2. 五笔字型字库：按前缀收集。
+    std::vector<std::string> engineTexts;
+    collectCandidatesForPrefix(prefix, singleChardict_, engineTexts);
+    collectCandidatesForPrefix(prefix, multiChardict_, engineTexts);
+    result_.texts.insert(result_.texts.end(), engineTexts.begin(), engineTexts.end());
 }
 
 const CandidatePayload &WbzxEngine::getResult() const
