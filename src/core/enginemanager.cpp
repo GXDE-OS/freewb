@@ -12,31 +12,86 @@ namespace freewb
 
 EngineManager::EngineManager(CandidateList *candidateList) : candidateList_(candidateList)
 {
-    initEngines();
+    initAllEngines();
+    loadDefaultEngines();
 }
 
 EngineManager::~EngineManager() = default;
 
-void EngineManager::initEngines()
+void EngineManager::initAllEngines()
 {
-    wbzxEngine_ = std::make_unique<WbzxEngine>();
-    pyEngine_ = std::make_unique<PyEngine>();
+    if (settings::instance().get_WbzxEngine())
+    {
+        wbzxEngine_ = std::unique_ptr<WbzxEngine>(new WbzxEngine());
+        const char *wbzxName = wbzxEngine_->name();
+        engines_.emplace_back(wbzxName, std::move(wbzxEngine_));
+    }
 
-    engines_.emplace_back(wbzxEngine_->name(), std::move(wbzxEngine_));
-    engines_.emplace_back(pyEngine_->name(), std::move(pyEngine_));
+    if (settings::instance().get_PyEngine())
+    {
+        pyEngine_ = std::unique_ptr<PyEngine>(new PyEngine());
+        const char *pyName = pyEngine_->name();
+        engines_.emplace_back(pyName, std::move(pyEngine_));
+    }
 
-    if (settings::instance().get_inputMode() == 0)
+    if (settings::instance().get_EnEngine())
     {
-        currentEngine_ = engines_[0].second.get();
+        enEngine_ = std::unique_ptr<En>(new En());
+        const char *enName = enEngine_->name();
+        engines_.emplace_back(enName, std::move(enEngine_));
     }
-    else if (settings::instance().get_inputMode() == 1)
+
+    if (settings::instance().get_WbpyEngine() && settings::instance().get_WbzxEngine() && settings::instance().get_PyEngine())
     {
-        currentEngine_ = engines_[1].second.get();
+        wbpyEngine_ = std::unique_ptr<Wbpy>(new Wbpy(wbzxEngine_.get(), pyEngine_.get()));
+        const char *wbpyName = wbpyEngine_->name();
+        engines_.emplace_back(wbpyName, std::move(wbpyEngine_));
     }
-    else
+}
+
+void EngineManager::loadDefaultEngines()
+{
+    static constexpr int kInputModeWbzx = 0;
+    static constexpr int kInputModeWbpy = 1;
+    static constexpr int kInputModePinyin = 2;
+    static constexpr int kInputModeEn = 3;
+
+    const char *name = nullptr;
+    switch (settings::instance().get_inputMode())
     {
-        currentEngine_ = nullptr;
+    case kInputModeWbzx:
+        name = "engine:wbzx";
+        break;
+    case kInputModeWbpy:
+        name = "engine:wbpy";
+        break;
+    case kInputModePinyin:
+        name = "engine:py";
+        break;
+    case kInputModeEn:
+        name = "engine:en";
+        break;
+    default:
+        break;
     }
+
+    currentEngine_ = findEngineByName(name);
+}
+
+IFreewbEngine *EngineManager::findEngineByName(const char *name) const
+{
+    if (name == nullptr)
+    {
+        return nullptr;
+    }
+    for (const auto &entry : engines_)
+    {
+        if (std::strcmp(entry.first, name) == 0)
+        {
+            return entry.second.get();
+        }
+    }
+    return nullptr;
 }
 
 void EngineManager::nextEngine()
@@ -93,12 +148,16 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return false;
     }
 
-    if (!Key::isKeyaz(keysym, state) || Key::isModifierKeySym(keysym))
+    if (!Key::isKeyaz(keysym, state) && !Key::isKeyAZ(keysym, state))
     {
         return false;
     }
 
     const char *key = Key::keySymToString(keysym);
+    if (key == nullptr)
+    {
+        return false;
+    }
     candidateList_->setPreeditText(candidateList_->preeditText() + key);
     if (static_cast<int>(candidateList_->preeditText().length()) > engine->inputCodeLength())
     {
@@ -133,14 +192,10 @@ void EngineManager::changeEngine(const std::string &engineName)
     {
         return;
     }
-    for (const auto &engine : engines_)
+    IFreewbEngine *engine = findEngineByName(engineName.c_str());
+    if (engine != nullptr)
     {
-        if (engine.first != engineName)
-        {
-            continue;
-        }
-        currentEngine_ = engine.second.get();
-        break;
+        currentEngine_ = engine;
     }
 }
 

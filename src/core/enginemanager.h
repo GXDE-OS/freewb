@@ -6,9 +6,11 @@
 #include <vector>
 
 #include "engine.h"
+#include "en.h"
 #include "keysym.h"
 #include "py.h"
 #include "types.h"
+#include "wbpy.h"
 #include "wbzx.h"
 #include "candidatelist.h"
 
@@ -29,11 +31,16 @@ public:
     void reset();
 
 private:
-    void initEngines();
+    void initAllEngines();
+    void loadDefaultEngines();
+    IFreewbEngine *findEngineByName(const char *name) const;
 
 private:
-    std::unique_ptr<WbzxEngine> wbzxEngine_;
-    std::unique_ptr<PyEngine> pyEngine_;
+    std::unique_ptr<WbzxEngine> wbzxEngine_ = nullptr;
+    std::unique_ptr<Wbpy> wbpyEngine_ = nullptr;
+    std::unique_ptr<PyEngine> pyEngine_ = nullptr;
+    std::unique_ptr<En> enEngine_ = nullptr;
+
     IFreewbEngine *currentEngine_ = nullptr;
     std::vector<std::pair<const char *, std::unique_ptr<IFreewbEngine>>> engines_;
 

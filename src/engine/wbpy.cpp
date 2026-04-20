@@ -92,7 +92,7 @@ void Wbpy::reset()
 
 int Wbpy::inputCodeLength() const
 {
-    return std::max(wbzxEngine_->inputCodeLength(), pyEngine_->inputCodeLength());
+    return std::min(wbzxEngine_->inputCodeLength(), pyEngine_->inputCodeLength());
 }
 
 } // namespace freewb
