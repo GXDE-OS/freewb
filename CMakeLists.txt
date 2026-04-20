@@ -1,7 +1,4 @@
-# This is a template of a simple template of a fcitx module with name "example"
-# Please remember to replace all "[Ee]xample"'s in the files and file names
-# to your addon's real name.
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.6)
 
 project(freewb)
 string(TIMESTAMP FREEWB_VERSION "v4.0 %Y.%m.%d" UTC)
@@ -13,13 +10,14 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     set(OS_TYPE "Windows")
     message(STATUS "Detected operating system is : ${OS_TYPE}")
+    add_definitions(-D__WIN__)
 else()
     message(STATUS "Unknown operating system.")
 endif()
 
 option(ENABLE_FCITX4 "enable support fcitx4" On)
 option(ENABLE_FCITX5 "enable support fcitx5" On)
-option(ENABLE_TEST "build freewb-test" Off)
+option(ENABLE_TEST "enable freewb test cases" Off)
 
 find_package(ECM REQUIRED 1.0.0)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${ECM_MODULE_PATH} ${CMAKE_MODULE_PATH})
@@ -41,11 +39,6 @@ message(STATUS "FREEWB_INSTALL_DATADIR: ${FREEWB_INSTALL_DATADIR}")
 message(STATUS "FREEWB_INSTALL_PKGDATADIR: ${FREEWB_INSTALL_PKGDATADIR}")
 message(STATUS "FREEWB_INSTALL_BINDIR: ${FREEWB_INSTALL_BINDIR}")
 
-find_package(Libintl REQUIRED)
-find_package(Libiconv REQUIRED)
-
-include_directories(${LIBINTL_INCLUDE_DIR})
-include_directories(${LIBICONV_INCLUDE_DIR})
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/include")
 include_directories("${PROJECT_BINARY_DIR}/src")
