@@ -149,7 +149,11 @@ enum class ValueType
     X(switchSkin, ShortcutKey, String, "CTRL+KEY_NONE", ShortcutKey, "")                                                                                                                                                                                                                                   \
     X(switchVKb, ShortcutKey, String, "CTRL+KEY_ESC", ShortcutKey, "")                                                                                                                                                                                                                                     \
     X(tempEnglish, ShortcutKey, String, "KEY_SEMICOLON", ShortcutKey, "")                                                                                                                                                                                                                                  \
-    X(tempPinyin, ShortcutKey, String, "KEY_BACKQUOTE", ShortcutKey, "")
+    X(tempPinyin, ShortcutKey, String, "KEY_BACKQUOTE", ShortcutKey, "") \
+    X(WbzxEngine, Engine, Bool, "true", Engine, "") \
+    X(WbpyEngine, Engine, Bool, "true", Engine, "") \
+    X(PyEngine, Engine, Bool, "true", Engine, "") \
+    X(EnEngine, Engine, Bool, "true", Engine, "")
 
 #define FREEWB_CFG_AUTO_FROM_ENTRY(id, cat, vtype, def, sect, desc) FREEWB_CFG_##vtype##_APPLY(id, get_##id, set_##id)
 
