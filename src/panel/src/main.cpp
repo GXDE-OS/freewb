@@ -100,9 +100,7 @@ int main(int argc, char *argv[])
     FreewbLog log("/tmp/freewb-ui-panel.log");
     FREEWB_DEBUG("panel started");
 
-#ifdef BUILD_IN_CAMKE
-    run_as_daemon(); // 将程序初始化为后台守护进程
-#endif
+    run_as_daemon();
     if (app_is_running())
     {
         exit(1);
@@ -110,7 +108,7 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     app.setQuitOnLastWindowClosed(false);
-    app.setApplicationName("Freewb");
+    app.setApplicationName("freewb");
 
     settings::instance().reload();
 

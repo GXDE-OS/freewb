@@ -25,5 +25,5 @@ fi
 
 # run freewb
 export QT_QPA_PLATFORM=xcb
-Freewb
+@FREEWB_INSTALL_BINDIR@/@PROJECT_NAME@-panel
 unset QT_QPA_PLATFORM

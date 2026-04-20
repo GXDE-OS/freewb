@@ -1,8 +1,7 @@
-project( Freewb )
-cmake_minimum_required(VERSION 3.1.0)
-
 #CMAKE编译标志
 add_definitions(-DBUILD_IN_CAMKE)
+
+include_directories(${PROJECT_SOURCE_DIR}/src/panel/src)
 
 #Qt工程需要用到的编译开关
 set(CMAKE_AUTOMOC ON)
@@ -35,10 +34,10 @@ include_directories(
 set(EXTERN_LIBS -ldl -lX11 -lXtst -lXext -lpthread freewbConversionTool)
 
 #编译
-add_executable(${PROJECT_NAME} ${SRC_FILES} ${UI_FILES} ${QRC_FILES})
+add_executable(${PROJECT_NAME}-panel ${SRC_FILES} ${UI_FILES} ${QRC_FILES})
 
 #链接库
-target_link_libraries(${PROJECT_NAME} PRIVATE 
+target_link_libraries(${PROJECT_NAME}-panel PRIVATE
     Qt${QT_VERSION_MAJOR}::Core 
     Qt${QT_VERSION_MAJOR}::Gui
     Qt${QT_VERSION_MAJOR}::Widgets
@@ -50,4 +49,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 
 #安装可执行文件
-install(TARGETS ${PROJECT_NAME} DESTINATION ${FREEWB_INSTALL_BINDIR})
+install(TARGETS ${PROJECT_NAME}-panel DESTINATION ${FREEWB_INSTALL_BINDIR})
