@@ -1100,9 +1100,6 @@ void ToolbarWin::slot_kim_UpdateProperty(const QString &prop)
     {
         if (!m_hideToolbar)
         {
-            {
-                move(m_defaultPosition);
-            }
             FREEWB_DEBUG("show toolbar for freewb im");
             show();
         }
