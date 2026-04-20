@@ -173,7 +173,6 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
 
 void EngineManager::reset()
 {
-    candidateList_->clear();
     if (currentEngine_ == nullptr)
     {
         return;
