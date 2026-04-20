@@ -30,3 +30,8 @@ add_executable(freewb-test-engine-py engine_py_test.cpp)
 target_include_directories(freewb-test-engine-py PRIVATE ${CMAKE_SOURCE_DIR}/src/core ${CMAKE_SOURCE_DIR}/src/utils ${CMAKE_SOURCE_DIR}/src/engine)
 target_link_libraries(freewb-test-engine-py PRIVATE ${PROJECT_NAME}-engine-py ${PROJECT_NAME}-utils ${PROJECT_NAME}-core)
 
+add_executable(freewb-user-dict-test user_dict_test.cpp)
+target_include_directories(freewb-user-dict-test PRIVATE ${CMAKE_SOURCE_DIR}/src/engine ${CMAKE_SOURCE_DIR}/src/utils)
+target_link_libraries(freewb-user-dict-test PRIVATE ${PROJECT_NAME}-engine-wbzx ${PROJECT_NAME}-utils)
+add_test(NAME freewb-user-dict-test COMMAND freewb-user-dict-test)
+
