@@ -17,11 +17,6 @@
 class DictQuery : public QObject
 {
     Q_OBJECT
-
-signals:
-
-public slots:
-
 public:
     explicit DictQuery(QObject *parent = nullptr);
     ~DictQuery();

@@ -262,9 +262,6 @@ void BackupWorker::start_restore()
         QString backupLexiconName(str);
 
         quint32 dataSize = static_cast<quint32>(lexiconNameSize + wbTableSize + pyTableSize + userTableSize + quickTableSize + settingFileSize);
-#ifdef DEBUG
-        qDebug() << backupFileHead << lexiconNameSize << wbTableSize << pyTableSize << userTableSize << quickTableSize << settingFileSize;
-#endif
         // 判断备份文件是否有效
         if ((backupFileHead != g_backupFileHead) || (dataHeadSize + dataSize != backupFile.size()))
         {
@@ -319,9 +316,6 @@ void BackupWorker::start_restore()
                     }
                 }
                 wbTableFile.close();
-#ifdef DEBUG
-                qDebug() << "wubimb file size: " << totalWriteBytes;
-#endif
             }
 
             // 恢复拼音词库
@@ -358,9 +352,6 @@ void BackupWorker::start_restore()
                     }
                 }
                 pyTableFile.close();
-#ifdef DEBUG
-                qDebug() << "pinyinmb file size: " << totalWriteBytes;
-#endif
             }
 
             // 恢复用户词组表
@@ -396,9 +387,6 @@ void BackupWorker::start_restore()
                     }
                 }
                 userTableFile.close();
-#ifdef DEBUG
-                qDebug() << "pinyinmb file size: " << totalWriteBytes;
-#endif
             }
 
             // 恢复快捷码表
@@ -434,9 +422,6 @@ void BackupWorker::start_restore()
                     }
                 }
                 quickTableFile.close();
-#ifdef DEBUG
-                qDebug() << "quick table file size: " << totalWriteBytes;
-#endif
             }
 
             // 恢复用户设置文件
@@ -472,9 +457,6 @@ void BackupWorker::start_restore()
                     }
                 }
                 settingFile.close();
-#ifdef DEBUG
-                qDebug() << "setting file size: " << totalWriteBytes;
-#endif
             }
 
             backupFile.close();
@@ -517,9 +499,6 @@ BackupDialog::~BackupDialog()
     delete ui;
     if (m_backupWorker)
     {
-#ifdef DEBUG
-        qDebug() << "delete m_backupWorker!";
-#endif
         delete m_backupWorker;
     }
 }
@@ -609,9 +588,6 @@ bool BackupDialog::eventFilter(QObject *obj, QEvent *event)
 
 void BackupDialog::slot_progress_updated(int opFlg, int percentage)
 {
-#ifdef DEBUG
-    qDebug() << opFlg << percentage;
-#endif
     if (percentage >= 100)
     {
         backup_thread_quit(); // 请求线程退出
