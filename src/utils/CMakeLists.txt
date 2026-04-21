@@ -1,17 +1,25 @@
 message(STATUS "building utils module")
 
-find_package(spdlog REQUIRED)
-if (NOT spdlog_FOUND)
-    message(FATAL_ERROR "spdlog not found")
-endif()
-
-add_library(${PROJECT_NAME}-utils SHARED ConvertUTF.c log.cpp settings.cpp key.cpp utils.cpp sound.cpp)
-
-if (NOT TARGET spdlog::spdlog)
-    message(FATAL_ERROR "spdlog::spdlog target not found")
-endif()
+add_library(${PROJECT_NAME}-utils SHARED
+    ConvertUTF.c
+    settings.cpp
+    key.cpp
+    utils.cpp
+    sound.cpp
+)
 
 target_include_directories(${PROJECT_NAME}-utils PUBLIC ${CMAKE_SOURCE_DIR}/src/utils)
-target_link_libraries(${PROJECT_NAME}-utils PUBLIC spdlog::spdlog)
+
+find_package(spdlog QUIET)
+if (spdlog_FOUND)
+    target_sources(${PROJECT_NAME}-utils PRIVATE log.cpp)
+    target_link_libraries(${PROJECT_NAME}-utils PUBLIC spdlog::spdlog)
+endif()
+
+find_package(OpenCC QUIET)
+if (OpenCC_FOUND)
+    target_sources(${PROJECT_NAME}-utils PRIVATE chttrans.cpp)
+    target_link_libraries(${PROJECT_NAME}-utils PUBLIC OpenCC::OpenCC)
+endif()
 
 install(TARGETS ${PROJECT_NAME}-utils LIBRARY DESTINATION ${FREEWB_INSTALL_LIBDIR})
