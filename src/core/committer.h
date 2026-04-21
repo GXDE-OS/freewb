@@ -20,6 +20,7 @@ public:
 
 private:
     void loadSettings();
+    void commit(const std::string &text);
 
 private:
     CandidateList *candidateList_;
