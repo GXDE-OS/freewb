@@ -41,12 +41,10 @@ toolbarTransparency=0
 uiAudioEffect=false
 
 [CandidateWinOptions]
-candiPageKey=CPSK_SUB_EQUAL
 cursorFollow=true
 hideCandiWin=false
 prevPageKey=KEY_DASH
 nextPageKey=KEY_EQUAL
-recodeSelectKey=1
 secondRecodeKey=KEY_SEMICOLON
 thirdRecodeKey=KEY_QUOTE
 shiftSelectRecode=false
