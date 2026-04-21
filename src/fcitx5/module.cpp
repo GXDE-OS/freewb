@@ -29,6 +29,8 @@ void FreewbIMModule::keyEvent(const fcitx::InputMethodEntry &entry, fcitx::KeyEv
     {
         keyEvent.filterAndAccept();
     }
+
+    freewb_->updateCandidateAndPreeditToUI();
 }
 
 void FreewbIMModule::activate(const fcitx::InputMethodEntry &entry, fcitx::InputContextEvent &event)

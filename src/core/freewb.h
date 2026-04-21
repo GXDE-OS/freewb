@@ -19,13 +19,14 @@ public:
     void activate();
     void deactivate();
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
+    void updateCandidateAndPreeditToUI();
     void reset();
 
     ipc::SDBusProxy *sdbusProxy() const;
 
 private:
     bool handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state);
-    void updateCandidateAndPreeditToUI();
+    bool handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state);
 
 private:
     FreewbLog log_;

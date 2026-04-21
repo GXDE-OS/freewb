@@ -58,6 +58,12 @@ bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
 {
     FREEWB_DEBUG("keysym: {}, state: {}", static_cast<int>(keysym), static_cast<int>(state));
     bool processed = false;
+    processed = handleSingleShortcutKey(keysym, state);
+    if (processed)
+    {
+        return true;
+    }
+
     processed = handleGlobalShortcutKey(keysym, state);
     if (processed)
     {
@@ -67,14 +73,12 @@ bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
     processed = engineManager_->processKey(keysym, state);
     if (processed)
     {
-        updateCandidateAndPreeditToUI();
         return true;
     }
 
     processed = committer_->processKey(keysym, state);
     if (processed)
     {
-        updateCandidateAndPreeditToUI();
         return true;
     }
     
@@ -198,6 +202,23 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
             sdbusProxy_->callSwitchVirtualKeyboardModeMethod(0);
             return true;
         }
+    }
+
+    return false;
+}
+
+bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
+{
+    if (state != FreewbKeyState_None)
+    {
+        return false;
+    }
+
+    if (keysym == FreewbKey_Escape)
+    {
+        candidateList_->clear();
+        engineManager_->reset();
+        return true;
     }
 
     return false;
