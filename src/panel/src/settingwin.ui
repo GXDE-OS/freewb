@@ -4251,31 +4251,6 @@
         <bold>false</bold>
        </font>
       </property>
-      <item>
-       <property name="text">
-        <string>无</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>分号，单引号</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>逗号，句号</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>左Ctrl，右Ctrl</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>左Shift，右Shift</string>
-       </property>
-      </item>
      </widget>
      <widget class="QComboBox" name="cmbPrevNextPage">
       <property name="enabled">
@@ -4296,26 +4271,6 @@
         <bold>false</bold>
        </font>
       </property>
-      <item>
-       <property name="text">
-        <string>减号，等号</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>逗号，句号</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>上箭头，下箭头</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>PageUp，PageDown</string>
-       </property>
-      </item>
      </widget>
      <widget class="QCheckBox" name="ckbDispOpDict">
       <property name="enabled">

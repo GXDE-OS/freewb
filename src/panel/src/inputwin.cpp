@@ -1,6 +1,7 @@
 #include "inputwin.h"
 
 #include "config.h"
+#include "key.h"
 #include "log.h"
 #include "settings.h"
 #include "settingshelper.h"
@@ -13,6 +14,52 @@ namespace
 QColor fwbcQColorFromSpec(const std::string &spec)
 {
     return QColor(toQStringUtf8(spec));
+}
+
+QString keyTokenName(const std::string &token)
+{
+    if (token.empty() || token == "KEY_NONE")
+        return {};
+    const FreewbKeySym sym = freewb::Key::keySymFromUniqueName(token.c_str());
+    if (sym == FreewbKey_None)
+        return {};
+    return QString::fromUtf8(freewb::Key::keySymToName(sym));
+}
+
+/* 两枚物理键拼成 "name1/name2"；任一解析失败返回空串。 */
+QString pairKeyDisplayText(const std::string &first, const std::string &second)
+{
+    const QString a = keyTokenName(first);
+    const QString b = keyTokenName(second);
+    if (a.isEmpty() || b.isEmpty())
+        return {};
+    return QString("%1/%2").arg(a, b);
+}
+
+/* "CTRL+KEY_XXX" 配置值 → "Ctrl+<name>" 展示；解析失败或 KEY_NONE 返回空。 */
+QString customShortcutDisplayText(const std::string &stored)
+{
+    return toQStringUtf8(freewb_custom_shortcut_format(stored));
+}
+
+/* 单键存储的是 KEY_* token（"KEY_NONE" 表示禁用）；与输入字符是否匹配。 */
+bool singleShortcutMatches(QChar ch, const std::string &stored)
+{
+    if (stored.empty() || stored == "KEY_NONE")
+        return false;
+    const FreewbKeySym sym = freewb::Key::keySymFromUniqueName(stored.c_str());
+    if (sym == FreewbKey_None)
+        return false;
+    return ch.toLatin1() == static_cast<char>(sym);
+}
+
+/* 中英切换落 INI 的是 KEY_* token；反查公共预设表取 displayName。 */
+QString cnEnSwitchDisplayText(const std::string &token)
+{
+    const int idx = freewb_cn_en_switch_preset_index(token);
+    if (idx < 0)
+        return {};
+    return QString::fromUtf8(freewb_cn_en_switch_presets()[static_cast<size_t>(idx)].displayName);
 }
 
 } // namespace
@@ -811,7 +858,7 @@ void InputWin::set_candiwin_op_help_info()
     if (m_preEidtText.isEmpty())
         return;
 
-    if (m_preEidtText.at(0).toLatin1() == toQStringUtf8(freewb_single_shortcut_ini_from_stored(settings::instance().get_tempEnglish())).toInt())
+    if (singleShortcutMatches(m_preEidtText.at(0), settings::instance().get_tempEnglish()))
     {
         if (m_preEidtText.length() > 1 && m_candiWordCount)
         {
@@ -830,11 +877,11 @@ void InputWin::set_candiwin_op_help_info()
     {
         oti = OTI_TEMP_ENGLISH;
     }
-    else if (m_preEidtText.length() == 1 && m_preEidtText.at(0).toLatin1() == toQStringUtf8(freewb_single_shortcut_ini_from_stored(settings::instance().get_shortcutInput())).toInt())
+    else if (m_preEidtText.length() == 1 && singleShortcutMatches(m_preEidtText.at(0), settings::instance().get_shortcutInput()))
     {
         oti = OTI_QUICK_INPUT;
     }
-    else if (m_preEidtText.length() == 1 && m_preEidtText.at(0).toLatin1() == toQStringUtf8(freewb_single_shortcut_ini_from_stored(settings::instance().get_tempPinyin())).toInt())
+    else if (m_preEidtText.length() == 1 && singleShortcutMatches(m_preEidtText.at(0), settings::instance().get_tempPinyin()))
     {
         oti = OTI_TEMP_PINYIN;
     }
@@ -861,7 +908,7 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_SWITCH_CHAR_WIDTH)
     {
-        tips = "【Shift+空格 切换全/半角】";
+        tips = "【Shift+Space 切换全/半角】";
     }
     else if (oti == OTI_SK_SWITCH_MARK)
     {
@@ -869,51 +916,39 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_BACK_FIND_CODE)
     {
-        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_BACK_FIND_CODE)));
-        if (keyName != "无")
-        {
-            tips = QString("【%1 反查编码】").arg(keyName);
-        }
+        const QString keyText = customShortcutDisplayText(settings::instance().get_backFindCode());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 反查编码】").arg(keyText);
     }
     else if (oti == OTI_SK_ONLINE_ADD_WORD)
     {
-        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_ONLINE_ADD_WORD)));
-        if (keyName != "无")
-        {
-            tips = QString("【%1 在线加词】").arg(keyName);
-        }
+        const QString keyText = customShortcutDisplayText(settings::instance().get_onlineAddWord());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 在线加词】").arg(keyText);
     }
     else if (oti == OTI_SK_ONLINE_DEL_WORD)
     {
-        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_ONLINE_DEL_WORD)));
-        if (keyName != "无")
-        {
-            tips = QString("【%1 在线删词】").arg(keyName);
-        }
+        const QString keyText = customShortcutDisplayText(settings::instance().get_onlineDelWord());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 在线删词】").arg(keyText);
     }
     else if (oti == OTI_SK_SWITCH_KEYBOARD)
     {
-        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_KEYBOARD)));
-        if (keyName != "无")
-        {
-            tips = QString("【%1 切换软键盘】").arg(keyName);
-        }
+        const QString keyText = customShortcutDisplayText(settings::instance().get_switchVKb());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 切换软键盘】").arg(keyText);
     }
     else if (oti == OTI_SK_SWITCH_CHAR_SET)
     {
-        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_CHAR_SET)));
-        if (keyName != "无")
-        {
-            tips = QString("【%1 切换字符集】").arg(keyName);
-        }
+        const QString keyText = customShortcutDisplayText(settings::instance().get_switchCharSet());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 切换字符集】").arg(keyText);
     }
     else if (oti == OTI_SK_SWITCH_INPUT_MODE)
     {
-        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_INPUT_MODE)));
-        if (keyName != "无")
-        {
-            tips = QString("【%1 切换输入模式】").arg(keyName);
-        }
+        const QString keyText = customShortcutDisplayText(settings::instance().get_switchInputMode());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 切换输入模式】").arg(keyText);
     }
     //    else if ( oti == OTI_SK_SWITCH_WORD_STATE )
     //    {
@@ -925,35 +960,27 @@ void InputWin::set_candiwin_op_help_info()
     //    }
     else if (oti == OTI_SK_SWITCH_S_IN_T_OUT)
     {
-        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_S_IN_T_OUT)));
-        if (keyName != "无")
-        {
-            tips = QString("【%1 切换简入繁出】").arg(keyName);
-        }
+        const QString keyText = customShortcutDisplayText(settings::instance().get_switchChttrans());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 切换简入繁出】").arg(keyText);
     }
     else if (oti == OTI_SK_SHOW_HIDE_STATUS_BAR)
     {
-        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SHOW_HIDE_STATUS_BAR)));
-        if (keyName != "无")
-        {
-            tips = QString("【%1 显/隐状态栏】").arg(keyName);
-        }
+        const QString keyText = customShortcutDisplayText(settings::instance().get_showHideToolbar());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 显/隐状态栏】").arg(keyText);
     }
     else if (oti == OTI_SK_SHOW_HIDE_CANDIDATE_WIN)
     {
-        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SHOW_HIDE_CANDIDATE_WIN)));
-        if (keyName != "无")
-        {
-            tips = QString("【%1 显/隐候选窗】").arg(keyName);
-        }
+        const QString keyText = customShortcutDisplayText(settings::instance().get_showHideCandiWin());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 显/隐候选窗】").arg(keyText);
     }
     else if (oti == OTI_SK_SWITCH_WORD_LEXICON)
     {
-        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_WORD_LEXICON)));
-        if (keyName != "无")
-        {
-            tips = QString("【%1 切换词库】").arg(keyName);
-        }
+        const QString keyText = customShortcutDisplayText(settings::instance().get_switchLexicon());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 切换词库】").arg(keyText);
     }
     //    else if ( oti == OTI_SK_ADD_CHAR_AFTER_OUTPUT )
     //    {
@@ -965,120 +992,57 @@ void InputWin::set_candiwin_op_help_info()
     //    }
     else if (oti == OTI_SK_SWITCH_SKIN)
     {
-        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_SWITCH_SKIN)));
-        if (keyName != "无")
-        {
-            tips = QString("【%1 切换皮肤】").arg(keyName);
-        }
+        const QString keyText = customShortcutDisplayText(settings::instance().get_switchSkin());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 切换皮肤】").arg(keyText);
     }
     else if (oti == OTI_SK_QUICK_DEL_SCREEN_CHAR)
     {
-        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_QUICK_DEL_SCREEN_CHAR)));
-        if (keyName != "无")
-        {
-            tips = QString("【%1 快删上屏项】").arg(keyName);
-        }
+        const QString keyText = customShortcutDisplayText(settings::instance().get_quickDelScreenItem());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 快删上屏项】").arg(keyText);
     }
     else if (oti == OTI_SK_MARK_AUTO_PAIR)
     {
-        QString keyName = toQStringUtf8(freewb_custom_shortcut_display_label(settings::instance(), static_cast<int>(CSF_MARK_AUTO_PAIR)));
-        if (keyName != "无")
-        {
-            tips = QString("【%1 标点自动配对】").arg(keyName);
-        }
+        const QString keyText = customShortcutDisplayText(settings::instance().get_markAutoPair());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 标点自动配对】").arg(keyText);
     }
-
     else if (oti == OTI_SK_TEMP_ENGLISH)
     {
-        const int idx = freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish());
-        if (idx != SSK_NONE)
-        {
-            tips = QString("【%1 临时英文输入】").arg(toQStringUtf8(freewb_single_shortcut_display_name(idx)));
-        }
+        const QString keyText = keyTokenName(settings::instance().get_tempEnglish());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 临时英文输入】").arg(keyText);
     }
     else if (oti == OTI_SK_QUICK_INPUT)
     {
-        const int idx = freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput());
-        if (idx != SSK_NONE)
-        {
-            tips = QString("【%1 快捷短语输入】").arg(toQStringUtf8(freewb_single_shortcut_display_name(idx)));
-        }
+        const QString keyText = keyTokenName(settings::instance().get_shortcutInput());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 快捷短语输入】").arg(keyText);
     }
     else if (oti == OTI_SK_TEMP_PINYIN)
     {
-        const int idx = freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin());
-        if (idx != SSK_NONE)
-        {
-            tips = QString("【%1  临时拼音/生癖字输入】").arg(toQStringUtf8(freewb_single_shortcut_display_name(idx)));
-        }
+        const QString keyText = keyTokenName(settings::instance().get_tempPinyin());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 临时拼音/生癖字输入】").arg(keyText);
     }
     else if (oti == OTI_SK_SWITCH_CN_EN)
     {
-        CnEnSwitchShortcutKey key = static_cast<CnEnSwitchShortcutKey>(freewb_cn_en_switch_index_from_token(settings::instance().get_cnEnSwitch()));
-        if (key == CESSK_LEFT_SHIFT)
-        {
-            tips = "【左Shift 切换中/英文】";
-        }
-        else if (key == CESSK_RIGHT_SHIFT)
-        {
-            tips = "【右Shift 切换中/英文】";
-        }
-        else if (key == CESSK_SHIFT)
-        {
-            tips = "【Shift 切换中/英文】";
-        }
-        else if (key == CESSK_LEFT_CTRL)
-        {
-            tips = "【左Ctrl 切换中/英文】";
-        }
-        else if (key == CESSK_RIGHT_CTRL)
-        {
-            tips = "【右Ctrl 切换中/英文】";
-        }
-        else if (key == CESSK_CTRL)
-        {
-            tips = "【Ctrl 切换中/英文】";
-        }
+        const QString keyText = cnEnSwitchDisplayText(settings::instance().get_cnEnSwitch());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 切换中/英文】").arg(keyText);
     }
     else if (oti == OTI_SK_RECODE_SELECT)
     {
-        RcodeSelectShortcutKey key = static_cast<RcodeSelectShortcutKey>(settings::instance().get_recodeSelectKey());
-        if (key == RSSK_SEMI_QUOTE)
-        {
-            tips = "【;/' 选择二三重码】";
-        }
-        else if (key == RSSK_COMMA_PERIOD)
-        {
-            tips = "【,/. 选择二三重码】";
-        }
-        else if (key == RSSK_CTRL)
-        {
-            tips = "【左/右Ctrl 选择二三重码】";
-        }
-        else if (key == RSSK_SHIFT)
-        {
-            tips = "【左/右Shift 选择二三重码】";
-        }
+        const QString keyText = pairKeyDisplayText(settings::instance().get_secondRecodeKey(), settings::instance().get_thirdRecodeKey());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 选择二三重码】").arg(keyText);
     }
     else if (oti == OTI_SK_CANDI_PAGE)
     {
-        CandiPageShortcutKey key = static_cast<CandiPageShortcutKey>(freewb_candi_page_index_from_token(settings::instance().get_candiPageKey()));
-        if (key == CPSK_SUB_EQUAL)
-        {
-            tips = "【-/= 候选词上下翻页】";
-        }
-        else if (key == CPSK_COMMA_PERIOD)
-        {
-            tips = "【,/. 候选词上下翻页】";
-        }
-        else if (key == CPSK_UP_DWON)
-        {
-            tips = "【↑/↓ 候选词上下翻页】";
-        }
-        else if (key == CPSK_PAGE_UP_DWON)
-        {
-            tips = "【PgUp/PgDn 候选词上下翻页】";
-        }
+        const QString keyText = pairKeyDisplayText(settings::instance().get_prevPageKey(), settings::instance().get_nextPageKey());
+        if (!keyText.isEmpty())
+            tips = QString("【%1 候选词上下翻页】").arg(keyText);
     }
 
     else if (oti == OTI_TEMP_ENGLISH)
@@ -1099,22 +1063,11 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_TEMP_ENGLISH_SELECT)
     {
-        RcodeSelectShortcutKey key = static_cast<RcodeSelectShortcutKey>(settings::instance().get_recodeSelectKey());
-        if (key == RSSK_SEMI_QUOTE)
+        const QString name2 = keyTokenName(settings::instance().get_secondRecodeKey());
+        const QString name3 = keyTokenName(settings::instance().get_thirdRecodeKey());
+        if (!name2.isEmpty() && !name3.isEmpty())
         {
-            tips = "[ 空格选1, ;选2, '选3 ]";
-        }
-        else if (key == RSSK_COMMA_PERIOD)
-        {
-            tips = "[ 空格选1, ,选2, .选3 ]";
-        }
-        else if (key == RSSK_CTRL)
-        {
-            tips = "[ 空格选1, 左Ctrl选2, 右Ctrl选3 ]";
-        }
-        else if (key == RSSK_SHIFT)
-        {
-            tips = "[ 空格选1, 左Shift选2, 右Shift选3 ]";
+            tips = QString("[ Space选1, %1选2, %2选3 ]").arg(name2, name3);
         }
     }
 

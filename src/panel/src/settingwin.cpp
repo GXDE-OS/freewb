@@ -1,11 +1,14 @@
 #include "settingwin.h"
 
+#include <array>
 #include <vector>
 
 #include <QDateTime>
 #include <QFont>
 
 #include "config.h"
+#include "inputwin.h"
+#include "key.h"
 #include "settings.h"
 #include "settingshelper.h"
 #include "ui_settingwin.h"
@@ -17,22 +20,259 @@ QColor swQColorFromSpec(const std::string &s)
     return QColor(toQStringUtf8(s));
 }
 
-void swBuildSingleShortcutCombo(QComboBox *combo, int selectedIdx, int forbiddenA, int forbiddenB)
+struct UiSessionState
+{
+    bool useAudioFile = true;
+    bool showAllGroup = false;
+};
+
+UiSessionState g_uiSessionState;
+
+bool useAudioFile()
+{
+    return g_uiSessionState.useAudioFile;
+}
+
+void setUseAudioFile(bool enabled)
+{
+    g_uiSessionState.useAudioFile = enabled;
+}
+
+bool toggleShowAllGroup()
+{
+    g_uiSessionState.showAllGroup = !g_uiSessionState.showAllGroup;
+    return g_uiSessionState.showAllGroup;
+}
+
+bool showAllGroup()
+{
+    return g_uiSessionState.showAllGroup;
+}
+
+/* KEY_* token → 可读 name。空 / "KEY_NONE" 返回 emptyLabel（下拉展示传"禁止"/"无"等占位
+ * 文字；默认 {} 表示不展示）；未知 token（解析失败）返回 {} 让调用方过滤。 */
+QString keyTokenName(const std::string &token, const QString &emptyLabel = {})
+{
+    if (token.empty() || token == "KEY_NONE")
+        return emptyLabel;
+    const FreewbKeySym sym = freewb::Key::keySymFromUniqueName(token.c_str());
+    if (sym == FreewbKey_None)
+        return {};
+    return QString::fromUtf8(freewb::Key::keySymToName(sym));
+}
+
+QString customShortcutItemLabel(const std::string &value)
+{
+    const char *keyTok = freewb::Key::readKeyString(value.c_str());
+    return keyTokenName(keyTok ? keyTok : std::string{}, QStringLiteral("无"));
+}
+
+/* 单键选择码（临时英文/快捷输入/临时拼音等）允许的 KEY_* token 候选列表；
+ * INI 直接落 token 字符串（"KEY_NONE" 表示禁用）。首项固定 "KEY_NONE"。 */
+const std::vector<std::string> &singleShortcutCandidates()
+{
+    static const std::vector<std::string> k = {
+        "KEY_NONE",      "KEY_SEMICOLON",     "KEY_QUOTE",     "KEY_COMMA",      "KEY_PERIOD",      "KEY_BACKQUOTE",
+        "KEY_LEFT_BRACKET", "KEY_RIGHT_BRACKET", "KEY_BACK_SLASH", "KEY_SLASH",       "KEY_u",          "KEY_i",
+        "KEY_v",         "KEY_z",
+    };
+    return k;
+}
+
+/* 自定义功能键（Ctrl+第二键）允许的 KEY_* 第二键 token 候选列表；
+ * INI 以 "CTRL+<KEY_X>" 形式落盘，"KEY_NONE" 表示未配置。首项固定 "KEY_NONE"。 */
+const std::vector<std::string> &customShortcutCandidates()
+{
+    static const std::vector<std::string> k = {
+        "KEY_NONE",   "KEY_INSERT",     "KEY_DEL",           "KEY_ESC",       "KEY_BACKSPACE",  "KEY_HOME",      "KEY_END",
+        "KEY_LEFT",   "KEY_RIGHT",      "KEY_UP",            "KEY_DOWN",      "KEY_QUOTE",      "KEY_SEMICOLON", "KEY_BACK_SLASH",
+        "KEY_LEFT_BRACKET", "KEY_RIGHT_BRACKET", "KEY_COMMA",        "KEY_PERIOD",    "KEY_SLASH",      "KEY_BACKQUOTE", "KEY_EQUAL",
+        "KEY_DASH",   "KEY_F1",         "KEY_F2",            "KEY_F3",        "KEY_F4",         "KEY_F5",        "KEY_F6",
+        "KEY_F7",     "KEY_F8",         "KEY_F9",            "KEY_F10",       "KEY_F11",        "KEY_F12",       "KEY_A",
+        "KEY_B",      "KEY_C",          "KEY_D",             "KEY_E",         "KEY_F",          "KEY_G",         "KEY_H",
+        "KEY_I",      "KEY_J",          "KEY_K",             "KEY_L",         "KEY_M",          "KEY_N",         "KEY_O",
+        "KEY_P",      "KEY_Q",          "KEY_R",             "KEY_S",         "KEY_T",          "KEY_U",         "KEY_V",
+        "KEY_W",      "KEY_X",          "KEY_Y",             "KEY_Z",
+    };
+    return k;
+}
+
+using CustomShortcutGetter = const std::string &(settings::Settings::*)() const;
+using CustomShortcutSetter = void (settings::Settings::*)(const std::string &);
+
+struct CustomShortcutAccessor
+{
+    CustomShortcutGetter getter;
+    CustomShortcutSetter setter;
+};
+
+/* 14 项自定义功能键 accessor 表；顺序与 settingwin.ui 中 cmbFunction 下拉项严格对应。
+ * 如需增减或改序，必须同步调整 .ui 中的条目顺序。 */
+const std::array<CustomShortcutAccessor, 14> kCustomShortcutAccessors = {{
+    {&settings::Settings::get_backFindCode, &settings::Settings::set_backFindCode},           // 反查编码
+    {&settings::Settings::get_onlineAddWord, &settings::Settings::set_onlineAddWord},         // 在线加词
+    {&settings::Settings::get_onlineDelWord, &settings::Settings::set_onlineDelWord},         // 在线删词
+    {&settings::Settings::get_switchVKb, &settings::Settings::set_switchVKb},                 // 切换软键盘
+    {&settings::Settings::get_switchCharSet, &settings::Settings::set_switchCharSet},         // 切换字符集
+    {&settings::Settings::get_switchInputMode, &settings::Settings::set_switchInputMode},     // 切换输入模式
+    {&settings::Settings::get_switchChttrans, &settings::Settings::set_switchChttrans},       // 切换简入繁出
+    {&settings::Settings::get_setupOption, &settings::Settings::set_setupOption},             // 打开系统设置
+    {&settings::Settings::get_showHideToolbar, &settings::Settings::set_showHideToolbar},     // 显/隐状态栏
+    {&settings::Settings::get_showHideCandiWin, &settings::Settings::set_showHideCandiWin},   // 显/隐候选窗
+    {&settings::Settings::get_switchLexicon, &settings::Settings::set_switchLexicon},         // 切换词库
+    {&settings::Settings::get_switchSkin, &settings::Settings::set_switchSkin},               // 切换皮肤
+    {&settings::Settings::get_quickDelScreenItem, &settings::Settings::set_quickDelScreenItem}, // 快删上屏项
+    {&settings::Settings::get_markAutoPair, &settings::Settings::set_markAutoPair},           // 标点自动配对
+}};
+
+const CustomShortcutAccessor *customShortcutAccessor(int funcIndex)
+{
+    if (funcIndex < 0 || static_cast<size_t>(funcIndex) >= kCustomShortcutAccessors.size())
+        return nullptr;
+    return &kCustomShortcutAccessors[static_cast<size_t>(funcIndex)];
+}
+
+int customShortcutCount()
+{
+    return static_cast<int>(kCustomShortcutAccessors.size());
+}
+
+std::string customShortcutGetValue(const settings::Settings &cfg, int funcIndex)
+{
+    const CustomShortcutAccessor *accessor = customShortcutAccessor(funcIndex);
+    if (!accessor || !accessor->getter)
+        return "CTRL+KEY_NONE";
+    return (cfg.*(accessor->getter))();
+}
+
+void customShortcutSetValue(settings::Settings &cfg, int funcIndex, const std::string &value)
+{
+    const CustomShortcutAccessor *accessor = customShortcutAccessor(funcIndex);
+    if (!accessor || !accessor->setter)
+        return;
+    (cfg.*(accessor->setter))(value);
+}
+
+void swBuildSingleShortcutCombo(QComboBox *combo, const std::string &selected, const std::string &forbiddenA, const std::string &forbiddenB)
 {
     combo->clear();
-    for (int i = 0; i < SSK_NUM; ++i)
+    const auto &candidates = singleShortcutCandidates();
+    for (const auto &token : candidates)
     {
-        if (i != SSK_NONE && (i == forbiddenA || i == forbiddenB))
+        if (token != "KEY_NONE" && (token == forbiddenA || token == forbiddenB))
             continue;
-        combo->addItem(toQStringUtf8(freewb_single_shortcut_display_name(i)), i);
+        combo->addItem(keyTokenName(token, QStringLiteral("禁止")), QString::fromStdString(token));
     }
 
-    int target = selectedIdx;
-    if (target != SSK_NONE && (target == forbiddenA || target == forbiddenB))
-        target = SSK_NONE;
+    std::string target = selected;
+    if (target != "KEY_NONE" && (target == forbiddenA || target == forbiddenB))
+        target = "KEY_NONE";
 
-    const int pos = combo->findData(target);
+    const int pos = combo->findData(QString::fromStdString(target));
     combo->setCurrentIndex(pos >= 0 ? pos : 0);
+}
+
+/* 中英切换的"KEY_SHIFT"/"KEY_CTRL" 聚合项等价覆盖左右两个物理键；单键/空返回自身。 */
+std::pair<std::string, std::string> cnEnSwitchCoverKeys(const std::string &token)
+{
+    if (token == "KEY_SHIFT")
+        return {"KEY_LEFT_SHIFT", "KEY_RIGHT_SHIFT"};
+    if (token == "KEY_CTRL")
+        return {"KEY_LEFT_CTRL", "KEY_RIGHT_CTRL"};
+    return {token, std::string()};
+}
+
+bool keyTokenHit(const std::string &x, const std::string &a, const std::string &b)
+{
+    if (x.empty() || x == "KEY_NONE")
+        return false;
+    return x == a || x == b;
+}
+
+bool pairIntersects(const std::string &a1, const std::string &a2, const std::string &b1, const std::string &b2)
+{
+    return keyTokenHit(b1, a1, a2) || keyTokenHit(b2, a1, a2);
+}
+
+/* 键对预设通用结构：两个 KEY_* token，显示时合成 "name1/name2"。*/
+struct KeyPairPreset
+{
+    const char *first;
+    const char *second;
+};
+
+/* 键对预设 → 下拉显示文本。二者皆 KEY_NONE 时统一显示 "无"。 */
+QString keyPairPresetLabel(const KeyPairPreset &preset)
+{
+    const std::string a = preset.first ? preset.first : "";
+    const std::string b = preset.second ? preset.second : "";
+    if ((a.empty() || a == "KEY_NONE") && (b.empty() || b == "KEY_NONE"))
+        return QStringLiteral("无");
+    const QString first = keyTokenName(a);
+    const QString second = keyTokenName(b);
+    if (first.isEmpty() || second.isEmpty())
+        return {};
+    return QStringLiteral("%1/%2").arg(first, second);
+}
+
+/* 二三重码选择键：UI 下拉 ↔ 物理键对互查；INI 对应secondRecodeKey/thirdRecodeKey。 */
+const std::array<KeyPairPreset, 5> &recodeSelectPresets()
+{
+    static const std::array<KeyPairPreset, 5> k = {{
+        {"KEY_NONE", "KEY_NONE"},
+        {"KEY_SEMICOLON", "KEY_QUOTE"},
+        {"KEY_COMMA", "KEY_PERIOD"},
+        {"KEY_LEFT_CTRL", "KEY_RIGHT_CTRL"},
+        {"KEY_LEFT_SHIFT", "KEY_RIGHT_SHIFT"},
+    }};
+    return k;
+}
+
+int recodeSelectPresetIndex(const std::string &second, const std::string &third)
+{
+    const auto &presets = recodeSelectPresets();
+    for (size_t i = 0; i < presets.size(); ++i)
+    {
+        if (second == presets[i].first && third == presets[i].second)
+            return static_cast<int>(i);
+    }
+    return -1;
+}
+
+/* 候选上下翻页键：UI 下拉 ↔ 物理键对互查；INI 对应prevPageKey/nextPageKey。 */
+const std::array<KeyPairPreset, 4> &candiPagePresets()
+{
+    static const std::array<KeyPairPreset, 4> k = {{
+        {"KEY_DASH", "KEY_EQUAL"},
+        {"KEY_COMMA", "KEY_PERIOD"},
+        {"KEY_UP", "KEY_DOWN"},
+        {"KEY_PAGE_UP", "KEY_PAGE_DOWN"},
+    }};
+    return k;
+}
+
+int candiPagePresetIndex(const std::string &prev, const std::string &next)
+{
+    const auto &presets = candiPagePresets();
+    for (size_t i = 0; i < presets.size(); ++i)
+    {
+        if (prev == presets[i].first && next == presets[i].second)
+            return static_cast<int>(i);
+    }
+    return -1;
+}
+
+/* 以预设表为数据源填充下拉：每项 text 来自 keyPairPresetLabel，
+ * userData 存"预设索引"，activated 槽凭 userData 回查。
+ */
+template <typename Preset, size_t N> void swBuildKeyPairCombo(QComboBox *combo, const std::array<Preset, N> &presets, int currentIndex)
+{
+    combo->clear();
+    for (size_t i = 0; i < presets.size(); ++i)
+    {
+        combo->addItem(keyPairPresetLabel(presets[i]), static_cast<int>(i));
+    }
+    combo->setCurrentIndex(currentIndex);
 }
 
 } // namespace
@@ -465,7 +705,7 @@ void SettingWin::update_listwidget_item()
     m_listItemAdvance = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "高级选项", ui->listWidget);
     m_listItemOthers = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "其他设置", ui->listWidget);
 
-    if (freewb_runtime_show_all_group())
+    if (showAllGroup())
     {
         m_listItemUi = new QListWidgetItem("界面设置", ui->listWidget);
         m_listItemCandidateWinUi = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "候选窗界面", ui->listWidget);
@@ -491,7 +731,7 @@ void SettingWin::init_common_page()
     ui->ckbSmartMark->setChecked(settings::instance().get_smartMark());
     ui->ckbRemindExistWord->setChecked(settings::instance().get_remindExistWord());
     ui->ckbAlertWhenEmptyCode->setChecked(settings::instance().get_alertWhenEmptyCode());
-    ui->ckbUseAudioFile->setChecked(freewb_runtime_use_audio_file());
+    ui->ckbUseAudioFile->setChecked(useAudioFile());
     ui->labelUseAudioFile->hide();
     ui->ckbUseAudioFile->hide(); ///////////////
     ui->ckbAutoAdjustFreq->setChecked(settings::instance().get_autoAdjustFreq());
@@ -548,50 +788,56 @@ void SettingWin::init_shortcutkey_page()
 void SettingWin::update_custom_shortkey_cmb()
 {
     ui->cmbShortcutKey->clear();
-    //@note update_custom_shortkey_cmb
-    for (int i = 0; i < CSK_NUM; i++)
+    const int curFunc = ui->cmbFunction->currentIndex();
+    const std::string currentValue = customShortcutGetValue(settings::instance(), curFunc);
+    const auto &candidates = customShortcutCandidates();
+    for (const auto &tok : candidates)
     {
-        bool isUsed = false;
-        for (int j = 0; j < CSF_NUM; j++)
+        const std::string value = std::string("CTRL+") + tok;
+        /* 同一组合键只允许绑到一个功能上，排除其他功能已占用的项（KEY_NONE 不受此约束）。 */
+        if (tok != "KEY_NONE")
         {
-            if (i != CSK_NONE && (j != ui->cmbFunction->currentIndex()) && (freewb_custom_shortcut_get_combine_index(settings::instance(), j) == i))
+            bool used = false;
+            const int funcCount = customShortcutCount();
+            for (int j = 0; j < funcCount; ++j)
             {
-                isUsed = true;
+                if (j == curFunc)
+                    continue;
+                if (customShortcutGetValue(settings::instance(), j) == value)
+                {
+                    used = true;
+                    break;
+                }
             }
+            if (used)
+                continue;
         }
-
-        if (!isUsed)
-        {
-            ui->cmbShortcutKey->addItem(toQStringUtf8(freewb_combine_shortcut_display_name(i)));
-        }
+        const QString label = customShortcutItemLabel(value);
+        if (label.isEmpty())
+            continue;
+        ui->cmbShortcutKey->addItem(label, QString::fromStdString(value));
     }
 
-    for (int i = 0; i < ui->cmbShortcutKey->count(); i++)
-    {
-        if (ui->cmbShortcutKey->itemText(i) == toQStringUtf8(freewb_custom_shortcut_key_display(settings::instance(), ui->cmbFunction->currentIndex())))
-        {
-            ui->cmbShortcutKey->setCurrentIndex(i);
-            break;
-        }
-    }
+    const int pos = ui->cmbShortcutKey->findData(QString::fromStdString(currentValue));
+    ui->cmbShortcutKey->setCurrentIndex(pos >= 0 ? pos : 0);
 }
 
 // 设置界面--更新临时英文选项框
 void SettingWin::update_tmp_engish_cmb()
 {
-    swBuildSingleShortcutCombo(ui->cmbTmpEnglish, freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish()), freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput()), freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin()));
+    swBuildSingleShortcutCombo(ui->cmbTmpEnglish, settings::instance().get_tempEnglish(), settings::instance().get_shortcutInput(), settings::instance().get_tempPinyin());
 }
 
 // 设置界面--更新快捷输入选项框
 void SettingWin::update_short_input_cmb()
 {
-    swBuildSingleShortcutCombo(ui->cmbShortcutInput, freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput()), freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish()), freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin()));
+    swBuildSingleShortcutCombo(ui->cmbShortcutInput, settings::instance().get_shortcutInput(), settings::instance().get_tempEnglish(), settings::instance().get_tempPinyin());
 }
 
 // 设置界面--更新临时拼音选项框
 void SettingWin::update_tmp_pinyin_cmb()
 {
-    swBuildSingleShortcutCombo(ui->cmbTmpPinyin, freewb_single_shortcut_index_from_token(settings::instance().get_tempPinyin()), freewb_single_shortcut_index_from_token(settings::instance().get_tempEnglish()), freewb_single_shortcut_index_from_token(settings::instance().get_shortcutInput()));
+    swBuildSingleShortcutCombo(ui->cmbTmpPinyin, settings::instance().get_tempPinyin(), settings::instance().get_tempEnglish(), settings::instance().get_shortcutInput());
 }
 
 void SettingWin::init_ui_setting_page()
@@ -826,15 +1072,16 @@ void SettingWin::update_fram_candidate_win()
 
 void SettingWin::init_candidate_option_page()
 {
-    ui->cmb23RecodeSelect->setCurrentIndex(settings::instance().get_recodeSelectKey());
-    ui->cmbPrevNextPage->setCurrentIndex(freewb_candi_page_index_from_token(settings::instance().get_candiPageKey()));
+    swBuildKeyPairCombo(ui->cmb23RecodeSelect, recodeSelectPresets(),
+                        recodeSelectPresetIndex(settings::instance().get_secondRecodeKey(), settings::instance().get_thirdRecodeKey()));
+    swBuildKeyPairCombo(ui->cmbPrevNextPage, candiPagePresets(),
+                        candiPagePresetIndex(settings::instance().get_prevPageKey(), settings::instance().get_nextPageKey()));
     // ui->ledt2ndRecode->setText( QChar(settings::instance().get_second_recode_key()) );
     // ui->ledt3rdRecode->setText( QChar(settings::instance().get_third_recode_key()) );
     ui->ckbCursorFollow->setChecked(settings::instance().get_cursorFollow());
     ui->ckbHideCandiChinese->setChecked(settings::instance().get_hideCandiWin());
     ui->ckbDispOpPrompt->setChecked(settings::instance().get_showOpRemindInfo());
     ui->ckbDispOpDict->setChecked(settings::instance().get_showCandDictInfo());
-
     // ui->ledtPrecPage->setText( QChar(settings::instance().get_prevPage_key()) );
     // ui->ledtNextPage->setText( QChar(settings::instance().get_nextPage_key()) );
     ui->ckbShiftSelectRecode->setChecked(settings::instance().get_shiftSelectRecode());
@@ -895,8 +1142,8 @@ void SettingWin::on_listWidget_currentItemChanged(QListWidgetItem *current, QLis
 
 void SettingWin::on_btnSettingOption_clicked()
 {
-    freewb_runtime_toggle_show_all_group();
-    if (freewb_runtime_show_all_group())
+    toggleShowAllGroup();
+    if (showAllGroup())
     {
         ui->btnSettingOption->setText("显示【常用】选项");
     }
@@ -979,11 +1226,11 @@ void SettingWin::on_ckbUseAudioFile_stateChanged(int arg1)
 {
     if (arg1 == Qt::Checked)
     {
-        freewb_runtime_set_use_audio_file(true);
+        setUseAudioFile(true);
     }
     else if (arg1 == Qt::Unchecked)
     {
-        freewb_runtime_set_use_audio_file(false);
+        setUseAudioFile(false);
     }
 }
 
@@ -1051,13 +1298,9 @@ void SettingWin::on_cmbFunction_activated(int index)
 
 void SettingWin::on_cmbShortcutKey_activated(int index)
 {
-    for (int i = 0; i < CSK_NUM; i++)
-    {
-        if (ui->cmbShortcutKey->itemText(index) == toQStringUtf8(freewb_combine_shortcut_display_name(i)))
-        {
-            freewb_custom_shortcut_set_combine_index(settings::instance(), ui->cmbFunction->currentIndex(), i);
-        }
-    }
+    Q_UNUSED(index);
+    const std::string value = ui->cmbShortcutKey->currentData().toString().toStdString();
+    customShortcutSetValue(settings::instance(), ui->cmbFunction->currentIndex(), value);
 }
 
 void SettingWin::on_ckbDisableAllShortcutKey_stateChanged(int arg1)
@@ -1083,12 +1326,16 @@ void SettingWin::on_ckbDisableFullHalfKey_toggled(bool checked)
 
 void SettingWin::on_cmbSwitchCnEn_activated(int index)
 {
-    RcodeSelectShortcutKey rssk = static_cast<RcodeSelectShortcutKey>(settings::instance().get_recodeSelectKey());
-    CnEnSwitchShortcutKey key = static_cast<CnEnSwitchShortcutKey>(index);
-    if ((rssk == RSSK_CTRL && (key == CESSK_CTRL || key == CESSK_LEFT_CTRL || key == CESSK_RIGHT_CTRL)) || (rssk == RSSK_SHIFT && (key == CESSK_SHIFT || key == CESSK_LEFT_SHIFT || key == CESSK_RIGHT_SHIFT)))
+    const auto &presets = freewb_cn_en_switch_presets();
+    if (index < 0 || static_cast<size_t>(index) >= presets.size())
+        return;
+    const auto cover = cnEnSwitchCoverKeys(presets[static_cast<size_t>(index)].token);
+    const std::string sec = settings::instance().get_secondRecodeKey();
+    const std::string thi = settings::instance().get_thirdRecodeKey();
+
+    if (pairIntersects(cover.first, cover.second, sec, thi))
     {
         m_msgBox = new QMessageBox(this);
-        // m_msgBox->setWindowFlag( Qt::FramelessWindowHint );
         m_msgBox->setIcon(QMessageBox::Warning);
         m_msgBox->setText("您设置的快捷键将与二三重码选择键冲突，确认设置？");
         m_msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -1101,19 +1348,18 @@ void SettingWin::on_cmbSwitchCnEn_activated(int index)
         delete m_msgBox;
         if (ret == QMessageBox::No)
         {
-            ui->cmbSwitchCnEn->setCurrentIndex(freewb_cn_en_switch_index_from_token(settings::instance().get_cnEnSwitch()));
+            ui->cmbSwitchCnEn->setCurrentIndex(freewb_cn_en_switch_preset_index(settings::instance().get_cnEnSwitch()));
             return;
         }
     }
 
-    settings::instance().set_cnEnSwitch(freewb_cn_en_switch_token_from_index(key));
+    settings::instance().set_cnEnSwitch(presets[static_cast<size_t>(index)].token);
 }
 
 void SettingWin::on_cmbTmpEnglish_activated(const QString &arg1)
 {
     Q_UNUSED(arg1);
-    const int idx = ui->cmbTmpEnglish->currentData().toInt();
-    settings::instance().set_tempEnglish(freewb_single_shortcut_ini_token(idx));
+    settings::instance().set_tempEnglish(ui->cmbTmpEnglish->currentData().toString().toStdString());
 
     update_short_input_cmb();
     update_tmp_pinyin_cmb();
@@ -1122,8 +1368,7 @@ void SettingWin::on_cmbTmpEnglish_activated(const QString &arg1)
 void SettingWin::on_cmbShortcutInput_activated(const QString &arg1)
 {
     Q_UNUSED(arg1);
-    const int idx = ui->cmbShortcutInput->currentData().toInt();
-    settings::instance().set_shortcutInput(freewb_single_shortcut_ini_token(idx));
+    settings::instance().set_shortcutInput(ui->cmbShortcutInput->currentData().toString().toStdString());
 
     update_tmp_engish_cmb();
     update_tmp_pinyin_cmb();
@@ -1132,8 +1377,7 @@ void SettingWin::on_cmbShortcutInput_activated(const QString &arg1)
 void SettingWin::on_cmbTmpPinyin_activated(const QString &arg1)
 {
     Q_UNUSED(arg1);
-    const int idx = ui->cmbTmpPinyin->currentData().toInt();
-    settings::instance().set_tempPinyin(freewb_single_shortcut_ini_token(idx));
+    settings::instance().set_tempPinyin(ui->cmbTmpPinyin->currentData().toString().toStdString());
 
     update_tmp_engish_cmb();
     update_short_input_cmb();
@@ -1491,27 +1735,30 @@ void SettingWin::on_ckbDispOpDict_toggled(bool checked)
 
 void SettingWin::on_cmb23RecodeSelect_activated(int index)
 {
-    QString conflictInfo;
-    int conflictFlg = 0;
-    CnEnSwitchShortcutKey cnEnSwitchShortcutKey = static_cast<CnEnSwitchShortcutKey>(freewb_cn_en_switch_index_from_token(settings::instance().get_cnEnSwitch()));
+    Q_UNUSED(index);
+    const auto &presets = recodeSelectPresets();
+    bool ok = false;
+    const int presetIdx = ui->cmb23RecodeSelect->currentData().toInt(&ok);
+    if (!ok || presetIdx < 0 || static_cast<size_t>(presetIdx) >= presets.size())
+        return;
+    const auto &p = presets[static_cast<size_t>(presetIdx)];
+    const std::string prev = settings::instance().get_prevPageKey();
+    const std::string next = settings::instance().get_nextPageKey();
+    const auto cessk = cnEnSwitchCoverKeys(settings::instance().get_cnEnSwitch());
 
-    RcodeSelectShortcutKey key = static_cast<RcodeSelectShortcutKey>(index);
-    if (key == RSSK_COMMA_PERIOD && static_cast<CandiPageShortcutKey>(freewb_candi_page_index_from_token(settings::instance().get_candiPageKey())) == CPSK_COMMA_PERIOD)
+    QString conflictInfo;
+    if (pairIntersects(p.first, p.second, prev, next))
     {
-        conflictFlg = 1;
         conflictInfo = "您设置的快捷键将与上下翻页键冲突，确认设置？";
     }
-    else if ((key == RSSK_CTRL && (cnEnSwitchShortcutKey == CESSK_CTRL || cnEnSwitchShortcutKey == CESSK_LEFT_CTRL || cnEnSwitchShortcutKey == CESSK_RIGHT_CTRL)) ||
-             (key == RSSK_SHIFT && (cnEnSwitchShortcutKey == CESSK_SHIFT || cnEnSwitchShortcutKey == CESSK_LEFT_SHIFT || cnEnSwitchShortcutKey == CESSK_RIGHT_SHIFT)))
+    else if (pairIntersects(p.first, p.second, cessk.first, cessk.second))
     {
-        conflictFlg = 1;
         conflictInfo = "您设置的快捷键将与中英文切换键冲突，确认设置？";
     }
 
-    if (conflictFlg)
+    if (!conflictInfo.isEmpty())
     {
         m_msgBox = new QMessageBox(this);
-        // m_msgBox->setWindowFlag( Qt::FramelessWindowHint );
         m_msgBox->setIcon(QMessageBox::Warning);
         m_msgBox->setText(conflictInfo);
         m_msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -1524,22 +1771,30 @@ void SettingWin::on_cmb23RecodeSelect_activated(int index)
         delete m_msgBox;
         if (ret == QMessageBox::No)
         {
-            ui->cmb23RecodeSelect->setCurrentIndex(settings::instance().get_recodeSelectKey());
+            ui->cmb23RecodeSelect->setCurrentIndex(recodeSelectPresetIndex(settings::instance().get_secondRecodeKey(), settings::instance().get_thirdRecodeKey()));
             return;
         }
     }
 
-    settings::instance().set_recodeSelectKey(key);
-    freewb_apply_recode_select_pair(settings::instance(), key);
+    settings::instance().set_secondRecodeKey(p.first);
+    settings::instance().set_thirdRecodeKey(p.second);
 }
 
 void SettingWin::on_cmbPrevNextPage_activated(int index)
 {
-    CandiPageShortcutKey key = static_cast<CandiPageShortcutKey>(index);
-    if (key == CPSK_COMMA_PERIOD && static_cast<RcodeSelectShortcutKey>(settings::instance().get_recodeSelectKey()) == RSSK_COMMA_PERIOD)
+    Q_UNUSED(index);
+    const auto &presets = candiPagePresets();
+    bool ok = false;
+    const int presetIdx = ui->cmbPrevNextPage->currentData().toInt(&ok);
+    if (!ok || presetIdx < 0 || static_cast<size_t>(presetIdx) >= presets.size())
+        return;
+    const auto &p = presets[static_cast<size_t>(presetIdx)];
+    const std::string sec = settings::instance().get_secondRecodeKey();
+    const std::string thi = settings::instance().get_thirdRecodeKey();
+
+    if (pairIntersects(p.first, p.second, sec, thi))
     {
         m_msgBox = new QMessageBox(this);
-        // m_msgBox->setWindowFlag( Qt::FramelessWindowHint );
         m_msgBox->setIcon(QMessageBox::Warning);
         m_msgBox->setText("您设置的快捷键将与二三重码选择键冲突，确认设置？");
         m_msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -1552,11 +1807,11 @@ void SettingWin::on_cmbPrevNextPage_activated(int index)
         delete m_msgBox;
         if (ret == QMessageBox::No)
         {
-            ui->cmbPrevNextPage->setCurrentIndex(freewb_candi_page_index_from_token(settings::instance().get_candiPageKey()));
+            ui->cmbPrevNextPage->setCurrentIndex(candiPagePresetIndex(settings::instance().get_prevPageKey(), settings::instance().get_nextPageKey()));
             return;
         }
     }
 
-    settings::instance().set_candiPageKey(freewb_candi_page_token_from_index(key));
-    freewb_apply_candidate_page_hotkeys(settings::instance(), key);
+    settings::instance().set_prevPageKey(p.first);
+    settings::instance().set_nextPageKey(p.second);
 }

@@ -34,6 +34,13 @@ namespace Ui
 class InputWin;
 }
 
+// 候选窗显示模式
+typedef enum
+{
+    CWDM_ONE_ROW,
+    CWDM_MULTI_ROW,
+} CandiWinDispMode;
+
 // 操作提示信息项
 typedef enum
 {

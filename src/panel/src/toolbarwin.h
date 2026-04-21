@@ -32,6 +32,21 @@ class ToolbarWin;
 
 typedef enum
 {
+    IM_OTHER = -1,
+    IM_WUBI_FONT,
+    IM_WUBI_PINYIN,
+    IM_STD_PINYIN,
+    IM_ENGLISH
+} InputMode;
+
+typedef enum
+{
+    CHAR_SIMPLIFIED,
+    CHAR_TRADITIONAL
+} CharFontMode;
+
+typedef enum
+{
     WIDTH_FULL, // 全角
     WIDTH_HALF  // 半角
 } CharWidthMode;

@@ -33,6 +33,13 @@ namespace Ui
 class SettingWin;
 }
 
+typedef enum
+{
+    AWGO_FORBID,
+    AWGO_LOSS,
+    AWGO_SAVE
+} AutoWordGroupOpt;
+
 class SettingWin : public QWidget
 {
     Q_OBJECT
