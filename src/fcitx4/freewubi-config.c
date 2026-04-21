@@ -627,7 +627,7 @@ KEY_LIST freewbKeyList[] = {{"KEY_F1", FcitxKey_F1},
                             {"KEY_LEFT_CTRL", FcitxKey_Control_L},
                             {"KEY_RIGHT_CTRL", FcitxKey_Control_R},
                             {"KEY_PAGE_UP", FcitxKey_Page_Up},
-                            {"KEY_PAGE_DWON", FcitxKey_Page_Down},
+                            {"KEY_PAGE_DOWN", FcitxKey_Page_Down},
 
                             {"KEY_NONEs", FcitxKey_None},
                             {"\0", 0}};
