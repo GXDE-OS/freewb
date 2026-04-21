@@ -57,9 +57,14 @@ ipc::SDBusProxy *Freewb::sdbusProxy() const
 bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
 {
     FREEWB_DEBUG("keysym: {}, state: {}", static_cast<int>(keysym), static_cast<int>(state));
-    handleGlobalKey(keysym, state);
+    bool processed = false;
+    processed = handleGlobalShortcutKey(keysym, state);
+    if (processed)
+    {
+        return true;
+    }
 
-    bool processed = engineManager_->processKey(keysym, state);
+    processed = engineManager_->processKey(keysym, state);
     if (processed)
     {
         updateCandidateAndPreeditToUI();
@@ -73,7 +78,6 @@ bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return true;
     }
     
-    updateCandidateAndPreeditToUI();
     return false;
 }
 
@@ -83,7 +87,7 @@ void Freewb::reset()
     candidateList_->clear();
 }
 
-void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
+bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
 {
     {
         const char *keyString = Key::readKeyString(settings::instance().get_backFindCode().c_str());
@@ -91,7 +95,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callDictQueryMethod(committer_->lastCommitString());
-            return;
+            return true;
         }
     }
     {
@@ -100,7 +104,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             //make mark auto pair
-            return;
+            return true;
         }
 
     }
@@ -110,7 +114,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callAddUsrParseMethod(0, "", "");
-            return;
+            return true;
         }
     }
     {
@@ -119,7 +123,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callDeleteUsrParseMethod(0, "", "");
-            return;
+            return true;
         }
     }
     {
@@ -128,7 +132,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             // 暂时不实现
-            return;
+            return true;
         }
     }
     {
@@ -137,7 +141,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callOpenUiSettingMethod();
-            return;
+            return true;
         }
     }
     {
@@ -146,7 +150,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callSwitchCharSetMethod();
-            return;
+            return true;
         }
     }
     {
@@ -155,7 +159,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callSwitchChttransMethod();
-            return;
+            return true;
         }
     }
     {
@@ -164,7 +168,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callSwitchInputModeMethod(0);
-            return;
+            return true;
         }
     }
     {
@@ -173,7 +177,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callSwitchTableMethod();
-            return;
+            return true;
         }
     }
     {
@@ -182,7 +186,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callSwitchSkinMethod();
-            return;
+            return true;
         }
     }
     
@@ -192,9 +196,11 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callSwitchVirtualKeyboardModeMethod(0);
-            return;
+            return true;
         }
     }
+
+    return false;
 }
 
 void Freewb::updateCandidateAndPreeditToUI()

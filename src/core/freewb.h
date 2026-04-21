@@ -24,7 +24,7 @@ public:
     ipc::SDBusProxy *sdbusProxy() const;
 
 private:
-    void handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state);
+    bool handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state);
     void updateCandidateAndPreeditToUI();
 
 private:
