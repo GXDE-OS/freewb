@@ -16,11 +16,11 @@ Committer::~Committer() = default;
 
 void Committer::loadSettings()
 {
-    secondRecodeKey_ = Key::keySymFromString(settings::instance().get_secondRecodeKey().c_str());
-    thirdRecodeKey_ = Key::keySymFromString(settings::instance().get_thirdRecodeKey().c_str());
+    secondRecodeKey_ = Key::keySymFromUniqueName(settings::instance().get_secondRecodeKey().c_str());
+    thirdRecodeKey_ = Key::keySymFromUniqueName(settings::instance().get_thirdRecodeKey().c_str());
 
-    prevPageKey_ = Key::keySymFromString(settings::instance().get_prevPageKey().c_str());
-    nextPageKey_ = Key::keySymFromString(settings::instance().get_nextPageKey().c_str());
+    prevPageKey_ = Key::keySymFromUniqueName(settings::instance().get_prevPageKey().c_str());
+    nextPageKey_ = Key::keySymFromUniqueName(settings::instance().get_nextPageKey().c_str());
 }
 
 bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)

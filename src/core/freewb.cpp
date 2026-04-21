@@ -87,7 +87,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
 {
     {
         const char *keyString = Key::readKeyString(settings::instance().get_backFindCode().c_str());
-        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callDictQueryMethod(committer_->lastCommitString());
@@ -96,7 +96,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
     }
     {
         const char *keyString = Key::readKeyString(settings::instance().get_markAutoPair().c_str());
-        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             //make mark auto pair
@@ -106,7 +106,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
     }
     {
         const char *keyString = Key::readKeyString(settings::instance().get_onlineAddWord().c_str());
-        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callAddUsrParseMethod(0, "", "");
@@ -115,7 +115,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
     }
     {
         const char *keyString = Key::readKeyString(settings::instance().get_onlineDelWord().c_str());
-        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callDeleteUsrParseMethod(0, "", "");
@@ -124,7 +124,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
     }
     {
         const char *keyString = Key::readKeyString(settings::instance().get_quickDelScreenItem().c_str());
-        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             // 暂时不实现
@@ -133,7 +133,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
     }
     {
         const char *keyString = Key::readKeyString(settings::instance().get_setupOption().c_str());
-        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callOpenUiSettingMethod();
@@ -142,7 +142,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
     }
     {
         const char *keyString = Key::readKeyString(settings::instance().get_switchCharSet().c_str());
-        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callSwitchCharSetMethod();
@@ -151,7 +151,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
     }
     {
         const char *keyString = Key::readKeyString(settings::instance().get_switchChttrans().c_str());
-        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callSwitchChttransMethod();
@@ -160,7 +160,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
     }
     {
         const char *keyString = Key::readKeyString(settings::instance().get_switchInputMode().c_str());
-        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callSwitchInputModeMethod(0);
@@ -169,7 +169,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
     }
     {
         const char *keyString = Key::readKeyString(settings::instance().get_switchLexicon().c_str());
-        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callSwitchTableMethod();
@@ -178,7 +178,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
     }
     {
         const char *keyString = Key::readKeyString(settings::instance().get_switchSkin().c_str());
-        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callSwitchSkinMethod();
@@ -188,7 +188,7 @@ void Freewb::handleGlobalKey(FreewbKeySym keysym, FreewbKeyState state)
     
     {
         const char *keyString = Key::readKeyString(settings::instance().get_switchVKb().c_str());
-        const FreewbKeySym keySym = Key::keySymFromString(keyString);
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             sdbusProxy_->callSwitchVirtualKeyboardModeMethod(0);

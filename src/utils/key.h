@@ -8,8 +8,10 @@ namespace freewb
 class Key
 {
 public:
-    static FreewbKeySym keySymFromString(const char *keyString);
-    static const char *keySymToString(FreewbKeySym sym);
+    static FreewbKeySym keySymFromUniqueName(const char *uniqueName);
+    static const char *keySymToName(FreewbKeySym sym);
+    static const char *keySymToUniqueName(FreewbKeySym sym);
+
     static bool isModifierKeySym(FreewbKeySym sym);
     static bool isKeyAZ(FreewbKeySym sym, FreewbKeyState state);
     static bool isKeyaz(FreewbKeySym sym, FreewbKeyState state);

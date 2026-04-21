@@ -153,7 +153,7 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return false;
     }
 
-    const char *key = Key::keySymToString(keysym);
+    const char *key = Key::keySymToName(keysym);
     if (key == nullptr)
     {
         return false;

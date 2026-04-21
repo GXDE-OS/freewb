@@ -5,16 +5,16 @@
 
 namespace freewb
 {
-FreewbKeySym Key::keySymFromString(const char *keyString)
+FreewbKeySym Key::keySymFromUniqueName(const char *uniqueName)
 {
-    if (!keyString)
+    if (!uniqueName)
     {
         return FreewbKey_None;
     }
     const auto n = sizeof(FreewbKeyNameList) / sizeof(FreewbKeyNameList[0]);
     for (std::size_t i = 0; i < n; ++i)
     {
-        if (std::strcmp(keyString, FreewbKeyNameList[i].name) == 0)
+        if (std::strcmp(uniqueName, FreewbKeyNameList[i].uniqueName) == 0)
         {
             return FreewbKeyNameList[i].sym;
         }
@@ -22,7 +22,7 @@ FreewbKeySym Key::keySymFromString(const char *keyString)
     return FreewbKey_None;
 }
 
-const char *Key::keySymToString(FreewbKeySym sym)
+const char *Key::keySymToName(FreewbKeySym sym)
 {
     const auto n = sizeof(FreewbKeyNameList) / sizeof(FreewbKeyNameList[0]);
     for (std::size_t i = 0; i < n; ++i)
@@ -30,6 +30,19 @@ const char *Key::keySymToString(FreewbKeySym sym)
         if (FreewbKeyNameList[i].sym == sym)
         {
             return FreewbKeyNameList[i].name;
+        }
+    }
+    return "";
+}
+
+const char *Key::keySymToUniqueName(FreewbKeySym sym)
+{
+    const auto n = sizeof(FreewbKeyNameList) / sizeof(FreewbKeyNameList[0]);
+    for (std::size_t i = 0; i < n; ++i)
+    {
+        if (FreewbKeyNameList[i].sym == sym)
+        {
+            return FreewbKeyNameList[i].uniqueName;
         }
     }
     return "";
