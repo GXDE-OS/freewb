@@ -39,8 +39,6 @@ public:
 
 Q_SIGNALS:
     // signals listened by fcitx's dbus service
-    Q_SCRIPTABLE void Configure();
-    Q_SCRIPTABLE void Exit();
     Q_SCRIPTABLE void LookupTablePageDown();
     Q_SCRIPTABLE void LookupTablePageUp();
     Q_SCRIPTABLE void ReloadConfig();
@@ -50,21 +48,16 @@ Q_SIGNALS:
     Q_SCRIPTABLE void SwitchFullWidth();
 
     // 以下信号是接收到fcitx对应的信号后转发出去的程序内部信号
-    void signal_Enable(bool);
     void signal_ShowPreedit(bool);
     void signal_ShowAux(bool);
     void signal_ShowLookupTable(bool);
-    void signal_UpdateLookupTableCursor(int);
     void signal_UpdateLookupTable(const QStringList &, const QStringList &, const QStringList &, bool, bool);
     void signal_UpdatePreeditCaret(int);
     void signal_UpdatePreeditText(const QString &, const QString &);
     void signal_UpdateAux(const QString &, const QString &);
     void signal_UpdateSpotLocation(int, int);
-    void signal_UpdateScreen(int);
     void signal_UpdateProperty(const QString &);
     void signal_RegisterProperties(const QStringList &);
-    void signal_ExecDialog(const QString &);
-    void signal_ExecMenu(const QStringList &);
 
     // 以下信号是接收到fcitx对应的方法调用后转发出去的程序内部信号
     void signal_SetSpotLocation(int, int, int, int);

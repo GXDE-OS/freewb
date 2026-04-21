@@ -2,9 +2,7 @@
 
 X11EventMonitor::X11EventMonitor(QObject *parent) : QThread(parent)
 {
-    m_mouseIsPressed = false;
     m_keyValue = 0;
-    m_buttonValue = 0;
 }
 
 void X11EventMonitor::run()
@@ -79,7 +77,6 @@ void X11EventMonitor::handleMonitorX11Event(XRecordInterceptData *data)
         case KeyRelease:
         {
             value = reinterpret_cast<unsigned char *>(data->data)[1];
-            emit signal_key_released(value);
             if (m_keyValue == value)
             {
                 emit signal_key_clicked(value);
@@ -91,38 +88,15 @@ void X11EventMonitor::handleMonitorX11Event(XRecordInterceptData *data)
         case ButtonPress:
         {
             value = event->u.u.detail;
-            if (value == 1)
-            {
-                m_mouseIsPressed = true;
-            }
             emit signal_button_pressed(value, event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
-            m_buttonValue = value;
             break;
         }
         case ButtonRelease:
         {
-            value = event->u.u.detail;
-            if (value == 1)
-            {
-                m_mouseIsPressed = false;
-            }
-            emit signal_button_released(event->u.u.detail, event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
-            if (m_buttonValue == value)
-            {
-                emit signal_button_clicked(value, event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
-                // qDebug() << "buttonClicked:" << value;
-            }
-            m_buttonValue = 0;
             break;
         }
         case MotionNotify:
-        {
-            if (m_mouseIsPressed)
-            {
-                // emit signal_buttonDrag( event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY );
-            }
             break;
-        }
         }
     }
 

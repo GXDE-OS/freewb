@@ -20,21 +20,16 @@ int KimAgent::create_fcitx_panel()
     create_freewubi_panel_service();
 
     // 连接fcitx发送出来的相关信号
-    QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "Enable", this, SIGNAL(signal_Enable(bool)));
     QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "ShowPreedit", this, SIGNAL(signal_ShowPreedit(bool)));
     QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "ShowAux", this, SIGNAL(signal_ShowAux(bool)));
     QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "ShowLookupTable", this, SIGNAL(signal_ShowLookupTable(bool)));
-    QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdateLookupTableCursor", this, SIGNAL(signal_UpdateLookupTableCursor(int)));
     QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdateLookupTable", this, SIGNAL(signal_UpdateLookupTable(QStringList, QStringList, QStringList, bool, bool)));
     QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdatePreeditCaret", this, SIGNAL(signal_UpdatePreeditCaret(int)));
     QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdatePreeditText", this, SIGNAL(signal_UpdatePreeditText(QString, QString)));
     QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdateAux", this, SIGNAL(signal_UpdateAux(QString, QString)));
     QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdateSpotLocation", this, SIGNAL(signal_UpdateSpotLocation(int, int)));
-    QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdateScreen", this, SIGNAL(UpdateScreen(int)));
     QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdateProperty", this, SIGNAL(signal_UpdateProperty(QString)));
     QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "RegisterProperties", this, SIGNAL(signal_RegisterProperties(QStringList)));
-    QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "ExecDialog", this, SIGNAL(signal_ExecDialog(QString)));
-    QDBusConnection(FREEWUBI_SESSION_BUSNAME).connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "ExecMenu", this, SIGNAL(signal_ExecMenu(QStringList)));
 
     return 0;
 }
@@ -44,9 +39,6 @@ void KimAgent::delete_fcitx_panel()
     QDBusConnection(FREEWUBI_SESSION_BUSNAME).unregisterObject(FREEWUBI_PANEL_OBJECTPATH);
     QDBusConnection(FREEWUBI_SESSION_BUSNAME).unregisterService(FREEWUBI_PANEL_SERVICENAME);
     QDBusConnection::disconnectFromBus(FREEWUBI_SESSION_BUSNAME);
-#ifdef DEBUG
-    qDebug() << "kimpanel exit！";
-#endif
 }
 
 void KimAgent::create_freewubi_panel_service()

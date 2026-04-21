@@ -28,12 +28,8 @@ public:
 
 signals:
     void signal_key_pressed(int code);
-    void signal_key_released(int code);
     void signal_key_clicked(int code);
     void signal_button_pressed(int button, int x, int y);
-    void signal_button_released(int button, int x, int y);
-    void signal_button_drag(int x, int y);
-    void signal_button_clicked(int button, int x, int y);
 
 protected:
     void run();
@@ -42,8 +38,6 @@ protected:
 
 private:
     int m_keyValue;
-    int m_buttonValue;
-    bool m_mouseIsPressed;
 };
 
 #endif

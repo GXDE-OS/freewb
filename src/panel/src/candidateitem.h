@@ -24,7 +24,7 @@ class CandidateItem : public QWidget
     Q_OBJECT
 
 public:
-    explicit CandidateItem(int row, int column, QWidget *parent = nullptr);
+    explicit CandidateItem(QWidget *parent = nullptr);
     ~CandidateItem();
 
 signals:
@@ -50,8 +50,6 @@ protected slots:
 private:
     Ui::CandidateItem *ui;
 
-    int m_rowIdx;
-    int m_columnIdx;
     int m_maxCharCount;  // 候选词能显示最多的字符数
     QString m_wordText;  // 候选词内容
     QColor m_wordColor;  // 候选词颜色

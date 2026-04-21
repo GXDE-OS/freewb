@@ -6,8 +6,6 @@
 #include "config.h"
 #include "settings.h"
 
-#define DEBUG
-
 MainProgram::MainProgram(QObject *parent) : QObject(parent)
 {
     m_x11EventMonitor = new X11EventMonitor(this);
@@ -32,11 +30,9 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
     // org.freedesktop.Aplication
     // fcitx通信代理发出的信号
     // m_kimAgent --> m_inputWin
-    connect(m_kimAgent, &KimAgent::signal_Enable, m_inputWin, &InputWin::slot_kim_Enable);
     connect(m_kimAgent, &KimAgent::signal_ShowPreedit, m_inputWin, &InputWin::slot_kim_ShowPreedit);
     connect(m_kimAgent, &KimAgent::signal_ShowAux, m_inputWin, &InputWin::slot_kim_ShowAux);
     connect(m_kimAgent, &KimAgent::signal_ShowLookupTable, m_inputWin, &InputWin::slot_kim_ShowLookupTable);
-    connect(m_kimAgent, &KimAgent::signal_UpdateLookupTableCursor, m_inputWin, &InputWin::slot_kim_UpdateLookupTableCursor);
     connect(m_kimAgent, &KimAgent::signal_UpdateLookupTable, m_inputWin, &InputWin::slot_kim_UpdateLookupTable);
     connect(m_kimAgent, &KimAgent::signal_SetLookupTable, m_inputWin, &InputWin::slot_kim_SetLookupTable);
     connect(m_kimAgent, &KimAgent::signal_UpdatePreeditCaret, m_inputWin, &InputWin::slot_kim_UpdatePreeditCaret);
@@ -44,11 +40,6 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
     connect(m_kimAgent, &KimAgent::signal_UpdateAux, m_inputWin, &InputWin::slot_kim_UpdateAux);
     connect(m_kimAgent, &KimAgent::signal_UpdateSpotLocation, m_inputWin, &InputWin::slot_kim_UpdateSpotLocation);
     connect(m_kimAgent, &KimAgent::signal_SetSpotLocation, m_inputWin, &InputWin::slot_kim_SetSpotLocation);
-    connect(m_kimAgent, &KimAgent::signal_UpdateScreen, m_inputWin, &InputWin::slot_kim_UpdateScreen);
-    connect(m_kimAgent, &KimAgent::signal_UpdateProperty, m_inputWin, &InputWin::slot_kim_UpdateProperty);
-    connect(m_kimAgent, &KimAgent::signal_RegisterProperties, m_inputWin, &InputWin::slot_kim_RegisterProperties);
-    connect(m_kimAgent, &KimAgent::signal_ExecDialog, m_inputWin, &InputWin::slot_kim_ExecDialog);
-    connect(m_kimAgent, &KimAgent::signal_ExecMenu, m_inputWin, &InputWin::slot_kim_ExecMenu);
     // m_kimAgent --> m_toolbar
     connect(m_kimAgent, &KimAgent::signal_UpdateProperty, m_toolbar, &ToolbarWin::slot_kim_UpdateProperty);
     connect(m_kimAgent, &KimAgent::signal_RegisterProperties, m_toolbar, &ToolbarWin::slot_kim_RegisterProperties);
@@ -198,14 +189,6 @@ void MainProgram::create_host_dbus_service()
     QDBusConnection::connectToBus(QDBusConnection::SessionBus, FREEWUBI_SETTINGS_BUSNAME).registerObject(FREEWUBI_SETTINGS_OBJECTPATH, this, QDBusConnection::ExportAllSlots);
 }
 
-void MainProgram::slot_create_freewb_panel()
-{
-    if (!settings::instance().get_hideToolbar())
-    {
-        m_toolbar->show();
-    }
-}
-
 void MainProgram::slot_delete_freewb_panel()
 {
     m_toolbar->hide();
@@ -213,12 +196,6 @@ void MainProgram::slot_delete_freewb_panel()
 }
 
 /********************************* 以下槽函数供输入法引擎通过DBUS调用 ***************************************/
-QString MainProgram::slot_dbus_test(const QString &text)
-{
-    qDebug() << text;
-    return text;
-}
-
 // 切换输入法
 void MainProgram::slot_dbus_switch_internal_input_method(int im)
 {
@@ -359,9 +336,6 @@ void MainProgram::slot_dbus_switch_toolbar_hide_flg()
 
     bool flg = settings::instance().get_hideToolbar() ? false : true;
 
-#ifdef DEBUG
-    printf("显/隐状态栏=%d\n", flg);
-#endif
     if (flg)
     {
         m_toolbar->hide();
@@ -415,10 +389,6 @@ void MainProgram::slot_dbus_switch_lexicon()
 // 切换皮肤
 void MainProgram::slot_dbus_switch_skin()
 {
-#ifdef DEBUG
-    puts("******** change skin ********\n");
-#endif
-
     const std::vector<std::string> &skinList = freewb_runtime_skin_list();
     const std::string &curSkin = settings::instance().get_curSkinId();
 

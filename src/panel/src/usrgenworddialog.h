@@ -10,7 +10,6 @@
 #define USRGENWORDDIALOG_H
 
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QDialog>
 #include <QMouseEvent>
 #include <QRegExpValidator>
@@ -59,7 +58,6 @@ private:
     // 用于窗口拖动计算
     bool m_mouseIsPressed;
     QPoint m_mouseLastPosition;
-    QPoint m_defaultPopPosition;
 
     QString m_userWordFile;
 };

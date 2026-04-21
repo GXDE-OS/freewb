@@ -19,9 +19,6 @@ UsrGenWordDialog::UsrGenWordDialog(QWidget *parent) : QDialog(parent), ui(new Ui
     QRegExpValidator *validator = new QRegExpValidator(rx, this);
     ui->ledtWordCode->setValidator(validator);
 
-    QDesktopWidget *d = QApplication::desktop();
-    m_defaultPopPosition = QPoint((d->width() - size().width()) / 2, (d->height() - size().height()) / 2);
-
     m_userWordFile = INSTALL_DIR + "/data/user_word.txt";
 
     init_user_word_file();

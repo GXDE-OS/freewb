@@ -33,7 +33,6 @@
 #define STR_ACTION211 "词库生成与维护"
 #define STR_ACTION212 "备份词库与设置"
 #define STR_ACTION213 "恢复词库与设置"
-
 #define STR_ACTION222 "现用词库信息"
 
 #define ICO_CHECKED ":/image/toolbar/checked.png"
@@ -233,6 +232,10 @@ void ContextMenu::on_action15_clicked()
         settings::instance().restoreAllDefaults();
         (void)settings::instance().save();
 
+        // 同步配置变更到输入法引擎与本地UI
+        g_settingsNotifier.notifySettingDataChangedToFcitx();
+        g_settingsNotifier.notifySettingDataChangedToLocal();
+
         emit signal_restore_all_settings();
     }
 }
@@ -345,7 +348,6 @@ void ContextMenu::on_actionGrpLexicon_clicked(QAction *action)
 void ContextMenu::on_action222_clicked()
 {
     close();
-    //    qDebug() << "";;
 }
 
 void ContextMenu::slot_update_lexicon_list()

@@ -456,16 +456,6 @@ void SettingWin::slot_show_version_info()
     ui->stackedWidget->setCurrentWidget(ui->pageVersionInfo);
 }
 
-void SettingWin::slot_open_advanced_settting_page()
-{
-    slot_init_all_setting_page();
-    show();
-    activateWindow();
-
-    ui->listWidget->setCurrentRow(1);
-    ui->stackedWidget->setCurrentWidget(ui->pageAdvance);
-}
-
 // 更新设置界面左侧的设置选项组
 void SettingWin::update_listwidget_item()
 {

@@ -124,11 +124,9 @@ public slots:
     void slot_update_mark_btn_ico();
 
     // 以下槽函数被fcitx所发出的信号连接
-    void slot_kim_Enable(bool);
     void slot_kim_ShowPreedit(bool);
     void slot_kim_ShowAux(bool);
     void slot_kim_ShowLookupTable(bool);
-    void slot_kim_UpdateLookupTableCursor(int);
     void slot_kim_UpdateLookupTable(const QStringList &, const QStringList &, const QStringList &, bool, bool);
     void slot_kim_SetLookupTable(const QStringList &, const QStringList &, const QStringList &, bool, bool, int);
     void slot_kim_UpdatePreeditCaret(int);
@@ -136,11 +134,6 @@ public slots:
     void slot_kim_UpdateAux(const QString &, const QString &);
     void slot_kim_UpdateSpotLocation(int, int);
     void slot_kim_SetSpotLocation(int, int, int, int);
-    void slot_kim_UpdateScreen(int);
-    void slot_kim_UpdateProperty(const QString &);
-    void slot_kim_RegisterProperties(const QStringList &);
-    void slot_kim_ExecDialog(const QString &);
-    void slot_kim_ExecMenu(const QStringList &);
 
 public:
     void show_user_word_operation_prompt(int addOrDel, const QString &wordText, const QString &wordCode);
@@ -162,7 +155,6 @@ protected:
     void set_candiwin_op_help_info();
 
     void update_skin();
-    void set_extern_im_skin();
     void adjust_candi_win_height();
     void adjust_candi_win_width();
     void auto_adjust_candi_win_geometry();
@@ -200,8 +192,6 @@ private:
 
     // 输入框中光标的位置
     QPoint m_imPromptPosition;
-
-    int m_externImFlg;
 
     QString m_preEidtText; // 预编辑框中的输入法引擎发送的原始数据
     int m_candiWordCount;  // 输入法引擎发送的实际候选词个数

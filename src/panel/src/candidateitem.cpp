@@ -1,15 +1,12 @@
 #include "candidateitem.h"
 
 #include <QTimer>
-#include <iostream>
 
 #include "ui_candidateitem.h"
 
-CandidateItem::CandidateItem(int row, int column, QWidget *parent) : QWidget(parent), ui(new Ui::CandidateItem)
+CandidateItem::CandidateItem(QWidget *parent) : QWidget(parent), ui(new Ui::CandidateItem)
 {
     ui->setupUi(this);
-    m_rowIdx = row;
-    m_columnIdx = column;
     adjustSize();
 }
 

@@ -317,7 +317,6 @@ private:
     QAction *m_kbInputTabs;         // 制表符输入模式
     QAction *m_kbInputSpecial;      // 特殊符号输入模式
     QAction *m_kbUserCharInputMode; // 用户自定义字符模式
-    QAction *m_kbUserMarkInputMode; // 用户自定义标点模式
 
     SkinToolBar m_skinData; // 皮肤配置数据
 

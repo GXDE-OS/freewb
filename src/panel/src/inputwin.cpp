@@ -66,7 +66,6 @@ InputWin::InputWin(QWidget *parent) : QWidget(parent), ui(new Ui::InputWin)
     m_mouseIsPressed = false;
     m_mouseLastPosition = QPoint();
     m_isUserWordMode = false;
-    m_externImFlg = 0;
 
     m_dictFindWin.setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
     m_dictFindWin.setAttribute(Qt::WA_TranslucentBackground);
@@ -188,11 +187,6 @@ void InputWin::slot_load_setting_data()
         update_skin();
     }
 
-    // 如果当前输入法不是极点五笔
-    if (m_externImFlg)
-    {
-        set_extern_im_skin();
-    }
 }
 
 void InputWin::init_ui_table()
@@ -205,7 +199,7 @@ void InputWin::init_ui_table()
         {
             if ((i == 0) || (i != 0 && j == 0))
             {
-                CandidateItem *item = new CandidateItem(i, j, ui->tableWidget);
+                CandidateItem *item = new CandidateItem(ui->tableWidget);
                 ui->tableWidget->setCellWidget(i, j, item);
                 item->set_word_text_cursor();
                 connect(item, &CandidateItem::signal_cursor_hover, this, &InputWin::slot_dict_find);
@@ -347,88 +341,6 @@ void InputWin::update_skin()
         ui->labelLeft->setStyleSheet(QSS_BG_LEFT);
         ui->labelRight->setStyleSheet(QSS_BG_RIGHT);
     }
-
-    slot_update_charWidth_btn_ico();
-    slot_update_mark_btn_ico();
-    ui->btnLogo->hide();
-
-    m_btnPrevPage->setStyleSheet(QSS_PREV0_PAGE);
-    m_btnNextPage->setStyleSheet(QSS_NEXT0_PAGE);
-}
-
-void InputWin::set_extern_im_skin()
-{
-    m_separateChar = '.';
-    m_candiCharCount = 128;
-    m_cursorFollow = true;
-    m_hideCandiWin = false;
-    m_radius = 5;
-
-    setWindowOpacity(1);
-    m_displayMode = CWDM_ONE_ROW;
-    set_display_mode(m_displayMode);
-
-    QFont font = freewb_candi_text_qfont(settings::instance());
-    QColor wordCcolor = qRgb(255, 255, 255);
-
-    m_labelImPrompt->setFont(font);
-    ui->labelPreEdit->setFont(font);
-    ui->labelPreEdit->setStyleSheet(QString("border-image: url(:/image/transparent.png);color:rgb(%1,%2,%3);").arg(wordCcolor.red()).arg(wordCcolor.green()).arg(wordCcolor.blue()));
-
-    CandidateItem *item;
-    for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; i++)
-    {
-        item = qobject_cast<CandidateItem *>(ui->tableWidget->cellWidget(0, i));
-        Q_ASSERT(item);
-        item->set_text_font(font);
-        item->set_hover_color(qRgb(55, 126, 236));
-        if (i == 0)
-        {
-            item->set_word_text_color(qRgb(55, 126, 236));
-        }
-        else
-        {
-            item->set_word_text_color(wordCcolor);
-        }
-
-        item->set_disp_max_char_count(m_candiCharCount);
-
-        item = qobject_cast<CandidateItem *>(ui->tableWidget->cellWidget(i, 0));
-        Q_ASSERT(item);
-        item->set_text_font(font);
-        item->set_hover_color(qRgb(55, 126, 236));
-        if (i == 0)
-        {
-            item->set_word_text_color(qRgb(55, 126, 236));
-        }
-        else
-        {
-            item->set_word_text_color(wordCcolor);
-        }
-        item->set_disp_max_char_count(m_candiCharCount);
-    }
-
-    ui->frameText->setStyleSheet("");
-    ui->labelTop->setFixedHeight(0);
-    ui->labelBottom->setFixedHeight(0);
-    ui->labelLeft->setFixedWidth(0);
-    ui->labelRight->setFixedWidth(0);
-
-    QString style;
-    QColor gradienColor0 = qRgb(60, 60, 60);
-    QColor gradienColor1 = qRgb(5, 5, 5);
-    QString gradienColorStyle =
-        QString("background-color:qlineargradient(spread:pad,x1:0, y1:0, x2:0, y2:1,stop:0 rgb(%1,%2,%3),stop:1 rgb(%4,%5,%6));").arg(gradienColor0.red()).arg(gradienColor0.green()).arg(gradienColor0.blue()).arg(gradienColor1.red()).arg(gradienColor1.green()).arg(gradienColor1.blue());
-    style = QString("#frameBg{"
-                    "border-width:0px;"
-                    "border-style:solid;"
-                    "border-radius:%1px;"
-                    "%2"
-                    "}")
-                .arg(m_radius)
-                .arg(gradienColorStyle);
-
-    ui->frameBg->setStyleSheet(style);
 
     slot_update_charWidth_btn_ico();
     slot_update_mark_btn_ico();
@@ -1341,13 +1253,6 @@ void InputWin::slot_caret_blink()
 }
 
 /**************************** fcitx信号处理函数 *********************************/
-// enable：文字输入框是否激活输入使能
-void InputWin::slot_kim_Enable(bool enable)
-{
-    Q_UNUSED(enable);
-    // qDebug() << enable;
-}
-
 // isShow: 切换到中文输入后是否在光标处出现短暂的提示信息， 辅助窗口显示
 void InputWin::slot_kim_ShowAux(bool enable)
 {
@@ -1368,12 +1273,6 @@ void InputWin::slot_kim_ShowAux(bool enable)
     //    {
     //        m_labelImPrompt->hide();
     //    }
-}
-
-//
-void InputWin::slot_kim_UpdateLookupTableCursor(int position)
-{
-    Q_UNUSED(position);
 }
 
 // isShow: 是否显示候选词组列表
@@ -1630,36 +1529,3 @@ void InputWin::slot_kim_SetSpotLocation(int x, int y, int w, int h)
     }
 }
 
-//
-void InputWin::slot_kim_UpdateScreen(int screen)
-{
-    Q_UNUSED(screen);
-}
-
-// prop: 切换输入法时提示的输入法本身描述信息
-void InputWin::slot_kim_UpdateProperty(const QString &prop)
-{
-    Q_UNUSED(prop);
-    //    qDebug() << prop;
-}
-
-// prop: 切换输入法时提示的输入法注册的相关属性信息
-void InputWin::slot_kim_RegisterProperties(const QStringList &prop)
-{
-    Q_UNUSED(prop);
-    //    qDebug() << prop;
-}
-
-//
-void InputWin::slot_kim_ExecDialog(const QString &prop)
-{
-    Q_UNUSED(prop);
-    //    qDebug() << prop;
-}
-
-//
-void InputWin::slot_kim_ExecMenu(const QStringList &prop)
-{
-    Q_UNUSED(prop);
-    //    qDebug() << prop;
-}

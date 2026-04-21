@@ -45,7 +45,6 @@ public slots:
     void slot_open_win();
     void slot_init_all_setting_page();
     void slot_show_version_info();
-    void slot_open_advanced_settting_page();
 
     void slot_custom_keyboard_char_clicked(SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue);
     void slot_custom_keyboard_mark_clicked(SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue);

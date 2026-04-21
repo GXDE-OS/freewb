@@ -58,17 +58,6 @@ void DictQuery::close_dict(sqlite3 *db)
     }
 }
 
-static void print_hex(const unsigned char *data, int size)
-{
-    printf("len = %d\n", size);
-    for (int i = 0; i < size; i++)
-    {
-        printf("%02X ", data[i]);
-    }
-    printf("\n");
-    fflush(stdout);
-}
-
 QString DictQuery::rstrip(const QString &str)
 {
     int n = str.size() - 1;

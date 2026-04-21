@@ -48,7 +48,6 @@ public:
     void create_host_dbus_service();
 
 public slots:                                                                                    // 提供给外部进程调用的DBUS方法接口
-    QString slot_dbus_test(const QString &text);                                                 // 测试使用
     void slot_dbus_switch_internal_input_method(int im);                                         // 切换极点五笔子输入法
     void slot_dbus_dict_query(const QString &text);                                              // 字典查询
     void slot_dbus_generate_usr_word(int flg, const QString &wordText, const QString &wordCode); // 用户造词
@@ -84,7 +83,6 @@ public slots:                                                                   
     void slot_dbus_set_recode_calib_flg(int flg);                         // 切换重码上屏校对模式
 
 protected slots:
-    void slot_create_freewb_panel();
     void slot_delete_freewb_panel();
 
 private:
