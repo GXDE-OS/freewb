@@ -6,7 +6,7 @@
 DictQueryWin::DictQueryWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::DictQueryWin)
 {
     ui->setupUi(this);
-    setWindowTitle("极点查询");
+    setWindowTitle(_("Freewb query"));
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
 
     setWindowIcon(QIcon(":/image/setting/logo.png"));
@@ -14,14 +14,14 @@ DictQueryWin::DictQueryWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::Di
     QDesktopWidget *d = QApplication::desktop();
     m_defaultPopPosition = QPoint((d->width() - size().width()) / 2, (d->height() - size().height()) / 2);
 
-    m_actCut = new QAction("剪切");
-    m_actCopy = new QAction("复制");
-    m_actPaste = new QAction("粘贴");
-    m_actSelectCopyAll = new QAction("选择所有并复制");
-    m_actSaveCurWordInfo = new QAction("保存当前词条信息");
-    m_actDelCurWordInfo = new QAction("删除当前词条信息");
+    m_actCut = new QAction(_("Cut"));
+    m_actCopy = new QAction(_("Copy"));
+    m_actPaste = new QAction(_("Paste"));
+    m_actSelectCopyAll = new QAction(_("Select all and copy"));
+    m_actSaveCurWordInfo = new QAction(_("Save current word information"));
+    m_actDelCurWordInfo = new QAction(_("Delete current word information"));
 
-    m_menuEdit = new QMenu("编辑", this);
+    m_menuEdit = new QMenu(_("Edit"), this);
     m_menuEdit->addAction(m_actCut);
     m_menuEdit->addAction(m_actCopy);
     m_menuEdit->addAction(m_actPaste);
@@ -107,7 +107,7 @@ void DictQueryWin::find_word(const QString &text)
     else
     {
         // ui->textEditExplain->setReadOnly( false );
-        paraphrase = "\n  当前词条无解释，你可以在此输入解释后存盘．";
+        paraphrase = _("The current word has no explanation, you can enter the explanation here and save it.");
     }
 
     ui->textEditExplain->setText(prefix + paraphrase);
@@ -127,14 +127,14 @@ void DictQueryWin::find_word(const QString &text)
                 QString wb = wbpy.at(0);
                 if (!wb.isEmpty())
                 {
-                    dispStr += QString("【 %1 】\n  编码：%2\n").arg(wchar).arg(wb.replace(",", "  "));
+                    dispStr += QString(_("【 %1 】\n  Code: %2\n")).arg(wchar).arg(wb.replace(",", "  "));
                 }
             }
             else if (wbpy.length() == 2)
             {
                 QString wb = wbpy.at(0);
                 QString py = wbpy.at(1);
-                dispStr += QString("【 %1 】\n  编码：%2\n  拼音：%3\n").arg(wchar).arg(wb.replace(",", "  ")).arg(py.replace(",", "  "));
+                dispStr += QString(_("【 %1 】\n  Code: %2\n  Pinyin: %3\n")).arg(wchar).arg(wb.replace(",", "  ")).arg(py.replace(",", "  "));
             }
         }
 
@@ -260,12 +260,12 @@ void DictQueryWin::slot_action_save_custom_word()
     QMessageBox *msgBox = new QMessageBox(this);
     msgBox->setWindowFlag(Qt::FramelessWindowHint);
     msgBox->setIcon(QMessageBox::Question);
-    msgBox->setText(QString("确定保存对词条【 %1 】的修改？").arg(m_findWordText));
+    msgBox->setText(QString(_("Are you sure you want to save the modification of the word [ %1 ]?")).arg(m_findWordText));
     msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msgBox->button(QMessageBox::Yes)->setIcon(QIcon());
-    msgBox->button(QMessageBox::Yes)->setText("是(&Y)");
+    msgBox->button(QMessageBox::Yes)->setText(_("Yes(&Y)"));
     msgBox->button(QMessageBox::No)->setIcon(QIcon());
-    msgBox->button(QMessageBox::No)->setText("否(&N)");
+    msgBox->button(QMessageBox::No)->setText(_("No(&N)"));
     msgBox->setDefaultButton(QMessageBox::Yes);
     ret = msgBox->exec();
     delete msgBox;
@@ -279,16 +279,16 @@ void DictQueryWin::slot_action_save_custom_word()
         msgBox->setIcon(QMessageBox::Information);
         msgBox->setStandardButtons(QMessageBox::Ok);
         msgBox->button(QMessageBox::Ok)->setIcon(QIcon());
-        msgBox->button(QMessageBox::Ok)->setText("确认(&OK)");
+        msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&OK)"));
         msgBox->setDefaultButton(QMessageBox::Ok);
 
         if (ret == 0)
         {
-            msgBox->setText("保存成功！");
+            msgBox->setText(_("Save successfully!"));
         }
         else
         {
-            msgBox->setText("保存失败！");
+            msgBox->setText(_("Save failed!"));
         }
 
         msgBox->exec();
@@ -303,12 +303,12 @@ void DictQueryWin::slot_action_del_custom_word()
     QMessageBox *msgBox = new QMessageBox(this);
     msgBox->setWindowFlag(Qt::FramelessWindowHint);
     msgBox->setIcon(QMessageBox::Question);
-    msgBox->setText(QString("确定删除词条【 %1 】？").arg(m_findWordText));
+    msgBox->setText(QString(_("Are you sure you want to delete the word [ %1 ]?")).arg(m_findWordText));
     msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msgBox->button(QMessageBox::Yes)->setIcon(QIcon());
-    msgBox->button(QMessageBox::Yes)->setText("是(&Y)");
+    msgBox->button(QMessageBox::Yes)->setText(_("Yes(&Y)"));
     msgBox->button(QMessageBox::No)->setIcon(QIcon());
-    msgBox->button(QMessageBox::No)->setText("否(&N)");
+    msgBox->button(QMessageBox::No)->setText(_("No(&N)"));
     msgBox->setDefaultButton(QMessageBox::Yes);
     ret = msgBox->exec();
     delete msgBox;
@@ -322,17 +322,17 @@ void DictQueryWin::slot_action_del_custom_word()
         msgBox->setIcon(QMessageBox::Information);
         msgBox->setStandardButtons(QMessageBox::Ok);
         msgBox->button(QMessageBox::Ok)->setIcon(QIcon());
-        msgBox->button(QMessageBox::Ok)->setText("确认(&OK)");
+        msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&OK)"));
         msgBox->setDefaultButton(QMessageBox::Ok);
 
         if (ret == 0)
         {
-            msgBox->setText("词条删除成功！");
+            msgBox->setText(_("Word deleted successfully!"));
             ui->textEditExplain->clear();
         }
         else
         {
-            msgBox->setText("词条删除失败！");
+            msgBox->setText(_("Word deletion failed!"));
         }
 
         msgBox->exec();

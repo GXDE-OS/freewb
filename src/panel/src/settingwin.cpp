@@ -356,11 +356,11 @@ void SettingWin::init_window_appearance()
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
 
     setWindowIcon(QIcon(":/image/setting/logo.png"));
-    setWindowTitle("属性设置");
+    setWindowTitle(_("settings"));
     // setFont(freewb_candi_text_qfont(settings::instance()));
 
     ui->labelVersionNum->setText(FREEWB_VERSION);
-    ui->labelVersion->setText("极点五笔输入法");
+    ui->labelVersion->setText(_("freewb"));
 
     // 载入窗口全局UI样式表
     QFile qssFile(QSS_FILE);
@@ -688,7 +688,7 @@ void SettingWin::slot_show_version_info()
 
     for (int i = 0; i < ui->listWidget->count(); i++)
     {
-        if (ui->listWidget->item(i)->text() == "版本信息")
+        if (ui->listWidget->item(i)->text() == _("Version information"))
         {
             ui->listWidget->setCurrentRow(i);
         }
@@ -701,21 +701,21 @@ void SettingWin::update_listwidget_item()
 {
     ui->listWidget->clear();
 
-    m_listItemCommon = new QListWidgetItem("常用选项", ui->listWidget);
-    m_listItemAdvance = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "高级选项", ui->listWidget);
-    m_listItemOthers = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "其他设置", ui->listWidget);
+    m_listItemCommon = new QListWidgetItem(_("Common options"), ui->listWidget);
+    m_listItemAdvance = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Advanced options"), ui->listWidget);
+    m_listItemOthers = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Other settings"), ui->listWidget);
 
     if (showAllGroup())
     {
-        m_listItemUi = new QListWidgetItem("界面设置", ui->listWidget);
-        m_listItemCandidateWinUi = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "候选窗界面", ui->listWidget);
-        m_listItemCandidateWinOption = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "候选窗选项", ui->listWidget);
+        m_listItemUi = new QListWidgetItem(_("Interface settings"), ui->listWidget);
+        m_listItemCandidateWinUi = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Candidate window interface"), ui->listWidget);
+        m_listItemCandidateWinOption = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Candidate window options"), ui->listWidget);
     }
 
-    m_listItemShortcutKey = new QListWidgetItem("设置快捷键", ui->listWidget);
-    m_listItemCustomKeyChar = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "定义软键盘", ui->listWidget);
-    m_listItemCustomKeyMark = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), "自定义标点", ui->listWidget);
-    m_listItemVersionInfo = new QListWidgetItem("版本信息", ui->listWidget);
+    m_listItemShortcutKey = new QListWidgetItem(_("Setting shortcut keys"), ui->listWidget);
+    m_listItemCustomKeyChar = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Define soft keyboard"), ui->listWidget);
+    m_listItemCustomKeyMark = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Custom punctuation"), ui->listWidget);
+    m_listItemVersionInfo = new QListWidgetItem(_("Version information"), ui->listWidget);
     // m_listItemBug = new QListWidgetItem( "问题反馈", ui->listWidget );
 
     ui->stackedWidget->setCurrentWidget(ui->pageCommon);
@@ -951,7 +951,7 @@ void SettingWin::ckb_useGradientBgColor_updated(bool checked)
     }
     else if (!ui->ckbUseBgImage->isChecked())
     {
-        ui->btnCandiBg->setText("背景色");
+        ui->btnCandiBg->setText(_("Background color"));
         ui->btnCandiBg->show();
         ui->btnCandiBgColor0->hide();
         ui->btnCandiBgColor1->hide();
@@ -964,7 +964,7 @@ void SettingWin::ckb_useBgImage_updated(bool checked)
     {
         ui->ckbUseGradientBgColor->setChecked(false);
         ui->ckbUseTile->setEnabled(true);
-        ui->btnCandiBg->setText("背景图");
+        ui->btnCandiBg->setText(_("Background image"));
         ui->btnCandiBg->show();
         ui->btnCandiBgColor0->hide();
         ui->btnCandiBgColor1->hide();
@@ -972,7 +972,7 @@ void SettingWin::ckb_useBgImage_updated(bool checked)
     else if (!ui->ckbUseGradientBgColor->isChecked())
     {
         ui->ckbUseTile->setEnabled(false);
-        ui->btnCandiBg->setText("背景色");
+        ui->btnCandiBg->setText(_("Background color"));
         ui->btnCandiBg->show();
         ui->btnCandiBgColor0->hide();
         ui->btnCandiBgColor1->hide();
@@ -1145,11 +1145,11 @@ void SettingWin::on_btnSettingOption_clicked()
     toggleShowAllGroup();
     if (showAllGroup())
     {
-        ui->btnSettingOption->setText("显示【常用】选项");
+        ui->btnSettingOption->setText(_("Display [Common] options"));
     }
     else
     {
-        ui->btnSettingOption->setText("显示【所有】选项");
+        ui->btnSettingOption->setText(_("Display [All] options"));
     }
 
     update_listwidget_item();
@@ -1337,12 +1337,12 @@ void SettingWin::on_cmbSwitchCnEn_activated(int index)
     {
         m_msgBox = new QMessageBox(this);
         m_msgBox->setIcon(QMessageBox::Warning);
-        m_msgBox->setText("您设置的快捷键将与二三重码选择键冲突，确认设置？");
+        m_msgBox->setText(_("The shortcut key you set will conflict with the second and third recode selection key, confirm setting?"));
         m_msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         m_msgBox->button(QMessageBox::Yes)->setIcon(QIcon());
-        m_msgBox->button(QMessageBox::Yes)->setText("是(&Y)");
+        m_msgBox->button(QMessageBox::Yes)->setText(_("Yes(&Y)"));
         m_msgBox->button(QMessageBox::No)->setIcon(QIcon());
-        m_msgBox->button(QMessageBox::No)->setText("否(&N)");
+        m_msgBox->button(QMessageBox::No)->setText(_("No(&N)"));
         m_msgBox->setDefaultButton(QMessageBox::No);
         int ret = m_msgBox->exec();
         delete m_msgBox;
@@ -1388,12 +1388,12 @@ void SettingWin::on_btnRestoreShortcutKey_clicked()
     m_msgBox = new QMessageBox(this);
     // m_msgBox->setWindowFlag( Qt::FramelessWindowHint );
     m_msgBox->setIcon(QMessageBox::Warning);
-    m_msgBox->setText("确定将快捷键都恢复成默认键值吗？");
+    m_msgBox->setText(_("Confirm to restore all shortcut keys to the default key value?"));
     m_msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     m_msgBox->button(QMessageBox::Yes)->setIcon(QIcon());
-    m_msgBox->button(QMessageBox::Yes)->setText("是(&Y)");
+    m_msgBox->button(QMessageBox::Yes)->setText(_("Yes(&Y)"));
     m_msgBox->button(QMessageBox::No)->setIcon(QIcon());
-    m_msgBox->button(QMessageBox::No)->setText("否(&N)");
+    m_msgBox->button(QMessageBox::No)->setText(_("No(&N)"));
     m_msgBox->setDefaultButton(QMessageBox::Yes);
 
     int ret = m_msgBox->exec();
@@ -1412,7 +1412,7 @@ void SettingWin::slot_custom_keyboard_char_clicked(SymbolKeyIdx keyIdx, const QS
     m_curSymbolKeyIdx = keyIdx;
     m_curCustomKeyValue = keyValue;
 
-    m_customKeyDialog->setWindowTitle("设置键盘字符");
+    m_customKeyDialog->setWindowTitle(_("Set keyboard characters"));
     m_customKeyDialog->set_custom_symbol(VKM_CUSTOM_CHAR, keyName, keyValue.commChar, keyValue.shiftChar);
     m_customKeyDialog->exec();
 }
@@ -1424,7 +1424,7 @@ void SettingWin::slot_custom_keyboard_mark_clicked(SymbolKeyIdx keyIdx, const QS
     m_curSymbolKeyIdx = keyIdx;
     m_curCustomKeyValue = keyValue;
 
-    m_customKeyDialog->setWindowTitle("设置键盘标点");
+    m_customKeyDialog->setWindowTitle(_("Set keyboard punctuation"));
     m_customKeyDialog->set_custom_symbol(VKM_CUSTOM_MARK, keyName, keyValue.commMark, keyValue.shiftMark);
     m_customKeyDialog->exec();
 }
@@ -1591,7 +1591,7 @@ void SettingWin::on_btnCandiBg_clicked()
 {
     if (settings::instance().get_useBgImage())
     {
-        QString file = QFileDialog::getOpenFileName(this, "选择背景图片", qgetenv("HOME"), "Images(*.png *.bmp *.jpg)");
+        QString file = QFileDialog::getOpenFileName(this, _("Select background image"), qgetenv("HOME"), "Images(*.png *.bmp *.jpg)");
         settings::instance().set_bgImage(fromStdUtf8(file));
         update_fram_candidate_win();
     }
@@ -1749,11 +1749,11 @@ void SettingWin::on_cmb23RecodeSelect_activated(int index)
     QString conflictInfo;
     if (pairIntersects(p.first, p.second, prev, next))
     {
-        conflictInfo = "您设置的快捷键将与上下翻页键冲突，确认设置？";
+        conflictInfo = _("The shortcut key you set will conflict with the up and down page key, confirm setting?");
     }
     else if (pairIntersects(p.first, p.second, cessk.first, cessk.second))
     {
-        conflictInfo = "您设置的快捷键将与中英文切换键冲突，确认设置？";
+        conflictInfo = _("The shortcut key you set will conflict with the Chinese/English switch key, confirm setting?");
     }
 
     if (!conflictInfo.isEmpty())
@@ -1763,9 +1763,9 @@ void SettingWin::on_cmb23RecodeSelect_activated(int index)
         m_msgBox->setText(conflictInfo);
         m_msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         m_msgBox->button(QMessageBox::Yes)->setIcon(QIcon());
-        m_msgBox->button(QMessageBox::Yes)->setText("是(&Y)");
+        m_msgBox->button(QMessageBox::Yes)->setText(_("Yes(&Y)"));
         m_msgBox->button(QMessageBox::No)->setIcon(QIcon());
-        m_msgBox->button(QMessageBox::No)->setText("否(&N)");
+        m_msgBox->button(QMessageBox::No)->setText(_("No(&N)"));
         m_msgBox->setDefaultButton(QMessageBox::No);
         int ret = m_msgBox->exec();
         delete m_msgBox;
@@ -1796,12 +1796,12 @@ void SettingWin::on_cmbPrevNextPage_activated(int index)
     {
         m_msgBox = new QMessageBox(this);
         m_msgBox->setIcon(QMessageBox::Warning);
-        m_msgBox->setText("您设置的快捷键将与二三重码选择键冲突，确认设置？");
+        m_msgBox->setText(_("The shortcut key you set will conflict with the second and third recode selection key, confirm setting?"));
         m_msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         m_msgBox->button(QMessageBox::Yes)->setIcon(QIcon());
-        m_msgBox->button(QMessageBox::Yes)->setText("是(&Y)");
+        m_msgBox->button(QMessageBox::Yes)->setText(_("Yes(&Y)"));
         m_msgBox->button(QMessageBox::No)->setIcon(QIcon());
-        m_msgBox->button(QMessageBox::No)->setText("否(&N)");
+        m_msgBox->button(QMessageBox::No)->setText(_("No(&N)"));
         m_msgBox->setDefaultButton(QMessageBox::No);
         int ret = m_msgBox->exec();
         delete m_msgBox;

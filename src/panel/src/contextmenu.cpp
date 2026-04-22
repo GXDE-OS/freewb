@@ -7,33 +7,33 @@
 #include "settingshelper.h"
 
 // 一级菜单
-#define STR_MENU1 "输入法设置"
-#define STR_MENU2 "管理工具"
-#define STR_ACTION3 "手工造词"
-#define STR_MENU4 "使用说明"
+#define STR_MENU1 _("Input method settings")
+#define STR_MENU2 _("Management tools")
+#define STR_ACTION3 _("Manual word creation")
+#define STR_MENU4 _("Usage instructions")
 
 // 二级菜单
-#define STR_ACTION11 "图形设置模式"
-#define STR_ACTION12 "专家设置模式"
-#define STR_ACTION13 "类王码设置"
-#define STR_ACTION14 "极点输入模式"
-#define STR_ACTION15 "恢复默认设置"
+#define STR_ACTION11 _("Graphical settings mode")
+#define STR_ACTION12 _("Expert settings mode")
+#define STR_ACTION13 _("Class Wangma settings")
+#define STR_ACTION14 _("Freewb input mode")
+#define STR_ACTION15 _("Restore default settings")
 
-#define STR_ACTION21 "编辑用户词组"
-#define STR_ACTION22 "编辑快捷码表"
-#define STR_MENU21 "词库工具"
-#define STR_MENU22 "切换词库"
+#define STR_ACTION21 _("Edit user word group")
+#define STR_ACTION22 _("Edit shortcut code table")
+#define STR_MENU21 _("Lexicon tool")
+#define STR_MENU22 _("Switch lexicon")
 
-#define STR_ACTION31 "快速入门"
-#define STR_ACTION32 "快捷命令"
-#define STR_ACTION33 "版本信息"
-#define STR_ACTION34 "软件注册"
+#define STR_ACTION31 _("Quick start")
+#define STR_ACTION32 _("Shortcut command")
+#define STR_ACTION33 _("Version information")
+#define STR_ACTION34 _("Software registration")
 
 // 三级菜单
-#define STR_ACTION211 "词库生成与维护"
-#define STR_ACTION212 "备份词库与设置"
-#define STR_ACTION213 "恢复词库与设置"
-#define STR_ACTION222 "现用词库信息"
+#define STR_ACTION211 _("Lexicon generation and maintenance")
+#define STR_ACTION212 _("Backup lexicon and settings")
+#define STR_ACTION213 _("Restore lexicon and settings")
+#define STR_ACTION222 _("Current lexicon information")
 
 #define ICO_CHECKED ":/image/toolbar/checked.png"
 
@@ -217,12 +217,12 @@ void ContextMenu::on_action15_clicked()
     QMessageBox *msgBox = new QMessageBox();
     msgBox->setWindowFlag(Qt::FramelessWindowHint);
     msgBox->setIcon(QMessageBox::Question);
-    msgBox->setText("确定将极点恢复到默认状态吗？");
+    msgBox->setText(_("Are you sure you want to restore Freewb to the default state?"));
     msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msgBox->button(QMessageBox::Yes)->setIcon(QIcon());
-    msgBox->button(QMessageBox::Yes)->setText("是(&Y)");
+    msgBox->button(QMessageBox::Yes)->setText(_("Yes(&Y)"));
     msgBox->button(QMessageBox::No)->setIcon(QIcon());
-    msgBox->button(QMessageBox::No)->setText("否(&N)");
+    msgBox->button(QMessageBox::No)->setText(_("No(&N)"));
     msgBox->setDefaultButton(QMessageBox::Yes);
 
     int ret = msgBox->exec();
@@ -292,7 +292,7 @@ void ContextMenu::on_action32_clicked()
     msgBox->setText(shortcutCmdInfo);
     msgBox->setStandardButtons(QMessageBox::Ok);
     msgBox->button(QMessageBox::Ok)->setIcon(QIcon());
-    msgBox->button(QMessageBox::Ok)->setText("确定(&OK)");
+    msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&OK)"));
     msgBox->setDefaultButton(QMessageBox::Ok);
 
     msgBox->exec();

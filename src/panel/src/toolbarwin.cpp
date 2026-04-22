@@ -730,19 +730,19 @@ void ToolbarWin::slot_update_input_mode_ico()
 
     if (s_capsFlg)
     {
-        ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "大写字母" : "大寫字母");
+        ui->btnMode->setText(_("Capital letters"));
     }
     else if (get_inputMode() == IM_WUBI_FONT)
     {
-        ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "五笔字型" : "五筆字型");
+        ui->btnMode->setText(_(" Wubi font"));
     }
     else if (get_inputMode() == IM_WUBI_PINYIN)
     {
-        ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "五笔拼音" : "五筆拼音");
+        ui->btnMode->setText(_(" Wubi pinyin"));
     }
     else if (get_inputMode() == IM_STD_PINYIN)
     {
-        ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "拼音输入" : "拼音輸入");
+        ui->btnMode->setText(_("Pinyin input"));
     }
 }
 
@@ -752,19 +752,19 @@ void ToolbarWin::update_input_mode_ico(InputMode im)
     s_capsFlg = Keyboard::get_caps_flg();
     if (s_capsFlg)
     {
-        ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "大写字母" : "大寫字母");
+        ui->btnMode->setText(_("Capital letters"));
     }
     else if (im == IM_WUBI_FONT)
     {
-        ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "五笔字型" : "五筆字型");
+        ui->btnMode->setText(_(" Wubi font"));
     }
     else if (im == IM_WUBI_PINYIN)
     {
-        ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "五笔拼音" : "五筆拼音");
+        ui->btnMode->setText(_(" Wubi pinyin"));
     }
     else if (im == IM_STD_PINYIN)
     {
-        ui->btnMode->setText(s_charFontMode == CHAR_SIMPLIFIED ? "拼音输入" : "拼音輸入");
+        ui->btnMode->setText(_("Pinyin input"));
     }
 }
 

@@ -7,7 +7,7 @@ TextFindDialog::TextFindDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Te
 {
     ui->setupUi(this);
     setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
-    setWindowTitle("查找");
+    setWindowTitle(_("Find"));
 }
 
 TextFindDialog::~TextFindDialog()

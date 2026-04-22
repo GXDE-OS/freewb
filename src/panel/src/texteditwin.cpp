@@ -18,11 +18,11 @@ TextEditWin::TextEditWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::Text
 
     m_textFindDialog = new TextFindDialog(this);
 
-    m_actFind = new QAction("查找(&F)", this);
+    m_actFind = new QAction(_("Find(&F)"), this);
     m_actFind->setShortcut(QKeySequence("ctrl+f"));
-    m_actSave = new QAction("保存(&S)", this);
+    m_actSave = new QAction(_("Save(&S)"), this);
     m_actSave->setShortcut(QKeySequence("ctrl+s"));
-    m_actQuit = new QAction("退出(&E)", this);
+    m_actQuit = new QAction(_("Exit(&E)"), this);
     m_actQuit->setShortcut(QKeySequence("ctrl+e"));
     ui->menubar->addAction(m_actFind);
     ui->menubar->addAction(m_actSave);
@@ -110,7 +110,7 @@ void TextEditWin::open_user_word_file()
     if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
     {
         qWarning() << textFile.fileName() << " open failed!";
-        setWindowTitle("文件打开失败!");
+        setWindowTitle(_("File open failed!"));
         ui->plainTextEdit->setPlainText("");
     }
     else
@@ -137,7 +137,7 @@ void TextEditWin::open_quick_table_file()
     if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
     {
         qWarning() << textFile.fileName() << " open failed!";
-        setWindowTitle("文件打开失败!");
+        setWindowTitle(_("File open failed!"));
         ui->plainTextEdit->setPlainText("");
     }
     else
@@ -160,7 +160,7 @@ void TextEditWin::open_wubi_table_file()
     QMessageBox msgBox;
     msgBox.setWindowFlag(Qt::FramelessWindowHint);
     msgBox.setIcon(QMessageBox::NoIcon);
-    msgBox.setText("正在打开......");
+    msgBox.setText(_("Opening..."));
     msgBox.show();
 
     int count;
@@ -176,7 +176,7 @@ void TextEditWin::open_wubi_table_file()
     if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
     {
         qWarning() << textFile.fileName() << " open failed!";
-        setWindowTitle("文件打开失败!");
+        setWindowTitle(_("File open failed!"));
         ui->plainTextEdit->setPlainText("");
     }
     else
@@ -200,7 +200,7 @@ void TextEditWin::open_pinyin_table_file()
     QMessageBox msgBox;
     msgBox.setWindowFlag(Qt::FramelessWindowHint);
     msgBox.setIcon(QMessageBox::NoIcon);
-    msgBox.setText("正在打开......");
+    msgBox.setText(_("Opening..."));
     msgBox.show();
 
     int count;

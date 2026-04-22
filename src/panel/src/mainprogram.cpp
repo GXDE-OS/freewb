@@ -211,15 +211,15 @@ void MainProgram::slot_dbus_switch_internal_input_method(int im)
     QString childIm;
     if (im == IM_WUBI_FONT && im != ToolbarWin::get_inputMode())
     {
-        childIm = "五笔字型";
+        childIm = _(" Wubi font");
     }
     else if (im == IM_WUBI_PINYIN && im != ToolbarWin::get_inputMode())
     {
-        childIm = "五笔拼音";
+        childIm = _(" Wubi pinyin");
     }
     if (im == IM_STD_PINYIN && im != ToolbarWin::get_inputMode())
     {
-        childIm = "拼音输入";
+        childIm = _(" Pinyin input");
     }
     m_inputWin->slot_kim_UpdateAux(childIm, "");
     m_inputWin->slot_kim_ShowAux(true);

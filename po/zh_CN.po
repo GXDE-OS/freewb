@@ -1,0 +1,487 @@
+# Chinese translations for freewb v4.0 package.
+# Copyright (C) 2026 freewb
+# This file is distributed under the same license as the freewb package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: freewb v4.0 2026.04.22\n"
+"Report-Msgid-Bugs-To: freewb\n"
+"POT-Creation-Date: 2026-04-22 16:51+0800\n"
+"PO-Revision-Date: 2026-04-22 15:30+0800\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/panel/src/backupdialog.cpp:597
+msgid "Dictionary and settings backup completed"
+msgstr ""
+
+#: src/panel/src/backupdialog.cpp:603
+msgid "Dictionary and settings recovery completed！"
+msgstr ""
+
+#: src/panel/src/backupdialog.cpp:614
+msgid "Dictionary and settings %1 failed！"
+msgstr ""
+
+#: src/panel/src/backupdialog.cpp:614
+msgid "backup"
+msgstr ""
+
+#: src/panel/src/backupdialog.cpp:614
+msgid "recovery"
+msgstr ""
+
+#: src/panel/src/backupdialog.cpp:631
+msgid "Generate backup file"
+msgstr ""
+
+#: src/panel/src/backupdialog.cpp:638
+msgid "Backup in progress, please wait..."
+msgstr ""
+
+#: src/panel/src/backupdialog.cpp:652
+msgid "Select backup file"
+msgstr ""
+
+#: src/panel/src/backupdialog.cpp:659
+msgid "Recovery in progress, please wait..."
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:10
+msgid "Input method settings"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:11
+msgid "Management tools"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:12
+msgid "Manual word creation"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:13
+msgid "Usage instructions"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:16
+msgid "Graphical settings mode"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:17
+msgid "Expert settings mode"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:18
+msgid "Class Wangma settings"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:19
+msgid "Freewb input mode"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:20
+msgid "Restore default settings"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:22
+msgid "Edit user word group"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:23
+msgid "Edit shortcut code table"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:24
+msgid "Lexicon tool"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:25
+msgid "Switch lexicon"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:27
+msgid "Quick start"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:28
+msgid "Shortcut command"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:29 src/panel/src/settingwin.cpp:691
+#: src/panel/src/settingwin.cpp:718
+msgid "Version information"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:30
+msgid "Software registration"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:33
+msgid "Lexicon generation and maintenance"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:34
+msgid "Backup lexicon and settings"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:35
+msgid "Restore lexicon and settings"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:36
+msgid "Current lexicon information"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:220
+msgid "Are you sure you want to restore Freewb to the default state?"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:223 src/panel/src/dictquerywin.cpp:266
+#: src/panel/src/dictquerywin.cpp:309 src/panel/src/lexicontoolwin.cpp:238
+#: src/panel/src/lexicontoolwin.cpp:513 src/panel/src/settingwin.cpp:1343
+#: src/panel/src/settingwin.cpp:1394 src/panel/src/settingwin.cpp:1766
+#: src/panel/src/settingwin.cpp:1802
+msgid "Yes(&Y)"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:225 src/panel/src/dictquerywin.cpp:268
+#: src/panel/src/dictquerywin.cpp:311 src/panel/src/lexicontoolwin.cpp:239
+#: src/panel/src/lexicontoolwin.cpp:515 src/panel/src/settingwin.cpp:1345
+#: src/panel/src/settingwin.cpp:1396 src/panel/src/settingwin.cpp:1768
+#: src/panel/src/settingwin.cpp:1804
+msgid "No(&N)"
+msgstr ""
+
+#: src/panel/src/contextmenu.cpp:295 src/panel/src/dictquerywin.cpp:282
+#: src/panel/src/dictquerywin.cpp:325 src/panel/src/lexicontoolwin.cpp:313
+#: src/panel/src/lexicontoolwin.cpp:671
+msgid "Confirm(&OK)"
+msgstr ""
+
+#: src/panel/src/dictquery.cpp:85 src/panel/src/dictquery.cpp:157
+msgid "select content from Library where code=\"%1\";"
+msgstr ""
+
+#: src/panel/src/dictquery.cpp:134
+msgid "select code from Library where code like \"%1%%\";"
+msgstr ""
+
+#: src/panel/src/dictquery.cpp:158
+msgid "insert into Library(code,content) values(?, ?);"
+msgstr ""
+
+#: src/panel/src/dictquery.cpp:159
+msgid "update Library set content=? where code=\"%1\";"
+msgstr ""
+
+#: src/panel/src/dictquery.cpp:219
+msgid "delete from Library where code=\"%1\";"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:9
+msgid "Freewb query"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:17
+msgid "Cut"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:18
+msgid "Copy"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:19
+msgid "Paste"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:20
+msgid "Select all and copy"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:21
+msgid "Save current word information"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:22
+msgid "Delete current word information"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:24
+msgid "Edit"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:110
+msgid ""
+"The current word has no explanation, you can enter the explanation here and "
+"save it."
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:130
+msgid ""
+"【 %1 】\n"
+"  Code: %2\n"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:137
+msgid ""
+"【 %1 】\n"
+"  Code: %2\n"
+"  Pinyin: %3\n"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:263
+msgid "Are you sure you want to save the modification of the word [ %1 ]?"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:287
+msgid "Save successfully!"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:291
+msgid "Save failed!"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:306
+msgid "Are you sure you want to delete the word [ %1 ]?"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:330
+msgid "Word deleted successfully!"
+msgstr ""
+
+#: src/panel/src/dictquerywin.cpp:335
+msgid "Word deletion failed!"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:80
+msgid "Freewb lexicon tool"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:224
+msgid "Number: "
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:231
+msgid "Lexicon export completed! Number: %1"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:240
+msgid ""
+"Lexicon generated successfully, whether to replace the current used lexicon?"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:244
+msgid "Lexicon marked completed! Number: %1"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:250
+msgid "Lexicon optimized completed!"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:258
+msgid "File open failed or format error!"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:321 src/panel/src/lexicontoolwin.cpp:448
+msgid "Generate TXT file"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:327 src/panel/src/lexicontoolwin.cpp:454
+msgid "Exporting lexicon..."
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:331 src/panel/src/lexicontoolwin.cpp:351
+#: src/panel/src/lexicontoolwin.cpp:386 src/panel/src/lexicontoolwin.cpp:413
+#: src/panel/src/lexicontoolwin.cpp:437 src/panel/src/lexicontoolwin.cpp:458
+#: src/panel/src/lexicontoolwin.cpp:478
+msgid "Cancel(&C)"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:332 src/panel/src/lexicontoolwin.cpp:387
+#: src/panel/src/lexicontoolwin.cpp:414 src/panel/src/lexicontoolwin.cpp:438
+#: src/panel/src/lexicontoolwin.cpp:459
+msgid "Confirm(&O)"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:343 src/panel/src/lexicontoolwin.cpp:376
+#: src/panel/src/lexicontoolwin.cpp:403 src/panel/src/lexicontoolwin.cpp:470
+msgid "Select TXT file"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:349 src/panel/src/lexicontoolwin.cpp:476
+msgid "Generating lexicon..."
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:382 src/panel/src/lexicontoolwin.cpp:409
+msgid "Marking..."
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:433
+msgid "Optimizing..."
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:510
+msgid "User lexicon exported to: %1/user_word.txt, whether to view?"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:530 src/panel/src/lexicontoolwin.cpp:536
+msgid "Select file"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:668
+msgid "Success %1 user word count: %2"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:668
+msgid "add"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:668
+msgid "delete"
+msgstr ""
+
+#: src/panel/src/mainprogram.cpp:214 src/panel/src/toolbarwin.cpp:737
+#: src/panel/src/toolbarwin.cpp:759
+msgid " Wubi font"
+msgstr ""
+
+#: src/panel/src/mainprogram.cpp:218 src/panel/src/toolbarwin.cpp:741
+#: src/panel/src/toolbarwin.cpp:763
+msgid " Wubi pinyin"
+msgstr ""
+
+#: src/panel/src/mainprogram.cpp:222
+msgid " Pinyin input"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:359
+msgid "settings"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:363
+msgid "freewb"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:704
+msgid "Common options"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:705
+msgid "Advanced options"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:706
+msgid "Other settings"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:710
+msgid "Interface settings"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:711
+msgid "Candidate window interface"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:712
+msgid "Candidate window options"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:715
+msgid "Setting shortcut keys"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:716
+msgid "Define soft keyboard"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:717
+msgid "Custom punctuation"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:954 src/panel/src/settingwin.cpp:975
+msgid "Background color"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:967
+msgid "Background image"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:1148
+msgid "Display [Common] options"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:1152
+msgid "Display [All] options"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:1340 src/panel/src/settingwin.cpp:1799
+msgid ""
+"The shortcut key you set will conflict with the second and third recode "
+"selection key, confirm setting?"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:1391
+msgid "Confirm to restore all shortcut keys to the default key value?"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:1415
+msgid "Set keyboard characters"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:1427
+msgid "Set keyboard punctuation"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:1594
+msgid "Select background image"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:1752
+msgid ""
+"The shortcut key you set will conflict with the up and down page key, "
+"confirm setting?"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:1756
+msgid ""
+"The shortcut key you set will conflict with the Chinese/English switch key, "
+"confirm setting?"
+msgstr ""
+
+#: src/panel/src/texteditwin.cpp:21
+msgid "Find(&F)"
+msgstr ""
+
+#: src/panel/src/texteditwin.cpp:23
+msgid "Save(&S)"
+msgstr ""
+
+#: src/panel/src/texteditwin.cpp:25
+msgid "Exit(&E)"
+msgstr ""
+
+#: src/panel/src/texteditwin.cpp:113 src/panel/src/texteditwin.cpp:140
+#: src/panel/src/texteditwin.cpp:179
+msgid "File open failed!"
+msgstr ""
+
+#: src/panel/src/texteditwin.cpp:163 src/panel/src/texteditwin.cpp:203
+msgid "Opening..."
+msgstr ""
+
+#: src/panel/src/textfinddialog.cpp:10
+msgid "Find"
+msgstr ""
+
+#: src/panel/src/toolbarwin.cpp:733 src/panel/src/toolbarwin.cpp:755
+msgid "Capital letters"
+msgstr ""
+
+#: src/panel/src/toolbarwin.cpp:745 src/panel/src/toolbarwin.cpp:767
+msgid "Pinyin input"
+msgstr ""

@@ -594,13 +594,13 @@ void BackupDialog::slot_progress_updated(int opFlg, int percentage)
         if (opFlg == 0)
         {
             // ui->stackedWidget->setCurrentWidget( ui->pageBackupOk );
-            ui->labelPrompt->setText("词库与设置备份完成！");
+            ui->labelPrompt->setText(_("Dictionary and settings backup completed"));
             ui->labelDir->setText(m_backupFile);
             ui->stackedWidget->setCurrentWidget(ui->pagePrompt);
         }
         else
         {
-            ui->labelPrompt->setText("词库与设置恢复完成！");
+            ui->labelPrompt->setText(_("Dictionary and settings recovery completed！"));
             ui->labelDir->setText("");
             ui->stackedWidget->setCurrentWidget(ui->pagePrompt);
 
@@ -611,7 +611,7 @@ void BackupDialog::slot_progress_updated(int opFlg, int percentage)
     else if (percentage < 0)
     {
         backup_thread_quit(); // 请求线程退出
-        ui->labelPrompt->setText(QString("词库与设置%1失败！").arg(opFlg ? "恢复" : "备份"));
+        ui->labelPrompt->setText(QString(_("Dictionary and settings %1 failed！")).arg(opFlg ? _("recovery") : _("backup")));
         ui->stackedWidget->setCurrentWidget(ui->pagePrompt);
     }
     else
@@ -628,14 +628,14 @@ void BackupDialog::slot_backup_lexicon_and_settings()
         backupDir.mkdir(DIR_DEFAULT_BACKUP);
     }
 
-    m_backupFile = QFileDialog::getSaveFileName(this, "生成备份文件", FILE_BACKUP);
+    m_backupFile = QFileDialog::getSaveFileName(this, _("Generate backup file"), FILE_BACKUP);
     if (!m_backupFile.isEmpty())
     {
         m_backupWorker->set_op_param(0, m_backupFile);
         m_backupThread->start();
 
         ui->stackedWidget->setCurrentWidget(ui->pageBackupRestore);
-        ui->label->setText("正在备份，请稍后...");
+        ui->label->setText(_("Backup in progress, please wait..."));
         move(m_defaultPopPosition);
         exec();
     }
@@ -649,14 +649,14 @@ void BackupDialog::slot_restore_lexicon_and_settings()
         backupDir.mkdir(DIR_DEFAULT_BACKUP);
     }
 
-    QString restoreFile = QFileDialog::getOpenFileName(this, "选择备份文件", FILE_BACKUP);
+    QString restoreFile = QFileDialog::getOpenFileName(this, _("Select backup file"), FILE_BACKUP);
     if (!restoreFile.isEmpty())
     {
         m_backupWorker->set_op_param(1, restoreFile);
         m_backupThread->start();
 
         ui->stackedWidget->setCurrentWidget(ui->pageBackupRestore);
-        ui->label->setText("正在恢复，请稍后...");
+        ui->label->setText(_("Recovery in progress, please wait..."));
         move(m_defaultPopPosition);
         exec();
     }

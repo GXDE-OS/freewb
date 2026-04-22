@@ -82,8 +82,7 @@ QString DictQuery::dict_query_word_paraphrase(const QString &word)
     {
         QString str = word;
         str = rstrip(str);
-        QString sql = QString("select content from Library where code=\"%1\";").arg(str);
-        // printf("%s\n",sql.toUtf8().constData());
+        QString sql = QString(_("select content from Library where code=\"%1\";")).arg(str);
         sqlite3_prepare(db, sql.toUtf8().data(), -1, &stmt, nullptr);
         while ((ret = sqlite3_step(stmt)) == SQLITE_ROW)
         {
@@ -105,10 +104,7 @@ QString DictQuery::dict_query_word_paraphrase(const QString &word)
         }
         sqlite3_finalize(stmt);
     }
-    else
-    {
-        // FcitxLog(DEBUG,"打开数据库错。");
-    }
+
     close_dict(db);
 
     return paraphrase;
@@ -135,7 +131,7 @@ QStringList DictQuery::dict_query_word_list(const QString &word)
     sqlite3 *db = open_dict();
     if (db)
     {
-        QString sql = QString("select code from Library where code like \"%1%%\";").arg(word);
+        QString sql = QString(_("select code from Library where code like \"%1%%\";")).arg(word);
 
         sqlite3_prepare(db, sql.toUtf8().data(), -1, &stmt, nullptr);
         while ((ret = sqlite3_step(stmt)) == SQLITE_ROW)
@@ -145,7 +141,6 @@ QStringList DictQuery::dict_query_word_list(const QString &word)
             {
                 const char *data = static_cast<const char *>(sqlite3_column_blob(stmt, 0));
                 wordList << QString(data);
-                // qDebug() << QString( data );
             }
         }
         sqlite3_finalize(stmt);
@@ -159,9 +154,9 @@ int DictQuery::dict_add_custom_word(const QString &word, const QString &explain)
 {
     int ret = -1;
     sqlite3_stmt *stmt = nullptr;
-    QString sqlFind = QString("select content from Library where code=\"%1\";").arg(word);
-    QString sqlInsert = QString("insert into Library(code,content) values(?, ?);");
-    QString sqlUpdate = QString("update Library set content=? where code=\"%1\";").arg(word);
+    QString sqlFind = QString(_("select content from Library where code=\"%1\";")).arg(word);
+    QString sqlInsert = QString(_("insert into Library(code,content) values(?, ?);"));
+    QString sqlUpdate = QString(_("update Library set content=? where code=\"%1\";")).arg(word);
 
     sqlite3 *db = open_dict();
     if (db)
@@ -183,8 +178,6 @@ int DictQuery::dict_add_custom_word(const QString &word, const QString &explain)
             ret = sqlite3_step(stmt);
             sqlite3_finalize(stmt);
 
-            // print_hex( reinterpret_cast<const unsigned char *>(blob), len*2 );
-            // qDebug() << "update word! wstr len:" << len;
         }
         else if (ret == SQLITE_DONE)
         {
@@ -195,13 +188,10 @@ int DictQuery::dict_add_custom_word(const QString &word, const QString &explain)
             ret = sqlite3_step(stmt);
             sqlite3_finalize(stmt);
 
-            // print_hex( reinterpret_cast<const unsigned char *>(blob), len*2 );
-            // qDebug() << "insert word! wstr len:" << len;
         }
         else
         {
             sqlite3_finalize(stmt);
-            qWarning() << "find word failed!" << ret;
         }
 
         delete[] blob;
@@ -210,12 +200,10 @@ int DictQuery::dict_add_custom_word(const QString &word, const QString &explain)
 
     if (ret == SQLITE_DONE)
     {
-        // qDebug() << "add custom word ok!";
         return 0;
     }
     else
     {
-        qWarning() << "add custom word failed!" << ret;
         return -1;
     }
 }
@@ -228,7 +216,7 @@ int DictQuery::dict_del_custom_word(const QString &word)
     sqlite3 *db = open_dict();
     if (db)
     {
-        QString sql = QString("delete from Library where code=\"%1\";").arg(word);
+        QString sql = QString(_("delete from Library where code=\"%1\";")).arg(word);
         sqlite3_prepare(db, sql.toUtf8().data(), -1, &stmt, nullptr);
         ret = sqlite3_step(stmt);
         sqlite3_finalize(stmt);
@@ -237,12 +225,10 @@ int DictQuery::dict_del_custom_word(const QString &word)
 
     if (ret == SQLITE_DONE)
     {
-        // qDebug() << "delete custom word ok!";
         return 0;
     }
     else
     {
-        qWarning() << "delete custom word failed!" << ret;
         return -1;
     }
 }

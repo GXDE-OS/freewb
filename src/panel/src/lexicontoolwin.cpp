@@ -30,9 +30,6 @@ LexiconWorker::~LexiconWorker()
 
 void LexiconWorker::set_op_param(LexiconToolOp opType, const QString &srcFile, const QString &destFile)
 {
-#ifdef DEBUG
-    qDebug() << opType << srcFile << destFile;
-#endif
     m_opType = opType;
     m_srcFile = srcFile;
     m_destFile = destFile;
@@ -80,7 +77,7 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
 
     setWindowIcon(QIcon(":/image/setting/logo.png"));
-    setWindowTitle("极点词库工具箱");
+    setWindowTitle(_("Freewb lexicon tool"));
 
     m_mouseIsPressed = false;
     m_mouseLastPosition = QPoint();
@@ -128,9 +125,6 @@ LexiconToolWin::~LexiconToolWin()
     delete ui;
     if (m_lexiconWorker)
     {
-#ifdef DEBUG
-        qDebug() << "delete m_lexiconWorker!";
-#endif
         delete m_lexiconWorker;
     }
 }
@@ -227,33 +221,33 @@ void LexiconToolWin::slot_process_updated(LexiconToolOp opType, int opStatus, in
     // qDebug() << opType << opStatus << count;
     if (opStatus == 0) //
     {
-        m_msgBox->setText(QString("数目：") + QString::number(count));
+        m_msgBox->setText(QString(_("Number: ")) + QString::number(count));
     }
     else if (opStatus == 1)
     {
         lexicon_thread_quit();
         if (opType == LTO_DUMP_SYS_TABLE || opType == LTO_DUMP_PINYIN_TABLE)
         {
-            m_msgBox->setText(QString("词库导出完成！数目：%1").arg(count));
+            m_msgBox->setText(QString(_("Lexicon export completed! Number: %1")).arg(count));
             m_msgBox->button(QMessageBox::Cancel)->setEnabled(false);
             m_msgBox->button(QMessageBox::Ok)->setEnabled(true);
         }
         else if (opType == LTO_GEN_SYS_TABLE || opType == LTO_GEN_PINYIN_TABLE)
         {
             m_msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-            m_msgBox->button(QMessageBox::Yes)->setText("是(&Y)");
-            m_msgBox->button(QMessageBox::No)->setText("否(&N)");
-            m_msgBox->setText("词库生成成功，是否替换当前使用词库？");
+            m_msgBox->button(QMessageBox::Yes)->setText(_("Yes(&Y)"));
+            m_msgBox->button(QMessageBox::No)->setText(_("No(&N)"));
+            m_msgBox->setText(_("Lexicon generated successfully, whether to replace the current used lexicon?"));
         }
         else if (opType == LTO_MARK_RARE_CHAR || opType == LTO_MARK_THINK_WORD)
         {
-            m_msgBox->setText(QString("词库标记完成！数目：%1").arg(count));
+            m_msgBox->setText(QString(_("Lexicon marked completed! Number: %1")).arg(count));
             m_msgBox->button(QMessageBox::Cancel)->setEnabled(false);
             m_msgBox->button(QMessageBox::Ok)->setEnabled(true);
         }
         else if (opType == LTO_OPTIMIZE_TABLE)
         {
-            m_msgBox->setText("词库优化完成！");
+            m_msgBox->setText(_("Lexicon optimized completed!"));
             m_msgBox->button(QMessageBox::Cancel)->setEnabled(false);
             m_msgBox->button(QMessageBox::Ok)->setEnabled(true);
         }
@@ -261,7 +255,7 @@ void LexiconToolWin::slot_process_updated(LexiconToolOp opType, int opStatus, in
     else if (opStatus == -1)
     {
         lexicon_thread_quit();
-        m_msgBox->setText("文件打开失败或格式错误！");
+        m_msgBox->setText(_("File open failed or format error!"));
         m_msgBox->button(QMessageBox::Cancel)->setEnabled(false);
         m_msgBox->button(QMessageBox::Ok)->setEnabled(true);
     }
@@ -316,7 +310,7 @@ void LexiconToolWin::on_btnHelp_clicked()
     msgBox->setText(helpInfo);
     msgBox->setStandardButtons(QMessageBox::Ok);
     msgBox->button(QMessageBox::Ok)->setIcon(QIcon());
-    msgBox->button(QMessageBox::Ok)->setText("确认(&OK)");
+    msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&OK)"));
     msgBox->setDefaultButton(QMessageBox::Ok);
     msgBox->exec();
     delete msgBox;
@@ -324,18 +318,18 @@ void LexiconToolWin::on_btnHelp_clicked()
 
 void LexiconToolWin::on_btnDumpSysLexicon_clicked()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, "生成TXT文件", QString(qgetenv("HOME")) + "/freeime.txt");
+    QString fileName = QFileDialog::getSaveFileName(this, _("Generate TXT file"), QString(qgetenv("HOME")) + "/freeime.txt");
     if (!fileName.isEmpty())
     {
         m_lexiconWorker->set_op_param(LTO_DUMP_SYS_TABLE, fileName, CUR_USED_WUBI_TABLE);
         m_lexiconThread->start();
 
-        m_msgBox->setText("正在导出词库......");
+        m_msgBox->setText(_("Exporting lexicon..."));
         m_msgBox->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
         m_msgBox->button(QMessageBox::Cancel)->setEnabled(true);
         m_msgBox->button(QMessageBox::Ok)->setEnabled(false);
-        m_msgBox->button(QMessageBox::Cancel)->setText("取消(&C)");
-        m_msgBox->button(QMessageBox::Ok)->setText("确定(&O)");
+        m_msgBox->button(QMessageBox::Cancel)->setText(_("Cancel(&C)"));
+        m_msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&O)"));
         int ret = m_msgBox->exec();
         if (ret == QMessageBox::Cancel)
         {
@@ -346,15 +340,15 @@ void LexiconToolWin::on_btnDumpSysLexicon_clicked()
 
 void LexiconToolWin::on_btnMakeSysLexicon_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "选择TXT文件", QString(qgetenv("HOME")));
+    QString fileName = QFileDialog::getOpenFileName(this, _("Select TXT file"), QString(qgetenv("HOME")));
     if (!fileName.isEmpty())
     {
         m_lexiconWorker->set_op_param(LTO_GEN_SYS_TABLE, fileName, m_tmpSysTable);
         m_lexiconThread->start();
 
-        m_msgBox->setText("正在生成词库......");
+        m_msgBox->setText(_("Generating lexicon..."));
         m_msgBox->setStandardButtons(QMessageBox::Cancel);
-        m_msgBox->button(QMessageBox::Cancel)->setText("取消(&C)");
+        m_msgBox->button(QMessageBox::Cancel)->setText(_("Cancel(&C)"));
         int ret = m_msgBox->exec();
         if (ret == QMessageBox::Cancel)
         {
@@ -379,18 +373,18 @@ void LexiconToolWin::on_btnMakeSysLexicon_clicked()
 
 void LexiconToolWin::on_btnMarkRareWord_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "选择TXT文件", QString(qgetenv("HOME")));
+    QString fileName = QFileDialog::getOpenFileName(this, _("Select TXT file"), QString(qgetenv("HOME")));
     if (!fileName.isEmpty())
     {
         m_lexiconWorker->set_op_param(LTO_MARK_RARE_CHAR, fileName, CUR_USED_WUBI_TABLE);
         m_lexiconThread->start();
 
-        m_msgBox->setText("正在标记......");
+        m_msgBox->setText(_("Marking..."));
         m_msgBox->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
         m_msgBox->button(QMessageBox::Cancel)->setEnabled(true);
         m_msgBox->button(QMessageBox::Ok)->setEnabled(false);
-        m_msgBox->button(QMessageBox::Cancel)->setText("取消(&C)");
-        m_msgBox->button(QMessageBox::Ok)->setText("确定(&O)");
+        m_msgBox->button(QMessageBox::Cancel)->setText(_("Cancel(&C)"));
+        m_msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&O)"));
         int ret = m_msgBox->exec();
         if (ret == QMessageBox::Cancel)
         {
@@ -406,18 +400,18 @@ void LexiconToolWin::on_btnMarkRareWord_clicked()
 
 void LexiconToolWin::on_btnMarkThinkWord_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "选择TXT文件", QString(qgetenv("HOME")));
+    QString fileName = QFileDialog::getOpenFileName(this, _("Select TXT file"), QString(qgetenv("HOME")));
     if (!fileName.isEmpty())
     {
         m_lexiconWorker->set_op_param(LTO_MARK_THINK_WORD, fileName, CUR_USED_WUBI_TABLE);
         m_lexiconThread->start();
 
-        m_msgBox->setText("正在标记......");
+        m_msgBox->setText(_("Marking..."));
         m_msgBox->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
         m_msgBox->button(QMessageBox::Cancel)->setEnabled(true);
         m_msgBox->button(QMessageBox::Ok)->setEnabled(false);
-        m_msgBox->button(QMessageBox::Cancel)->setText("取消(&C)");
-        m_msgBox->button(QMessageBox::Ok)->setText("确定(&O)");
+        m_msgBox->button(QMessageBox::Cancel)->setText(_("Cancel(&C)"));
+        m_msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&O)"));
         int ret = m_msgBox->exec();
         if (ret == QMessageBox::Cancel)
         {
@@ -436,12 +430,12 @@ void LexiconToolWin::on_btnOptimize_clicked()
     m_lexiconWorker->set_op_param(LTO_OPTIMIZE_TABLE, CUR_USED_WUBI_TABLE, "");
     m_lexiconThread->start();
 
-    m_msgBox->setText("正在优化......");
+    m_msgBox->setText(_("Optimizing..."));
     m_msgBox->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     m_msgBox->button(QMessageBox::Cancel)->setEnabled(true);
     m_msgBox->button(QMessageBox::Ok)->setEnabled(false);
-    m_msgBox->button(QMessageBox::Cancel)->setText("取消(&C)");
-    m_msgBox->button(QMessageBox::Ok)->setText("确定(&O)");
+    m_msgBox->button(QMessageBox::Cancel)->setText(_("Cancel(&C)"));
+    m_msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&O)"));
     int ret = m_msgBox->exec();
     if (ret == QMessageBox::Cancel)
     {
@@ -451,18 +445,18 @@ void LexiconToolWin::on_btnOptimize_clicked()
 
 void LexiconToolWin::on_btnDumpPinyinLexicon_clicked()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, "生成TXT文件", QString(qgetenv("HOME")) + "/attach.txt");
+    QString fileName = QFileDialog::getSaveFileName(this, _("Generate TXT file"), QString(qgetenv("HOME")) + "/attach.txt");
     if (!fileName.isEmpty())
     {
         m_lexiconWorker->set_op_param(LTO_DUMP_PINYIN_TABLE, fileName, CUR_USED_PINYIN_TABLE);
         m_lexiconThread->start();
 
-        m_msgBox->setText("正在导出词库......");
+        m_msgBox->setText(_("Exporting lexicon..."));
         m_msgBox->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
         m_msgBox->button(QMessageBox::Cancel)->setEnabled(true);
         m_msgBox->button(QMessageBox::Ok)->setEnabled(false);
-        m_msgBox->button(QMessageBox::Cancel)->setText("取消(&C)");
-        m_msgBox->button(QMessageBox::Ok)->setText("确定(&O)");
+        m_msgBox->button(QMessageBox::Cancel)->setText(_("Cancel(&C)"));
+        m_msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&O)"));
         int ret = m_msgBox->exec();
         if (ret == QMessageBox::Cancel)
         {
@@ -473,15 +467,15 @@ void LexiconToolWin::on_btnDumpPinyinLexicon_clicked()
 
 void LexiconToolWin::on_btnMakePinyinLexicon_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "选择TXT文件", QString(qgetenv("HOME")));
+    QString fileName = QFileDialog::getOpenFileName(this, _("Select TXT file"), QString(qgetenv("HOME")));
     if (!fileName.isEmpty())
     {
         m_lexiconWorker->set_op_param(LTO_GEN_PINYIN_TABLE, fileName, m_tmpPinyinTable);
         m_lexiconThread->start();
 
-        m_msgBox->setText("正在生成词库......");
+        m_msgBox->setText(_("Generating lexicon..."));
         m_msgBox->setStandardButtons(QMessageBox::Cancel);
-        m_msgBox->button(QMessageBox::Cancel)->setText("取消(&C)");
+        m_msgBox->button(QMessageBox::Cancel)->setText(_("Cancel(&C)"));
         int ret = m_msgBox->exec();
         if (ret == QMessageBox::Cancel)
         {
@@ -513,12 +507,12 @@ void LexiconToolWin::on_btnDumpUserLexicon_clicked()
     QMessageBox *msgBox = new QMessageBox(this);
     msgBox->setWindowFlag(Qt::FramelessWindowHint);
     msgBox->setIcon(QMessageBox::Question);
-    msgBox->setText(QString("用户词库已导出至：%1/user_word.txt，是否查看？").arg(QString(qgetenv("HOME"))));
+    msgBox->setText(QString(_("User lexicon exported to: %1/user_word.txt, whether to view?")).arg(QString(qgetenv("HOME"))));
     msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msgBox->button(QMessageBox::Yes)->setIcon(QIcon());
-    msgBox->button(QMessageBox::Yes)->setText("是(&Y)");
+    msgBox->button(QMessageBox::Yes)->setText(_("Yes(&Y)"));
     msgBox->button(QMessageBox::No)->setIcon(QIcon());
-    msgBox->button(QMessageBox::No)->setText("否(&N)");
+    msgBox->button(QMessageBox::No)->setText(_("No(&N)"));
     msgBox->setDefaultButton(QMessageBox::Yes);
     int ret = msgBox->exec();
     delete msgBox;
@@ -533,13 +527,13 @@ void LexiconToolWin::on_btnDumpUserLexicon_clicked()
 
 void LexiconToolWin::on_btnBatchDel_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "选择文件", qgetenv("HOME"), "Text files (*.txt);;");
+    QString fileName = QFileDialog::getOpenFileName(this, _("Select file"), qgetenv("HOME"), "Text files (*.txt);;");
     add_del_user_word_from_file(0, fileName);
 }
 
 void LexiconToolWin::on_btnBatchAdd_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "选择文件", qgetenv("HOME"), "Text files (*.txt);;");
+    QString fileName = QFileDialog::getOpenFileName(this, _("Select file"), qgetenv("HOME"), "Text files (*.txt);;");
     add_del_user_word_from_file(1, fileName);
 }
 
@@ -671,10 +665,10 @@ void LexiconToolWin::add_del_user_word_from_file(int op, const QString &fileName
         QMessageBox *msgBox = new QMessageBox(this);
         msgBox->setWindowFlag(Qt::FramelessWindowHint);
         msgBox->setIcon(QMessageBox::Information);
-        msgBox->setText(QString("成功%1用户词组数目：%2").arg(op ? "增加" : "删除").arg(count));
+        msgBox->setText(QString(_("Success %1 user word count: %2")).arg(op ? _("add") : _("delete")).arg(count));
         msgBox->setStandardButtons(QMessageBox::Ok);
         msgBox->button(QMessageBox::Ok)->setIcon(QIcon());
-        msgBox->button(QMessageBox::Ok)->setText("确认(&OK)");
+        msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&OK)"));
         msgBox->setDefaultButton(QMessageBox::Ok);
         msgBox->exec();
         delete msgBox;
