@@ -41,12 +41,6 @@ typedef enum
 
 typedef enum
 {
-    CHAR_SIMPLIFIED,
-    CHAR_TRADITIONAL
-} CharFontMode;
-
-typedef enum
-{
     WIDTH_FULL, // 全角
     WIDTH_HALF  // 半角
 } CharWidthMode;
@@ -198,7 +192,7 @@ signals:
     void signal_open_dict_query_win(const QString &queryText);
     void signal_switch_char_set();
     void signal_switch_char_font();
-    void signal_char_font_changed(CharFontMode charFontMode);
+    void signal_traditional_mode_changed(bool isTraditional);
 
     // 以下信号发给输入面板
     void signal_btn_charWidth_clicked();
@@ -215,7 +209,7 @@ public slots:
     void slot_load_skin(const QString &skinId);
     void slot_update_input_mode_ico();
     void slot_update_char_width_mode_ico();
-    void slot_switch_char_font_mode(CharFontMode charFont);
+    void slot_set_traditional_mode(bool isTraditional);
 
     void slot_kim_UpdateProperty(const QString &prop);
     void slot_kim_RegisterProperties(const QStringList &prop);
@@ -231,7 +225,7 @@ public slots:
 
 public:
     void switch_char_set();
-    void switch_char_font_mode(CharFontMode charFont);
+    void set_traditional_mode(bool isTraditional);
     void update_char_width_mode_ico(CharWidthMode charWidth);
     void update_mark_mode_ico(MarkMode markMode);
     void update_char_font_ico();
@@ -244,7 +238,7 @@ public:
     static CharWidthMode get_char_width_mode();
     static void set_mark_mode(MarkMode markMode);
     static MarkMode get_mark_mode();
-    static CharFontMode get_char_font_mode();
+    static bool is_traditional_mode();
     static void switch_char_set_mode();
     static CharSetMode get_char_set_mode();
 
@@ -291,7 +285,7 @@ private:
     static InputMode s_inputMode;         // 输入法模式
     static CharWidthMode s_charWidthMode; // 字符宽度
     static MarkMode s_markMode;           // 标点模式
-    static CharFontMode s_charFontMode;   // 简体繁体
+    static bool s_isTraditionalMode;      // 简体/繁体：true=繁体
     static CharSetMode s_charSetMode;     // 字符集
     static int s_capsFlg;
 

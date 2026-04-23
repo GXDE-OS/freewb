@@ -54,7 +54,7 @@
 InputMode ToolbarWin::s_inputMode = IM_WUBI_PINYIN;
 CharWidthMode ToolbarWin::s_charWidthMode = WIDTH_HALF;
 MarkMode ToolbarWin::s_markMode = MARK_CN;
-CharFontMode ToolbarWin::s_charFontMode = CHAR_SIMPLIFIED;
+bool ToolbarWin::s_isTraditionalMode = false;
 CharSetMode ToolbarWin::s_charSetMode = CHAR_GB;
 int ToolbarWin::s_capsFlg;
 
@@ -94,9 +94,9 @@ MarkMode ToolbarWin::get_mark_mode()
     return s_markMode;
 }
 
-CharFontMode ToolbarWin::get_char_font_mode()
+bool ToolbarWin::is_traditional_mode()
 {
-    return s_charFontMode;
+    return s_isTraditionalMode;
 }
 
 void ToolbarWin::switch_char_set_mode()
@@ -129,6 +129,7 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_mouseMoveFlag = false;
 
     set_inputMode(static_cast<InputMode>(settings::instance().get_inputMode()));
+    s_isTraditionalMode = settings::instance().get_simpTradFlg();
     s_charSetMode = (CharSetMode)settings::instance().get_charSet();
 
     // 初始化虚拟键盘的输入模式选择菜单
@@ -186,10 +187,6 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
 
     m_hideDelayTimer.setSingleShot(true);
     connect(&m_hideDelayTimer, &QTimer::timeout, this, &ToolbarWin::slot_hide_toolbar);
-
-    settings::instance().set_inputMode(get_inputMode());
-    settings::instance().set_simpTradFlg(s_charFontMode);
-    settings::instance().set_currentCharset(s_charSetMode);
 
     s_capsFlg = Keyboard::get_caps_flg();
     // printf("执行Freewb时加载slot-open-toolbar\n");
@@ -781,9 +778,9 @@ void ToolbarWin::slot_update_char_width_mode_ico()
     }
 }
 
-void ToolbarWin::slot_switch_char_font_mode(CharFontMode charFont)
+void ToolbarWin::slot_set_traditional_mode(bool isTraditional)
 {
-    switch_char_font_mode(charFont);
+    set_traditional_mode(isTraditional);
     emit signal_switch_char_font();
 }
 
@@ -803,7 +800,7 @@ void ToolbarWin::update_mark_mode_ico()
 // 更新工具条上的简体繁体按钮图标
 void ToolbarWin::update_char_font_ico()
 {
-    if (get_char_font_mode() == CHAR_SIMPLIFIED)
+    if (!is_traditional_mode())
     {
         ui->btnCharFont->setStyleSheet(QSS_CHAR_SIMPLIFIED);
     }
@@ -1013,10 +1010,10 @@ void ToolbarWin::update_mark_mode_ico(MarkMode markMode)
     emit signal_btn_mark_clicked();
 }
 
-void ToolbarWin::switch_char_font_mode(CharFontMode charFont)
+void ToolbarWin::set_traditional_mode(bool isTraditional)
 {
-    settings::instance().set_simpTradFlg(charFont);
-    s_charFontMode = charFont;
+    s_isTraditionalMode = isTraditional;
+    settings::instance().set_simpTradFlg(s_isTraditionalMode);
     update_char_font_ico();
     update_input_mode_ico(s_inputMode);
 }
@@ -1031,16 +1028,9 @@ void ToolbarWin::on_btnCharFont_clicked()
 {
     Sound::play(SOUND_LETTER);
 
-    if (s_charFontMode == CHAR_SIMPLIFIED)
-    {
-        slot_switch_char_font_mode(CHAR_TRADITIONAL);
-    }
-    else
-    {
-        slot_switch_char_font_mode(CHAR_SIMPLIFIED);
-    }
+    slot_set_traditional_mode(!s_isTraditionalMode);
 
-    emit signal_char_font_changed(s_charFontMode);
+    emit signal_traditional_mode_changed(s_isTraditionalMode);
     emit signal_fcitx_switch_char_font("/Fcitx/chttrans");
 }
 

@@ -58,7 +58,7 @@ public slots:                                                                   
     void slot_dbus_switch_vk(int flg);                                                           // 切换软键盘
     void slot_dbus_close_vk();                                                                   // 退出软键盘
     void slot_dbus_switch_char_set();                                                            // 切换字符集
-    void slot_dbus_switch_simp_or_trad(int tradFlg);                                             // 切换简/繁体
+    void slot_dbus_switch_simp_or_trad();                                                        // 切换简/繁体
     void slot_dbus_switch_toolbar_hide_flg();                                                    // 显/隐状态栏
     void slot_dbus_switch_candiwin_hide_flg();                                                   // 显/隐候选框
     void slot_dbus_switch_lexicon();                                                             // 切换词库

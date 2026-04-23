@@ -318,9 +318,9 @@ void MainProgram::slot_dbus_switch_char_set()
 }
 
 // 切换简/繁体
-void MainProgram::slot_dbus_switch_simp_or_trad(int tradFlg)
+void MainProgram::slot_dbus_switch_simp_or_trad()
 {
-    m_toolbar->switch_char_font_mode(static_cast<CharFontMode>(tradFlg));
+    m_toolbar->set_traditional_mode(!ToolbarWin::is_traditional_mode());
 }
 
 // 切换大小写状态
