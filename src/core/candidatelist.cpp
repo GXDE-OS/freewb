@@ -55,6 +55,12 @@ void CandidateList::syncVisiblePage()
     const int start = pageIndex_ * wordCount_;
     const int end = std::min(start + wordCount_, total);
     currentPageTexts_.insert(currentPageTexts_.end(), allTexts_.begin() + start, allTexts_.begin() + end);
+
+    for (auto &text : currentPageTexts_)
+    {
+        chttrans_.simpToTrad(text);
+    }
+
 }
 
 void CandidateList::prev()

@@ -1,6 +1,7 @@
 #ifndef CANDIDATELIST_H
 #define CANDIDATELIST_H
 
+#include "chttrans.h"
 #include "types.h"
 
 namespace freewb
@@ -45,6 +46,7 @@ private:
     int totalPages_ = 0;
     int wordCount_ = 5;
     std::string preeditText_;
+    Chttrans chttrans_;
 };
 } // namespace freewb
 
