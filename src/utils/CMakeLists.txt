@@ -16,10 +16,4 @@ if (spdlog_FOUND)
     target_link_libraries(${PROJECT_NAME}-utils PUBLIC spdlog::spdlog)
 endif()
 
-find_package(OpenCC QUIET)
-if (OpenCC_FOUND)
-    target_sources(${PROJECT_NAME}-utils PRIVATE chttrans.cpp)
-    target_link_libraries(${PROJECT_NAME}-utils PUBLIC OpenCC::OpenCC)
-endif()
-
 install(TARGETS ${PROJECT_NAME}-utils LIBRARY DESTINATION ${FREEWB_INSTALL_LIBDIR})

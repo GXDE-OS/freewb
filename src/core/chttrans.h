@@ -20,8 +20,8 @@ public:
     bool available() const override;
     void changeAvailable() override;
 
-    std::string simpToTrad(const std::string &text) const;
-    std::string tradToSimp(const std::string &text) const;
+    void simpToTrad(std::string &text) const;
+    void tradToSimp(std::string &text) const;
 
 private:
     void loadPair(const std::string &s2tProfile, const std::string &t2sProfile);

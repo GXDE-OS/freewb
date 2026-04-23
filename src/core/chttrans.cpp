@@ -1,5 +1,5 @@
 #include "chttrans.h"
-
+#include "settings.h"
 #include "log.h"
 
 namespace freewb
@@ -39,7 +39,7 @@ Chttrans::Chttrans()
 
 const char *Chttrans::name() const
 {
-    return "utils:chttrans";
+    return "core:chttrans";
 }
 
 bool Chttrans::available() const
@@ -52,39 +52,42 @@ void Chttrans::changeAvailable()
     available_ = !available_;
 }
 
-std::string Chttrans::simpToTrad(const std::string &text) const
+void Chttrans::simpToTrad(std::string &text) const
 {
     if (!available_ || !s2t_)
     {
-        return text;
+        FREEWB_WARN("available_ is false or s2t_ is nullptr");
+        return;
+    }
+    if (!settings::instance().get_simpTradFlg())
+    {
+        return;
     }
 
     try
     {
-        return s2t_->Convert(text);
+        text = s2t_->Convert(text);
     }
     catch (const std::exception &)
     {
         FREEWB_ERROR("Failed to convert text to trad: {}", text);
-        return text;
     }
 }
 
-std::string Chttrans::tradToSimp(const std::string &text) const
+void Chttrans::tradToSimp(std::string &text) const
 {
     if (!available_ || !t2s_)
     {
-        return text;
+        return;
     }
 
     try
     {
-        return t2s_->Convert(text);
+        text = t2s_->Convert(text);
     }
     catch (const std::exception &)
     {
         FREEWB_ERROR("Failed to convert text to simp: {}", text);
-        return text;
     }
 }
 
