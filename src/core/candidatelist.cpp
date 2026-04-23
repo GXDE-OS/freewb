@@ -163,6 +163,7 @@ void CandidateList::setPreeditText(const std::string &text)
         return;
     }
     preeditText_ = text;
+    cursor_ = preeditText_.size();
 }
 
 const std::string &CandidateList::preeditText() const
