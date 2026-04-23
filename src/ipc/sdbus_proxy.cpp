@@ -285,7 +285,7 @@ void SDBusProxy::callSwitchUncommonParseStateMethod(const std::string &wordText,
 
 void SDBusProxy::callSwitchChttransMethod()
 {
-    callSettingsMethod("slot_dbus_switch_simp_or_trad", "i", 0);
+    callSettingsMethod("slot_dbus_switch_simp_or_trad", "");
 }
 
 void SDBusProxy::callOpenUiSettingMethod()

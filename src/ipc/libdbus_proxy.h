@@ -19,7 +19,7 @@ void FreeWubiServiceSwitchSmartPunc(DBusConnection *conn, int flg);
 void FreeWubiServiceSwitchCharSet(DBusConnection *conn);
 void FreeWubiServiceSwitchRecodeProof(DBusConnection *conn, int flg);
 void FreeWubiServiceSwitchUncommon(DBusConnection *conn, char *wordText, int flg); // 词组常用与非常用切换成功
-void FreeWubiServiceSwitchChttrans(DBusConnection *conn, int flg);
+void FreeWubiServiceSwitchChttrans(DBusConnection *conn);
 void FreeWubiServiceOpenSysConf(DBusConnection *conn);
 void FreeWubiServiceShowVersion(DBusConnection *conn);
 void FreeWubiServiceOpenProfessionalConf(DBusConnection *conn);

@@ -318,18 +318,12 @@ void FreeWubiServiceSwitchRecodeProof(DBusConnection *conn, int flg)
     dbus_message_unref(msg);
 }
 
-void FreeWubiServiceSwitchChttrans(DBusConnection *conn, int flg)
+void FreeWubiServiceSwitchChttrans(DBusConnection *conn)
 {
     DBusMessage *msg;
-    DBusMessageIter args;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
     msg = createSettingsMethodCallMessage("slot_dbus_switch_simp_or_trad");
     if (NULL == msg)
-    {
-        return;
-    }
-    dbus_message_iter_init_append(msg, &args);
-    if (!dbus_message_append_args(msg, DBUS_TYPE_INT32, &flg, DBUS_TYPE_INVALID))
     {
         return;
     }
