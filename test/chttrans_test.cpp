@@ -19,7 +19,8 @@ bool test_simp_to_trad()
 {
     freewb::Chttrans cht;
     const std::string in = "汉";
-    const std::string out = cht.simpToTrad(in);
+    std::string out = in;
+    cht.simpToTrad(out);
     std::cout << "  [simp->trad] in=\"" << in << "\" out=\"" << out
               << "\" expected=\"漢\"\n";
     CHECK(out == "漢", "simpToTrad(\"汉\") should be \"漢\"");
@@ -30,7 +31,8 @@ bool test_trad_to_simp()
 {
     freewb::Chttrans cht;
     const std::string in = "體";
-    const std::string out = cht.tradToSimp(in);
+    std::string out = in;
+    cht.tradToSimp(out);
     std::cout << "  [trad->simp] in=\"" << in << "\" out=\"" << out
               << "\" expected=\"体\"\n";
     CHECK(out == "体", "tradToSimp(\"體\") should be \"体\"");
@@ -42,7 +44,8 @@ bool test_disable_switch()
     freewb::Chttrans cht;
     cht.changeAvailable();
     const std::string in = "汉";
-    const std::string out = cht.simpToTrad(in);
+    std::string out = in;
+    cht.simpToTrad(out);
     std::cout << "  [disabled] in=\"" << in << "\" out=\"" << out
               << "\" expected=\"" << in << "\"\n";
     CHECK(out == in, "conversion should bypass when unavailable");
@@ -53,7 +56,8 @@ bool test_invalid_profile_path()
 {
     freewb::Chttrans cht;
     const std::string in = "汉";
-    const std::string out = cht.simpToTrad(in);
+    std::string out = in;
+    cht.simpToTrad(out);
     std::cout << "  [invalid-profile] available=" << (cht.available() ? "true" : "false")
               << " in=\"" << in << "\" out=\"" << out << "\" expected=\"" << in
               << "\"\n";
@@ -65,7 +69,8 @@ bool test_existing_dir_missing_profile_file()
 {
     freewb::Chttrans cht;
     const std::string in = "體";
-    const std::string out = cht.tradToSimp(in);
+    std::string out = in;
+    cht.tradToSimp(out);
     std::cout << "  [missing-file-in-existing-dir] available=" << (cht.available() ? "true" : "false")
               << " in=\"" << in << "\" out=\"" << out << "\" expected=\"" << in << "\"\n";
     CHECK(!cht.available(), "available() should be false when profile files are missing");

@@ -23,8 +23,8 @@ target_link_libraries(freewb-candidate-list-test PRIVATE ${PROJECT_NAME}-core ${
 add_test(NAME freewb-candidate-list-test COMMAND freewb-candidate-list-test)
 
 add_executable(freewb-chttrans-test chttrans_test.cpp)
-target_include_directories(freewb-chttrans-test PRIVATE ${CMAKE_SOURCE_DIR}/src/utils)
-target_link_libraries(freewb-chttrans-test PRIVATE ${PROJECT_NAME}-utils)
+target_include_directories(freewb-chttrans-test PRIVATE ${CMAKE_SOURCE_DIR}/src/core)
+target_link_libraries(freewb-chttrans-test PRIVATE ${PROJECT_NAME}-core)
 add_test(NAME freewb-chttrans-test COMMAND freewb-chttrans-test)
 
 add_executable(freewb-test-engine-wbzx engine_wbzx_test.cpp)
