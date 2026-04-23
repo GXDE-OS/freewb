@@ -147,7 +147,7 @@ static void loadAllConfig(Fcitxfreewubi *fwb)
     fwb->config.bIsGBK = GetIniKeyInt(ini, "Misc", "currentCharset", 0);
     fwb->config.bQuickTableChanged = GetIniKeyBool(ini, "Misc", "quickTableFlg");
     fwb->config.iKeyboardMode = GetIniKeyInt(ini, "Misc", "vkMode", 1);
-    fwb->config.bIsTraditional = GetIniKeyInt(ini, "Misc", "simpTradFlg", 0);
+    fwb->config.bIsTraditional = GetIniKeyBool(ini, "Misc", "simpTradFlg");
     fcitx_utils_string_swap(&fwb->config.WubiPath, GetIniKeyString(ini, "Misc", "wubiTable", "default/freeime.mb"));
     fcitx_utils_string_swap(&fwb->config.PinyinPath, GetIniKeyString(ini, "Misc", "pinyinTable", "default/attach.mb"));
     fcitx_utils_string_swap(&fwb->config.usrPath, GetIniKeyString(ini, "Misc", "UsrFile", "user_word.txt"));
@@ -1264,7 +1264,7 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
         else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkSwitchChttrans) && !fwb->bIsTempEnglish))
         {
             fwb->config.bIsTraditional = !fwb->config.bIsTraditional;
-            FreeWubiServiceSwitchChttrans(FcitxDBusGetConnection(fwb->owner), fwb->config.bIsTraditional);
+            FreeWubiServiceSwitchChttrans(FcitxDBusGetConnection(fwb->owner));
             return IRV_CLEAN;
         }
         else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkShowHideCandiWin) && !fwb->bIsTempEnglish) || (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_HIDE_CANDWIN)))
@@ -1437,7 +1437,7 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
         {
             fwb->bIsTempEnglish = false;
             fwb->config.bIsTraditional = !fwb->config.bIsTraditional;
-            FreeWubiServiceSwitchChttrans(FcitxDBusGetConnection(fwb->owner), fwb->config.bIsTraditional);
+            FreeWubiServiceSwitchChttrans(FcitxDBusGetConnection(fwb->owner));
             return IRV_CLEAN;
         }
         else if (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_OPEN_CONFIG))
