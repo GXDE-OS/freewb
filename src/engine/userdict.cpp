@@ -69,24 +69,13 @@ bool UserDict::parseFile(const std::string &filePath)
         return false;
     }
 
-    bool headerSeen = false;
     std::string line;
     while (std::getline(in, line))
     {
         const std::string trimmed = trim(line);
-        if (trimmed.empty() || trimmed[0] == '#')
+        if (trimmed.empty() || trimmed[0] == '#' || trimmed[0] == '[')
         {
             continue;
-        }
-
-        if (!headerSeen)
-        {
-            if (trimmed == "[UserWord]")
-            {
-                headerSeen = true;
-                continue;
-            }
-            headerSeen = true;
         }
 
         const std::size_t eq = trimmed.find('=');
