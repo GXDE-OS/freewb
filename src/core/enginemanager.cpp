@@ -171,6 +171,22 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
     return true;
 }
 
+void EngineManager::refreshEngineResult()
+{
+    if (currentEngine_ == nullptr)
+    {
+        return;
+    }
+    auto *engine = dynamic_cast<IFreewbEngine *>(currentEngine_);
+    if (engine == nullptr)
+    {
+        return;
+    }
+
+    engine->putKey(candidateList_->preeditText().c_str());
+    candidateList_->setCandidateTexts(currentEngine_->getResult().texts);
+}
+
 void EngineManager::reset()
 {
     if (currentEngine_ == nullptr)

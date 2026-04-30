@@ -31,6 +31,7 @@ public:
 
     void setPreeditText(const std::string &text);
     const std::string &preeditText() const;
+    void popPreeditText();
 
 private:
     void init();

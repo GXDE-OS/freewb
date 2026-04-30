@@ -28,6 +28,7 @@ public:
     void changeEngine(const std::string &engineName);
 
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
+    void refreshEngineResult();
     void reset();
 
 private:

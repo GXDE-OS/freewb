@@ -162,6 +162,7 @@ void CandidateList::setPreeditText(const std::string &text)
         preeditText_.clear();
         return;
     }
+
     preeditText_ = text;
     cursor_ = preeditText_.size();
 }
@@ -169,5 +170,19 @@ void CandidateList::setPreeditText(const std::string &text)
 const std::string &CandidateList::preeditText() const
 {
     return preeditText_;
+}
+
+void CandidateList::popPreeditText()
+{
+    if (preeditText_.empty())
+    {
+        return;
+    }
+
+    preeditText_.pop_back();
+    if (preeditText_.empty())
+    {
+        clear();
+    }
 }
 } // namespace freewb

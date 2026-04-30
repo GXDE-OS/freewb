@@ -221,6 +221,40 @@ bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         return true;
     }
 
+    const FreewbKeySym prevPageKey = Key::keySymFromUniqueName(settings::instance().get_prevPageKey().c_str());
+    if (keysym == prevPageKey)
+    {
+        if (candidateList_->size() == 0)
+        {
+            return false;
+        }
+        candidateList_->prev();
+        return true;
+    }
+
+    const FreewbKeySym nextPageKey = Key::keySymFromUniqueName(settings::instance().get_nextPageKey().c_str());
+    if (keysym == nextPageKey)
+    {
+        if (candidateList_->size() == 0)
+        {
+            return false;
+        }
+        candidateList_->next();
+        return true;
+    }
+
+    if (keysym == FreewbKey_BackSpace)
+    {
+        candidateList_->popPreeditText();
+        if (candidateList_->preeditText().empty())
+        {
+            engineManager_->reset();
+            return true;
+        }
+        engineManager_->refreshEngineResult();
+        return true;
+    }
+
     return false;
 }
 
