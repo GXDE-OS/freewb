@@ -180,7 +180,7 @@ void handleCommand(DemoState &s, const std::string &cmd)
         else if (action == "del" && tokens.size() >= 5)
             proxy.callDeleteUsrParseMethod(toInt(tokens[2]), tokens[4], tokens[3]);
         else if (action == "switch_input_mode" && tokens.size() >= 3)
-            proxy.callSwitchInputModeMethod(toInt(tokens[2]));
+            proxy.callSwitchInputModeMethod(tokens[2]);
         else if (action == "switch_skin")
             proxy.callSwitchSkinMethod();
         else if (action == "switch_vk" && tokens.size() >= 3)
@@ -348,7 +348,7 @@ void handleCommand(DemoState &s, const std::string &cmd)
         proxy.callAddUsrParseMethod(0, "cs", u8"\u6d4b\u8bd5\u8bcd");
         proxy.callDeleteUsrParseMethod(0, "cs", u8"\u6d4b\u8bd5\u8bcd");
         proxy.callDictQueryMethod(u8"\u6d4b\u8bd5");
-        proxy.callSwitchInputModeMethod(1);
+        proxy.callSwitchInputModeMethod("engine:wbpy");
         proxy.callSwitchVirtualKeyboardModeMethod(0);
         proxy.callSwitchRecodeProofMethod();
         proxy.callSwitchUncommonParseStateMethod(u8"\u6d4b\u8bd5\u8bcd", 1);
