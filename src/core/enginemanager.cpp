@@ -51,31 +51,12 @@ void EngineManager::initAllEngines()
 
 void EngineManager::loadDefaultEngines()
 {
-    static constexpr int kInputModeWbzx = 0;
-    static constexpr int kInputModeWbpy = 1;
-    static constexpr int kInputModePinyin = 2;
-    static constexpr int kInputModeEn = 3;
-
-    const char *name = nullptr;
-    switch (settings::instance().get_inputMode())
+    const std::string &name = settings::instance().get_inputMode();
+    currentEngine_ = findEngineByName(name.c_str());
+    if (currentEngine_ == nullptr && !engines_.empty())
     {
-    case kInputModeWbzx:
-        name = "engine:wbzx";
-        break;
-    case kInputModeWbpy:
-        name = "engine:wbpy";
-        break;
-    case kInputModePinyin:
-        name = "engine:py";
-        break;
-    case kInputModeEn:
-        name = "engine:en";
-        break;
-    default:
-        break;
+        currentEngine_ = engines_[0].second.get();
     }
-
-    currentEngine_ = findEngineByName(name);
 }
 
 IFreewbEngine *EngineManager::findEngineByName(const char *name) const

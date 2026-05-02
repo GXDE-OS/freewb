@@ -171,7 +171,9 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            sdbusProxy_->callSwitchInputModeMethod(0);
+            engineManager_->nextEngine();
+            const std::string nextEngine = engineManager_->currentEngineName();
+            sdbusProxy_->callSwitchInputModeMethod(nextEngine);
             return true;
         }
     }
