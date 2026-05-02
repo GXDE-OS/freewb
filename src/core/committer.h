@@ -6,6 +6,7 @@
 #include "candidatelist.h"
 #include "enginemanager.h"
 #include "key.h"
+#include "punc.h"
 
 namespace freewb
 {
@@ -34,6 +35,7 @@ private:
     FreewbKeySym nextPageKey_;
 
     std::string lastCommitString_;
+    Punc punc_;
 };
 } // namespace freewb
 

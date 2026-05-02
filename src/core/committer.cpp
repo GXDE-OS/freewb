@@ -82,7 +82,17 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     if (Key::isSpecialCommitCharacter(keysym, state))
     {
         const char *keyString = Key::keySymToName(keysym);
-        commit(candidateList_->selectCandidateText(0) + keyString);
+        const std::pair<const char *, const char *> autoPair = punc_.autoPair(keyString);
+        if (autoPair.first != nullptr && autoPair.second != nullptr)
+        {
+            FREEWB_DEBUG("auto pair: {} {}", autoPair.first, autoPair.second);
+            commit(autoPair.first + candidateList_->selectCandidateText(0) + autoPair.second);
+        }
+        else
+        {
+            FREEWB_DEBUG("no auto pair: {}", keyString);
+            commit(candidateList_->selectCandidateText(0) + keyString);
+        }
         return true;
     }
 
