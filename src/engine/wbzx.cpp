@@ -276,4 +276,9 @@ int WbzxEngine::inputCodeLength() const
     return iCodeLength_;
 }
 
+bool WbzxEngine::shouldProcessKey(const char *key) const
+{
+    return strInputCode_.find(key) != std::string::npos;
+}
+
 } // namespace freewb

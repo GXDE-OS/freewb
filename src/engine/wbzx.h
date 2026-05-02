@@ -28,6 +28,7 @@ public:
     void reset() override;
 
     int inputCodeLength() const override;
+    bool shouldProcessKey(const char *key) const override;
 
 private:
     void clearMbLoadState();

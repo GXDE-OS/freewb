@@ -96,6 +96,11 @@ int PyEngine::inputCodeLength() const
     return iCodeLength_;
 }
 
+bool PyEngine::shouldProcessKey(const char *key) const
+{
+    return strInputCode_.find(key) != std::string::npos;
+}
+
 void PyEngine::clearMbLoadState()
 {
     result_ = CandidatePayload{};

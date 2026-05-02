@@ -30,6 +30,7 @@ public:
     virtual const CandidatePayload &getResult() const = 0;
     virtual void reset() = 0;
     virtual int inputCodeLength() const = 0;
+    virtual bool shouldProcessKey(const char *key) const = 0;
 };
 } // namespace freewb
 

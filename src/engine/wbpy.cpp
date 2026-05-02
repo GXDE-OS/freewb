@@ -95,4 +95,9 @@ int Wbpy::inputCodeLength() const
     return std::min(wbzxEngine_->inputCodeLength(), pyEngine_->inputCodeLength());
 }
 
+bool Wbpy::shouldProcessKey(const char *key) const
+{
+    return wbzxEngine_->shouldProcessKey(key) || pyEngine_->shouldProcessKey(key);
+}
+
 } // namespace freewb
