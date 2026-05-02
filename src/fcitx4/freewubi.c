@@ -104,6 +104,23 @@ static void Fcitx4IMOnChanged(void *arg);
 static boolean tray_menu_handler_empty(void *arg);
 static void freewb_settings_handler(void *arg);
 
+static int imTypeFromEngineName(const char *engineName)
+{
+    if (engineName == NULL)
+    {
+        return FREE_WUBI;
+    }
+    if (strcmp(engineName, "engine:wbpy") == 0)
+    {
+        return FREE_WBPY;
+    }
+    if (strcmp(engineName, "engine:py") == 0)
+    {
+        return FREE_PINYIN;
+    }
+    return FREE_WUBI;
+}
+
 void FreeWubiInstanceCommitString(FcitxInstance *instance, FcitxInputContext *ic, const char *str)
 {
     FcitxInstanceCommitString(instance, ic, str);
@@ -142,7 +159,8 @@ static void loadAllConfig(Fcitxfreewubi *fwb)
     fwb->config.iAutoPhraseOpt = GetIniKeyInt(ini, "Advanced", "autoWordGroupOpt", 1);
 
     fwb->config.bUserWordChanged = GetIniKeyInt(ini, "Misc", "userWordFlg", 1);
-    fwb->config.iImType = GetIniKeyInt(ini, "Misc", "inputMode", 1);
+    const char *inputMode = GetIniKeyString(ini, "Misc", "inputMode", "engine:wbzx");
+    fwb->config.iImType = imTypeFromEngineName(inputMode);
     fwb->config.bBackUpTable = GetIniKeyBool(ini, "Misc", "imeTableChanged");
     fwb->config.bIsGBK = GetIniKeyInt(ini, "Misc", "currentCharset", 0);
     fwb->config.bQuickTableChanged = GetIniKeyBool(ini, "Misc", "quickTableFlg");
