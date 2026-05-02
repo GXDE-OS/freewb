@@ -1,5 +1,6 @@
 #include "mainprogram.h"
 
+#include <QDBusMessage>
 #include <QDebug>
 
 #include "../../ipc/ipc.h"
@@ -57,7 +58,7 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
 
     // 工具条发送的信号
     // m_toolbar --> m_kimAgent
-    connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_inputmethod, m_kimAgent, &KimAgent::ReloadConfig);
+    connect(m_toolbar, &ToolbarWin::signal_request_next_input_mode, this, &MainProgram::slot_request_next_input_mode);
     connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_char_font, m_kimAgent, &KimAgent::TriggerProperty);
 
     connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_char_width, m_kimAgent, &KimAgent::SwitchFullWidth);
@@ -195,36 +196,24 @@ void MainProgram::slot_delete_freewb_panel()
     m_inputWin->hide();
 }
 
+void MainProgram::slot_request_next_input_mode()
+{
+    QDBusMessage msg = QDBusMessage::createSignal(FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE, "RequestNextInputMode");
+    QDBusConnection::sessionBus().send(msg);
+}
+
 /********************************* 以下槽函数供输入法引擎通过DBUS调用 ***************************************/
 // 切换输入法
-void MainProgram::slot_dbus_switch_internal_input_method(int im)
+void MainProgram::slot_switch_input_mode(const QString &inputMode)
 {
+    if (inputMode == ToolbarWin::get_input_mode())
+    {
+        return;
+    }
 
-    // printf("slot_dbus_switch_internal_input_method=%d\n",im);
-    if ((ToolbarWin::get_inputMode() == IM_ENGLISH && im != IM_ENGLISH) || (ToolbarWin::get_inputMode() != IM_ENGLISH && im != IM_ENGLISH))
-    {
-        m_virtualKeyboard->switch_caps_flg(0);
-    }
-    settings::instance().set_inputMode(static_cast<InputMode>(im));
+    m_virtualKeyboard->switch_caps_flg(0);
 
-    // 光标处提示极点五笔子输入法
-    QString childIm;
-    if (im == IM_WUBI_FONT && im != ToolbarWin::get_inputMode())
-    {
-        childIm = _(" Wubi font");
-    }
-    else if (im == IM_WUBI_PINYIN && im != ToolbarWin::get_inputMode())
-    {
-        childIm = _(" Wubi pinyin");
-    }
-    if (im == IM_STD_PINYIN && im != ToolbarWin::get_inputMode())
-    {
-        childIm = _(" Pinyin input");
-    }
-    m_inputWin->slot_kim_UpdateAux(childIm, "");
-    m_inputWin->slot_kim_ShowAux(true);
-
-    ToolbarWin::set_inputMode(static_cast<InputMode>(im));
+    ToolbarWin::set_input_mode(nextInputMode);
     m_toolbar->slot_update_input_mode_ico();
 }
 

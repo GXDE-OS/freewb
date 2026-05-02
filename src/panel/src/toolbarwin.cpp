@@ -4,11 +4,11 @@
 #include <QLabel>
 
 #include "config.h"
+#include "log.h"
 #include "settings.h"
 #include "settingshelper.h"
 #include "sound.h"
 #include "ui_toolbarwin.h"
-#include "log.h"
 
 // 桌面工具条按钮样式表
 #define QSS_BG0 QString("border-image: url(%1);").arg(m_skinData.bg0ImagePath)
@@ -51,7 +51,7 @@
 
 /**********************************************　静态成员　************************************************/
 // 工具条按钮默认状态值
-InputMode ToolbarWin::s_inputMode = IM_WUBI_PINYIN;
+QString ToolbarWin::s_inputMode = ToolbarWin::kEngineWbzx;
 CharWidthMode ToolbarWin::s_charWidthMode = WIDTH_HALF;
 MarkMode ToolbarWin::s_markMode = MARK_CN;
 bool ToolbarWin::s_isTraditionalMode = false;
@@ -59,13 +59,13 @@ CharSetMode ToolbarWin::s_charSetMode = CHAR_GB;
 int ToolbarWin::s_capsFlg;
 
 // 设置输入模式
-void ToolbarWin::set_inputMode(InputMode inputMode)
+void ToolbarWin::set_input_mode(const QString &inputMode)
 {
     s_inputMode = inputMode;
 }
 
 // 获取输入模式
-InputMode ToolbarWin::get_inputMode()
+const QString &ToolbarWin::get_input_mode()
 {
     return s_inputMode;
 }
@@ -128,7 +128,7 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_extendMenuOpenState = true;
     m_mouseMoveFlag = false;
 
-    set_inputMode(static_cast<InputMode>(settings::instance().get_inputMode()));
+    set_input_mode(QString::fromStdString(settings::instance().get_inputMode()));
     s_isTraditionalMode = settings::instance().get_simpTradFlg();
     s_charSetMode = (CharSetMode)settings::instance().get_charSet();
 
@@ -476,7 +476,8 @@ void ToolbarWin::update_extend_menu(bool state)
 
 void ToolbarWin::update_mouse_hover_tips()
 {
-    auto fmt = [](const std::string &value) -> QString {
+    auto fmt = [](const std::string &value) -> QString
+    {
         const std::string s = freewb_custom_shortcut_format(value);
         return s.empty() ? QStringLiteral("无") : toQStringUtf8(s);
     };
@@ -724,42 +725,43 @@ void ToolbarWin::update_extend_menu_ico()
 void ToolbarWin::slot_update_input_mode_ico()
 {
     s_capsFlg = Keyboard::get_caps_flg();
+    const QString &engineName = get_input_mode();
 
     if (s_capsFlg)
     {
         ui->btnMode->setText(_("Capital letters"));
     }
-    else if (get_inputMode() == IM_WUBI_FONT)
+    else if (engineName == kEngineWbzx)
     {
         ui->btnMode->setText(_(" Wubi font"));
     }
-    else if (get_inputMode() == IM_WUBI_PINYIN)
+    else if (engineName == kEngineWbpy)
     {
         ui->btnMode->setText(_(" Wubi pinyin"));
     }
-    else if (get_inputMode() == IM_STD_PINYIN)
+    else if (engineName == kEnginePy)
     {
         ui->btnMode->setText(_("Pinyin input"));
     }
 }
 
 // 更新工具条上的输入模式指示图标
-void ToolbarWin::update_input_mode_ico(InputMode im)
+void ToolbarWin::update_input_mode_ico(const QString &inputMode)
 {
     s_capsFlg = Keyboard::get_caps_flg();
     if (s_capsFlg)
     {
         ui->btnMode->setText(_("Capital letters"));
     }
-    else if (im == IM_WUBI_FONT)
+    else if (inputMode == kEngineWbzx)
     {
         ui->btnMode->setText(_(" Wubi font"));
     }
-    else if (im == IM_WUBI_PINYIN)
+    else if (inputMode == kEngineWbpy)
     {
         ui->btnMode->setText(_(" Wubi pinyin"));
     }
-    else if (im == IM_STD_PINYIN)
+    else if (inputMode == kEnginePy)
     {
         ui->btnMode->setText(_("Pinyin input"));
     }
@@ -864,40 +866,17 @@ void ToolbarWin::on_btnMenuExtend_clicked()
 void ToolbarWin::on_btnMode_clicked()
 {
     Sound::play(SOUND_LETTER);
-
-    InputMode curIm = get_inputMode();
-    if (curIm == IM_WUBI_FONT)
+    if (Keyboard::get_caps_flg())
     {
-        set_inputMode(IM_WUBI_PINYIN);
-        settings::instance().set_inputMode(IM_WUBI_PINYIN);
-        slot_update_input_mode_ico();
-        emit signal_fcitx_switch_inputmethod();
+        return;
     }
-    else if (curIm == IM_WUBI_PINYIN)
-    {
-        set_inputMode(IM_STD_PINYIN);
-        settings::instance().set_inputMode(IM_STD_PINYIN);
-        slot_update_input_mode_ico();
-        emit signal_fcitx_switch_inputmethod();
-    }
-    else if (curIm == IM_STD_PINYIN)
-    {
-        set_inputMode(IM_WUBI_FONT);
-        settings::instance().set_inputMode(IM_WUBI_FONT);
-        slot_update_input_mode_ico();
-        emit signal_fcitx_switch_inputmethod();
-    }
-    else if (curIm != IM_ENGLISH)
-    {
-        FREEWB_WARN("ToolbarWin::on_btnMode_clicked: unhandled InputMode {}", static_cast<int>(curIm));
-    }
+    emit signal_request_next_input_mode();
 }
 
 void ToolbarWin::fcitx_inputmethod_updated(const QString &param)
 {
     FREEWB_DEBUG("param={}", param.toUtf8().constData());
-    InputMode im = static_cast<InputMode>(settings::instance().get_inputMode());
-    set_inputMode(im);
+    set_input_mode(QString::fromStdString(settings::instance().get_inputMode()));
     slot_update_input_mode_ico();
 }
 

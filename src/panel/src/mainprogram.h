@@ -48,7 +48,7 @@ public:
     void create_host_dbus_service();
 
 public slots:                                                                                    // 提供给外部进程调用的DBUS方法接口
-    void slot_dbus_switch_internal_input_method(int im);                                         // 切换极点五笔子输入法
+    void slot_switch_input_mode(const QString &inputMode);                                        // 按输入模式切换子输入法
     void slot_dbus_dict_query(const QString &text);                                              // 字典查询
     void slot_dbus_generate_usr_word(int flg, const QString &wordText, const QString &wordCode); // 用户造词
     void slot_dbus_delete_usr_word(int flg, const QString &wordText, const QString &wordCode);   // 用户删词
@@ -84,6 +84,7 @@ public slots:                                                                   
 
 protected slots:
     void slot_delete_freewb_panel();
+    void slot_request_next_input_mode();
 
 private:
     X11EventMonitor *m_x11EventMonitor; // X11系统事件监视器

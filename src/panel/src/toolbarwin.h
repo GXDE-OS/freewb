@@ -9,6 +9,8 @@
 #ifndef TOOLBARWIN_H
 #define TOOLBARWIN_H
 
+#include <string>
+
 #include <QActionGroup>
 #include <QDebug>
 #include <QDesktopWidget>
@@ -29,15 +31,6 @@ namespace Ui
 {
 class ToolbarWin;
 }
-
-typedef enum
-{
-    IM_OTHER = -1,
-    IM_WUBI_FONT,
-    IM_WUBI_PINYIN,
-    IM_STD_PINYIN,
-    IM_ENGLISH
-} InputMode;
 
 typedef enum
 {
@@ -180,6 +173,11 @@ class ToolbarWin : public QWidget
     Q_OBJECT
 
 public:
+    static constexpr const char *kEngineWbzx = "engine:wbzx";
+    static constexpr const char *kEngineWbpy = "engine:wbpy";
+    static constexpr const char *kEnginePy = "engine:py";
+    static constexpr const char *kEngineEn = "engine:en";
+
     explicit ToolbarWin(QWidget *parent = nullptr);
     ~ToolbarWin();
 
@@ -200,6 +198,7 @@ signals:
 
     // 以下信号发给fcitx
     void signal_fcitx_switch_inputmethod();
+    void signal_request_next_input_mode();
     void signal_fcitx_switch_char_font(const QString &param);
     void signal_fcitx_switch_char_width(const QString &param);
     void signal_fcitx_switch_mark(const QString &param);
@@ -232,8 +231,8 @@ public:
 
 public:
     // 静态成员函数
-    static void set_inputMode(InputMode inputMode);
-    static InputMode get_inputMode();
+    static void set_input_mode(const QString &inputMode);
+    static const QString &get_input_mode();
     static void set_char_width_mode(CharWidthMode charMode);
     static CharWidthMode get_char_width_mode();
     static void set_mark_mode(MarkMode markMode);
@@ -256,7 +255,7 @@ protected:
     void update_mark_mode_ico();
     void update_char_set_ico();
     void update_vk_mode_ckecked_state(VirtualKeyboardMode mode);
-    void update_input_mode_ico(InputMode im);
+    void update_input_mode_ico(const QString &inputMode);
 
     void fcitx_inputmethod_updated(const QString &param);
     void fcitx_charFont_updated(const QString &param);
@@ -282,7 +281,7 @@ private slots:
 
 private:
     // 静态数据成员
-    static InputMode s_inputMode;         // 输入法模式
+    static QString s_inputMode;           // 输入模式
     static CharWidthMode s_charWidthMode; // 字符宽度
     static MarkMode s_markMode;           // 标点模式
     static bool s_isTraditionalMode;      // 简体/繁体：true=繁体
