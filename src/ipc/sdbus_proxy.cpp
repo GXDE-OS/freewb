@@ -253,9 +253,9 @@ void SDBusProxy::callDictQueryMethod(const std::string &wordText)
     callSettingsMethod("slot_dbus_dict_query", "s", wordText.c_str());
 }
 
-void SDBusProxy::callSwitchInputModeMethod(int inputMode)
+void SDBusProxy::callSwitchInputModeMethod(const std::string &inputMode)
 {
-    callSettingsMethod("slot_dbus_switch_internal_input_method", "i", inputMode);
+    callSettingsMethod("slot_switch_input_mode", "s", inputMode.c_str());
 }
 
 void SDBusProxy::callSwitchSkinMethod()

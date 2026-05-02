@@ -84,10 +84,10 @@ public: // settings 通过 D-Bus 调用 freewb-settings 服务的方法
     void callDictQueryMethod(const std::string &wordText);
 
     /**
-     * @brief 切换输入模式
-     * @param inputMode 输入模式：0-五笔字型，1-五笔拼音，2-拼音输入。
+     * @brief 按输入模式切换输入法。
+     * @param inputMode 输入模式字符串（如 "engine:wbzx"）。
      */
-    void callSwitchInputModeMethod(int inputMode);
+    void callSwitchInputModeMethod(const std::string &inputMode);
 
     /** @brief 切换皮肤。 */
     void callSwitchSkinMethod();

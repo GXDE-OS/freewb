@@ -139,13 +139,26 @@ void FreeWubiServiceSwitchFreeIm(DBusConnection *conn, int imState)
     DBusMessage *msg;
     DBusMessageIter args;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
-    msg = createSettingsMethodCallMessage("slot_dbus_switch_internal_input_method");
+    const char *inputMode = "engine:wbzx";
+    if (imState == 1)
+    {
+        inputMode = "engine:wbpy";
+    }
+    else if (imState == 2)
+    {
+        inputMode = "engine:py";
+    }
+    else if (imState == 3)
+    {
+        inputMode = "engine:en";
+    }
+    msg = createSettingsMethodCallMessage("slot_switch_input_mode");
     if (NULL == msg)
     {
         return;
     }
     dbus_message_iter_init_append(msg, &args);
-    dbus_message_append_args(msg, DBUS_TYPE_INT32, &imState, DBUS_TYPE_INVALID);
+    dbus_message_append_args(msg, DBUS_TYPE_STRING, &inputMode, DBUS_TYPE_INVALID);
     if (!dbus_connection_send(conn, msg, &serial))
     {
         return;
