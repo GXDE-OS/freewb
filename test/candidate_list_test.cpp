@@ -80,13 +80,14 @@ int main()
             all.push_back("c" + std::to_string(i));
         }
 
-        freewb::CandidateList cl(std::move(all), true, true, 0);
+        freewb::CandidateList cl(std::move(all), 0);
         REQUIRE(static_cast<int>(cl.candidateTexts().size()) == wc, "page 0 width");
-        REQUIRE(cl.hasPrev() == false, "page 0 no prev");
-        REQUIRE(cl.hasNext() == true, "page 0 hasNext flag");
+        REQUIRE(cl.hasPrev() == true, "page 0 has prev");
+        REQUIRE(cl.hasNext() == true, "page 0 hasNext");
 
         cl.next();
         REQUIRE(cl.hasPrev() == true, "page 1 has prev");
+        REQUIRE(cl.hasNext() == true, "page 1 hasNext");
         REQUIRE(static_cast<int>(cl.candidateTexts().size()) == wc, "page 1 width");
         REQUIRE(cl.candidateTexts()[0] == "c" + std::to_string(wc), "page 1 first item");
 

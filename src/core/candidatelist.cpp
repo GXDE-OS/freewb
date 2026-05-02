@@ -9,13 +9,13 @@
 
 namespace freewb
 {
-CandidateList::CandidateList(CandidatePayload &&candidatePayload) : hasPrev_(candidatePayload.hasPrev), hasNext_(candidatePayload.hasNext), cursor_(candidatePayload.cursor), allTexts_(std::move(candidatePayload.texts))
+CandidateList::CandidateList(CandidatePayload &&candidatePayload) : cursor_(candidatePayload.cursor), allTexts_(std::move(candidatePayload.texts))
 {
     init();
     syncVisiblePage();
 }
 
-CandidateList::CandidateList(std::vector<std::string> texts, bool hasPrev, bool hasNext, int cursor) : hasPrev_(hasPrev), hasNext_(hasNext), cursor_(cursor), allTexts_(std::move(texts))
+CandidateList::CandidateList(std::vector<std::string> texts, int cursor) : cursor_(cursor), allTexts_(std::move(texts))
 {
     init();
     syncVisiblePage();
@@ -50,17 +50,19 @@ void CandidateList::syncVisiblePage()
     }
 
     totalPages_ = total % wordCount_ == 0 ? total / wordCount_ : total / wordCount_ + 1;
-    FREEWB_DEBUG("total pages={}, pageIndex={}", totalPages_, pageIndex_);
+    if (totalPages_ <= 0)
+    {
+        totalPages_ = 1;
+    }
+    pageIndex_ = std::min(pageIndex_, totalPages_ - 1);
 
     const int start = pageIndex_ * wordCount_;
     const int end = std::min(start + wordCount_, total);
     currentPageTexts_.insert(currentPageTexts_.end(), allTexts_.begin() + start, allTexts_.begin() + end);
-
     for (auto &text : currentPageTexts_)
     {
         chttrans_.simpToTrad(text);
     }
-
 }
 
 void CandidateList::prev()
@@ -82,13 +84,13 @@ bool CandidateList::hasPrev() const
         return false;
     }
 
-    return hasPrev_;
+    return true;
 }
 
 void CandidateList::next()
 {
     ++pageIndex_;
-    if (pageIndex_ >= totalPages_)
+    if (pageIndex_ > totalPages_)
     {
         pageIndex_ = totalPages_;
     }
@@ -99,12 +101,13 @@ void CandidateList::next()
 
 bool CandidateList::hasNext() const
 {
-    if (pageIndex_ >= totalPages_)
+    FREEWB_DEBUG("pageIndex={}, totalPages={}", pageIndex_, totalPages_);
+    if (pageIndex_ >= totalPages_ - 1)
     {
         return false;
     }
 
-    return hasNext_;
+    return true;
 }
 
 void CandidateList::setCursor(int cursor)
@@ -129,14 +132,11 @@ void CandidateList::clear()
     preeditText_.clear();
     cursor_ = -1;
     pageIndex_ = 0;
-    hasPrev_ = false;
-    hasNext_ = false;
 }
 
 void CandidateList::setCandidateTexts(std::vector<std::string> text)
 {
     allTexts_ = std::move(text);
-    cursor_ = -1;
     pageIndex_ = 0;
     syncVisiblePage();
 }
@@ -184,5 +184,7 @@ void CandidateList::popPreeditText()
     {
         clear();
     }
+
+    cursor_ = preeditText_.size();
 }
 } // namespace freewb

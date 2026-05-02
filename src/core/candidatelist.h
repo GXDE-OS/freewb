@@ -10,7 +10,7 @@ class CandidateList
 {
 public:
     CandidateList(CandidatePayload &&candidatePayload);
-    CandidateList(std::vector<std::string> texts, bool hasPrev = false, bool hasNext = false, int cursor = 0);
+    CandidateList(std::vector<std::string> texts, int cursor = 0);
     CandidateList();
     ~CandidateList();
 
@@ -38,8 +38,6 @@ private:
     void syncVisiblePage();
 
 private:
-    bool hasPrev_;
-    bool hasNext_;
     int cursor_;
     std::vector<std::string> allTexts_;
     std::vector<std::string> currentPageTexts_;

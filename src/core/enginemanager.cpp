@@ -183,6 +183,12 @@ void EngineManager::refreshEngineResult()
         return;
     }
 
+    if (candidateList_->preeditText().empty())
+    {
+        engine->reset();
+        return;
+    }
+
     engine->putKey(candidateList_->preeditText().c_str());
     candidateList_->setCandidateTexts(currentEngine_->getResult().texts);
 }

@@ -245,12 +245,12 @@ bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
 
     if (keysym == FreewbKey_BackSpace)
     {
-        candidateList_->popPreeditText();
         if (candidateList_->preeditText().empty())
         {
-            engineManager_->reset();
-            return true;
+            return false;
         }
+
+        candidateList_->popPreeditText();
         engineManager_->refreshEngineResult();
         return true;
     }
@@ -260,8 +260,9 @@ bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
 
 void Freewb::updateCandidateAndPreeditToUI()
 {
-    sdbusProxy_->emitUpdatePreeditText({.text = candidateList_->preeditText(), .caret = static_cast<int>(candidateList_->preeditText().length()), .show = !candidateList_->preeditText().empty()});
-    sdbusProxy_->emitUpdateCandidate({.labels = {}, .texts = candidateList_->candidateTexts(), .attrs = {}, .hasPrev = candidateList_->hasPrev(), .hasNext = candidateList_->hasNext(), .cursor = candidateList_->cursor(), .layout = Horizontal});
+    sdbusProxy_->emitUpdatePreeditText({.text = candidateList_->preeditText(), .caret = candidateList_->cursor(), .show = !candidateList_->preeditText().empty()});
+    sdbusProxy_->emitUpdatePreeditCaret(candidateList_->cursor());
+    sdbusProxy_->emitUpdateCandidate({.labels = {}, .texts = candidateList_->candidateTexts(), .attrs = {}, .hasPrev = candidateList_->hasPrev(), .hasNext = candidateList_->hasNext(), .cursor = -1, .layout = Horizontal});
 }
 
 } // namespace freewb
