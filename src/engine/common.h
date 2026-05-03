@@ -1,6 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <cstddef>
 #include <cstdint>
 #include <fstream>
 #include <string>
@@ -11,6 +12,7 @@
 
 namespace freewb
 {
+
 
 class MbDictionaryTable
 {
@@ -46,6 +48,8 @@ private:
     uint32_t iCodeLength_ = 4;
     std::vector<EngineRuleBlock> rules_;
     uint32_t recordCount_ = 0;
+
+    static const std::size_t maxCandidatesPages_ = 500;
 };
 
 } // namespace freewb

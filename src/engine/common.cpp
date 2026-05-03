@@ -12,6 +12,10 @@ const uint32_t kMaxHzFieldBytes = 7U * 30U;
 
 void MbDictionaryTable::collectCandidatesForPrefix(const std::string &prefix, const std::unordered_map<std::string, std::vector<std::string>> &dict, std::vector<std::string> &out)
 {
+    if (out.size() >= maxCandidatesPages_)
+    {
+        return;
+    }
     std::vector<std::string> keys;
     keys.reserve(dict.size());
     for (const auto &kv : dict)
@@ -29,6 +33,10 @@ void MbDictionaryTable::collectCandidatesForPrefix(const std::string &prefix, co
     std::sort(keys.begin(), keys.end());
     for (const std::string &k : keys)
     {
+        if (out.size() >= maxCandidatesPages_)
+        {
+            return;
+        }
         const auto it = dict.find(k);
         if (it == dict.end())
         {
@@ -36,9 +44,14 @@ void MbDictionaryTable::collectCandidatesForPrefix(const std::string &prefix, co
         }
         for (const auto &hz : it->second)
         {
-            if (!hz.empty())
+            if (hz.empty())
             {
-                out.push_back(hz);
+                continue;
+            }
+            out.push_back(hz);
+            if (out.size() >= maxCandidatesPages_)
+            {
+                return;
             }
         }
     }
