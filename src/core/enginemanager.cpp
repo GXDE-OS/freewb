@@ -20,10 +20,8 @@ EngineManager::~EngineManager() = default;
 
 void EngineManager::initAllEngines()
 {
-    // en engine is always available
+    // en engine is always available,but not added to engines vector.
     enEngine_ = std::unique_ptr<En>(new En());
-    const char *enName = enEngine_->name();
-    engines_.emplace_back(enName, std::move(enEngine_));
 
     // wbzx engine is available if config is true
     if (settings::instance().get_WbzxEngine())
