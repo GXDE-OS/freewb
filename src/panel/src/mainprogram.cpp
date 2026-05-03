@@ -213,7 +213,7 @@ void MainProgram::slot_switch_input_mode(const QString &inputMode)
 
     m_virtualKeyboard->switch_caps_flg(0);
 
-    ToolbarWin::set_input_mode(nextInputMode);
+    ToolbarWin::set_input_mode(inputMode);
     m_toolbar->slot_update_input_mode_ico();
 }
 
