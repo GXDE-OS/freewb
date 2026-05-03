@@ -24,7 +24,7 @@ public:
     ~EngineManager();
 
     void nextEngine();
-    const std::string &currentEngineName() const;
+    const char *currentEngineName() const;
     void changeEngine(const std::string &engineName);
 
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);

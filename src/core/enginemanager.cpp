@@ -55,6 +55,8 @@ void EngineManager::initAllEngines()
         const char *wbpyName = wbpyEngine_->name();
         engines_.emplace_back(wbpyName, std::move(wbpyEngine_));
     }
+
+    FREEWB_DEBUG("engines size: {}", engines_.size());
 }
 
 void EngineManager::loadDefaultEngines()
@@ -65,6 +67,8 @@ void EngineManager::loadDefaultEngines()
     {
         currentEngine_ = engines_[0].second.get();
     }
+
+    FREEWB_DEBUG("current engine: {}", currentEngineName());
 }
 
 IFreewbEngine *EngineManager::findEngineByName(const char *name) const
@@ -111,16 +115,13 @@ void EngineManager::nextEngine()
     currentEngine_ = engines_[0].second.get();
 }
 
-const std::string &EngineManager::currentEngineName() const
+const char *EngineManager::currentEngineName() const
 {
-    if (currentEngine_ == nullptr)
-    {
-        return "";
-    }
     const auto *engine = dynamic_cast<const IFreewb *>(currentEngine_);
     if (engine == nullptr)
     {
-        return "";
+        FREEWB_DEBUG("current engine is nullptr");
+        return nullptr;
     }
     return engine->name();
 }
