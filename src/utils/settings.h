@@ -150,8 +150,7 @@ enum class ValueType
     X(tempPinyin, ShortcutKey, String, "KEY_BACKQUOTE", ShortcutKey, "") \
     X(WbzxEngine, Engine, Bool, "true", Engine, "") \
     X(WbpyEngine, Engine, Bool, "true", Engine, "") \
-    X(PyEngine, Engine, Bool, "true", Engine, "") \
-    X(EnEngine, Engine, Bool, "true", Engine, "")
+    X(PyEngine, Engine, Bool, "true", Engine, "")
 
 #define FREEWB_CFG_AUTO_FROM_ENTRY(id, cat, vtype, def, sect, desc) FREEWB_CFG_##vtype##_APPLY(id, get_##id, set_##id)
 

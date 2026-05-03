@@ -20,6 +20,12 @@ EngineManager::~EngineManager() = default;
 
 void EngineManager::initAllEngines()
 {
+    // en engine is always available
+    enEngine_ = std::unique_ptr<En>(new En());
+    const char *enName = enEngine_->name();
+    engines_.emplace_back(enName, std::move(enEngine_));
+
+    // wbzx engine is available if config is true
     if (settings::instance().get_WbzxEngine())
     {
         wbzxEngine_ = std::unique_ptr<WbzxEngine>(new WbzxEngine());
@@ -27,6 +33,7 @@ void EngineManager::initAllEngines()
         engines_.emplace_back(wbzxName, std::move(wbzxEngine_));
     }
 
+    // py engine is available if config is true
     if (settings::instance().get_PyEngine())
     {
         pyEngine_ = std::unique_ptr<PyEngine>(new PyEngine());
@@ -34,16 +41,17 @@ void EngineManager::initAllEngines()
         engines_.emplace_back(pyName, std::move(pyEngine_));
     }
 
-    if (settings::instance().get_EnEngine())
-    {
-        enEngine_ = std::unique_ptr<En>(new En());
-        const char *enName = enEngine_->name();
-        engines_.emplace_back(enName, std::move(enEngine_));
-    }
-
+    // wbpy engine is available if config is true
     if (settings::instance().get_WbpyEngine() && settings::instance().get_WbzxEngine() && settings::instance().get_PyEngine())
     {
-        wbpyEngine_ = std::unique_ptr<Wbpy>(new Wbpy(wbzxEngine_.get(), pyEngine_.get()));
+        auto *wbzx = dynamic_cast<WbzxEngine *>(findEngineByName("engine:wbzx"));
+        auto *py = dynamic_cast<PyEngine *>(findEngineByName("engine:py"));
+        if (wbzx == nullptr || py == nullptr)
+        {
+            return;
+        }
+
+        wbpyEngine_ = std::unique_ptr<Wbpy>(new Wbpy(wbzx, py));
         const char *wbpyName = wbpyEngine_->name();
         engines_.emplace_back(wbpyName, std::move(wbpyEngine_));
     }
@@ -119,17 +127,8 @@ const std::string &EngineManager::currentEngineName() const
 
 bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
 {
-    if (currentEngine_ == nullptr)
-    {
-        return false;
-    }
     auto *engine = dynamic_cast<IFreewbEngine *>(currentEngine_);
     if (engine == nullptr)
-    {
-        return false;
-    }
-
-    if (!Key::isKeyaz(keysym, state) && !Key::isKeyAZ(keysym, state))
     {
         return false;
     }
@@ -139,25 +138,27 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         return false;
     }
+
+    if (!engine->shouldProcessKey(key))
+    {
+        return false;
+    }
+
     candidateList_->setPreeditText(candidateList_->preeditText() + key);
-    if (static_cast<int>(candidateList_->preeditText().length()) > engine->inputCodeLength())
+    engine->putKey(candidateList_->preeditText().c_str());
+    candidateList_->setCandidateTexts(currentEngine_->getResult().texts);
+
+    if (static_cast<int>(candidateList_->preeditText().length()) >= engine->inputCodeLength())
     {
         candidateList_->clear();
         engine->reset();
         return true;
     }
-
-    engine->putKey(candidateList_->preeditText().c_str());
-    candidateList_->setCandidateTexts(currentEngine_->getResult().texts);
     return true;
 }
 
 void EngineManager::refreshEngineResult()
 {
-    if (currentEngine_ == nullptr)
-    {
-        return;
-    }
     auto *engine = dynamic_cast<IFreewbEngine *>(currentEngine_);
     if (engine == nullptr)
     {
