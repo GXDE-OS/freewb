@@ -257,7 +257,6 @@ protected:
     void update_vk_mode_ckecked_state(VirtualKeyboardMode mode);
     void update_input_mode_ico(const QString &inputMode);
 
-    void fcitx_inputmethod_updated(const QString &param);
     void fcitx_charFont_updated(const QString &param);
     void fcitx_charWidth_updated(const QString &param);
     void fcitx_charMark_updated(const QString &param);

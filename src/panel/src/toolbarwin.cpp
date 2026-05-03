@@ -873,13 +873,6 @@ void ToolbarWin::on_btnMode_clicked()
     emit signal_request_next_input_mode();
 }
 
-void ToolbarWin::fcitx_inputmethod_updated(const QString &param)
-{
-    FREEWB_DEBUG("param={}", param.toUtf8().constData());
-    set_input_mode(QString::fromStdString(settings::instance().get_inputMode()));
-    slot_update_input_mode_ico();
-}
-
 void ToolbarWin::fcitx_charFont_updated(const QString &param)
 {
     //    qDebug() << param;
@@ -1041,11 +1034,7 @@ void ToolbarWin::slot_kim_RegisterProperties(const QStringList &prop)
     // printf("ToolbarWin::slot_kim_RegisterProperties:%s\n",prop[0].toUtf8().constData());
     foreach(QString param, prop)
     {
-        if (param.contains("/Fcitx/im:"))
-        {
-            fcitx_inputmethod_updated(param);
-        }
-        else if (param.contains("/Fcitx/chttrans:"))
+        if (param.contains("/Fcitx/chttrans:"))
         {
             // fcitx_charFont_updated( param );
         }
@@ -1064,10 +1053,6 @@ void ToolbarWin::slot_kim_RegisterProperties(const QStringList &prop)
 void ToolbarWin::slot_kim_UpdateProperty(const QString &prop)
 {
     FREEWB_DEBUG("ToolbarWin::slot_kim_UpdateProperty: prop={}", prop.toUtf8().constData());
-    if (prop.contains("/Fcitx/im:"))
-    {
-        fcitx_inputmethod_updated(prop);
-    }
     FREEWB_DEBUG("switch ime: {}", prop.toUtf8().constData());
     if (prop.contains("/Fcitx/im:Freewb") || prop.contains("/Fcitx/im:极点五笔"))
     {
