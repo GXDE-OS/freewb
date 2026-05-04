@@ -4,12 +4,14 @@
 
 #include "settings.h"
 #include "log.h"
+#include "dbus.h"
 
 namespace freewb
 {
 Committer::Committer(CommitCallback commitCallback, Freewb *freewb) : commitCallback_(std::move(commitCallback)), freewb_(freewb)
 {
     loadSettings();
+    connectDBusCallback();
 }
 
 Committer::~Committer() = default;
@@ -21,6 +23,17 @@ void Committer::loadSettings()
 
     prevPageKey_ = Key::keySymFromUniqueName(settings::instance().get_prevPageKey().c_str());
     nextPageKey_ = Key::keySymFromUniqueName(settings::instance().get_nextPageKey().c_str());
+}
+
+void Committer::connectDBusCallback()
+{
+    freewb_->sdbusProxy()->bindDBusSignalCallback([this](const char *member, int index) {
+        if (std::strcmp(member, "SelectCandidate") != 0)
+        {
+            return;
+        }
+        this->commit(freewb_->candidateList()->selectCandidateText(index));
+    });
 }
 
 bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)

@@ -22,6 +22,7 @@ public:
 
 private:
     void loadSettings();
+    void connectDBusCallback();
     void commit(const std::string &text);
 
 private:
