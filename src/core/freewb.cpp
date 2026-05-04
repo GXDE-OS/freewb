@@ -14,7 +14,7 @@ Freewb::Freewb(void *sd_event_handle, CommitCallback commitCallback) : log_("/tm
     punc_ = new Punc();
     candidateList_ = new CandidateList();
     engineManager_ = new EngineManager(candidateList_);
-    committer_ = new Committer(std::move(commitCallback), candidateList_, engineManager_, punc_);
+    committer_ = new Committer(std::move(commitCallback), this);
 }
 
 Freewb::~Freewb()
@@ -58,6 +58,16 @@ void Freewb::deactivate()
 ipc::SDBusProxy *Freewb::sdbusProxy() const
 {
     return sdbusProxy_;
+}
+
+EngineManager *Freewb::engineManager() const
+{
+    return engineManager_;
+}
+
+CandidateList *Freewb::candidateList() const
+{
+    return candidateList_;
 }
 
 Punc *Freewb::punc() const

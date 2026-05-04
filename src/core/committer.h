@@ -3,18 +3,18 @@
 
 #include <string>
 
-#include "candidatelist.h"
-#include "enginemanager.h"
 #include "key.h"
-#include "punc.h"
+#include "freewb.h"
 
 namespace freewb
 {
 
+class Freewb;
+
 class Committer
 {
 public:
-    Committer(CommitCallback commitCallback, CandidateList *candidateList, EngineManager *engineManager, Punc *punc);
+    Committer(CommitCallback commitCallback, Freewb *freewb);
     ~Committer();
 
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
@@ -25,8 +25,7 @@ private:
     void commit(const std::string &text);
 
 private:
-    CandidateList *candidateList_;
-    EngineManager *engineManager_;
+    Freewb *freewb_;
 
     CommitCallback commitCallback_;
 
@@ -36,7 +35,6 @@ private:
     FreewbKeySym nextPageKey_;
 
     std::string lastCommitString_;
-    Punc *punc_;
 };
 } // namespace freewb
 

@@ -12,6 +12,8 @@
 
 namespace freewb
 {
+class Committer;
+
 class Freewb
 {
 public:
@@ -24,6 +26,8 @@ public:
     void reset();
 
     ipc::SDBusProxy *sdbusProxy() const;
+    EngineManager *engineManager() const;
+    CandidateList *candidateList() const;
     Punc *punc() const;
 
 private:

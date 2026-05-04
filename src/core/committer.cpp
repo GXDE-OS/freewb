@@ -7,7 +7,7 @@
 
 namespace freewb
 {
-Committer::Committer(CommitCallback commitCallback, CandidateList *candidateList, EngineManager *engineManager, Punc *punc) : commitCallback_(std::move(commitCallback)), candidateList_(candidateList), engineManager_(engineManager), punc_(punc)
+Committer::Committer(CommitCallback commitCallback, Freewb *freewb) : commitCallback_(std::move(commitCallback)), freewb_(freewb)
 {
     loadSettings();
 }
@@ -25,7 +25,7 @@ void Committer::loadSettings()
 
 bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
 {
-    if (!commitCallback_ || (candidateList_->size() == 0))
+    if (!commitCallback_ || (freewb_->candidateList()->size() == 0))
     {
         return false;
     }
@@ -42,17 +42,17 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
         int index = keysym - FreewbKey_1;
         if (index < 0)
         {
-            candidateList_->clear();
-            engineManager_->reset();
+            freewb_->candidateList()->clear();
+            freewb_->engineManager()->reset();
             return false;
         }
-        else if (index >= candidateList_->size())
+        else if (index >= freewb_->candidateList()->size())
         {
-            commit(candidateList_->selectCandidateText(0));
+            commit(freewb_->candidateList()->selectCandidateText(0));
         }
         else
         {
-            commit(candidateList_->selectCandidateText(index));
+            commit(freewb_->candidateList()->selectCandidateText(index));
         }
         return true;
     }
@@ -60,21 +60,21 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     // 二三重码上屏
     if ((keysym == secondRecodeKey_ && state == FreewbKeyState_None) || (keysym == thirdRecodeKey_ && state == FreewbKeyState_None))
     {
-        commit(candidateList_->selectCandidateText(keysym == secondRecodeKey_ ? 1 : 2));
+        commit(freewb_->candidateList()->selectCandidateText(keysym == secondRecodeKey_ ? 1 : 2));
         return true;
     }
 
     // 空格上屏
     if (keysym == FreewbKey_space && state == FreewbKeyState_None)
     {
-        commit(candidateList_->selectCandidateText(0));
+        commit(freewb_->candidateList()->selectCandidateText(0));
         return true;
     }
 
     // 回车上屏
     if (keysym == FreewbKey_Return && state == FreewbKeyState_None)
     {
-        commit(candidateList_->preeditText());
+        commit(freewb_->candidateList()->preeditText());
         return true;
     }
 
@@ -82,16 +82,16 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     if (Key::isSpecialCommitCharacter(keysym, state))
     {
         const char *keyString = Key::keySymToName(keysym);
-        const std::pair<const char *, const char *> autoPair = punc_->autoPair(keyString);
+        const std::pair<const char *, const char *> autoPair = freewb_->punc()->autoPair(keyString);
         if (autoPair.first != nullptr && autoPair.second != nullptr)
         {
             FREEWB_DEBUG("auto pair: {} {}", autoPair.first, autoPair.second);
-            commit(autoPair.first + candidateList_->selectCandidateText(0) + autoPair.second);
+            commit(autoPair.first + freewb_->candidateList()->selectCandidateText(0) + autoPair.second);
         }
         else
         {
             FREEWB_DEBUG("no auto pair: {}", keyString);
-            commit(candidateList_->selectCandidateText(0) + keyString);
+            commit(freewb_->candidateList()->selectCandidateText(0) + keyString);
         }
         return true;
     }
@@ -109,7 +109,7 @@ void Committer::commit(const std::string &text)
     FREEWB_DEBUG("committer will commit text : {}", text);
     lastCommitString_ = text;
     commitCallback_(text);
-    candidateList_->clear();
-    engineManager_->reset();
+    freewb_->candidateList()->clear();
+    freewb_->engineManager()->reset();
 }
 } // namespace freewb
