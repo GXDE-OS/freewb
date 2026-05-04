@@ -1205,10 +1205,12 @@ void InputWin::on_tableWidget_cellClicked(int row, int column)
     if (m_displayMode == CWDM_ONE_ROW && column < m_candiWordItem && row == 0)
     {
         emit signal_candidate_select(column);
+        hide();
     }
     else if (m_displayMode == CWDM_MULTI_ROW && row < m_candiWordItem && column == 0)
     {
         emit signal_candidate_select(row);
+        hide();
     }
 }
 
