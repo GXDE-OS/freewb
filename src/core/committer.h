@@ -10,10 +10,11 @@
 
 namespace freewb
 {
+
 class Committer
 {
 public:
-    Committer(CommitCallback commitCallback, CandidateList *candidateList, EngineManager *engineManager);
+    Committer(CommitCallback commitCallback, CandidateList *candidateList, EngineManager *engineManager, Punc *punc);
     ~Committer();
 
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
@@ -35,7 +36,7 @@ private:
     FreewbKeySym nextPageKey_;
 
     std::string lastCommitString_;
-    Punc punc_;
+    Punc *punc_;
 };
 } // namespace freewb
 

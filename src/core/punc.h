@@ -24,7 +24,7 @@ static const struct _PuncPair
 class Punc : public IFreewb
 {
 public:
-    Punc() = default;
+    Punc();
     ~Punc() = default;
 
     const char *name() const override;

@@ -7,7 +7,7 @@
 
 namespace freewb
 {
-Committer::Committer(CommitCallback commitCallback, CandidateList *candidateList, EngineManager *engineManager) : commitCallback_(std::move(commitCallback)), candidateList_(candidateList), engineManager_(engineManager)
+Committer::Committer(CommitCallback commitCallback, CandidateList *candidateList, EngineManager *engineManager, Punc *punc) : commitCallback_(std::move(commitCallback)), candidateList_(candidateList), engineManager_(engineManager), punc_(punc)
 {
     loadSettings();
 }
@@ -82,7 +82,7 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     if (Key::isSpecialCommitCharacter(keysym, state))
     {
         const char *keyString = Key::keySymToName(keysym);
-        const std::pair<const char *, const char *> autoPair = punc_.autoPair(keyString);
+        const std::pair<const char *, const char *> autoPair = punc_->autoPair(keyString);
         if (autoPair.first != nullptr && autoPair.second != nullptr)
         {
             FREEWB_DEBUG("auto pair: {} {}", autoPair.first, autoPair.second);

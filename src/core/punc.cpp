@@ -5,6 +5,12 @@
 
 namespace freewb
 {
+
+Punc::Punc()
+{
+    available_ = settings::instance().get_smartMark();
+}
+
 const char *Punc::name() const
 {
     return "core:punc";
@@ -12,17 +18,18 @@ const char *Punc::name() const
 
 bool Punc::available() const
 {
-    return true;
+    return available_;
 }
 
 void Punc::changeAvailable()
 {
     available_ = !available_;
+    settings::instance().set_smartMark(available_);
 }
 
 const std::pair<const char *, const char *> Punc::autoPair(const char *key) const
 {
-    if (!settings::instance().get_smartMark())
+    if (!available_)
     {
         return std::make_pair(nullptr, nullptr);
     }

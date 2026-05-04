@@ -11,9 +11,10 @@ namespace freewb
 Freewb::Freewb(void *sd_event_handle, CommitCallback commitCallback) : log_("/tmp/freewb-engine.log")
 {
     sdbusProxy_ = new ipc::SDBusProxy(sd_event_handle);
+    punc_ = new Punc();
     candidateList_ = new CandidateList();
     engineManager_ = new EngineManager(candidateList_);
-    committer_ = new Committer(std::move(commitCallback), candidateList_, engineManager_);
+    committer_ = new Committer(std::move(commitCallback), candidateList_, engineManager_, punc_);
 }
 
 Freewb::~Freewb()
@@ -32,6 +33,11 @@ Freewb::~Freewb()
     {
         delete candidateList_;
         candidateList_ = nullptr;
+    }
+    if (punc_ != nullptr)
+    {
+        delete punc_;
+        punc_ = nullptr;
     }
 }
 
@@ -52,6 +58,11 @@ void Freewb::deactivate()
 ipc::SDBusProxy *Freewb::sdbusProxy() const
 {
     return sdbusProxy_;
+}
+
+Punc *Freewb::punc() const
+{
+    return punc_;
 }
 
 bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
@@ -108,6 +119,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             //make mark auto pair
+            punc_->changeAvailable();
             return true;
         }
 

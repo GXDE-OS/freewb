@@ -8,6 +8,7 @@
 #include "sdbus_proxy.h"
 #include "committer.h"
 #include "types.h"
+#include "punc.h"
 
 namespace freewb
 {
@@ -23,6 +24,7 @@ public:
     void reset();
 
     ipc::SDBusProxy *sdbusProxy() const;
+    Punc *punc() const;
 
 private:
     bool handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state);
@@ -34,6 +36,7 @@ private:
     EngineManager *engineManager_ = nullptr;
     CandidateList *candidateList_ = nullptr;
     Committer *committer_ = nullptr;
+    Punc *punc_ = nullptr;
 };
 } // namespace freewb
 
