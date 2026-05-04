@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "key.h"
 #include "freewb.h"
+#include "key.h"
 
 namespace freewb
 {

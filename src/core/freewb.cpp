@@ -52,7 +52,8 @@ void Freewb::deactivate()
     candidateList_->clear();
     sdbusProxy_->emitHideToolbar();
     sdbusProxy_->emitUpdatePreeditText({.text = "", .caret = 0, .show = false});
-    sdbusProxy_->emitUpdateCandidate({.labels = {}, .texts = {}, .attrs = {}, .hasPrev = false, .hasNext = false, .cursor = -1, .layout = Horizontal});
+    sdbusProxy_->emitUpdateCandidate(
+        {.labels = {}, .texts = {}, .attrs = {}, .hasPrev = false, .hasNext = false, .cursor = -1, .layout = Horizontal});
 }
 
 ipc::SDBusProxy *Freewb::sdbusProxy() const
@@ -102,7 +103,7 @@ bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         return true;
     }
-    
+
     return false;
 }
 
@@ -128,11 +129,10 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            //make mark auto pair
+            // make mark auto pair
             punc_->changeAvailable();
             return true;
         }
-
     }
     {
         const char *keyString = Key::readKeyString(settings::instance().get_onlineAddWord().c_str());
@@ -217,7 +217,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
             return true;
         }
     }
-    
+
     {
         const char *keyString = Key::readKeyString(settings::instance().get_switchVKb().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
@@ -284,9 +284,17 @@ bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
 
 void Freewb::updateCandidateAndPreeditToUI()
 {
-    sdbusProxy_->emitUpdatePreeditText({.text = candidateList_->preeditText(), .caret = candidateList_->cursor(), .show = !candidateList_->preeditText().empty()});
+    sdbusProxy_->emitUpdatePreeditText({.text = candidateList_->preeditText(),
+                                        .caret = candidateList_->cursor(),
+                                        .show = !candidateList_->preeditText().empty()});
     sdbusProxy_->emitUpdatePreeditCaret(candidateList_->cursor());
-    sdbusProxy_->emitUpdateCandidate({.labels = {}, .texts = candidateList_->candidateTexts(), .attrs = {}, .hasPrev = candidateList_->hasPrev(), .hasNext = candidateList_->hasNext(), .cursor = -1, .layout = Horizontal});
+    sdbusProxy_->emitUpdateCandidate({.labels = {},
+                                      .texts = candidateList_->candidateTexts(),
+                                      .attrs = {},
+                                      .hasPrev = candidateList_->hasPrev(),
+                                      .hasNext = candidateList_->hasNext(),
+                                      .cursor = -1,
+                                      .layout = Horizontal});
 }
 
 } // namespace freewb

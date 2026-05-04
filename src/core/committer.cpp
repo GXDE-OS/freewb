@@ -2,9 +2,9 @@
 
 #include <utility>
 
-#include "settings.h"
-#include "log.h"
 #include "dbus.h"
+#include "log.h"
+#include "settings.h"
 
 namespace freewb
 {
@@ -27,13 +27,15 @@ void Committer::loadSettings()
 
 void Committer::connectDBusCallback()
 {
-    freewb_->sdbusProxy()->bindDBusSignalCallback([this](const char *member, int index) {
-        if (std::strcmp(member, "SelectCandidate") != 0)
+    freewb_->sdbusProxy()->bindDBusSignalCallback(
+        [this](const char *member, int index)
         {
-            return;
-        }
-        this->commit(freewb_->candidateList()->selectCandidateText(index));
-    });
+            if (std::strcmp(member, "SelectCandidate") != 0)
+            {
+                return;
+            }
+            this->commit(freewb_->candidateList()->selectCandidateText(index));
+        });
 }
 
 bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
@@ -71,7 +73,8 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     // 二三重码上屏
-    if ((keysym == secondRecodeKey_ && state == FreewbKeyState_None) || (keysym == thirdRecodeKey_ && state == FreewbKeyState_None))
+    if ((keysym == secondRecodeKey_ && state == FreewbKeyState_None) ||
+        (keysym == thirdRecodeKey_ && state == FreewbKeyState_None))
     {
         commit(freewb_->candidateList()->selectCandidateText(keysym == secondRecodeKey_ ? 1 : 2));
         return true;
@@ -91,7 +94,7 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return true;
     }
 
-    //顶字上屏,上屏效果与普通上屏不同。如："你好,"
+    // 顶字上屏,上屏效果与普通上屏不同。如："你好,"
     if (Key::isSpecialCommitCharacter(keysym, state))
     {
         const char *keyString = Key::keySymToName(keysym);

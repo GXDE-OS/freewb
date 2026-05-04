@@ -32,11 +32,11 @@ boolean LoadDict(TableMetaData *tableMetaData, TableDict *tableDict, FILE *fpDic
     char cChar = 0, cTemp;
     int iRecordIndex;
     tableDict->pool = fcitx_memory_pool_create();
-#define CHECK_LOAD_TABLE_ERROR(SIZE)                                                                                                                                                                                                                                                                       \
-    if (size < (SIZE))                                                                                                                                                                                                                                                                                     \
-    {                                                                                                                                                                                                                                                                                                      \
-        error = true;                                                                                                                                                                                                                                                                                      \
-        break;                                                                                                                                                                                                                                                                                             \
+#define CHECK_LOAD_TABLE_ERROR(SIZE)                                                                                             \
+    if (size < (SIZE))                                                                                                           \
+    {                                                                                                                            \
+        error = true;                                                                                                            \
+        break;                                                                                                                   \
     }
     do
     {
@@ -111,7 +111,8 @@ boolean LoadDict(TableMetaData *tableMetaData, TableDict *tableDict, FILE *fpDic
                 CHECK_LOAD_TABLE_ERROR(1);
                 size = fread(&(tableDict->rule[i].iWords), sizeof(unsigned char), 1, fpDict);
                 CHECK_LOAD_TABLE_ERROR(1);
-                tableDict->rule[i].rule = (RULE_RULE *)fcitx_memory_pool_alloc(tableDict->pool, sizeof(RULE_RULE) * tableDict->iCodeLength);
+                tableDict->rule[i].rule =
+                    (RULE_RULE *)fcitx_memory_pool_alloc(tableDict->pool, sizeof(RULE_RULE) * tableDict->iCodeLength);
                 for (iTemp = 0; iTemp < tableDict->iCodeLength; iTemp++)
                 {
                     size = fread(&(tableDict->rule[i].rule[iTemp].iFlag), sizeof(unsigned char), 1, fpDict);
@@ -334,8 +335,9 @@ boolean LoadUsrDict(TableMetaData *tableMetaData)
                     break;
                 if (tableDict->currentRecord->type == RECORDTYPE_CONSTRUCT)
                 {
-                    //                     FcitxLog(INFO, _("11tableDict->currentRecord:%s  %s"), tableDict->currentRecord->strCode,tableDict->currentRecord->strHZ);
-                    //                     FcitxLog(INFO, _("11data:%s  %s"), data,temp);
+                    //                     FcitxLog(INFO, _("11tableDict->currentRecord:%s  %s"),
+                    //                     tableDict->currentRecord->strCode,tableDict->currentRecord->strHZ); FcitxLog(INFO,
+                    //                     _("11data:%s  %s"), data,temp);
                     tableDict->currentRecord->prev->next = tableDict->currentRecord->next;
                     tableDict->currentRecord->next->prev = tableDict->currentRecord->prev;
                     tableDict->iRecordCount--;
@@ -361,7 +363,8 @@ boolean LoadUsrDict(TableMetaData *tableMetaData)
                 }
                 if (tableDict->currentRecord->type == RECORDTYPE_CONSTRUCT)
                 {
-                    //                     FcitxLog(INFO, _("22tableDict->currentRecord:%s  %s"), tableDict->currentRecord->strCode,tableDict->currentRecord->strHZ);
+                    //                     FcitxLog(INFO, _("22tableDict->currentRecord:%s  %s"),
+                    //                     tableDict->currentRecord->strCode,tableDict->currentRecord->strHZ);
                     tableDict->currentRecord->prev->next = tableDict->currentRecord->next;
                     tableDict->currentRecord->next->prev = tableDict->currentRecord->prev;
                     tableDict->iRecordCount--;
@@ -389,7 +392,8 @@ boolean LoadUsrDict(TableMetaData *tableMetaData)
             strcpy(recTemp->strHZ, temp);
             recTemp->type = RECORDTYPE_CONSTRUCT;
             //             recTemp->iHit = 0;
-            //             FcitxLog(INFO, _("33tableDict->currentRecord:%s  %s"), tableDict->currentRecord->strCode,tableDict->currentRecord->strHZ);
+            //             FcitxLog(INFO, _("33tableDict->currentRecord:%s  %s"),
+            //             tableDict->currentRecord->strCode,tableDict->currentRecord->strHZ);
             recTemp->prev = insertPoint->prev;
             insertPoint->prev->next = recTemp;
             recTemp->next = insertPoint;
@@ -692,7 +696,8 @@ boolean LoadS2tPhraseDict(TableMetaData *tableMetaData)
                     if (tableSingleHZ[iTemp])
                     {
                         RECORD *tempR = tableSingleHZ[iTemp];
-                        while (!strncmp(tempR->strCode, strCode, strlen(strCode)) && strlen(tempR->strCode) <= strlen(recTemp->strCode) && tempR != tableDict->s2tCurrentRecord)
+                        while (!strncmp(tempR->strCode, strCode, strlen(strCode)) &&
+                               strlen(tempR->strCode) <= strlen(recTemp->strCode) && tempR != tableDict->s2tCurrentRecord)
                         {
                             if (!strcmp(tempR->strCode, recTemp->strCode) && !strcmp(tempR->strHZ, recTemp->strHZ))
                             {
@@ -703,7 +708,8 @@ boolean LoadS2tPhraseDict(TableMetaData *tableMetaData)
                         }
                         if (findRepeat)
                             continue;
-                        if (!strncmp(tempR->strCode, strCode, strlen(strCode)) && strlen(tempR->strCode) <= strlen(recTemp->strCode) && tempR == tableDict->s2tCurrentRecord)
+                        if (!strncmp(tempR->strCode, strCode, strlen(strCode)) &&
+                            strlen(tempR->strCode) <= strlen(recTemp->strCode) && tempR == tableDict->s2tCurrentRecord)
                         {
                             tableDict->s2tCurrentRecord->next = recTemp;
                             recTemp->prev = tableDict->s2tCurrentRecord;
@@ -794,14 +800,14 @@ void SaveDict(TableMetaData *tableMetaData, TableDict *tableDict)
 
     boolean error = false;
     size_t size;
-#define CHECK_WRITE_TABLE_ERROR(SIZE)                                                                                                                                                                                                                                                                      \
-    do                                                                                                                                                                                                                                                                                                     \
-    {                                                                                                                                                                                                                                                                                                      \
-        if (size < (SIZE))                                                                                                                                                                                                                                                                                 \
-        {                                                                                                                                                                                                                                                                                                  \
-            error = true;                                                                                                                                                                                                                                                                                  \
-            break;                                                                                                                                                                                                                                                                                         \
-        }                                                                                                                                                                                                                                                                                                  \
+#define CHECK_WRITE_TABLE_ERROR(SIZE)                                                                                            \
+    do                                                                                                                           \
+    {                                                                                                                            \
+        if (size < (SIZE))                                                                                                       \
+        {                                                                                                                        \
+            error = true;                                                                                                        \
+            break;                                                                                                               \
+        }                                                                                                                        \
     } while (0)
 
     // write version number
@@ -1247,7 +1253,8 @@ int TableCompareCode(const char *strUser, const char *strDict, boolean exactMatc
     return 0;
 }
 
-int TableFindFirstMatchCode(TableMetaData *tableMetaData, const char *strCodeInput, boolean exactMatch, boolean cacheCurrentRecord)
+int TableFindFirstMatchCode(TableMetaData *tableMetaData, const char *strCodeInput, boolean exactMatch,
+                            boolean cacheCurrentRecord)
 {
     int i = 0;
     TableDict *WubiDict, *PinyinDict;

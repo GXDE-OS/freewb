@@ -9,8 +9,10 @@
 namespace settings
 {
 
-const char kDefaultCoustomChar[] = u8R"cc(ˉ  ，  、  ；  ：  ？  ！  …  —  •  〔  （  【  〈  “  〉  《  》  ∶  「  」  『  ［  ）  ＂  ＇  ‘  ”  〕  々  ‖  】  ’  〗  ～  〖  。  ˇ  ¨  `  |  "  』  .  ］  中  国  )cc";
-const char kDefaultCoustomMark[] = u8R"cc( ）  ！  ·  #  ￥  %  …  —  *  （                                                     ` ~ － — ＝ + [ { ] } 、 ｜ ； ： ’  ，  。  、 ？ )cc";
+const char kDefaultCoustomChar[] =
+    u8R"cc(ˉ  ，  、  ；  ：  ？  ！  …  —  •  〔  （  【  〈  “  〉  《  》  ∶  「  」  『  ［  ）  ＂  ＇  ‘  ”  〕  々  ‖  】  ’  〗  ～  〖  。  ˇ  ¨  `  |  "  』  .  ］  中  国  )cc";
+const char kDefaultCoustomMark[] =
+    u8R"cc( ）  ！  ·  #  ￥  %  …  —  *  （                                                     ` ~ － — ＝ + [ { ] } 、 ｜ ； ： ’  ，  。  、 ？ )cc";
 
 namespace
 {
@@ -80,7 +82,8 @@ void Settings::load()
         }
         case ValueType::Int:
         {
-            e.value.intValue = static_cast<int>(ini.GetLongValue(e.section, e.uniquename, static_cast<long>(e.defaultValue.intValue)));
+            e.value.intValue =
+                static_cast<int>(ini.GetLongValue(e.section, e.uniquename, static_cast<long>(e.defaultValue.intValue)));
             break;
         }
         case ValueType::String:

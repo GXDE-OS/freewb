@@ -96,7 +96,13 @@ void CandidateItem::set_text_font(const QFont &font)
 void CandidateItem::set_hover_color(const QColor &color)
 {
     m_hoverColor = color;
-    QString str = QString("QLabel:hover{color:rgb(%1,%2,%3)}QLabel{color:rgb(%4,%5,%6)}").arg(color.red()).arg(color.green()).arg(color.blue()).arg(m_wordColor.red()).arg(m_wordColor.green()).arg(m_wordColor.blue());
+    QString str = QString("QLabel:hover{color:rgb(%1,%2,%3)}QLabel{color:rgb(%4,%5,%6)}")
+                      .arg(color.red())
+                      .arg(color.green())
+                      .arg(color.blue())
+                      .arg(m_wordColor.red())
+                      .arg(m_wordColor.green())
+                      .arg(m_wordColor.blue());
 
     ui->labelWord->setStyleSheet(str);
 }
@@ -105,7 +111,13 @@ void CandidateItem::set_hover_color(const QColor &color)
 void CandidateItem::set_word_text_color(const QColor &color)
 {
     m_wordColor = color;
-    QString str = QString("QLabel{color:rgb(%1,%2,%3)}QLabel:hover{color:rgb(%4,%5,%6)}").arg(color.red()).arg(color.green()).arg(color.blue()).arg(m_hoverColor.red()).arg(m_hoverColor.green()).arg(m_hoverColor.blue());
+    QString str = QString("QLabel{color:rgb(%1,%2,%3)}QLabel:hover{color:rgb(%4,%5,%6)}")
+                      .arg(color.red())
+                      .arg(color.green())
+                      .arg(color.blue())
+                      .arg(m_hoverColor.red())
+                      .arg(m_hoverColor.green())
+                      .arg(m_hoverColor.blue());
 
     ui->labelWord->setStyleSheet(str);
 }

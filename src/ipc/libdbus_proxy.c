@@ -4,7 +4,8 @@
 
 static DBusMessage *createSettingsMethodCallMessage(const char *methodName)
 {
-    return dbus_message_new_method_call(FREEWUBI_SETTINGS_SERVICENAME, FREEWUBI_SETTINGS_OBJECTPATH, FREEWUBI_SETTINGS_INTERFACE, methodName);
+    return dbus_message_new_method_call(FREEWUBI_SETTINGS_SERVICENAME, FREEWUBI_SETTINGS_OBJECTPATH, FREEWUBI_SETTINGS_INTERFACE,
+                                        methodName);
 }
 
 void FreeWubiServiceAddUsrParse(DBusConnection *conn, int flg, char *wordText, char *wordCode)
@@ -18,7 +19,8 @@ void FreeWubiServiceAddUsrParse(DBusConnection *conn, int flg, char *wordText, c
         return;
     }
     dbus_message_iter_init_append(msg, &args);
-    if (!dbus_message_append_args(msg, DBUS_TYPE_INT32, &flg, DBUS_TYPE_STRING, &wordText, DBUS_TYPE_STRING, &wordCode, DBUS_TYPE_INVALID))
+    if (!dbus_message_append_args(msg, DBUS_TYPE_INT32, &flg, DBUS_TYPE_STRING, &wordText, DBUS_TYPE_STRING, &wordCode,
+                                  DBUS_TYPE_INVALID))
     {
         return;
     }
@@ -40,7 +42,8 @@ void FreeWubiServiceDeleteUsrParse(DBusConnection *conn, int flg, char *wordText
         return;
     }
     dbus_message_iter_init_append(msg, &args);
-    if (!dbus_message_append_args(msg, DBUS_TYPE_INT32, &flg, DBUS_TYPE_STRING, &wordText, DBUS_TYPE_STRING, &wordCode, DBUS_TYPE_INVALID))
+    if (!dbus_message_append_args(msg, DBUS_TYPE_INT32, &flg, DBUS_TYPE_STRING, &wordText, DBUS_TYPE_STRING, &wordCode,
+                                  DBUS_TYPE_INVALID))
     {
         return;
     }

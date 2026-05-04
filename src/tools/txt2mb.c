@@ -57,8 +57,10 @@
 #define AUTO_PHRASE_COUNT 10000
 #define SINGLE_HZ_COUNT 66000
 
-char *strConst[CONST_STR_SIZE] = {"键码=", "码长=", "规避字符=", "拼音=", "拼音长度=", "[数据]", "[组词规则]", "提示=", "构词=", "生僻字="};
-char *strConstNew[CONST_STR_SIZE] = {"KeyCode=", "Length=", "InvalidChar=", "Pinyin=", "PinyinLength=", "[Data]", "[Rule]", "Prompt=", "ConstructPhrase=", "UncommonWords="};
+char *strConst[CONST_STR_SIZE] = {"键码=",  "码长=",      "规避字符=", "拼音=", "拼音长度=",
+                                  "[数据]", "[组词规则]", "提示=",     "构词=", "生僻字="};
+char *strConstNew[CONST_STR_SIZE] = {"KeyCode=", "Length=", "InvalidChar=", "Pinyin=",          "PinyinLength=",
+                                     "[Data]",   "[Rule]",  "Prompt=",      "ConstructPhrase=", "UncommonWords="};
 
 char strInputCode[100] = "\0";
 char strIgnoreChars[100] = "\0";

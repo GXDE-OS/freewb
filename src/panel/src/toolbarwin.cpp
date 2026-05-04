@@ -35,18 +35,18 @@
 #define ICO_KEYBOARD_MODE_CHECKED ":/image/toolbar/checked.png"
 #define ICO_KEYBOARD_MODE_UNCHECKED ""
 
-#define QSS_MENU                                                                                                                                                                                                                                                                                           \
-    "QMenu::item{color: rgb(56, 56, 56);}"                                                                                                                                                                                                                                                                 \
+#define QSS_MENU                                                                                                                 \
+    "QMenu::item{color: rgb(56, 56, 56);}"                                                                                       \
     "QMenu::item:selected{background-color:#DFDFDF;color: rgb(56, 56, 56)}"
 
-#define QSS_TOOL_TIPS                                                                                                                                                                                                                                                                                      \
-    "color: rgb(56, 56, 56);"                                                                                                                                                                                                                                                                              \
-    "font: 12pt \"Ubuntu\";"                                                                                                                                                                                                                                                                               \
-    "padding: 10px;"                                                                                                                                                                                                                                                                                       \
-    "background-color: rgb(254, 255, 226);"                                                                                                                                                                                                                                                                \
-    "border-radius: 5px;"                                                                                                                                                                                                                                                                                  \
-    "border-width: 2px;"                                                                                                                                                                                                                                                                                   \
-    "border-style: solid;"                                                                                                                                                                                                                                                                                 \
+#define QSS_TOOL_TIPS                                                                                                            \
+    "color: rgb(56, 56, 56);"                                                                                                    \
+    "font: 12pt \"Ubuntu\";"                                                                                                     \
+    "padding: 10px;"                                                                                                             \
+    "background-color: rgb(254, 255, 226);"                                                                                      \
+    "border-radius: 5px;"                                                                                                        \
+    "border-width: 2px;"                                                                                                         \
+    "border-style: solid;"                                                                                                       \
     "border-color: rgb(200, 200, 200);"
 
 /**********************************************　静态成员　************************************************/
@@ -115,7 +115,8 @@ CharSetMode ToolbarWin::get_char_set_mode()
 ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin)
 {
     ui->setupUi(this);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint |
+                   Qt::WindowStaysOnTopHint);
 
     setAttribute(Qt::WA_TranslucentBackground, true);
     setAttribute(Qt::WA_AlwaysShowToolTips, true); // Enables tooltips for inactive windows
@@ -177,7 +178,8 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_defaultPosition = QPoint(m_desktopSize.width() - size().width() - 12, m_desktopSize.height() - size().height() - 50);
     move(m_defaultPosition);
 
-    m_tooltipsWin.setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::WindowDoesNotAcceptFocus);
+    m_tooltipsWin.setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint |
+                                 Qt::WindowDoesNotAcceptFocus);
     m_tooltipsWin.setAttribute(Qt::WA_TranslucentBackground);
     m_tooltipsLabel = new QLabel(&m_tooltipsWin);
     m_tooltipsLabel->setStyleSheet(QSS_TOOL_TIPS);
@@ -489,7 +491,8 @@ void ToolbarWin::update_mouse_hover_tips()
     m_tipsTextMap.insert(ui->btnMark, QString("中英文标点切换按钮\n快捷键：Ctrl+."));
     m_tipsTextMap.insert(ui->btnKeyboard, QString("开关或切换软键盘按钮\n快捷键：") + fmt(settings::instance().get_switchVKb()));
     m_tipsTextMap.insert(ui->btnSetting, "打开设置界面按钮");
-    m_tipsTextMap.insert(ui->btnCharFont, QString("简繁体输出切换按钮\n快捷键：") + fmt(settings::instance().get_switchChttrans()));
+    m_tipsTextMap.insert(ui->btnCharFont,
+                         QString("简繁体输出切换按钮\n快捷键：") + fmt(settings::instance().get_switchChttrans()));
     m_tipsTextMap.insert(ui->btnCharSet, QString("字符集切换按钮\n快捷键：") + fmt(settings::instance().get_switchCharSet()));
 }
 
@@ -836,7 +839,8 @@ void ToolbarWin::update_vk_mode_ckecked_state(VirtualKeyboardMode mode)
     m_kbInputJapanFlat->setIcon(QIcon(mode == VKM_INPUT_JAPAN_FLAT ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
     m_kbInputJapanPiece->setIcon(QIcon(mode == VKM_INPUT_JAPAN_PIECE ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
     m_kbInputPunctuation->setIcon(QIcon(mode == VKM_INPUT_PUNCTUATION ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
-    m_kbInputDigitalOrder->setIcon(QIcon(mode == VKM_INPUT_DIGITAL_ORDER ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbInputDigitalOrder->setIcon(
+        QIcon(mode == VKM_INPUT_DIGITAL_ORDER ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
     m_kbInputMath->setIcon(QIcon(mode == VKM_INPUT_MATH ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
     m_kbInputUnit->setIcon(QIcon(mode == VKM_INPUT_UNIT ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
     m_kbInputTabs->setIcon(QIcon(mode == VKM_INPUT_TABS ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));

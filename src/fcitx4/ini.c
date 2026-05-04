@@ -254,7 +254,8 @@ boolean GetIniKeyBool(INI *ini, const char *Sections, const char *key)
 {
     char key2[128];
     sprintf(key2, "#%s", key);
-    return (strcasecmp(GetIniKeyString(ini, Sections, key, ""), "true") == 0 || strcasecmp(GetIniKeyString(ini, Sections, key2, ""), "true") == 0);
+    return (strcasecmp(GetIniKeyString(ini, Sections, key, ""), "true") == 0 ||
+            strcasecmp(GetIniKeyString(ini, Sections, key2, ""), "true") == 0);
 }
 
 int GetIniKeyInt(INI *ini, const char *Sections, const char *key, const int defineValue)

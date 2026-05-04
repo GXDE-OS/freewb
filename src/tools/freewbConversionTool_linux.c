@@ -29,7 +29,9 @@
 // #define AUTO_PHRASE_COUNT 10000
 // #define SINGLE_HZ_COUNT 66000
 
-char *strConst[CONST_STR_SIZE] = {"[Description]", "Name=", "词库信息=", "生成日期:", "编码截止键=", "特殊符号引导符=", "编码方案类型=", "径直上屏的标点=", "UsedCodes=", "WildChar=", "[rule]", ":生僻字词", ":用户词组", "联想词组", "[Text]"};
+char *strConst[CONST_STR_SIZE] = {"[Description]",   "Name=",         "词库信息=",       "生成日期:",  "编码截止键=",
+                                  "特殊符号引导符=", "编码方案类型=", "径直上屏的标点=", "UsedCodes=", "WildChar=",
+                                  "[rule]",          ":生僻字词",     ":用户词组",       "联想词组",   "[Text]"};
 
 char strName[30] = "五笔字型";
 char strInforMation[100] = {0};
@@ -517,12 +519,12 @@ int mb2txt(char *txtPath, char *mbPath, int *HZcount)
         fflush(stdout);
         return 0;
     }
-#define CHECK_LOAD_TABLE_ERROR(SIZE)                                                                                                                                                                                                                                                                       \
-    if (size < (SIZE))                                                                                                                                                                                                                                                                                     \
-    {                                                                                                                                                                                                                                                                                                      \
-        printf("码表格式错误");                                                                                                                                                                                                                                                                            \
-        fflush(stdout);                                                                                                                                                                                                                                                                                    \
-        return 0;                                                                                                                                                                                                                                                                                          \
+#define CHECK_LOAD_TABLE_ERROR(SIZE)                                                                                             \
+    if (size < (SIZE))                                                                                                           \
+    {                                                                                                                            \
+        printf("码表格式错误");                                                                                                  \
+        fflush(stdout);                                                                                                          \
+        return 0;                                                                                                                \
     }
     size_t size;
     // 读取名字

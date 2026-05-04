@@ -405,13 +405,15 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
         return IRV_CLEAN;
     }
 
-    if (strlen(strCodeInput) == 0 && sym == FcitxKey_Escape && state == FcitxKeyState_None && !fwb->bIsTableAddPhrase && !fwb->bIsTableDelPhrase && !fwb->bIsTempEnglish)
+    if (strlen(strCodeInput) == 0 && sym == FcitxKey_Escape && state == FcitxKeyState_None && !fwb->bIsTableAddPhrase &&
+        !fwb->bIsTableDelPhrase && !fwb->bIsTempEnglish)
     {
         return IRV_DO_NOTHING;
     }
 
     // 2024-5-6
-    if (fwb->bIsTableAddPhrase && state == FcitxKeyState_None && sym != FcitxKey_Left && sym != FcitxKey_Right && sym != FcitxKey_Escape && sym != FcitxKey_Return)
+    if (fwb->bIsTableAddPhrase && state == FcitxKeyState_None && sym != FcitxKey_Left && sym != FcitxKey_Right &&
+        sym != FcitxKey_Escape && sym != FcitxKey_Return)
     {
         return IRV_DO_NOTHING;
     }
@@ -537,7 +539,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
             FcitxInputStateSetRawInputBufferSize(input, raw_size);
         }
     }
-    if (FcitxHotkeyIsHotKeyUAZ(sym, state) && !fwb->bIsAutoEnglish && !fwb->bIsTableAddPhrase && !fwb->bIsTableDelPhrase && !fwb->bIsTempEnglish)
+    if (FcitxHotkeyIsHotKeyUAZ(sym, state) && !fwb->bIsAutoEnglish && !fwb->bIsTableAddPhrase && !fwb->bIsTableDelPhrase &&
+        !fwb->bIsTempEnglish)
     {
         puts("8888888");
         if (FcitxCandidateWordPageCount(candList))
@@ -584,7 +587,9 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
 
     if (fwb->config.QuickInputKey[0].sym && strCodeInput[0] == fwb->config.QuickInputKey[0].sym)
     {
-        if ((FcitxHotkeyIsHotKey(sym, state, FCITX_SPACE) || (sym == fwb->config.QuickInputKey[0].sym && state == FcitxKeyState_None)) && FcitxCandidateWordPageCount(candList) != 0)
+        if ((FcitxHotkeyIsHotKey(sym, state, FCITX_SPACE) ||
+             (sym == fwb->config.QuickInputKey[0].sym && state == FcitxKeyState_None)) &&
+            FcitxCandidateWordPageCount(candList) != 0)
         {
             if (fwb->config.bInputVoice)
                 playSound(SOUND_SAPCE);
@@ -607,7 +612,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
         puncNumber = isPuncKey(sym);
     }
 
-    if (!fwb->bIsTempEnglish && -1 != puncNumber && fwb->config.bUseSmartPunc && !(FcitxCandidateWordPageCount(candList) && FcitxHotkeyIsHotKey(sym, state, fwb->config.hkThirdRecode)))
+    if (!fwb->bIsTempEnglish && -1 != puncNumber && fwb->config.bUseSmartPunc &&
+        !(FcitxCandidateWordPageCount(candList) && FcitxHotkeyIsHotKey(sym, state, fwb->config.hkThirdRecode)))
     {
         if (FcitxCandidateWordPageCount(candList))
         {
@@ -621,11 +627,15 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
         FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), output_str);
         FreeWubiResetInputState(FreeWubiGetInputState());
         fwb->bNeedMoveCur = true;
-        // FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_Left, FcitxKeyState_None);
+        // FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_Left,
+        // FcitxKeyState_None);
         return IRV_CLEAN;
     } // 成对标点
 
-    if (state == FcitxKeyState_None && !fwb->bIsTempEnglish && !fwb->bIsAutoEnglish && (IsInputKey(table, sym) || FcitxHotkeyIsHotKeyUAZ(sym, state) || (table->tableType != FREE_PINYIN && (IsUncommonKey(table, sym, state) || (strCodeInput[0] == fwb->config.unCommonKey[0].sym && '/' == sym)))))
+    if (state == FcitxKeyState_None && !fwb->bIsTempEnglish && !fwb->bIsAutoEnglish &&
+        (IsInputKey(table, sym) || FcitxHotkeyIsHotKeyUAZ(sym, state) ||
+         (table->tableType != FREE_PINYIN &&
+          (IsUncommonKey(table, sym, state) || (strCodeInput[0] == fwb->config.unCommonKey[0].sym && '/' == sym)))))
     {
         if (fwb->config.bInputVoice)
             playSound(SOUND_LETTER);
@@ -635,7 +645,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
         /* it's not in special state */
         if (!fwb->bIsTableAddPhrase && !fwb->bIsTableDelPhrase && !fwb->bIsTableAdjustOrder)
         {
-            if (IsUncommonKey(table, sym, state) && FcitxInputStateGetRawInputBufferSize(input) == 1 && strCodeInput[0] == fwb->config.unCommonKey[0].sym)
+            if (IsUncommonKey(table, sym, state) && FcitxInputStateGetRawInputBufferSize(input) == 1 &&
+                strCodeInput[0] == fwb->config.unCommonKey[0].sym)
             {
                 return FcitxCandidateWordChooseByIndex(candList, 0);
             }
@@ -665,7 +676,9 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                         if (FcitxCandidateWordGetByIndex(candList, 1))
                         {
                             TABLECANDWORD *tableCandWord2 = FcitxCandidateWordGetByIndex(candList, 1)->priv;
-                            if (tableCandWord2->flag == CT_NORMAL && strcmp(strCodeInput, tableCandWord2->candWord.record->strCode) == 0 && tableCandWord2->candWord.record->owner == table->WubiDict)
+                            if (tableCandWord2->flag == CT_NORMAL &&
+                                strcmp(strCodeInput, tableCandWord2->candWord.record->strCode) == 0 &&
+                                tableCandWord2->candWord.record->owner == table->WubiDict)
                             {
                                 playSound(SOUND_RECODE);
                             }
@@ -688,12 +701,16 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                     if (candWord->owner == fwb)
                     {
                         TABLECANDWORD *tableCandWord = candWord->priv;
-                        if (tableCandWord->candWord.record && (!strcmp(tableCandWord->candWord.record->strCode, strCodeInput) || (strCodeInput[0] == fwb->config.unCommonKey[0].sym && !strcmp(tableCandWord->candWord.record->strCode, strCodeInput + 1))))
+                        if (tableCandWord->candWord.record &&
+                            (!strcmp(tableCandWord->candWord.record->strCode, strCodeInput) ||
+                             (strCodeInput[0] == fwb->config.unCommonKey[0].sym &&
+                              !strcmp(tableCandWord->candWord.record->strCode, strCodeInput + 1))))
                         {
                             if (fwb->config.bRecodeProof && FcitxCandidateWordGetByIndex(candList, 1))
                             {
                                 TABLECANDWORD *tableCandWord2 = FcitxCandidateWordGetByIndex(candList, 1)->priv;
-                                if (tableCandWord2->flag == CT_NORMAL && strcmp(strCodeInput, tableCandWord2->candWord.record->strCode) == 0)
+                                if (tableCandWord2->flag == CT_NORMAL &&
+                                    strcmp(strCodeInput, tableCandWord2->candWord.record->strCode) == 0)
                                 {
                                     strcat(strReCodeProof, "【");
                                     strcat(strReCodeProof, FcitxCandidateWordGetByIndex(candList, 1)->strWord);
@@ -744,7 +761,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 retVal = FreeWubiGetCandWords(fwb);
                 if (fwb->config.bRecodeVoice && raw_size == table->WubiDict->iCodeLength)
                 {
-                    // printf("%s=%d[%d] \n",strCodeInput,TableFindPhraseByCodeNum(table->WubiDict,strCodeInput,fwb->config.bIsGBK),FcitxCandidateWordPageCount(candList));
+                    // printf("%s=%d[%d]
+                    // \n",strCodeInput,TableFindPhraseByCodeNum(table->WubiDict,strCodeInput,fwb->config.bIsGBK),FcitxCandidateWordPageCount(candList));
                     candCount = TableFindPhraseByCodeNum(table->WubiDict, strCodeInput, fwb->config.bIsGBK);
                 }
 
@@ -769,14 +787,18 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                     if (candWord->owner == fwb)
                     {
                         TABLECANDWORD *tableCandWord = candWord->priv;
-                        if (tableCandWord->candWord.record && (!strcmp(tableCandWord->candWord.record->strCode, strCodeInput) || (strCodeInput[0] == fwb->config.unCommonKey[0].sym) && !strcmp(tableCandWord->candWord.record->strCode, strCodeInput)))
+                        if (tableCandWord->candWord.record &&
+                            (!strcmp(tableCandWord->candWord.record->strCode, strCodeInput) ||
+                             (strCodeInput[0] == fwb->config.unCommonKey[0].sym) &&
+                                 !strcmp(tableCandWord->candWord.record->strCode, strCodeInput)))
                         {
                             if (fwb->config.bRecodeProof && FcitxCandidateWordGetByIndex(candList, 1))
                             {
                                 TABLECANDWORD *tableCandWord2 = FcitxCandidateWordGetByIndex(candList, 1)->priv;
                                 // printf("%s=%s \n",strCodeInput,tableCandWord2->candWord.record->strHZ);
 
-                                if (tableCandWord2->flag == CT_NORMAL && strcmp(strCodeInput, tableCandWord2->candWord.record->strCode) == 0)
+                                if (tableCandWord2->flag == CT_NORMAL &&
+                                    strcmp(strCodeInput, tableCandWord2->candWord.record->strCode) == 0)
                                 {
                                     strcat(strReCodeProof, "【");
                                     strcat(strReCodeProof, FcitxCandidateWordGetByIndex(candList, 1)->strWord);
@@ -837,7 +859,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
     {
         if (FcitxHotkeyIsHotKey(sym, state, FCITX_ENTER) && fwb->config.bInputVoice)
             playSound(SOUND_ENTER);
-        if (sym == fwb->config.tempEnglishKey[0].sym && state == FcitxKeyState_None && !FcitxInputStateGetRawInputBufferSize(input) && !fwb->bIsTempEnglish)
+        if (sym == fwb->config.tempEnglishKey[0].sym && state == FcitxKeyState_None &&
+            !FcitxInputStateGetRawInputBufferSize(input) && !fwb->bIsTempEnglish)
         {
             fwb->bIsTempEnglish = true;
             size_t raw_size = FcitxInputStateGetRawInputBufferSize(input);
@@ -909,7 +932,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 fwb->bIsTempEnglish = false;
                 return IRV_CLEAN;
             }
-            else if (sym == fwb->config.tempEnglishKey[0].sym && state == FcitxKeyState_None && FcitxInputStateGetRawInputBufferSize(input) == 1)
+            else if (sym == fwb->config.tempEnglishKey[0].sym && state == FcitxKeyState_None &&
+                     FcitxInputStateGetRawInputBufferSize(input) == 1)
             {
                 if (fwb->config.bInputVoice)
                     playSound(SOUND_SAPCE);
@@ -958,7 +982,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                     else
                         playSound(SOUND_RECODE);
                 }
-                else if (!fwb->bIsTableAddPhraseByClip && fwb->iTableNewPhraseHZCount < table->WubiDict->iHZLastInputCount && fwb->iTableNewPhraseHZCount < PHRASE_MAX_LENGTH)
+                else if (!fwb->bIsTableAddPhraseByClip && fwb->iTableNewPhraseHZCount < table->WubiDict->iHZLastInputCount &&
+                         fwb->iTableNewPhraseHZCount < PHRASE_MAX_LENGTH)
                 {
                     fwb->iTableNewPhraseHZCount++;
                     int i;
@@ -966,7 +991,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                     memset(strHZ, 0, PHRASE_MAX_LENGTH * UTF8_MAX_LENGTH + 1);
                     char strCode[5];
                     memset(strCode, 0, 5);
-                    for (i = table->WubiDict->iHZLastInputCount - fwb->iTableNewPhraseHZCount; i >= 0 && i < table->WubiDict->iHZLastInputCount; i++)
+                    for (i = table->WubiDict->iHZLastInputCount - fwb->iTableNewPhraseHZCount;
+                         i >= 0 && i < table->WubiDict->iHZLastInputCount; i++)
                     {
                         strcat(strHZ, table->WubiDict->hzLastInput[i % PHRASE_MAX_LENGTH].strHZ);
                     }
@@ -1002,7 +1028,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                     }
                     else
                     {
-                        for (i = table->WubiDict->iHZLastInputCount - fwb->iTableNewPhraseHZCount; i >= 0 && i < table->WubiDict->iHZLastInputCount; i++)
+                        for (i = table->WubiDict->iHZLastInputCount - fwb->iTableNewPhraseHZCount;
+                             i >= 0 && i < table->WubiDict->iHZLastInputCount; i++)
                         {
                             strcat(strHZ, table->WubiDict->hzLastInput[i % PHRASE_MAX_LENGTH].strHZ);
                         }
@@ -1039,7 +1066,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 }
                 else
                 {
-                    for (i = table->WubiDict->iHZLastInputCount - fwb->iTableNewPhraseHZCount; i >= 0 && i < table->WubiDict->iHZLastInputCount; i++)
+                    for (i = table->WubiDict->iHZLastInputCount - fwb->iTableNewPhraseHZCount;
+                         i >= 0 && i < table->WubiDict->iHZLastInputCount; i++)
                     {
                         strcat(strHZ, table->WubiDict->hzLastInput[i % PHRASE_MAX_LENGTH].strHZ);
                     }
@@ -1089,7 +1117,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 }
                 else
                 {
-                    for (i = table->WubiDict->iHZLastInputCount - fwb->iTableNewPhraseHZCount; i >= 0 && i < table->WubiDict->iHZLastInputCount; i++)
+                    for (i = table->WubiDict->iHZLastInputCount - fwb->iTableNewPhraseHZCount;
+                         i >= 0 && i < table->WubiDict->iHZLastInputCount; i++)
                     {
                         strcat(strHZ, table->WubiDict->hzLastInput[i % PHRASE_MAX_LENGTH].strHZ);
                     }
@@ -1114,8 +1143,10 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 FcitxInputStateSetIsDoInputOnly(input, false);
                 if (fwb->pLastCommitRecord)
                 {
-                    deleteWordPhraseAndSaveToDict(fwb->table, table->WubiDict, 1, fwb->pLastCommitRecord->strHZ, fwb->pLastCommitRecord->strCode);
-                    FreeWubiServiceDeleteUsrParse(FcitxDBusGetConnection(fwb->owner), 1, fwb->pLastCommitRecord->strHZ, fwb->pLastCommitRecord->strCode);
+                    deleteWordPhraseAndSaveToDict(fwb->table, table->WubiDict, 1, fwb->pLastCommitRecord->strHZ,
+                                                  fwb->pLastCommitRecord->strCode);
+                    FreeWubiServiceDeleteUsrParse(FcitxDBusGetConnection(fwb->owner), 1, fwb->pLastCommitRecord->strHZ,
+                                                  fwb->pLastCommitRecord->strCode);
                 }
                 return IRV_CLEAN;
             }
@@ -1134,7 +1165,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
         } // delete word
 
         // add word
-        if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkTableAddPhrase) && !fwb->bIsTempEnglish) || (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_ADD_PHRASE)))
+        if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkTableAddPhrase) && !fwb->bIsTempEnglish) ||
+            (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_ADD_PHRASE)))
         {
             fwb->bIsTempEnglish = false;
             if (!fwb->bIsTableAddPhrase && table->tableType != FREE_PINYIN)
@@ -1158,7 +1190,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 memset(strHZ, 0, PHRASE_MAX_LENGTH * UTF8_MAX_LENGTH + 1);
                 char strCode[5];
                 memset(strCode, 0, 5);
-                for (i = table->WubiDict->iHZLastInputCount - fwb->iTableNewPhraseHZCount; i >= 0 && i < table->WubiDict->iHZLastInputCount; i++)
+                for (i = table->WubiDict->iHZLastInputCount - fwb->iTableNewPhraseHZCount;
+                     i >= 0 && i < table->WubiDict->iHZLastInputCount; i++)
                 {
                     strcat(strHZ, table->WubiDict->hzLastInput[i % PHRASE_MAX_LENGTH].strHZ);
                 }
@@ -1190,7 +1223,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
             {
                 char *str = FreeWubiServiceGetClipboard(FcitxDBusGetConnection(fwb->owner));
                 fwb->iTableNewPhraseHZCount = fcitx_utf8_strlen(str);
-                if (fwb->iTableNewPhraseHZCount <= 1 || fwb->iTableNewPhraseHZCount >= PHRASE_MAX_LENGTH || !table->WubiDict->bRule) // 词组最少为两个汉字
+                if (fwb->iTableNewPhraseHZCount <= 1 || fwb->iTableNewPhraseHZCount >= PHRASE_MAX_LENGTH ||
+                    !table->WubiDict->bRule) // 词组最少为两个汉字
                     return IRV_CLEAN;
                 fwb->bIsTableAddPhrase = true;
                 fwb->bIsTableAddPhraseByClip = true;
@@ -1218,7 +1252,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 retVal = IRV_TO_PROCESS;
             return retVal;
         }
-        else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkTableDelPhrase) && !fwb->bIsTempEnglish) || (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_DELETE_PHRASE)))
+        else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkTableDelPhrase) && !fwb->bIsTempEnglish) ||
+                 (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_DELETE_PHRASE)))
         {
             fwb->bIsTempEnglish = false;
             if (!fwb->bIsTableDelPhrase && table->tableType != FREE_PINYIN)
@@ -1236,8 +1271,10 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 FreeWubiInputStateCleanInputWindow(input);
                 if (fwb->pLastCommitRecord)
                 {
-                    deleteWordPhraseAndSaveToDict(fwb->table, table->WubiDict, 0, fwb->pLastCommitRecord->strHZ, fwb->pLastCommitRecord->strCode);
-                    FreeWubiServiceDeleteUsrParse(FcitxDBusGetConnection(fwb->owner), 0, fwb->pLastCommitRecord->strHZ, fwb->pLastCommitRecord->strCode);
+                    deleteWordPhraseAndSaveToDict(fwb->table, table->WubiDict, 0, fwb->pLastCommitRecord->strHZ,
+                                                  fwb->pLastCommitRecord->strCode);
+                    FreeWubiServiceDeleteUsrParse(FcitxDBusGetConnection(fwb->owner), 0, fwb->pLastCommitRecord->strHZ,
+                                                  fwb->pLastCommitRecord->strCode);
                 }
                 retVal = IRV_DO_NOTHING;
             }
@@ -1258,7 +1295,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
             FreeWubiServiceSetCharWidth(FcitxDBusGetConnection(fwb->owner), 0, 1);
             retVal = IRV_DO_NOTHING;
         }
-        else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkReverseCheck) && !fwb->bIsTempEnglish) || (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_REVERSE_CHECK)))
+        else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkReverseCheck) && !fwb->bIsTempEnglish) ||
+                 (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_REVERSE_CHECK)))
         {
             fwb->bIsTempEnglish = false;
             if (fwb->pLastCommitRecord)
@@ -1285,13 +1323,15 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
             FreeWubiServiceSwitchChttrans(FcitxDBusGetConnection(fwb->owner));
             return IRV_CLEAN;
         }
-        else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkShowHideCandiWin) && !fwb->bIsTempEnglish) || (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_HIDE_CANDWIN)))
+        else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkShowHideCandiWin) && !fwb->bIsTempEnglish) ||
+                 (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_HIDE_CANDWIN)))
         {
             FreeWubiServiceSwitchCandiwinState(FcitxDBusGetConnection(fwb->owner));
             fwb->bIsTempEnglish = false;
             return IRV_CLEAN;
         }
-        else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkShowHideToolbar) && !fwb->bIsTempEnglish) || (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_HIDE_TOOLBAR)))
+        else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkShowHideToolbar) && !fwb->bIsTempEnglish) ||
+                 (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_HIDE_TOOLBAR)))
         {
             FreeWubiServiceSwitchToolbarState(FcitxDBusGetConnection(fwb->owner));
             fwb->bIsTempEnglish = false;
@@ -1303,13 +1343,15 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
             fwb->bIsTempEnglish = false;
             return IRV_CLEAN;
         }
-        else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkSwitchVKb) && !fwb->bIsTempEnglish) || (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_SWITCH_KEYBORD)))
+        else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkSwitchVKb) && !fwb->bIsTempEnglish) ||
+                 (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_SWITCH_KEYBORD)))
         {
             FreeWubiServiceSwitchVk(FcitxDBusGetConnection(fwb->owner), 0);
             fwb->bIsTempEnglish = false;
             return IRV_CLEAN;
         }
-        else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkSwitchCharSet) && !fwb->bIsTempEnglish) || (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_SWITCH_CHAR_SET)))
+        else if ((FcitxHotkeyIsHotKey(sym, state, fwb->config.hkSwitchCharSet) && !fwb->bIsTempEnglish) ||
+                 (fwb->bIsTempEnglish && !strcmp(strCodeInput + 1, STR_SWITCH_CHAR_SET)))
         {
             FreeWubiServiceSwitchCharSet(FcitxDBusGetConnection(fwb->owner));
             fwb->bIsTempEnglish = false;
@@ -1345,7 +1387,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
             int a = fcitx_utf8_strlen(strlast);
             while (a--)
             {
-                FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_BackSpace, FcitxKeyState_None);
+                FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_BackSpace,
+                                        FcitxKeyState_None);
                 if (table->tableType != FREE_PINYIN)
                     table->WubiDict->iHZLastInputCount--;
             }
@@ -1415,7 +1458,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                 return FreeWubiGetCandWords(fwb);
             }
         }
-        else if (state == FcitxKeyState_None && sym == FcitxKey_Delete && !fwb->bIsTempEnglish && FcitxCandidateWordPageCount(candList))
+        else if (state == FcitxKeyState_None && sym == FcitxKey_Delete && !fwb->bIsTempEnglish &&
+                 FcitxCandidateWordPageCount(candList))
         {
             fwb->bisDelNumber = true;
             return IRV_DO_NOTHING;
@@ -1425,7 +1469,8 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
             fwb->bIsTempEnglish = false;
             if (fwb->pLastCommitRecord)
             {
-                RECORD *recTemp = TableFindPhraseByCode(fwb->pLastCommitRecord->owner, fwb->pLastCommitRecord->strCode, fwb->pLastCommitRecord->strHZ);
+                RECORD *recTemp = TableFindPhraseByCode(fwb->pLastCommitRecord->owner, fwb->pLastCommitRecord->strCode,
+                                                        fwb->pLastCommitRecord->strHZ);
                 if (recTemp)
                 {
                     if (recTemp->type == RECORDTYPE_NORMAL)
@@ -1538,13 +1583,15 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
                     return IRV_DO_NOTHING;
                 }
             }
-            else if (FcitxHotkeyIsHotKey(sym, state, FCITX_SPACE) && (FcitxInputStateGetRawInputBufferSize(input) || FcitxCandidateWordPageCount(candList) != 0))
+            else if (FcitxHotkeyIsHotKey(sym, state, FCITX_SPACE) &&
+                     (FcitxInputStateGetRawInputBufferSize(input) || FcitxCandidateWordPageCount(candList) != 0))
             {
                 if (fwb->config.bInputVoice)
                     playSound(SOUND_SAPCE);
                 if (FcitxCandidateWordPageCount(candList) == 0)
                 {
-                    FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), FcitxInputStateGetRawInputBuffer(input));
+                    FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance),
+                                                 FcitxInputStateGetRawInputBuffer(input));
                     FcitxInputStateSetRawInputBufferSize(input, 0);
                     FcitxInputStateGetRawInputBuffer(input)[0] = '\0';
                     FcitxInputStateSetIsInRemind(input, false);
@@ -1722,14 +1769,18 @@ static INPUT_RETURN_VALUE FreeWubiDoInput(void *arg, FcitxKeySym sym, unsigned i
 
     if (fwb->bIsTableDelPhrase || fwb->bIsTableAdjustOrder)
         FcitxInputStateSetShowCursor(input, false);
-    else if (state == FcitxKey_None && sym == FcitxKey_comma && FcitxCandidateWordGetCurrentWindowSize(candList) >= 1 && fwb->config.hkAlternativePrevPage[0].sym != FcitxKey_comma && fwb->config.hkAlternativeNextPage[0].sym != FcitxKey_comma)
+    else if (state == FcitxKey_None && sym == FcitxKey_comma && FcitxCandidateWordGetCurrentWindowSize(candList) >= 1 &&
+             fwb->config.hkAlternativePrevPage[0].sym != FcitxKey_comma &&
+             fwb->config.hkAlternativeNextPage[0].sym != FcitxKey_comma)
     {
         FcitxCandidateWordChooseByIndex(candList, 0);
         FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), output_str);
         FreeWubiResetInputState(FreeWubiGetInputState());
         FreeWubiPanelProxyCloseInputWindow();
     }
-    else if (state == FcitxKey_None && sym == FcitxKey_period && FcitxCandidateWordGetCurrentWindowSize(candList) >= 1 && fwb->config.hkAlternativePrevPage[0].sym != FcitxKey_period && fwb->config.hkAlternativeNextPage[0].sym != FcitxKey_period)
+    else if (state == FcitxKey_None && sym == FcitxKey_period && FcitxCandidateWordGetCurrentWindowSize(candList) >= 1 &&
+             fwb->config.hkAlternativePrevPage[0].sym != FcitxKey_period &&
+             fwb->config.hkAlternativeNextPage[0].sym != FcitxKey_period)
     {
         FcitxCandidateWordChooseByIndex(candList, 0);
         FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), output_str);
@@ -1788,7 +1839,8 @@ INPUT_RETURN_VALUE TableGetRemindCandWords(Fcitxfreewubi *fwb)
 
         if (((iLength + 1) <= fcitx_utf8_strlen(tableRemind->strHZ)))
         {
-            if (!fcitx_utf8_strncmp(tableRemind->strHZ, fwb->strTableRemindSource, iLength) && fcitx_utf8_get_nth_char(tableRemind->strHZ, iLength))
+            if (!fcitx_utf8_strncmp(tableRemind->strHZ, fwb->strTableRemindSource, iLength) &&
+                fcitx_utf8_get_nth_char(tableRemind->strHZ, iLength))
             {
                 TABLECANDWORD *tableCandWord = fcitx_utils_new(TABLECANDWORD);
                 TableAddRemindCandWord(tableRemind, tableCandWord);
@@ -1872,7 +1924,8 @@ INPUT_RETURN_VALUE _TableGetCandWord(Fcitxfreewubi *fwb, TABLECANDWORD *tableCan
         {
             FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), fwb->pLastCommitRecord->strHZ);
             FreeWubiResetInputState(FreeWubiGetInputState());
-            FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_Left, FcitxKeyState_None);
+            FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_Left,
+                                    FcitxKeyState_None);
             return IRV_CLEAN;
         }
         break;
@@ -1881,8 +1934,10 @@ INPUT_RETURN_VALUE _TableGetCandWord(Fcitxfreewubi *fwb, TABLECANDWORD *tableCan
         tableCandWord->candWord.autoPhrase->iSelected = true;
         if (fwb->config.iAutoPhraseOpt == 2)
         {
-            addWordPhraseAndSaveToDict(table, table->WubiDict, 1, tableCandWord->candWord.autoPhrase->strHZ, tableCandWord->candWord.autoPhrase->strCode);
-            FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), 1, tableCandWord->candWord.autoPhrase->strHZ, tableCandWord->candWord.autoPhrase->strCode);
+            addWordPhraseAndSaveToDict(table, table->WubiDict, 1, tableCandWord->candWord.autoPhrase->strHZ,
+                                       tableCandWord->candWord.autoPhrase->strCode);
+            FreeWubiServiceAddUsrParse(FcitxDBusGetConnection(fwb->owner), 1, tableCandWord->candWord.autoPhrase->strHZ,
+                                       tableCandWord->candWord.autoPhrase->strCode);
         }
         if (!fwb->pLastCommitRecord)
             fwb->pLastCommitRecord = fcitx_utils_new(RECORD);
@@ -1904,7 +1959,8 @@ INPUT_RETURN_VALUE _TableGetCandWord(Fcitxfreewubi *fwb, TABLECANDWORD *tableCan
             FreeWubiInstanceCommitString(instance, FcitxInstanceGetCurrentIC(instance), fwb->pLastCommitRecord->strHZ);
             FreeWubiResetInputState(FreeWubiGetInputState());
             fwb->bNeedMoveCur = true;
-            // FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_Left, FcitxKeyState_None);
+            // FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_Left,
+            // FcitxKeyState_None);
             return IRV_CLEAN;
         }
         break;
@@ -1966,11 +2022,12 @@ static INPUT_RETURN_VALUE FreeWubiDoReleaseIntput(void *arg, FcitxKeySym sym, un
     //     if(state == FcitxKeyState_None)
     //         puncNumber = isPuncKey(sym);
     //     if(!fwb->bIsTempEnglish&&-1!=puncNumber&&fwb->config.bUseSmartPunc){
-    //         FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_Left, FcitxKeyState_None);
-    //         return IRV_TO_PROCESS;
+    //         FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_Left,
+    //         FcitxKeyState_None); return IRV_TO_PROCESS;
     //     }
     if (fwb->bNeedMoveCur)
-        FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_Left, FcitxKeyState_None);
+        FcitxInstanceForwardKey(instance, FcitxInstanceGetCurrentIC(instance), FCITX_PRESS_KEY, FcitxKey_Left,
+                                FcitxKeyState_None);
     fwb->bNeedMoveCur = false;
     return IRV_TO_PROCESS;
 }
@@ -2079,7 +2136,8 @@ static INPUT_RETURN_VALUE FreeWubiGetCandWord(void *arg, FcitxCandidateWord *can
             table->autoRecord->recordIndex = 0;
         }
         if (fwb->pLastCommitRecord && fwb->config.bAutoAdjustOrder)
-            adjustOrder(fwb->table, fwb->pLastCommitRecord->owner, fwb->pLastCommitRecord->strHZ, fwb->pLastCommitRecord->strCode);
+            adjustOrder(fwb->table, fwb->pLastCommitRecord->owner, fwb->pLastCommitRecord->strHZ,
+                        fwb->pLastCommitRecord->strCode);
     }
     return retVal;
 }
@@ -2096,7 +2154,8 @@ INPUT_RETURN_VALUE TableGetRepeateCandWords(Fcitxfreewubi *fwb)
 
     FcitxInstanceCleanInputWindowUp(instance);
     FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetPreedit(input), MSG_INPUT, FcitxInputStateGetRawInputBuffer(input));
-    FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetClientPreedit(input), MSG_INPUT | MSG_DONOT_COMMIT_WHEN_UNFOCUS, FcitxInputStateGetRawInputBuffer(input));
+    FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetClientPreedit(input), MSG_INPUT | MSG_DONOT_COMMIT_WHEN_UNFOCUS,
+                                         FcitxInputStateGetRawInputBuffer(input));
     FcitxInputStateSetCursorPos(input, FcitxInputStateGetRawInputBufferSize(input));
     FcitxInputStateSetClientCursorPos(input, 0);
 
@@ -2132,7 +2191,8 @@ INPUT_RETURN_VALUE TableGetQuickCandWords(Fcitxfreewubi *fwb)
     int puncNumber = -1;
     FcitxInstanceCleanInputWindowUp(instance);
     FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetPreedit(input), MSG_INPUT, FcitxInputStateGetRawInputBuffer(input));
-    FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetClientPreedit(input), MSG_INPUT | MSG_DONOT_COMMIT_WHEN_UNFOCUS, FcitxInputStateGetRawInputBuffer(input));
+    FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetClientPreedit(input), MSG_INPUT | MSG_DONOT_COMMIT_WHEN_UNFOCUS,
+                                         FcitxInputStateGetRawInputBuffer(input));
     FcitxInputStateSetCursorPos(input, FcitxInputStateGetRawInputBufferSize(input));
     FcitxInputStateSetClientCursorPos(input, 0);
     FcitxInputStateSetShowCursor(input, true);
@@ -2242,11 +2302,14 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
     if (FcitxInputStateGetIsInRemind(input))
         return TableGetRemindCandWords(fwb);
 
-    if (FcitxInputStateGetRawInputBuffer(input)[0] == 'z' && FcitxInputStateGetRawInputBufferSize(input) == 1 && fwb->pLastCommitRecord)
+    if (FcitxInputStateGetRawInputBuffer(input)[0] == 'z' && FcitxInputStateGetRawInputBufferSize(input) == 1 &&
+        fwb->pLastCommitRecord)
     {
         return TableGetRepeateCandWords(fwb);
     }
-    if (FcitxInputStateGetRawInputBuffer(input)[0] == fwb->config.QuickInputKey[0].sym || fwb->bIsTempEnglish || (FcitxInputStateGetRawInputBuffer(input)[0] == fwb->config.unCommonKey[0].sym && FcitxInputStateGetRawInputBufferSize(input) == 1))
+    if (FcitxInputStateGetRawInputBuffer(input)[0] == fwb->config.QuickInputKey[0].sym || fwb->bIsTempEnglish ||
+        (FcitxInputStateGetRawInputBuffer(input)[0] == fwb->config.unCommonKey[0].sym &&
+         FcitxInputStateGetRawInputBufferSize(input) == 1))
         return TableGetQuickCandWords(fwb);
 
     char *code = FcitxInputStateGetRawInputBuffer(input);
@@ -2256,9 +2319,11 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
         {
             FcitxMessagesSetMessageCount(FcitxInputStateGetPreedit(input), 0);
             FcitxMessagesSetMessageCount(FcitxInputStateGetClientPreedit(input), 0);
-            FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetPreedit(input), MSG_INPUT, FcitxInputStateGetRawInputBuffer(input));
+            FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetPreedit(input), MSG_INPUT,
+                                                 FcitxInputStateGetRawInputBuffer(input));
             FcitxMessageType type = MSG_INPUT;
-            FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetClientPreedit(input), type, FcitxInputStateGetRawInputBuffer(input));
+            FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetClientPreedit(input), type,
+                                                 FcitxInputStateGetRawInputBuffer(input));
             FcitxInputStateSetCursorPos(input, strlen(FcitxInputStateGetRawInputBuffer(input)));
             FcitxInputStateSetClientCursorPos(input, 0);
         }
@@ -2279,7 +2344,8 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
             { // 临时拼音生僻字
                 char *strInput = FcitxInputStateGetRawInputBuffer(input);
                 strInput++;
-                if (table->WubiDict->currentRecord->type == RECORDTYPE_UNCOMMON && !TableCompareCode(strInput, table->WubiDict->currentRecord->strCode, !fwb->config.bCodeRemind))
+                if (table->WubiDict->currentRecord->type == RECORDTYPE_UNCOMMON &&
+                    !TableCompareCode(strInput, table->WubiDict->currentRecord->strCode, !fwb->config.bCodeRemind))
                 {
                     if (fwb->config.bIsTraditional)
                     { // 简入繁出
@@ -2288,7 +2354,8 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
                         if (len == 1)
                             strcpy(strSignelHZ, table->WubiDict->currentRecord->strHZ);
                         else
-                            strncpy(strSignelHZ, table->WubiDict->currentRecord->strHZ, fcitx_utf8_char_len(table->WubiDict->currentRecord->strHZ));
+                            strncpy(strSignelHZ, table->WubiDict->currentRecord->strHZ,
+                                    fcitx_utf8_char_len(table->WubiDict->currentRecord->strHZ));
                         recTemp = table->WubiDict->s2tSignleHZ[CalHZIndex(strSignelHZ)];
                         if (!recTemp)
                         {
@@ -2298,11 +2365,14 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
                         }
                         else
                         {
-                            while (recTemp != table->WubiDict->s2tRecordHead && !strncmp(recTemp->strCode, strSignelHZ, strlen(strSignelHZ)) && strcmp(recTemp->strCode, table->WubiDict->currentRecord->strHZ))
+                            while (recTemp != table->WubiDict->s2tRecordHead &&
+                                   !strncmp(recTemp->strCode, strSignelHZ, strlen(strSignelHZ)) &&
+                                   strcmp(recTemp->strCode, table->WubiDict->currentRecord->strHZ))
                             {
                                 recTemp = recTemp->next;
                             }
-                            if (recTemp == table->WubiDict->s2tRecordHead || strcmp(recTemp->strCode, table->WubiDict->currentRecord->strHZ))
+                            if (recTemp == table->WubiDict->s2tRecordHead ||
+                                strcmp(recTemp->strCode, table->WubiDict->currentRecord->strHZ))
                             {
                                 TABLECANDWORD *tableCandWord = fcitx_utils_malloc0(sizeof(TABLECANDWORD));
                                 TableAddCandWord(table->WubiDict->currentRecord, tableCandWord);
@@ -2310,7 +2380,8 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
                             }
                             else
                             {
-                                while (recTemp != table->WubiDict->s2tRecordHead && !strcmp(recTemp->strCode, table->WubiDict->currentRecord->strHZ))
+                                while (recTemp != table->WubiDict->s2tRecordHead &&
+                                       !strcmp(recTemp->strCode, table->WubiDict->currentRecord->strHZ))
                                 {
                                     TABLECANDWORD *tableCandWord = fcitx_utils_malloc0(sizeof(TABLECANDWORD));
                                     TableAddCandWord(recTemp, tableCandWord);
@@ -2329,7 +2400,9 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
                     }
                 }
             }
-            else if ((fwb->config.bIsGBK || table->WubiDict->currentRecord->type != RECORDTYPE_UNCOMMON) && !TableCompareCode(FcitxInputStateGetRawInputBuffer(input), table->WubiDict->currentRecord->strCode, !fwb->config.bCodeRemind))
+            else if ((fwb->config.bIsGBK || table->WubiDict->currentRecord->type != RECORDTYPE_UNCOMMON) &&
+                     !TableCompareCode(FcitxInputStateGetRawInputBuffer(input), table->WubiDict->currentRecord->strCode,
+                                       !fwb->config.bCodeRemind))
             {
                 if (fwb->config.bIsTraditional)
                 { // 简入繁出
@@ -2338,7 +2411,8 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
                     if (len == 1)
                         strcpy(strSignelHZ, table->WubiDict->currentRecord->strHZ);
                     else
-                        strncpy(strSignelHZ, table->WubiDict->currentRecord->strHZ, fcitx_utf8_char_len(table->WubiDict->currentRecord->strHZ));
+                        strncpy(strSignelHZ, table->WubiDict->currentRecord->strHZ,
+                                fcitx_utf8_char_len(table->WubiDict->currentRecord->strHZ));
                     recTemp = table->WubiDict->s2tSignleHZ[CalHZIndex(strSignelHZ)];
                     if (!recTemp)
                     {
@@ -2348,11 +2422,14 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
                     }
                     else
                     {
-                        while (recTemp != table->WubiDict->s2tRecordHead && !strncmp(recTemp->strCode, strSignelHZ, strlen(strSignelHZ)) && strcmp(recTemp->strCode, table->WubiDict->currentRecord->strHZ))
+                        while (recTemp != table->WubiDict->s2tRecordHead &&
+                               !strncmp(recTemp->strCode, strSignelHZ, strlen(strSignelHZ)) &&
+                               strcmp(recTemp->strCode, table->WubiDict->currentRecord->strHZ))
                         {
                             recTemp = recTemp->next;
                         }
-                        if (recTemp == table->WubiDict->s2tRecordHead || strcmp(recTemp->strCode, table->WubiDict->currentRecord->strHZ))
+                        if (recTemp == table->WubiDict->s2tRecordHead ||
+                            strcmp(recTemp->strCode, table->WubiDict->currentRecord->strHZ))
                         {
                             //                                 printf("111%s%s\n",recTemp->strCode,recTemp->strHZ);
                             TABLECANDWORD *tableCandWord = fcitx_utils_malloc0(sizeof(TABLECANDWORD));
@@ -2362,7 +2439,8 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
                         else
                         {
                             //                                 printf("222%s%s\n",recTemp->strCode,recTemp->strHZ);
-                            while (recTemp != table->WubiDict->s2tRecordHead && !strcmp(recTemp->strCode, table->WubiDict->currentRecord->strHZ))
+                            while (recTemp != table->WubiDict->s2tRecordHead &&
+                                   !strcmp(recTemp->strCode, table->WubiDict->currentRecord->strHZ))
                             {
                                 TABLECANDWORD *tableCandWord = fcitx_utils_malloc0(sizeof(TABLECANDWORD));
                                 TableAddCandWord(recTemp, tableCandWord);
@@ -2399,7 +2477,8 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
             char *strInput = FcitxInputStateGetRawInputBuffer(input);
             if (FcitxInputStateGetRawInputBuffer(input)[0] == fwb->config.unCommonKey[0].sym && table->tableType == FREE_WUBI)
                 strInput++;
-            if (table->PinyinDict->currentRecord->type != RECORDTYPE_CONSTRUCT && !TableCompareCode(strInput, table->PinyinDict->currentRecord->strCode, !fwb->config.bCodeRemind))
+            if (table->PinyinDict->currentRecord->type != RECORDTYPE_CONSTRUCT &&
+                !TableCompareCode(strInput, table->PinyinDict->currentRecord->strCode, !fwb->config.bCodeRemind))
             {
                 if (fwb->config.bIsTraditional)
                 {
@@ -2408,7 +2487,8 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
                     if (len == 1)
                         strcpy(strSignelHZ, table->PinyinDict->currentRecord->strHZ);
                     else
-                        strncpy(strSignelHZ, table->PinyinDict->currentRecord->strHZ, fcitx_utf8_char_len(table->PinyinDict->currentRecord->strHZ));
+                        strncpy(strSignelHZ, table->PinyinDict->currentRecord->strHZ,
+                                fcitx_utf8_char_len(table->PinyinDict->currentRecord->strHZ));
                     recTemp = table->WubiDict->s2tSignleHZ[CalHZIndex(strSignelHZ)];
                     if (!recTemp)
                     {
@@ -2418,11 +2498,14 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
                     }
                     else
                     {
-                        while (recTemp != table->WubiDict->s2tRecordHead && !strncmp(recTemp->strCode, strSignelHZ, strlen(strSignelHZ)) && strcmp(recTemp->strCode, table->PinyinDict->currentRecord->strHZ))
+                        while (recTemp != table->WubiDict->s2tRecordHead &&
+                               !strncmp(recTemp->strCode, strSignelHZ, strlen(strSignelHZ)) &&
+                               strcmp(recTemp->strCode, table->PinyinDict->currentRecord->strHZ))
                         {
                             recTemp = recTemp->next;
                         }
-                        if (recTemp == table->WubiDict->s2tRecordHead || strcmp(recTemp->strCode, table->PinyinDict->currentRecord->strHZ))
+                        if (recTemp == table->WubiDict->s2tRecordHead ||
+                            strcmp(recTemp->strCode, table->PinyinDict->currentRecord->strHZ))
                         {
                             TABLECANDWORD *tableCandWord = fcitx_utils_malloc0(sizeof(TABLECANDWORD));
                             TableAddCandWord(table->PinyinDict->currentRecord, tableCandWord);
@@ -2430,7 +2513,8 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
                         }
                         else
                         {
-                            while (recTemp != table->WubiDict->s2tRecordHead && !strcmp(recTemp->strCode, table->PinyinDict->currentRecord->strHZ))
+                            while (recTemp != table->WubiDict->s2tRecordHead &&
+                                   !strcmp(recTemp->strCode, table->PinyinDict->currentRecord->strHZ))
                             {
                                 TABLECANDWORD *tableCandWord = fcitx_utils_malloc0(sizeof(TABLECANDWORD));
                                 TableAddCandWord(recTemp, tableCandWord);
@@ -2466,7 +2550,8 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
     sortCandwords(&candWubi, &candPinyin, &candTemp);
     boolean isRepeat = false;
     TABLECANDWORD **pcand = NULL;
-    for (pcand = (TABLECANDWORD **)utarray_front(&candTemp); pcand != NULL; pcand = (TABLECANDWORD **)utarray_next(&candTemp, pcand))
+    for (pcand = (TABLECANDWORD **)utarray_front(&candTemp); pcand != NULL;
+         pcand = (TABLECANDWORD **)utarray_next(&candTemp, pcand))
     {
         TABLECANDWORD *tableCandWord = *pcand;
         FcitxCandidateWord candWord;
@@ -2484,7 +2569,9 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
             char *speStrHZ = tableCandWord->candWord.record->strHZ;
             if (tableCandWord->candWord.record->type == RECORDTYPE_CONSTRUCT)
             {
-                if (autoCandWord && strcmp(tableCandWord->candWord.record->strCode, autoCandWord->candWord.autoPhrase->strCode) == 0 && strcmp(tableCandWord->candWord.record->strHZ, autoCandWord->candWord.autoPhrase->strHZ) == 0)
+                if (autoCandWord &&
+                    strcmp(tableCandWord->candWord.record->strCode, autoCandWord->candWord.autoPhrase->strCode) == 0 &&
+                    strcmp(tableCandWord->candWord.record->strHZ, autoCandWord->candWord.autoPhrase->strHZ) == 0)
                     isRepeat = true; // 如果与自动造词的词组重复，则不显示自动造词的词组
                 candWord.strWord = matchTime(speStrHZ);
             }
@@ -2509,16 +2596,21 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
         boolean isSingleS2t = false;
         if (tableCandWord->flag == CT_NORMAL)
         {
-            if (tableCandWord->candWord.record->type == RECORDTYPE_S2T && fcitx_utf8_strlen(tableCandWord->candWord.record->strHZ) == 1)
+            if (tableCandWord->candWord.record->type == RECORDTYPE_S2T &&
+                fcitx_utf8_strlen(tableCandWord->candWord.record->strHZ) == 1)
             {
                 pstrS2t = tableCandWord->candWord.record->strCode;
                 isSingleS2t = true;
             }
-            if ((tableCandWord->candWord.record->owner->tableType == FREE_PINYIN) || (tableCandWord->candWord.record->type == RECORDTYPE_S2T && tableCandWord->candWord.simpelRecord->owner->tableType == FREE_PINYIN))
+            if ((tableCandWord->candWord.record->owner->tableType == FREE_PINYIN) ||
+                (tableCandWord->candWord.record->type == RECORDTYPE_S2T &&
+                 tableCandWord->candWord.simpelRecord->owner->tableType == FREE_PINYIN))
             {
                 if (fcitx_utf8_strlen(tableCandWord->candWord.record->strHZ) == 1)
                 {
-                    if (!strcmp(FcitxInputStateGetRawInputBuffer(input), tableCandWord->candWord.record->strCode) || (tableCandWord->candWord.record->type == RECORDTYPE_S2T && !strcmp(FcitxInputStateGetRawInputBuffer(input), tableCandWord->candWord.simpelRecord->strCode)))
+                    if (!strcmp(FcitxInputStateGetRawInputBuffer(input), tableCandWord->candWord.record->strCode) ||
+                        (tableCandWord->candWord.record->type == RECORDTYPE_S2T &&
+                         !strcmp(FcitxInputStateGetRawInputBuffer(input), tableCandWord->candWord.simpelRecord->strCode)))
                     {
                         recTemp = table->WubiDict->tableSingleHZ[CalHZIndex(tableCandWord->candWord.record->strHZ)];
                         if (!recTemp)
@@ -2529,8 +2621,12 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
                             isSinglePinyin = true;
                         }
                     }
-                    else if ((!strcmp(FcitxInputStateGetRawInputBuffer(input) + 1, tableCandWord->candWord.record->strCode) && FcitxInputStateGetRawInputBuffer(input)[0] == fwb->config.unCommonKey[0].sym) ||
-                             (tableCandWord->candWord.record->type == RECORDTYPE_S2T && !strcmp(FcitxInputStateGetRawInputBuffer(input) + 1, tableCandWord->candWord.simpelRecord->strCode) && FcitxInputStateGetRawInputBuffer(input)[0] == fwb->config.unCommonKey[0].sym))
+                    else if ((!strcmp(FcitxInputStateGetRawInputBuffer(input) + 1, tableCandWord->candWord.record->strCode) &&
+                              FcitxInputStateGetRawInputBuffer(input)[0] == fwb->config.unCommonKey[0].sym) ||
+                             (tableCandWord->candWord.record->type == RECORDTYPE_S2T &&
+                              !strcmp(FcitxInputStateGetRawInputBuffer(input) + 1,
+                                      tableCandWord->candWord.simpelRecord->strCode) &&
+                              FcitxInputStateGetRawInputBuffer(input)[0] == fwb->config.unCommonKey[0].sym))
                     {
                         recTemp = table->WubiDict->tableSingleHZ[CalHZIndex(tableCandWord->candWord.record->strHZ)];
                         if (!recTemp)
@@ -2557,7 +2653,8 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
                         pstr = tableCandWord->candWord.record->strCode + FcitxInputStateGetRawInputBufferSize(input);
                 }
             }
-            else if (tableCandWord->candWord.record->type == RECORDTYPE_UNCOMMON && FcitxInputStateGetRawInputBuffer(input)[0] == fwb->config.unCommonKey[0].sym)
+            else if (tableCandWord->candWord.record->type == RECORDTYPE_UNCOMMON &&
+                     FcitxInputStateGetRawInputBuffer(input)[0] == fwb->config.unCommonKey[0].sym)
             {
                 if (tableCandWord->candWord.record->type == RECORDTYPE_S2T)
                     pstr = tableCandWord->candWord.simpelRecord->strCode + FcitxInputStateGetRawInputBufferSize(input) - 1;
@@ -2615,9 +2712,14 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
             char *strCodeInput = FcitxInputStateGetRawInputBuffer(input);
             if (tableCandWord->flag == CT_NORMAL)
             {
-                if (!strcmp(tableCandWord->candWord.record->strCode, strCodeInput) || (tableCandWord->candWord.record->type == RECORDTYPE_S2T && !strcmp(tableCandWord->candWord.simpelRecord->strCode, strCodeInput)) ||
-                    (strCodeInput[0] == fwb->config.unCommonKey[0].sym && !strcmp(tableCandWord->candWord.record->strCode, strCodeInput + 1)) ||
-                    ((strCodeInput[0] == fwb->config.unCommonKey[0].sym && tableCandWord->candWord.record->type == RECORDTYPE_S2T && !strcmp(tableCandWord->candWord.record->strCode, strCodeInput + 1))))
+                if (!strcmp(tableCandWord->candWord.record->strCode, strCodeInput) ||
+                    (tableCandWord->candWord.record->type == RECORDTYPE_S2T &&
+                     !strcmp(tableCandWord->candWord.simpelRecord->strCode, strCodeInput)) ||
+                    (strCodeInput[0] == fwb->config.unCommonKey[0].sym &&
+                     !strcmp(tableCandWord->candWord.record->strCode, strCodeInput + 1)) ||
+                    ((strCodeInput[0] == fwb->config.unCommonKey[0].sym &&
+                      tableCandWord->candWord.record->type == RECORDTYPE_S2T &&
+                      !strcmp(tableCandWord->candWord.record->strCode, strCodeInput + 1))))
                     retVal = FcitxCandidateWordChooseByIndex(candList, 0);
             }
             else if (tableCandWord->flag == CT_AUTOPHRASE)
@@ -2638,7 +2740,8 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
     if (FcitxInputStateGetRawInputBufferSize(input))
     {
         FcitxMessagesSetMessageCount(FcitxInputStateGetPreedit(input), 0);
-        FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetPreedit(input), MSG_INPUT, FcitxInputStateGetRawInputBuffer(input));
+        FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetPreedit(input), MSG_INPUT,
+                                             FcitxInputStateGetRawInputBuffer(input));
         FcitxInputStateSetCursorPos(input, strlen(FcitxInputStateGetRawInputBuffer(input)));
         FcitxCandidateWord *candWord = NULL;
         if ((candWord = FcitxCandidateWordGetFirst(candList)))
@@ -2651,7 +2754,8 @@ INPUT_RETURN_VALUE FreeWubiGetCandWords(void *arg)
         {
             FcitxMessagesSetMessageCount(FcitxInputStateGetClientPreedit(input), 0);
             FcitxMessageType type = MSG_INPUT;
-            FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetClientPreedit(input), type, FcitxInputStateGetRawInputBuffer(input));
+            FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetClientPreedit(input), type,
+                                                 FcitxInputStateGetRawInputBuffer(input));
             FcitxInputStateSetClientCursorPos(input, 0);
         }
     }
@@ -2736,7 +2840,8 @@ void sortCandwords(UT_array *arry1, UT_array *arry2, UT_array *result)
         RECORD *re1;
         RECORD *re2;
 
-        if (NULL == tableCandWord1 || NULL == tableCandWord2 || tableCandWord1->candWord.record == NULL || tableCandWord2->candWord.record == NULL)
+        if (NULL == tableCandWord1 || NULL == tableCandWord2 || tableCandWord1->candWord.record == NULL ||
+            tableCandWord2->candWord.record == NULL)
             break; //+2024-2-23
 
         if (tableCandWord1->candWord.record->type == RECORDTYPE_S2T)
@@ -2926,7 +3031,8 @@ static void *FcitxFreeWubiCreate(FcitxInstance *instance)
 
     boolean flags = true;
     FcitxInstanceSetContext(freewubi->owner, CONTEXT_DISABLE_QUICKPHRASE, &flags);
-    FcitxUIRegisterStatus(freewubi->owner, freewubi->owner, _("属性设置"), _("属性设置"), _("属性设置"), freewb_settings_handler, tray_menu_handler_empty);
+    FcitxUIRegisterStatus(freewubi->owner, freewubi->owner, _("属性设置"), _("属性设置"), _("属性设置"), freewb_settings_handler,
+                          tray_menu_handler_empty);
 
     return freewubi;
 }

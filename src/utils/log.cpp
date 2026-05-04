@@ -33,7 +33,9 @@ void FreewbLog::init(const LogOption &option)
 
     try
     {
-        spdlog::sink_ptr file_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(m_logFilePath, option.fileSize, option.fileCounts, option.rotateEnable);
+        spdlog::sink_ptr file_sink =
+            std::make_shared<spdlog::sinks::rotating_file_sink_mt>(m_logFilePath, option.fileSize, option.fileCounts,
+                                                                   option.rotateEnable);
         sinks.push_back(file_sink);
     }
     catch (const spdlog::spdlog_ex &e)

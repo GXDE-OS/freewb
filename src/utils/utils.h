@@ -8,7 +8,6 @@
 namespace freewb
 {
 
-
 const std::string userFreewbPath();
 
 } // namespace freewb

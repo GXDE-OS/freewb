@@ -22,9 +22,9 @@ void Sound::play(SoundType soundType)
         return;
     }
 
-    #if defined(__LINUX__)
-        char cmd[128] = {0};
-        sprintf(cmd, "aplay %s%s%s > /dev/null 2>&1 &", FREEWB_INSTALL_PKGDATADIR"/sound", "/", s_soundData[soundType]);
-        system(cmd);
-    #endif
+#if defined(__LINUX__)
+    char cmd[128] = {0};
+    sprintf(cmd, "aplay %s%s%s > /dev/null 2>&1 &", FREEWB_INSTALL_PKGDATADIR "/sound", "/", s_soundData[soundType]);
+    system(cmd);
+#endif
 }

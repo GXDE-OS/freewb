@@ -25,14 +25,14 @@ namespace
 {
 int g_failed = 0;
 
-#define EXPECT(cond)                                                                                                                                                                                                                                                                                       \
-    do                                                                                                                                                                                                                                                                                                     \
-    {                                                                                                                                                                                                                                                                                                      \
-        if (!(cond))                                                                                                                                                                                                                                                                                       \
-        {                                                                                                                                                                                                                                                                                                  \
-            ++g_failed;                                                                                                                                                                                                                                                                                    \
-            std::cerr << "FAIL: " << __FILE__ << ":" << __LINE__ << " " << #cond << std::endl;                                                                                                                                                                                                             \
-        }                                                                                                                                                                                                                                                                                                  \
+#define EXPECT(cond)                                                                                                             \
+    do                                                                                                                           \
+    {                                                                                                                            \
+        if (!(cond))                                                                                                             \
+        {                                                                                                                        \
+            ++g_failed;                                                                                                          \
+            std::cerr << "FAIL: " << __FILE__ << ":" << __LINE__ << " " << #cond << std::endl;                                   \
+        }                                                                                                                        \
     } while (0)
 
 int removeEntry(const char *path, const struct stat * /*sb*/, int typeflag, struct FTW * /*ftwbuf*/)

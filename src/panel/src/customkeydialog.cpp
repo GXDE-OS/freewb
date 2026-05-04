@@ -60,7 +60,8 @@ bool CustomKeyDialog::eventFilter(QObject *obj, QEvent *event)
     return isProcessed;
 }
 
-void CustomKeyDialog::set_custom_symbol(VirtualKeyboardMode vkm, const QString &keyName, const QString &commSymbol, const QString &shiftSymbol)
+void CustomKeyDialog::set_custom_symbol(VirtualKeyboardMode vkm, const QString &keyName, const QString &commSymbol,
+                                        const QString &shiftSymbol)
 {
     ui->labelKeyName->setText(keyName);
 

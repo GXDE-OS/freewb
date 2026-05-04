@@ -1,11 +1,12 @@
 #ifndef CHTTRANS_H
 #define CHTTRANS_H
 
-#include "ifreewb.h"
-
-#include <opencc.h>
 #include <memory>
 #include <string>
+
+#include <opencc.h>
+
+#include "ifreewb.h"
 
 namespace freewb
 {

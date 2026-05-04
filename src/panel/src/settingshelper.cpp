@@ -44,7 +44,6 @@ int freewb_cn_en_switch_preset_index(const std::string &token)
     return -1;
 }
 
-
 SettingsNotifier::SettingsNotifier(QObject *parent) : QObject(parent)
 {
 }
@@ -235,7 +234,8 @@ CustomKeyStrings freewb_custom_key_info_from_values(const std::string &chars, co
     return table[static_cast<size_t>(keyIdx)];
 }
 
-bool freewb_custom_key_info_apply_to_values(std::string &chars, std::string &marks, int keyIdx, int keyCount, const CustomKeyStrings &keyValue)
+bool freewb_custom_key_info_apply_to_values(std::string &chars, std::string &marks, int keyIdx, int keyCount,
+                                            const CustomKeyStrings &keyValue)
 {
     if (keyIdx < 0 || keyIdx >= keyCount)
         return false;

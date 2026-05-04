@@ -1,14 +1,14 @@
 #include "chttrans.h"
-#include "settings.h"
+
 #include "log.h"
+#include "settings.h"
 
 namespace freewb
 {
 
 void Chttrans::loadPair(const std::string &s2tProfile, const std::string &t2sProfile)
 {
-    const std::string s2tPath =
-        s2tProfile.empty() ? std::string(OPENCC_DEFAULT_CONFIG_SIMP_TO_TRAD) : s2tProfile;
+    const std::string s2tPath = s2tProfile.empty() ? std::string(OPENCC_DEFAULT_CONFIG_SIMP_TO_TRAD) : s2tProfile;
     try
     {
         s2t_ = std::make_unique<opencc::SimpleConverter>(s2tPath);
@@ -19,8 +19,7 @@ void Chttrans::loadPair(const std::string &s2tProfile, const std::string &t2sPro
         s2t_.reset();
     }
 
-    const std::string t2sPath =
-        t2sProfile.empty() ? std::string(OPENCC_DEFAULT_CONFIG_TRAD_TO_SIMP) : t2sProfile;
+    const std::string t2sPath = t2sProfile.empty() ? std::string(OPENCC_DEFAULT_CONFIG_TRAD_TO_SIMP) : t2sProfile;
     try
     {
         t2s_ = std::make_unique<opencc::SimpleConverter>(t2sPath);

@@ -134,7 +134,10 @@ void DictQueryWin::find_word(const QString &text)
             {
                 QString wb = wbpy.at(0);
                 QString py = wbpy.at(1);
-                dispStr += QString(_("【 %1 】\n  Code: %2\n  Pinyin: %3\n")).arg(wchar).arg(wb.replace(",", "  ")).arg(py.replace(",", "  "));
+                dispStr += QString(_("【 %1 】\n  Code: %2\n  Pinyin: %3\n"))
+                               .arg(wchar)
+                               .arg(wb.replace(",", "  "))
+                               .arg(py.replace(",", "  "));
             }
         }
 
@@ -272,7 +275,8 @@ void DictQueryWin::slot_action_save_custom_word()
 
     if (ret == QMessageBox::Yes)
     {
-        ret = m_dictQuery.dict_add_custom_word(ui->ledtFind->text(), ui->textEditExplain->toPlainText().remove(QString("【 %1 】\n").arg(m_findWordText)));
+        ret = m_dictQuery.dict_add_custom_word(ui->ledtFind->text(), ui->textEditExplain->toPlainText().remove(
+                                                                         QString("【 %1 】\n").arg(m_findWordText)));
 
         msgBox = new QMessageBox(this);
         msgBox->setWindowFlag(Qt::FramelessWindowHint);

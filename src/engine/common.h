@@ -13,7 +13,6 @@
 namespace freewb
 {
 
-
 class MbDictionaryTable
 {
 public:
@@ -24,7 +23,9 @@ public:
     int codeLength() const;
 
 private:
-    static void collectCandidatesForPrefix(const std::string &prefix, const std::unordered_map<std::string, std::vector<std::string>> &dict, std::vector<std::string> &out);
+    static void collectCandidatesForPrefix(const std::string &prefix,
+                                           const std::unordered_map<std::string, std::vector<std::string>> &dict,
+                                           std::vector<std::string> &out);
     void readNulTerminatedField(std::ifstream &in, std::string &out);
     bool readU32(std::ifstream &in, uint32_t &out);
     bool readExact(std::ifstream &in, void *dst, std::streamsize len);

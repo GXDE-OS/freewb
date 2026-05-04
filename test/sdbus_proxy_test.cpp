@@ -19,7 +19,8 @@ namespace
 {
 
 /** 与旧 emitUpdateCandidate 等价的调用顺序，供演示/测试。 */
-void emitCandidateFrame(freewb::ipc::SDBusProxy &proxy, const freewb::SpotRectPayload &spot, const freewb::CandidatePayload &cand, const freewb::PreeditPayload &preedit, const freewb::CandidateAuxPayload &aux)
+void emitCandidateFrame(freewb::ipc::SDBusProxy &proxy, const freewb::SpotRectPayload &spot, const freewb::CandidatePayload &cand,
+                        const freewb::PreeditPayload &preedit, const freewb::CandidateAuxPayload &aux)
 {
     proxy.emitUpdateSpotRect(spot);
     proxy.emitUpdateCandidate(cand);
@@ -239,7 +240,8 @@ void handleCommand(DemoState &s, const std::string &cmd)
 
     if (cmd == "0")
     {
-        FREEWB_WARN("cmd=0 before emitCandidateFrame: cand labels={} texts={} preedit=\"{}\" aux=\"{}\"", s.candidate.labels.size(), s.candidate.texts.size(), s.preedit.text, s.aux.text);
+        FREEWB_WARN("cmd=0 before emitCandidateFrame: cand labels={} texts={} preedit=\"{}\" aux=\"{}\"",
+                    s.candidate.labels.size(), s.candidate.texts.size(), s.preedit.text, s.aux.text);
         emitCandidateFrame(proxy, s.spotRect, s.candidate, s.preedit, s.aux);
         FREEWB_WARN("cmd=0 after emitCandidateFrame (full)");
         std::cout << "ok\n";
@@ -366,8 +368,11 @@ void handleCommand(DemoState &s, const std::string &cmd)
     }
     else if (cmd == "c")
     {
-        std::cout << "[stats] onDBusSignal=" << s.cbSignalCount << " unknown=" << s.cbUnknownCount << " onSelectCandidate=" << s.cbSelectCount << " onPageUp=" << s.cbPageUpCount << " onPageDown=" << s.cbPageDownCount << " onReloadConfig=" << s.cbReloadCount << '\n';
-        FREEWB_WARN("callback stats signal={} unknown={} select={} up={} down={} reload={}", s.cbSignalCount, s.cbUnknownCount, s.cbSelectCount, s.cbPageUpCount, s.cbPageDownCount, s.cbReloadCount);
+        std::cout << "[stats] onDBusSignal=" << s.cbSignalCount << " unknown=" << s.cbUnknownCount
+                  << " onSelectCandidate=" << s.cbSelectCount << " onPageUp=" << s.cbPageUpCount
+                  << " onPageDown=" << s.cbPageDownCount << " onReloadConfig=" << s.cbReloadCount << '\n';
+        FREEWB_WARN("callback stats signal={} unknown={} select={} up={} down={} reload={}", s.cbSignalCount, s.cbUnknownCount,
+                    s.cbSelectCount, s.cbPageUpCount, s.cbPageDownCount, s.cbReloadCount);
     }
     else if (cmd == "q" || cmd == "quit")
     {
@@ -435,7 +440,8 @@ int main(int argc, char **argv)
     fcitx::EventLoop eventLoop;
     if (std::strcmp(eventLoop.implementation(), "sd-event") != 0)
     {
-        std::cerr << "freewb-sdbusproxy-test needs Fcitx5 Utils built with sd-event (got: " << eventLoop.implementation() << "). libuv backend cannot attach sd-bus here.\n";
+        std::cerr << "freewb-sdbusproxy-test needs Fcitx5 Utils built with sd-event (got: " << eventLoop.implementation()
+                  << "). libuv backend cannot attach sd-bus here.\n";
         return 1;
     }
     void *const nativeLoop = eventLoop.nativeHandle();
@@ -463,7 +469,8 @@ int main(int argc, char **argv)
     const bool bound = proxy.bindDBusSignalCallback(&onDBusSignalCallback);
     FREEWB_WARN("proxy.bindDBusSignalCallback = {}", bound);
     std::cout << "proxy.bindDBusSignalCallback=" << (bound ? "true" : "false") << '\n';
-    std::cout << "stdin is non-blocking; same Fcitx5 EventLoop drives D-Bus (panel clicks should log without typing a command first).\n";
+    std::cout << "stdin is non-blocking; same Fcitx5 EventLoop drives D-Bus (panel clicks should log without typing a command "
+                 "first).\n";
     std::cout << "With panel running: panel signals are passed through to one callback; callback decides how to parse/handle.\n";
     if (!bound)
     {
@@ -483,7 +490,10 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    std::unique_ptr<fcitx::EventSourceIO> stdinWatch = eventLoop.addIOEvent(STDIN_FILENO, fcitx::IOEventFlag::In, [&state](fcitx::EventSourceIO * /*src*/, int fd, fcitx::IOEventFlags /*flags*/) { return onStdinReadable(state, fd); });
+    std::unique_ptr<fcitx::EventSourceIO> stdinWatch =
+        eventLoop.addIOEvent(STDIN_FILENO, fcitx::IOEventFlag::In,
+                             [&state](fcitx::EventSourceIO * /*src*/, int fd, fcitx::IOEventFlags /*flags*/)
+                             { return onStdinReadable(state, fd); });
 
     (void)stdinWatch;
     eventLoop.exec();

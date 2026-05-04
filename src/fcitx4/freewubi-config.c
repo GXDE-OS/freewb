@@ -59,7 +59,8 @@ CONFIG_BINDING_REGISTER("候选项", "nextPageKey", hkAlternativeNextPage)
 CONFIG_BINDING_END()
 
 typedef FcitxConfigSyncResult (*FreewbConfigOptionFunc)(FcitxConfigOption *, FcitxConfigSync);
-static void FreewbConfigSyncValue(FcitxGenericConfig *config, FcitxConfigGroup *group, FcitxConfigOption *option, FcitxConfigSync sync);
+static void FreewbConfigSyncValue(FcitxGenericConfig *config, FcitxConfigGroup *group, FcitxConfigOption *option,
+                                  FcitxConfigSync sync);
 static FcitxConfigSyncResult FreewbConfigOptionInteger(FcitxConfigOption *option, FcitxConfigSync sync);
 static FcitxConfigSyncResult FreewbConfigOptionBoolean(FcitxConfigOption *option, FcitxConfigSync sync);
 static FcitxConfigSyncResult FreewbConfigOptionEnum(FcitxConfigOption *option, FcitxConfigSync sync);
@@ -208,14 +209,16 @@ FcitxConfigSyncResult FreewbConfigOptionInteger(FcitxConfigOption *option, Fcitx
     case Raw2Value:
     {
         int value = atoi(option->rawValue);
-        if (value > option->optionDesc2->constrain.integerConstrain.max || value < option->optionDesc2->constrain.integerConstrain.min)
+        if (value > option->optionDesc2->constrain.integerConstrain.max ||
+            value < option->optionDesc2->constrain.integerConstrain.min)
             return SyncInvalid;
         *option->value.integer = value;
         return SyncSuccess;
     }
 
     case Value2Raw:
-        if (*option->value.integer > option->optionDesc2->constrain.integerConstrain.max || *option->value.integer < option->optionDesc2->constrain.integerConstrain.min)
+        if (*option->value.integer > option->optionDesc2->constrain.integerConstrain.max ||
+            *option->value.integer < option->optionDesc2->constrain.integerConstrain.min)
             return SyncInvalid;
 
         if (option->rawValue)
@@ -316,14 +319,16 @@ FcitxConfigSyncResult FreewbConfigOptionString(FcitxConfigOption *option, FcitxC
     {
 
     case Raw2Value:
-        if (option->optionDesc2->constrain.stringConstrain.maxLength && strlen(option->rawValue) > option->optionDesc2->constrain.stringConstrain.maxLength)
+        if (option->optionDesc2->constrain.stringConstrain.maxLength &&
+            strlen(option->rawValue) > option->optionDesc2->constrain.stringConstrain.maxLength)
             return SyncInvalid;
         fcitx_utils_string_swap(option->value.string, option->rawValue);
 
         return SyncSuccess;
 
     case Value2Raw:
-        if (option->optionDesc2->constrain.stringConstrain.maxLength && strlen(*option->value.string) > option->optionDesc2->constrain.stringConstrain.maxLength)
+        if (option->optionDesc2->constrain.stringConstrain.maxLength &&
+            strlen(*option->value.string) > option->optionDesc2->constrain.stringConstrain.maxLength)
             return SyncInvalid;
         fcitx_utils_string_swap(&option->rawValue, *option->value.string);
 

@@ -2,6 +2,7 @@
 #define PUNC_H
 
 #include <string>
+
 #include "ifreewb.h"
 
 namespace freewb
@@ -12,13 +13,7 @@ static const struct _PuncPair
     const char *left;
     const char *right;
 } PuncPairList[] = {
-    {"[", "]"},
-    {"{", "}"},
-    {"【", "】"},
-    {"（", "）"},
-    {"《", "》"},
-    {"<", ">"},
-    {"(", ")"},
+    {"[", "]"}, {"{", "}"}, {"【", "】"}, {"（", "）"}, {"《", "》"}, {"<", ">"}, {"(", ")"},
 };
 
 class Punc : public IFreewb

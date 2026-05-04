@@ -158,7 +158,8 @@ boolean LoadS2tManyDict(TableMetaData *tableMetaData);   // 一对多简体繁�
 boolean LoadS2tPhraseDict(TableMetaData *tableMetaData); // 特殊词组简体繁体转换表
 boolean TableCalPhraseCode(TableDict *tableDict, char *strHZ, char *strCode);
 int TableCompareCode(const char *strUser, const char *strDict, boolean exactMatch);
-int TableFindFirstMatchCode(TableMetaData *tableMetaData, const char *strCodeInput, boolean exactMatch, boolean cacheCurrentRecord);
+int TableFindFirstMatchCode(TableMetaData *tableMetaData, const char *strCodeInput, boolean exactMatch,
+                            boolean cacheCurrentRecord);
 RECORD *TableFindPhrase(const TableDict *tableDict, const char *strHZ);
 RECORD *TableFindPhraseByCode(const TableDict *tableDict, const char *strCode, const char *strHZ);
 boolean IsInputKey(const TableMetaData *tableMetaData, int iKey);

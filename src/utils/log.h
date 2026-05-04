@@ -9,31 +9,31 @@
 
 #include <spdlog/spdlog.h>
 
-#define FREEWB_DEBUG(...)                                                                                                                                                                                                                                                                                  \
-    do                                                                                                                                                                                                                                                                                                     \
-    {                                                                                                                                                                                                                                                                                                      \
-        if (!FreewbLog::isCleaned() && spdlog::default_logger_raw() != nullptr)                                                                                                                                                                                                                            \
-        {                                                                                                                                                                                                                                                                                                  \
-            SPDLOG_LOGGER_DEBUG(spdlog::default_logger_raw(), __VA_ARGS__);                                                                                                                                                                                                                                \
-        }                                                                                                                                                                                                                                                                                                  \
+#define FREEWB_DEBUG(...)                                                                                                        \
+    do                                                                                                                           \
+    {                                                                                                                            \
+        if (!FreewbLog::isCleaned() && spdlog::default_logger_raw() != nullptr)                                                  \
+        {                                                                                                                        \
+            SPDLOG_LOGGER_DEBUG(spdlog::default_logger_raw(), __VA_ARGS__);                                                      \
+        }                                                                                                                        \
     } while (0)
 
-#define FREEWB_WARN(...)                                                                                                                                                                                                                                                                                   \
-    do                                                                                                                                                                                                                                                                                                     \
-    {                                                                                                                                                                                                                                                                                                      \
-        if (!FreewbLog::isCleaned() && spdlog::default_logger_raw() != nullptr)                                                                                                                                                                                                                            \
-        {                                                                                                                                                                                                                                                                                                  \
-            SPDLOG_LOGGER_WARN(spdlog::default_logger_raw(), __VA_ARGS__);                                                                                                                                                                                                                                 \
-        }                                                                                                                                                                                                                                                                                                  \
+#define FREEWB_WARN(...)                                                                                                         \
+    do                                                                                                                           \
+    {                                                                                                                            \
+        if (!FreewbLog::isCleaned() && spdlog::default_logger_raw() != nullptr)                                                  \
+        {                                                                                                                        \
+            SPDLOG_LOGGER_WARN(spdlog::default_logger_raw(), __VA_ARGS__);                                                       \
+        }                                                                                                                        \
     } while (0)
 
-#define FREEWB_ERROR(...)                                                                                                                                                                                                                                                                                  \
-    do                                                                                                                                                                                                                                                                                                     \
-    {                                                                                                                                                                                                                                                                                                      \
-        if (!FreewbLog::isCleaned() && spdlog::default_logger_raw() != nullptr)                                                                                                                                                                                                                            \
-        {                                                                                                                                                                                                                                                                                                  \
-            SPDLOG_LOGGER_ERROR(spdlog::default_logger_raw(), __VA_ARGS__);                                                                                                                                                                                                                                \
-        }                                                                                                                                                                                                                                                                                                  \
+#define FREEWB_ERROR(...)                                                                                                        \
+    do                                                                                                                           \
+    {                                                                                                                            \
+        if (!FreewbLog::isCleaned() && spdlog::default_logger_raw() != nullptr)                                                  \
+        {                                                                                                                        \
+            SPDLOG_LOGGER_ERROR(spdlog::default_logger_raw(), __VA_ARGS__);                                                      \
+        }                                                                                                                        \
     } while (0)
 
 class FreewbLog

@@ -1001,19 +1001,25 @@ void Keyboard::update_keyboard_button()
         }
         else if (m_vkWorkMode == VKM_INPUT_USER_CHAR)
         {
-            customKeyValue = customKeyToQt(freewb_custom_key_info_from_values(settings::instance().get_CoustomChar(), settings::instance().get_CoustomMark(), i, KEY_SYMBOL_NUM));
+            customKeyValue =
+                customKeyToQt(freewb_custom_key_info_from_values(settings::instance().get_CoustomChar(),
+                                                                 settings::instance().get_CoustomMark(), i, KEY_SYMBOL_NUM));
             btn->set_custom_symbol(customKeyValue.commChar, customKeyValue.shiftChar);
         }
 
         // 自定义模式
         else if (m_vkWorkMode == VKM_CUSTOM_CHAR)
         {
-            customKeyValue = customKeyToQt(freewb_custom_key_info_from_values(settings::instance().get_CoustomChar(), settings::instance().get_CoustomMark(), i, KEY_SYMBOL_NUM));
+            customKeyValue =
+                customKeyToQt(freewb_custom_key_info_from_values(settings::instance().get_CoustomChar(),
+                                                                 settings::instance().get_CoustomMark(), i, KEY_SYMBOL_NUM));
             btn->set_custom_symbol(customKeyValue.commChar, customKeyValue.shiftChar);
         }
         else if (m_vkWorkMode == VKM_CUSTOM_MARK)
         {
-            customKeyValue = customKeyToQt(freewb_custom_key_info_from_values(settings::instance().get_CoustomChar(), settings::instance().get_CoustomMark(), i, KEY_SYMBOL_NUM));
+            customKeyValue =
+                customKeyToQt(freewb_custom_key_info_from_values(settings::instance().get_CoustomChar(),
+                                                                 settings::instance().get_CoustomMark(), i, KEY_SYMBOL_NUM));
             btn->set_custom_symbol(customKeyValue.commMark, customKeyValue.shiftMark);
         }
 
@@ -1150,7 +1156,8 @@ void Keyboard::slot_virtual_keyboard_clicked(int keyIdx)
     // 用户自定义键盘符号
     else if (m_vkWorkMode == VKM_CUSTOM_CHAR || m_vkWorkMode == VKM_CUSTOM_MARK)
     {
-        handle_custom_keyboard_clicked(static_cast<SymbolKeyIdx>(keyIdx), static_cast<KeyButton *>(m_btnGroup.button(keyIdx))->get_key_name());
+        handle_custom_keyboard_clicked(static_cast<SymbolKeyIdx>(keyIdx),
+                                       static_cast<KeyButton *>(m_btnGroup.button(keyIdx))->get_key_name());
     }
 }
 
@@ -1161,7 +1168,9 @@ void Keyboard::handle_custom_keyboard_clicked(SymbolKeyIdx keyIdx, const QString
 
     if (keyIdx < KEY_SYMBOL_NUM)
     {
-        customKeyValue = customKeyToQt(freewb_custom_key_info_from_values(settings::instance().get_CoustomChar(), settings::instance().get_CoustomMark(), static_cast<int>(keyIdx), KEY_SYMBOL_NUM));
+        customKeyValue = customKeyToQt(freewb_custom_key_info_from_values(settings::instance().get_CoustomChar(),
+                                                                          settings::instance().get_CoustomMark(),
+                                                                          static_cast<int>(keyIdx), KEY_SYMBOL_NUM));
     }
 
     emit signal_custom_key_clicked(keyIdx, keyName, customKeyValue);

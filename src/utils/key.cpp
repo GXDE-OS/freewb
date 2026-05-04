@@ -119,7 +119,8 @@ const char *Key::readKeyString(const char *str)
 
 bool Key::isSpecialCommitCharacter(FreewbKeySym sym, FreewbKeyState state)
 {
-    return (!state && (sym == FreewbKey_comma || sym == FreewbKey_period || sym == FreewbKey_slash
-        || sym == FreewbKey_semicolon || sym == FreewbKey_quoteright || sym == FreewbKey_bracketleft || sym == FreewbKey_bracketright || sym == FreewbKey_backslash));
+    return (!state && (sym == FreewbKey_comma || sym == FreewbKey_period || sym == FreewbKey_slash ||
+                       sym == FreewbKey_semicolon || sym == FreewbKey_quoteright || sym == FreewbKey_bracketleft ||
+                       sym == FreewbKey_bracketright || sym == FreewbKey_backslash));
 }
 } // namespace freewb

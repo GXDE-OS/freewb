@@ -5,7 +5,9 @@
 namespace freewb
 {
 
-Wbpy::Wbpy(WbzxEngine *wbzxEngine, PyEngine *pyEngine) : wbzxEngine_(wbzxEngine), pyEngine_(pyEngine) {}
+Wbpy::Wbpy(WbzxEngine *wbzxEngine, PyEngine *pyEngine) : wbzxEngine_(wbzxEngine), pyEngine_(pyEngine)
+{
+}
 
 Wbpy::~Wbpy()
 {

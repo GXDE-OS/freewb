@@ -153,7 +153,8 @@ FakeKey *fakekey_init(Display *xdpy)
      *
      */
 
-    fk->keysyms = XGetKeyboardMapping(fk->xdpy, (unsigned char)fk->min_keycode, fk->max_keycode - fk->min_keycode + 1, &fk->n_keysyms_per_keycode);
+    fk->keysyms = XGetKeyboardMapping(fk->xdpy, (unsigned char)fk->min_keycode, fk->max_keycode - fk->min_keycode + 1,
+                                      &fk->n_keysyms_per_keycode);
 
     modifiers = XGetModifierMapping(fk->xdpy);
 
@@ -217,7 +218,8 @@ int fakekey_reload_keysyms(FakeKey *fk)
     if (fk->keysyms)
         XFree(fk->keysyms);
 
-    fk->keysyms = XGetKeyboardMapping(fk->xdpy, (unsigned char)fk->min_keycode, fk->max_keycode - fk->min_keycode + 1, &fk->n_keysyms_per_keycode);
+    fk->keysyms = XGetKeyboardMapping(fk->xdpy, (unsigned char)fk->min_keycode, fk->max_keycode - fk->min_keycode + 1,
+                                      &fk->n_keysyms_per_keycode);
     return 1;
 }
 
@@ -287,7 +289,8 @@ int fakekey_press_keysym(FakeKey *fk, KeySym keysym, int flags)
 
         fk->keysyms[index] = keysym;
 
-        XChangeKeyboardMapping(fk->xdpy, fk->min_keycode, fk->n_keysyms_per_keycode, fk->keysyms, (fk->max_keycode - fk->min_keycode));
+        XChangeKeyboardMapping(fk->xdpy, fk->min_keycode, fk->n_keysyms_per_keycode, fk->keysyms,
+                               (fk->max_keycode - fk->min_keycode));
 
         XSync(fk->xdpy, False);
 

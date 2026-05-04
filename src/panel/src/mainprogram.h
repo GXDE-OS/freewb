@@ -47,9 +47,9 @@ public:
 
     void create_host_dbus_service();
 
-public slots:                                                                                    // 提供给外部进程调用的DBUS方法接口
-    void slot_switch_input_mode(const QString &inputMode);                                        // 按输入模式切换子输入法
-    void slot_dbus_dict_query(const QString &text);                                              // 字典查询
+public slots:                                              // 提供给外部进程调用的DBUS方法接口
+    void slot_switch_input_mode(const QString &inputMode); // 按输入模式切换子输入法
+    void slot_dbus_dict_query(const QString &text);        // 字典查询
     void slot_dbus_generate_usr_word(int flg, const QString &wordText, const QString &wordCode); // 用户造词
     void slot_dbus_delete_usr_word(int flg, const QString &wordText, const QString &wordCode);   // 用户删词
     void slot_dbus_usr_word_load_ok();                                                           // 用户词组加载完成

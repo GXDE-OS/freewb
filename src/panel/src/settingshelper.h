@@ -174,7 +174,8 @@ std::vector<CustomKeyStrings> freewb_build_custom_key_table(const std::string &c
 std::string freewb_flatten_custom_char_value(const std::vector<CustomKeyStrings> &table);
 std::string freewb_flatten_custom_mark_value(const std::vector<CustomKeyStrings> &table);
 CustomKeyStrings freewb_custom_key_info_from_values(const std::string &chars, const std::string &marks, int keyIdx, int keyCount);
-bool freewb_custom_key_info_apply_to_values(std::string &chars, std::string &marks, int keyIdx, int keyCount, const CustomKeyStrings &keyValue);
+bool freewb_custom_key_info_apply_to_values(std::string &chars, std::string &marks, int keyIdx, int keyCount,
+                                            const CustomKeyStrings &keyValue);
 
 // ═════════════════════════════════════════════════════════════════════════════════════
 // 候选文字体：由 candiTextFontName + candiTextFontSize 构造（持久化字段，非 QFont::toString）

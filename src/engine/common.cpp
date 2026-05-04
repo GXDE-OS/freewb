@@ -10,7 +10,9 @@ namespace freewb
 {
 const uint32_t kMaxHzFieldBytes = 7U * 30U;
 
-void MbDictionaryTable::collectCandidatesForPrefix(const std::string &prefix, const std::unordered_map<std::string, std::vector<std::string>> &dict, std::vector<std::string> &out)
+void MbDictionaryTable::collectCandidatesForPrefix(const std::string &prefix,
+                                                   const std::unordered_map<std::string, std::vector<std::string>> &dict,
+                                                   std::vector<std::string> &out)
 {
     if (out.size() >= maxCandidatesPages_)
     {
@@ -208,7 +210,10 @@ bool MbDictionaryTable::loadFromStream(std::ifstream &in, const char *linePrefix
         }
     }
 
-    FREEWB_DEBUG("{}tableName={}\ntableInfo={}\ntableCreateTime={}\nstrEndKeys={}\nstrSpecialKeys={}\nstrCodeType={}\nstrStraightUPKeys={}\ninputCodeLen={}\ncWildChar={}\nbRule={}\niCodeLength={}\nrecordCount={}", p, tableName_, tableInfo_, tableCreateTime_, strEndKeys_, strSpecialKeys_, strCodeType_, strStraightUPKeys_, inputCodeLen, cWildChar_, bRule_, iCodeLength_, recordCount_);
+    FREEWB_DEBUG("{}tableName={}\ntableInfo={}\ntableCreateTime={}\nstrEndKeys={}\nstrSpecialKeys={}\nstrCodeType={}"
+                 "\nstrStraightUPKeys={}\ninputCodeLen={}\ncWildChar={}\nbRule={}\niCodeLength={}\nrecordCount={}",
+                 p, tableName_, tableInfo_, tableCreateTime_, strEndKeys_, strSpecialKeys_, strCodeType_, strStraightUPKeys_,
+                 inputCodeLen, cWildChar_, bRule_, iCodeLength_, recordCount_);
     return true;
 }
 
@@ -252,7 +257,8 @@ bool MbDictionaryTable::readU32(std::ifstream &in, uint32_t &out)
     {
         return false;
     }
-    out = static_cast<uint32_t>(b[0]) | (static_cast<uint32_t>(b[1]) << 8) | (static_cast<uint32_t>(b[2]) << 16) | (static_cast<uint32_t>(b[3]) << 24);
+    out = static_cast<uint32_t>(b[0]) | (static_cast<uint32_t>(b[1]) << 8) | (static_cast<uint32_t>(b[2]) << 16) |
+          (static_cast<uint32_t>(b[3]) << 24);
     return true;
 }
 

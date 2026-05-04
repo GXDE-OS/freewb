@@ -9,7 +9,8 @@
 
 namespace freewb
 {
-CandidateList::CandidateList(CandidatePayload &&candidatePayload) : cursor_(candidatePayload.cursor), allTexts_(std::move(candidatePayload.texts))
+CandidateList::CandidateList(CandidatePayload &&candidatePayload)
+    : cursor_(candidatePayload.cursor), allTexts_(std::move(candidatePayload.texts))
 {
     init();
     syncVisiblePage();

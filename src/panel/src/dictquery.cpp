@@ -177,7 +177,6 @@ int DictQuery::dict_add_custom_word(const QString &word, const QString &explain)
             sqlite3_bind_blob(stmt, 1, static_cast<const void *>(blob), len * 2, SQLITE_TRANSIENT);
             ret = sqlite3_step(stmt);
             sqlite3_finalize(stmt);
-
         }
         else if (ret == SQLITE_DONE)
         {
@@ -187,7 +186,6 @@ int DictQuery::dict_add_custom_word(const QString &word, const QString &explain)
             sqlite3_bind_blob(stmt, 2, static_cast<const void *>(blob), len * 2, SQLITE_TRANSIENT);
             ret = sqlite3_step(stmt);
             sqlite3_finalize(stmt);
-
         }
         else
         {

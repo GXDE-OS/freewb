@@ -63,7 +63,8 @@ public:
     ~Keyboard();
 
 signals:
-    void signal_custom_key_clicked(SymbolKeyIdx keyIdx, const QString &keName, const CustomKeyValue &keyValue); // 用于设置界面软键盘按键自定义
+    void signal_custom_key_clicked(SymbolKeyIdx keyIdx, const QString &keName,
+                                   const CustomKeyValue &keyValue); // 用于设置界面软键盘按键自定义
     void signal_vk_mode_changed(VirtualKeyboardMode mode);
     void signal_vk_flg_changed();
     void signal_kb_caps_changed(int capsFlg);

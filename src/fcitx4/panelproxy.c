@@ -23,69 +23,70 @@ static inline boolean CheckAddPrefix(const char **name)
     return result;
 }
 
-static const char *freewubipanel_introspection_xml = "<!DOCTYPE node PUBLIC \"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN\" "
-                                                     "\"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd\">"
-                                                     "<node name=\"" FREEWUBI_INPUTMETHOD_OBJECTPATH "\">"
-                                                     "<interface name=\"org.freedesktop.DBus.Introspectable\">"
-                                                     "<method name=\"Introspect\">"
-                                                     "<arg name=\"data\" direction=\"out\" type=\"s\"/>"
-                                                     "</method>"
-                                                     "</interface>"
-                                                     "<interface name=\"" FREEWUBI_INPUTMETHOD_SERVICENAME "\">"
-                                                     "<signal name=\"ExecDialog\">"
-                                                     "<arg name=\"prop\" direction=\"in\" type=\"s\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"ExecMenu\">"
-                                                     "<arg name=\"prop\" direction=\"in\" type=\"as\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"RegisterProperties\">"
-                                                     "<arg name=\"prop\" direction=\"in\" type=\"as\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"UpdateProperty\">"
-                                                     "<arg name=\"prop\" direction=\"in\" type=\"s\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"RemoveProperty\">"
-                                                     "<arg name=\"prop\" direction=\"in\" type=\"s\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"ShowAux\">"
-                                                     "<arg name=\"toshow\" direction=\"in\" type=\"b\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"ShowPreedit\">"
-                                                     "<arg name=\"toshow\" direction=\"in\" type=\"b\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"ShowLookupTable\">"
-                                                     "<arg name=\"toshow\" direction=\"in\" type=\"b\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"UpdateLookupTable\">"
-                                                     "<arg name=\"label\" direction=\"in\" type=\"as\"/>"
-                                                     "<arg name=\"text\" direction=\"in\" type=\"as\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"UpdateLookupTableCursor\">"
-                                                     "<arg name=\"cursor\" direction=\"in\" type=\"i\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"UpdatePreeditCaret\">"
-                                                     "<arg name=\"position\" direction=\"in\" type=\"i\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"UpdatePreeditText\">"
-                                                     "<arg name=\"text\" direction=\"in\" type=\"s\"/>"
-                                                     "<arg name=\"attr\" direction=\"in\" type=\"s\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"UpdateAux\">"
-                                                     "<arg name=\"text\" direction=\"in\" type=\"s\"/>"
-                                                     "<arg name=\"attr\" direction=\"in\" type=\"s\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"UpdateSpotLocation\">"
-                                                     "<arg name=\"x\" direction=\"in\" type=\"i\"/>"
-                                                     "<arg name=\"y\" direction=\"in\" type=\"i\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"UpdateScreen\">"
-                                                     "<arg name=\"screen\" direction=\"in\" type=\"i\"/>"
-                                                     "</signal>"
-                                                     "<signal name=\"Enable\">"
-                                                     "<arg name=\"toenable\" direction=\"in\" type=\"b\"/>"
-                                                     "</signal>"
-                                                     "</interface>"
-                                                     "</node>";
+static const char *freewubipanel_introspection_xml =
+    "<!DOCTYPE node PUBLIC \"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN\" "
+    "\"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd\">"
+    "<node name=\"" FREEWUBI_INPUTMETHOD_OBJECTPATH "\">"
+    "<interface name=\"org.freedesktop.DBus.Introspectable\">"
+    "<method name=\"Introspect\">"
+    "<arg name=\"data\" direction=\"out\" type=\"s\"/>"
+    "</method>"
+    "</interface>"
+    "<interface name=\"" FREEWUBI_INPUTMETHOD_SERVICENAME "\">"
+    "<signal name=\"ExecDialog\">"
+    "<arg name=\"prop\" direction=\"in\" type=\"s\"/>"
+    "</signal>"
+    "<signal name=\"ExecMenu\">"
+    "<arg name=\"prop\" direction=\"in\" type=\"as\"/>"
+    "</signal>"
+    "<signal name=\"RegisterProperties\">"
+    "<arg name=\"prop\" direction=\"in\" type=\"as\"/>"
+    "</signal>"
+    "<signal name=\"UpdateProperty\">"
+    "<arg name=\"prop\" direction=\"in\" type=\"s\"/>"
+    "</signal>"
+    "<signal name=\"RemoveProperty\">"
+    "<arg name=\"prop\" direction=\"in\" type=\"s\"/>"
+    "</signal>"
+    "<signal name=\"ShowAux\">"
+    "<arg name=\"toshow\" direction=\"in\" type=\"b\"/>"
+    "</signal>"
+    "<signal name=\"ShowPreedit\">"
+    "<arg name=\"toshow\" direction=\"in\" type=\"b\"/>"
+    "</signal>"
+    "<signal name=\"ShowLookupTable\">"
+    "<arg name=\"toshow\" direction=\"in\" type=\"b\"/>"
+    "</signal>"
+    "<signal name=\"UpdateLookupTable\">"
+    "<arg name=\"label\" direction=\"in\" type=\"as\"/>"
+    "<arg name=\"text\" direction=\"in\" type=\"as\"/>"
+    "</signal>"
+    "<signal name=\"UpdateLookupTableCursor\">"
+    "<arg name=\"cursor\" direction=\"in\" type=\"i\"/>"
+    "</signal>"
+    "<signal name=\"UpdatePreeditCaret\">"
+    "<arg name=\"position\" direction=\"in\" type=\"i\"/>"
+    "</signal>"
+    "<signal name=\"UpdatePreeditText\">"
+    "<arg name=\"text\" direction=\"in\" type=\"s\"/>"
+    "<arg name=\"attr\" direction=\"in\" type=\"s\"/>"
+    "</signal>"
+    "<signal name=\"UpdateAux\">"
+    "<arg name=\"text\" direction=\"in\" type=\"s\"/>"
+    "<arg name=\"attr\" direction=\"in\" type=\"s\"/>"
+    "</signal>"
+    "<signal name=\"UpdateSpotLocation\">"
+    "<arg name=\"x\" direction=\"in\" type=\"i\"/>"
+    "<arg name=\"y\" direction=\"in\" type=\"i\"/>"
+    "</signal>"
+    "<signal name=\"UpdateScreen\">"
+    "<arg name=\"screen\" direction=\"in\" type=\"i\"/>"
+    "</signal>"
+    "<signal name=\"Enable\">"
+    "<arg name=\"toenable\" direction=\"in\" type=\"b\"/>"
+    "</signal>"
+    "</interface>"
+    "</node>";
 
 #define FREEWUBI_PANEL_BUFFER_SIZE 4096
 #ifndef DBUS_TIMEOUT_USE_DEFAULT
@@ -111,7 +112,8 @@ static DBusHandlerResult FreeWubiPanelProxyDBusFilter(DBusConnection *connection
 static int FreeWubiPanelProxyCalCursorPos();
 static char *FreeWubiPanelProxyStatus2String(FcitxInstance *instance, FcitxUIStatus *status);
 static char *FreeWubiPanelProxyComplexStatus2String(FcitxInstance *instance, FcitxUIComplexStatus *status);
-static void FreeWubiPanelProxyOwnerChanged(void *user_data, void *arg, const char *serviceName, const char *oldName, const char *newName);
+static void FreeWubiPanelProxyOwnerChanged(void *user_data, void *arg, const char *serviceName, const char *oldName,
+                                           const char *newName);
 
 static inline boolean isUnity()
 {
@@ -227,7 +229,8 @@ void FreeWubiPanelProxyInitializeInstance(FcitxInstance *instance)
 
     DBusError err;
     dbus_error_init(&err);
-    dbus_bus_add_match(freeWubiPanel->conn, "type='signal',sender='" FREEWUBI_PANEL_SERVICENAME "',interface='" FREEWUBI_PANEL_INTERFACE "'", &err);
+    dbus_bus_add_match(freeWubiPanel->conn,
+                       "type='signal',sender='" FREEWUBI_PANEL_SERVICENAME "',interface='" FREEWUBI_PANEL_INTERFACE "'", &err);
     dbus_connection_flush(freeWubiPanel->conn);
     if (dbus_error_is_set(&err))
     {
@@ -314,7 +317,8 @@ void FreeWubiPanelProxyRegisterAllStatus()
     int count = 2;
 
     FcitxUIComplexStatus *compstatus;
-    for (compstatus = (FcitxUIComplexStatus *)utarray_front(uicompstats); compstatus != NULL; compstatus = (FcitxUIComplexStatus *)utarray_next(uicompstats, compstatus))
+    for (compstatus = (FcitxUIComplexStatus *)utarray_front(uicompstats); compstatus != NULL;
+         compstatus = (FcitxUIComplexStatus *)utarray_next(uicompstats, compstatus))
     {
         if (!compstatus->visible)
             continue;
@@ -323,7 +327,8 @@ void FreeWubiPanelProxyRegisterAllStatus()
     }
 
     FcitxUIStatus *status;
-    for (status = (FcitxUIStatus *)utarray_front(uistats); status != NULL; status = (FcitxUIStatus *)utarray_next(uistats, status))
+    for (status = (FcitxUIStatus *)utarray_front(uistats); status != NULL;
+         status = (FcitxUIStatus *)utarray_next(uistats, status))
     {
         if (!status->visible)
             continue;
@@ -372,12 +377,14 @@ void FreeWubiPanelProxyCloseInputWindow()
 
 static DBusMessage *createPanelMethodCallMessage(const char *methodName)
 {
-    return dbus_message_new_method_call(FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE, methodName);
+    return dbus_message_new_method_call(FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE,
+                                        methodName);
 }
 
 void FreeWubiPanelProxySetSpotRect(int x, int y, int w, int h)
 {
-    if (freeWubiPanel->lastUpdateX == x && freeWubiPanel->lastUpdateY == y && freeWubiPanel->lastUpdateW == w && freeWubiPanel->lastUpdateH == h)
+    if (freeWubiPanel->lastUpdateX == x && freeWubiPanel->lastUpdateY == y && freeWubiPanel->lastUpdateW == w &&
+        freeWubiPanel->lastUpdateH == h)
         return;
     freeWubiPanel->lastUpdateX = x;
     freeWubiPanel->lastUpdateY = y;
@@ -394,7 +401,8 @@ void FreeWubiPanelProxySetSpotRect(int x, int y, int w, int h)
         return;
     }
 
-    if (!dbus_message_append_args(msg, DBUS_TYPE_INT32, &x, DBUS_TYPE_INT32, &y, DBUS_TYPE_INT32, &w, DBUS_TYPE_INT32, &h, DBUS_TYPE_INVALID))
+    if (!dbus_message_append_args(msg, DBUS_TYPE_INT32, &x, DBUS_TYPE_INT32, &y, DBUS_TYPE_INT32, &w, DBUS_TYPE_INT32, &h,
+                                  DBUS_TYPE_INVALID))
     {
         // FcitxLog(DEBUG, "Out Of Memory!");
     }
@@ -409,7 +417,8 @@ void FreeWubiPanelProxySetSpotRect(int x, int y, int w, int h)
     dbus_message_unref(msg);
 }
 
-void FreeWubiPanelProxySetLookupTable(char *labels[], int nLabel, char *texts[], int nText, boolean has_prev, boolean has_next, int cursor, int layout)
+void FreeWubiPanelProxySetLookupTable(char *labels[], int nLabel, char *texts[], int nText, boolean has_prev, boolean has_next,
+                                      int cursor, int layout)
 {
     int i;
     dbus_uint32_t serial = 0; // unique number to associate replies with requests
@@ -506,7 +515,9 @@ char *FreeWubiPanelProxyStatus2String(FcitxInstance *instance, FcitxUIStatus *st
 {
     char *result;
     FcitxUIMenu *menu = FcitxUIGetMenuByStatusName(instance, status->name);
-    fcitx_utils_alloc_cat_str(result, "/Fcitx/", status->name, ":", status->shortDescription, ":fcitx-", status->name, ((status->getCurrentStatus(status->arg)) ? "-active:" : "-inactive:"), status->longDescription, menu ? ":menu" : ":");
+    fcitx_utils_alloc_cat_str(result, "/Fcitx/", status->name, ":", status->shortDescription, ":fcitx-", status->name,
+                              ((status->getCurrentStatus(status->arg)) ? "-active:" : "-inactive:"), status->longDescription,
+                              menu ? ":menu" : ":");
     return result;
 }
 
@@ -516,7 +527,8 @@ char *FreeWubiPanelProxyComplexStatus2String(FcitxInstance *instance, FcitxUICom
     char *str;
     boolean result = CheckAddPrefix(&icon);
     FcitxUIMenu *menu = FcitxUIGetMenuByStatusName(instance, status->name);
-    fcitx_utils_alloc_cat_str(str, "/Fcitx/", status->name, ":", status->shortDescription, (result ? ":fcitx-" : ":"), icon, ":", status->longDescription, menu ? ":menu" : ":");
+    fcitx_utils_alloc_cat_str(str, "/Fcitx/", status->name, ":", status->shortDescription, (result ? ":fcitx-" : ":"), icon, ":",
+                              status->longDescription, menu ? ":menu" : ":");
     return str;
 }
 
@@ -530,19 +542,23 @@ int FreeWubiUINewMessageToOldStyleMessage(FcitxInputState *input, FcitxMessages 
 
     for (i = 0; i < FcitxMessagesGetMessageCount(input->msgAuxUp); i++)
     {
-        FcitxMessagesAddMessageStringsAtLast(msgUp, FcitxMessagesGetMessageType(input->msgAuxUp, i), FcitxMessagesGetMessageString(input->msgAuxUp, i));
+        FcitxMessagesAddMessageStringsAtLast(msgUp, FcitxMessagesGetMessageType(input->msgAuxUp, i),
+                                             FcitxMessagesGetMessageString(input->msgAuxUp, i));
         extraLength += strlen(FcitxMessagesGetMessageString(input->msgAuxUp, i));
     }
 
     for (i = 0; i < FcitxMessagesGetMessageCount(input->msgPreedit); i++)
-        FcitxMessagesAddMessageStringsAtLast(msgUp, FcitxMessagesGetMessageType(input->msgPreedit, i), FcitxMessagesGetMessageString(input->msgPreedit, i));
+        FcitxMessagesAddMessageStringsAtLast(msgUp, FcitxMessagesGetMessageType(input->msgPreedit, i),
+                                             FcitxMessagesGetMessageString(input->msgPreedit, i));
 
     for (i = 0; i < FcitxMessagesGetMessageCount(input->msgAuxDown); i++)
-        FcitxMessagesAddMessageStringsAtLast(msgDown, FcitxMessagesGetMessageType(input->msgAuxDown, i), FcitxMessagesGetMessageString(input->msgAuxDown, i));
+        FcitxMessagesAddMessageStringsAtLast(msgDown, FcitxMessagesGetMessageType(input->msgAuxDown, i),
+                                             FcitxMessagesGetMessageString(input->msgAuxDown, i));
 
     FcitxCandidateWord *candWord = NULL;
 
-    for (candWord = FcitxCandidateWordGetCurrentWindow(input->candList), i = 0; candWord != NULL; candWord = FcitxCandidateWordGetCurrentWindowNext(input->candList, candWord), i++)
+    for (candWord = FcitxCandidateWordGetCurrentWindow(input->candList), i = 0; candWord != NULL;
+         candWord = FcitxCandidateWordGetCurrentWindowNext(input->candList, candWord), i++)
     {
         char strTemp[3] = {'\0', '\0', '\0'};
         strTemp[0] = FcitxCandidateWordGetChoose(input->candList)[i];
@@ -556,7 +572,9 @@ int FreeWubiUINewMessageToOldStyleMessage(FcitxInputState *input, FcitxMessages 
 
         unsigned int mod = FcitxCandidateWordGetModifier(input->candList);
 
-        FcitxMessagesAddMessageStringsAtLast(msgDown, MSG_INDEX, (mod & FcitxKeyState_Super) ? "M-" : "", (mod & FcitxKeyState_Ctrl) ? "C-" : "", (mod & FcitxKeyState_Alt) ? "A-" : "", (mod & FcitxKeyState_Shift) ? "S-" : "", strTemp);
+        FcitxMessagesAddMessageStringsAtLast(msgDown, MSG_INDEX, (mod & FcitxKeyState_Super) ? "M-" : "",
+                                             (mod & FcitxKeyState_Ctrl) ? "C-" : "", (mod & FcitxKeyState_Alt) ? "A-" : "",
+                                             (mod & FcitxKeyState_Shift) ? "S-" : "", strTemp);
 
         FcitxMessageType type = candWord->wordType;
 
@@ -584,7 +602,8 @@ void FreeWubiPanelProxyShowInputWindow()
     FcitxInstance *instance = freeWubiPanel->owner;
     FcitxInputState *input = FreeWubiGetInputState();
     FcitxCandidateWordList *candList = input->candList;
-    freeWubiPanel->iCursorPos = FreeWubiUINewMessageToOldStyleMessage(input, freeWubiPanel->messageUp, freeWubiPanel->messageDown);
+    freeWubiPanel->iCursorPos =
+        FreeWubiUINewMessageToOldStyleMessage(input, freeWubiPanel->messageUp, freeWubiPanel->messageDown);
     FcitxMessages *messageDown = freeWubiPanel->messageDown;
     FcitxMessages *messageUp = freeWubiPanel->messageUp;
     // FcitxLog(DEBUG, "FreeWubiPanelProxyShowInputWindow");
@@ -607,7 +626,8 @@ void FreeWubiPanelProxyShowInputWindow()
     {
         for (i = 0; i < n; i++)
         {
-            // FcitxLog(DEBUG, "Type: %d Text: %s" , FcitxMessagesGetMessageType(messageDown, i), FcitxMessagesGetMessageString(messageDown, i));
+            // FcitxLog(DEBUG, "Type: %d Text: %s" , FcitxMessagesGetMessageType(messageDown, i),
+            // FcitxMessagesGetMessageString(messageDown, i));
 
             if (FcitxMessagesGetMessageType(messageDown, i) == MSG_INDEX)
             {
@@ -1180,7 +1200,8 @@ void FreeWubiPanelProxyDestroyInstance()
     dbus_connection_unregister_object_path(freeWubiPanel->conn, FREEWUBI_INPUTMETHOD_OBJECTPATH);
     dbus_connection_remove_filter(freeWubiPanel->conn, FreeWubiPanelProxyDBusFilter, freeWubiPanel);
 
-    dbus_bus_remove_match(freeWubiPanel->conn, "type='signal',sender='" FREEWUBI_PANEL_SERVICENAME "',interface='" FREEWUBI_PANEL_INTERFACE "'", NULL);
+    dbus_bus_remove_match(freeWubiPanel->conn,
+                          "type='signal',sender='" FREEWUBI_PANEL_SERVICENAME "',interface='" FREEWUBI_PANEL_INTERFACE "'", NULL);
 
     dbus_connection_flush(freeWubiPanel->conn);
 

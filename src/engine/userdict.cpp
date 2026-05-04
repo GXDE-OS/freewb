@@ -1,7 +1,8 @@
 #include "userdict.h"
 
-#include <fstream>
 #include <sys/stat.h>
+
+#include <fstream>
 
 #include "utils.h"
 

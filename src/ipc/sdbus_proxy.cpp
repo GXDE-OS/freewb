@@ -85,7 +85,8 @@ std::string SDBusProxy::toolbarPayloadToPropertyLine(const ToolbarPropertiesPayl
     if (p.uniqueName == "fullwidth" || p.uniqueName == "punc")
     {
         const std::string st = p.active ? "active" : "inactive";
-        return "/Fcitx/" + p.uniqueName + ":" + p.shortDescription + ":fcitx-" + p.uniqueName + "-" + st + ":" + p.longDescription;
+        return "/Fcitx/" + p.uniqueName + ":" + p.shortDescription + ":fcitx-" + p.uniqueName + "-" + st + ":" +
+               p.longDescription;
     }
     return "/Fcitx/im:" + p.uniqueName + ":" + p.name;
 }
@@ -191,13 +192,17 @@ void SDBusProxy::emitUpdateCandidate(const CandidatePayload &payload)
         FREEWB_ERROR("emitUpdateCandidate skipped: bus={} available_={}", static_cast<const void *>(bus_), available_);
         return;
     }
-    FREEWB_DEBUG("emitUpdateCandidate: labels={} texts={} attrs={} hasPrev={} hasNext={} cursor={} layout={}", payload.labels.size(), payload.texts.size(), payload.attrs.size(), payload.hasPrev, payload.hasNext, payload.cursor, static_cast<int>(payload.layout));
+    FREEWB_DEBUG("emitUpdateCandidate: labels={} texts={} attrs={} hasPrev={} hasNext={} cursor={} layout={}",
+                 payload.labels.size(), payload.texts.size(), payload.attrs.size(), payload.hasPrev, payload.hasNext,
+                 payload.cursor, static_cast<int>(payload.layout));
 
     sd_bus_message *m = nullptr;
-    const int newCallR = sd_bus_message_new_method_call(bus_, &m, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE, "SetLookupTable");
+    const int newCallR = sd_bus_message_new_method_call(bus_, &m, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH,
+                                                        FREEWUBI_PANEL_INTERFACE, "SetLookupTable");
     if (newCallR < 0)
     {
-        FREEWB_ERROR("emitUpdateCandidate: sd_bus_message_new_method_call(SetLookupTable) failed: {} ({})", newCallR, strerror(-newCallR));
+        FREEWB_ERROR("emitUpdateCandidate: sd_bus_message_new_method_call(SetLookupTable) failed: {} ({})", newCallR,
+                     strerror(-newCallR));
         return;
     }
 
@@ -365,7 +370,8 @@ void SDBusProxy::emitRegisterPropertiesSignal(const std::vector<std::string> &pr
         return;
     }
     sd_bus_message *m = nullptr;
-    if (sd_bus_message_new_signal(bus_, &m, FREEWUBI_INPUTMETHOD_OBJECTPATH, FREEWUBI_INPUTMETHOD_SERVICENAME, "RegisterProperties") < 0)
+    if (sd_bus_message_new_signal(bus_, &m, FREEWUBI_INPUTMETHOD_OBJECTPATH, FREEWUBI_INPUTMETHOD_SERVICENAME,
+                                  "RegisterProperties") < 0)
     {
         return;
     }
@@ -425,7 +431,8 @@ void SDBusProxy::sendPanelMethod(const char *member, const char *types, ...) con
         return;
     }
     sd_bus_message *m = nullptr;
-    if (sd_bus_message_new_method_call(bus_, &m, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE, member) < 0)
+    if (sd_bus_message_new_method_call(bus_, &m, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE,
+                                       member) < 0)
     {
         return;
     }
@@ -476,14 +483,16 @@ void SDBusProxy::callSettingsMethod(const char *member, const char *types, ...) 
 {
     if (!bus_ || !available_ || !member)
     {
-        FREEWB_WARN("callSettingsMethod skipped: bus={} available_={} member={}", static_cast<const void *>(bus_), available_, member ? member : "(null)");
+        FREEWB_WARN("callSettingsMethod skipped: bus={} available_={} member={}", static_cast<const void *>(bus_), available_,
+                    member ? member : "(null)");
         return;
     }
 
     FREEWB_DEBUG("callSettingsMethod: member={} types={}", member, (types && types[0] != '\0') ? types : "(none)");
 
     sd_bus_message *m = nullptr;
-    const int newCallR = sd_bus_message_new_method_call(bus_, &m, FREEWUBI_SETTINGS_SERVICENAME, FREEWUBI_SETTINGS_OBJECTPATH, FREEWUBI_SETTINGS_INTERFACE, member);
+    const int newCallR = sd_bus_message_new_method_call(bus_, &m, FREEWUBI_SETTINGS_SERVICENAME, FREEWUBI_SETTINGS_OBJECTPATH,
+                                                        FREEWUBI_SETTINGS_INTERFACE, member);
     if (newCallR < 0)
     {
         FREEWB_ERROR("callSettingsMethod: new_method_call({}) failed: {} ({})", member, newCallR, strerror(-newCallR));
@@ -522,7 +531,8 @@ std::string SDBusProxy::callSettingsMethodReplyString(const char *member) const
     }
     sd_bus_error err = SD_BUS_ERROR_NULL;
     sd_bus_message *reply = nullptr;
-    const int callR = sd_bus_call_method(bus_, FREEWUBI_SETTINGS_SERVICENAME, FREEWUBI_SETTINGS_OBJECTPATH, FREEWUBI_SETTINGS_INTERFACE, member, &err, &reply, "");
+    const int callR = sd_bus_call_method(bus_, FREEWUBI_SETTINGS_SERVICENAME, FREEWUBI_SETTINGS_OBJECTPATH,
+                                         FREEWUBI_SETTINGS_INTERFACE, member, &err, &reply, "");
     if (callR < 0)
     {
         sd_bus_error_free(&err);
@@ -542,7 +552,8 @@ bool SDBusProxy::registerPanelMatches()
     {
         return false;
     }
-    const int r = sd_bus_match_signal(bus_, &panelSignalSlot_, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE, nullptr, &SDBusProxy::handlePanelSignal, this);
+    const int r = sd_bus_match_signal(bus_, &panelSignalSlot_, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH,
+                                      FREEWUBI_PANEL_INTERFACE, nullptr, &SDBusProxy::handlePanelSignal, this);
     return r >= 0;
 }
 

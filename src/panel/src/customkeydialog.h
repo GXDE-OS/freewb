@@ -35,7 +35,8 @@ signals:
     void signal_custom_ok_btn_clicked(const QString &commSymbol, const QString &shiftSymbol); // 自定义案件符号确定
 
 public:
-    void set_custom_symbol(VirtualKeyboardMode vkm, const QString &keyName, const QString &commSymbol, const QString &shiftSymbol);
+    void set_custom_symbol(VirtualKeyboardMode vkm, const QString &keyName, const QString &commSymbol,
+                           const QString &shiftSymbol);
 
 protected:
     // 重载函数，用于窗口拖动

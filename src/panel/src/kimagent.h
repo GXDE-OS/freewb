@@ -72,7 +72,8 @@ private:
 
     // METHODS(暴露给DBUS提供给外界进程调用的方法)
 public Q_SLOTS:
-    Q_SCRIPTABLE void SetLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev, bool hasNext, int cursor, int layout);
+    Q_SCRIPTABLE void SetLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev,
+                                     bool hasNext, int cursor, int layout);
 
     Q_SCRIPTABLE void SetSpotRect(int x, int y, int w, int h);
 };

@@ -5,14 +5,14 @@
 #include <utility>
 #include <vector>
 
-#include "engine.h"
+#include "candidatelist.h"
 #include "en.h"
+#include "engine.h"
 #include "keysym.h"
 #include "py.h"
 #include "types.h"
 #include "wbpy.h"
 #include "wbzx.h"
-#include "candidatelist.h"
 
 namespace freewb
 {

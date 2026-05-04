@@ -85,26 +85,31 @@ QString cnEnSwitchDisplayText(const std::string &token)
 
 #define QSS_FREEIME_LOGO QString("background-image: url(%1);").arg(m_skinData.logoIcoPath)
 
-#define QSS_PREV0_PAGE QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;").arg(m_skinData.prev0PageIcoPath)
-#define QSS_PREV1_PAGE QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;").arg(m_skinData.prev1PageIcoPath)
-#define QSS_NEXT0_PAGE QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;").arg(m_skinData.next0PageIcoPath)
-#define QSS_NEXT1_PAGE QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;").arg(m_skinData.next1PageIcoPath)
+#define QSS_PREV0_PAGE                                                                                                           \
+    QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;").arg(m_skinData.prev0PageIcoPath)
+#define QSS_PREV1_PAGE                                                                                                           \
+    QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;").arg(m_skinData.prev1PageIcoPath)
+#define QSS_NEXT0_PAGE                                                                                                           \
+    QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;").arg(m_skinData.next0PageIcoPath)
+#define QSS_NEXT1_PAGE                                                                                                           \
+    QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;").arg(m_skinData.next1PageIcoPath)
 
-#define QSS_DICT_INFO_WIN                                                                                                                                                                                                                                                                                  \
-    "color: rgb(56, 56, 56);"                                                                                                                                                                                                                                                                              \
-    "font: 12pt \"Ubuntu\";"                                                                                                                                                                                                                                                                               \
-    "padding: 10px;"                                                                                                                                                                                                                                                                                       \
-    "background-color: rgb(254, 255, 226);"                                                                                                                                                                                                                                                                \
-    "border-radius: 5px;"                                                                                                                                                                                                                                                                                  \
-    "border-width: 2px;"                                                                                                                                                                                                                                                                                   \
-    "border-style: solid;"                                                                                                                                                                                                                                                                                 \
+#define QSS_DICT_INFO_WIN                                                                                                        \
+    "color: rgb(56, 56, 56);"                                                                                                    \
+    "font: 12pt \"Ubuntu\";"                                                                                                     \
+    "padding: 10px;"                                                                                                             \
+    "background-color: rgb(254, 255, 226);"                                                                                      \
+    "border-radius: 5px;"                                                                                                        \
+    "border-width: 2px;"                                                                                                         \
+    "border-style: solid;"                                                                                                       \
     "border-color: rgb(200, 200, 200);"
 
 InputWin::InputWin(QWidget *parent) : QWidget(parent), ui(new Ui::InputWin)
 {
     ui->setupUi(this);
 
-    setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::WindowDoesNotAcceptFocus);
+    setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint |
+                   Qt::WindowDoesNotAcceptFocus);
 
     setAttribute(Qt::WA_TranslucentBackground);
 
@@ -144,7 +149,8 @@ void InputWin::init_im_prompt_lable()
 {
     m_labelImPrompt = new QLabel;
     m_labelImPrompt->setStyleSheet(QSS_IM_PROMPT);
-    m_labelImPrompt->setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+    m_labelImPrompt->setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint |
+                                    Qt::X11BypassWindowManagerHint);
     m_labelImPrompt->setAttribute(Qt::WA_TranslucentBackground, true);
     m_labelImPrompt->hide();
 }
@@ -184,8 +190,14 @@ void InputWin::slot_load_setting_data()
     font2.setPointSize(font.pointSize() * 0.95);
     ui->labelPrompt->setFont(font2);
 
-    ui->labelPreEdit->setStyleSheet(QString("border-image: url(:/image/transparent.png);color:rgb(%1,%2,%3);").arg(wordCcolor.red()).arg(wordCcolor.green()).arg(wordCcolor.blue()));
-    ui->labelPrompt->setStyleSheet(QString("border-image: url(:/image/transparent.png);color:rgb(%1,%2,%3);").arg(promptColor.red()).arg(promptColor.green()).arg(promptColor.blue()));
+    ui->labelPreEdit->setStyleSheet(QString("border-image: url(:/image/transparent.png);color:rgb(%1,%2,%3);")
+                                        .arg(wordCcolor.red())
+                                        .arg(wordCcolor.green())
+                                        .arg(wordCcolor.blue()));
+    ui->labelPrompt->setStyleSheet(QString("border-image: url(:/image/transparent.png);color:rgb(%1,%2,%3);")
+                                       .arg(promptColor.red())
+                                       .arg(promptColor.green())
+                                       .arg(promptColor.blue()));
 
     CandidateItem *item;
     for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; i++)
@@ -233,7 +245,6 @@ void InputWin::slot_load_setting_data()
     {
         update_skin();
     }
-
 }
 
 void InputWin::init_ui_table()
@@ -323,12 +334,19 @@ void InputWin::update_skin()
         QColor gradienColor0 = fwbcQColorFromSpec(settings::instance().get_gradientColor0());
         QColor gradienColor1 = fwbcQColorFromSpec(settings::instance().get_gradientColor1());
 
-        QString borderColorStyle = QString("border-color:rgb(%1,%2,%3);").arg(boderColor.red()).arg(boderColor.green()).arg(boderColor.blue());
+        QString borderColorStyle =
+            QString("border-color:rgb(%1,%2,%3);").arg(boderColor.red()).arg(boderColor.green()).arg(boderColor.blue());
 
         if (settings::instance().get_useGradientColor())
         {
-            QString gradienColorStyle =
-                QString("background-color:qlineargradient(spread:pad,x1:0, y1:0, x2:0, y2:1,stop:0 rgb(%1,%2,%3),stop:1 rgb(%4,%5,%6));").arg(gradienColor0.red()).arg(gradienColor0.green()).arg(gradienColor0.blue()).arg(gradienColor1.red()).arg(gradienColor1.green()).arg(gradienColor1.blue());
+            QString gradienColorStyle = QString("background-color:qlineargradient(spread:pad,x1:0, y1:0, x2:0, y2:1,stop:0 "
+                                                "rgb(%1,%2,%3),stop:1 rgb(%4,%5,%6));")
+                                            .arg(gradienColor0.red())
+                                            .arg(gradienColor0.green())
+                                            .arg(gradienColor0.blue())
+                                            .arg(gradienColor1.red())
+                                            .arg(gradienColor1.green())
+                                            .arg(gradienColor1.blue());
             style = QString("#frameBg{"
                             "border-width:1px;"
                             "border-style:solid;"
@@ -342,7 +360,9 @@ void InputWin::update_skin()
         }
         else if (settings::instance().get_useBgImage())
         {
-            QString bgImageStyle = QString("%1:url(%2);").arg(settings::instance().get_enableTiled() ? "background-image" : "border-image").arg(toQStringUtf8(settings::instance().get_bgImage()));
+            QString bgImageStyle = QString("%1:url(%2);")
+                                       .arg(settings::instance().get_enableTiled() ? "background-image" : "border-image")
+                                       .arg(toQStringUtf8(settings::instance().get_bgImage()));
 
             style = QString("#frameBg{"
                             "border-width:1px;"
@@ -473,7 +493,8 @@ void InputWin::adjust_candi_win_width()
     int tableColumn = ui->tableWidget->columnCount();
 
     // int fontWidth = QFontMetrics( freewb_candi_text_qfont(settings::instance()) ).width("中");
-    lenPreEdtLine = ui->labelPreEdit->sizeHint().width() + ui->btnCharWidth->width() + ui->btnMark->width() + ui->btnLogo->width();
+    lenPreEdtLine =
+        ui->labelPreEdit->sizeHint().width() + ui->btnCharWidth->width() + ui->btnMark->width() + ui->btnLogo->width();
     for (int i = 0; i < tableColumn; i++)
     {
         ui->tableWidget->resizeColumnToContents(i);
@@ -488,7 +509,8 @@ void InputWin::adjust_candi_win_width()
     }
     if (lenTable < len)
     {
-        ui->tableWidget->setColumnWidth(tableColumn - 3, len - lenTable + ui->tableWidget->horizontalHeader()->sectionSize(tableColumn - 3));
+        ui->tableWidget->setColumnWidth(tableColumn - 3,
+                                        len - lenTable + ui->tableWidget->horizontalHeader()->sectionSize(tableColumn - 3));
     }
     len += ui->horizontalLayout->contentsMargins().left() + ui->horizontalLayout->contentsMargins().right();
     len += (ui->labelLeft->width() + ui->labelRight->width());
@@ -1034,13 +1056,15 @@ void InputWin::set_candiwin_op_help_info()
     }
     else if (oti == OTI_SK_RECODE_SELECT)
     {
-        const QString keyText = pairKeyDisplayText(settings::instance().get_secondRecodeKey(), settings::instance().get_thirdRecodeKey());
+        const QString keyText =
+            pairKeyDisplayText(settings::instance().get_secondRecodeKey(), settings::instance().get_thirdRecodeKey());
         if (!keyText.isEmpty())
             tips = QString("【%1 选择二三重码】").arg(keyText);
     }
     else if (oti == OTI_SK_CANDI_PAGE)
     {
-        const QString keyText = pairKeyDisplayText(settings::instance().get_prevPageKey(), settings::instance().get_nextPageKey());
+        const QString keyText =
+            pairKeyDisplayText(settings::instance().get_prevPageKey(), settings::instance().get_nextPageKey());
         if (!keyText.isEmpty())
             tips = QString("【%1 候选词上下翻页】").arg(keyText);
     }
@@ -1122,14 +1146,18 @@ void InputWin::slot_dict_find(const QString &wordText)
                 QString wb = wbpy.at(0);
                 if (!wb.isEmpty())
                 {
-                    findInfo += QString("<p><font color='#ef2929'>%1</font></p>  编码：%2\n").arg(wchar).arg(wb.replace(",", "  "));
+                    findInfo +=
+                        QString("<p><font color='#ef2929'>%1</font></p>  编码：%2\n").arg(wchar).arg(wb.replace(",", "  "));
                 }
             }
             else if (wbpy.length() == 2)
             {
                 QString wb = wbpy.at(0);
                 QString py = wbpy.at(1);
-                findInfo += QString("<p><font color='#ef2929'>%1</font></p>  编码：%2\n  拼音：%3\n").arg(wchar).arg(wb.replace(",", "  ")).arg(py.replace(",", "  "));
+                findInfo += QString("<p><font color='#ef2929'>%1</font></p>  编码：%2\n  拼音：%3\n")
+                                .arg(wchar)
+                                .arg(wb.replace(",", "  "))
+                                .arg(py.replace(",", "  "));
             }
         }
     }
@@ -1240,7 +1268,8 @@ void InputWin::slot_kim_ShowLookupTable(bool enable)
     }
 }
 
-void InputWin::slot_kim_UpdateLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev, bool hasNext)
+void InputWin::slot_kim_UpdateLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr,
+                                          bool hasPrev, bool hasNext)
 {
     Q_UNUSED(label);
     Q_UNUSED(attr);
@@ -1250,7 +1279,8 @@ void InputWin::slot_kim_UpdateLookupTable(const QStringList &label, const QStrin
     int len = m_candiWordCount;
     if (len > MAX_CANDIDATE_WORD_COUNT)
     {
-        FREEWB_DEBUG("slot_kim_UpdateLookupTable: len > MAX_CANDIDATE_WORD_COUNT, len={}, MAX_CANDIDATE_WORD_COUNT={}", len, MAX_CANDIDATE_WORD_COUNT);
+        FREEWB_DEBUG("slot_kim_UpdateLookupTable: len > MAX_CANDIDATE_WORD_COUNT, len={}, MAX_CANDIDATE_WORD_COUNT={}", len,
+                     MAX_CANDIDATE_WORD_COUNT);
         len = MAX_CANDIDATE_WORD_COUNT;
     }
 
@@ -1330,7 +1360,8 @@ void InputWin::slot_kim_UpdateLookupTable(const QStringList &label, const QStrin
     auto_adjust_candi_win_geometry();
 }
 
-void InputWin::slot_kim_SetLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev, bool hasNext, int cursor)
+void InputWin::slot_kim_SetLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev,
+                                       bool hasNext, int cursor)
 {
     Q_UNUSED(cursor)
     slot_kim_UpdateLookupTable(label, text, attr, hasPrev, hasNext);
@@ -1481,4 +1512,3 @@ void InputWin::slot_kim_SetSpotLocation(int x, int y, int w, int h)
         move(x, y);
     }
 }
-

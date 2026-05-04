@@ -2127,7 +2127,8 @@ extern "C"
         FreewbKeyState_Hyper = 1 << 27,
         FreewbKeyState_Meta = 1 << 28,
         FreewbKeyState_UsedMask = 0x5c001fff,
-        FreewbKeyState_SimpleMask = FreewbKeyState_Ctrl_Alt_Shift | FreewbKeyState_Super | FreewbKeyState_Super2 | FreewbKeyState_Hyper | FreewbKeyState_Meta,
+        FreewbKeyState_SimpleMask = FreewbKeyState_Ctrl_Alt_Shift | FreewbKeyState_Super | FreewbKeyState_Super2 |
+                                    FreewbKeyState_Hyper | FreewbKeyState_Meta,
     } FreewbKeyState;
 
     static const struct _FreewbKeyNameList

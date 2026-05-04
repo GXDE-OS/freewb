@@ -2,13 +2,13 @@
 #define FREEWB_H
 
 #include "candidatelist.h"
+#include "committer.h"
 #include "enginemanager.h"
 #include "keysym.h"
 #include "log.h"
-#include "sdbus_proxy.h"
-#include "committer.h"
-#include "types.h"
 #include "punc.h"
+#include "sdbus_proxy.h"
+#include "types.h"
 
 namespace freewb
 {

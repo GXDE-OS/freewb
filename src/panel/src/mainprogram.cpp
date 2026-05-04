@@ -101,8 +101,10 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
     // m_contextmenu --> m_usrGenWordDialog
     connect(m_contextmenu, &ContextMenu::signal_open_user_word_dialog, m_usrGenWordDialog, &UsrGenWordDialog::slot_show_dialog);
     // m_contextmenu --> m_backup
-    connect(m_contextmenu, &ContextMenu::signal_backup_lexicon_and_settings, m_backupDialog, &BackupDialog::slot_backup_lexicon_and_settings);
-    connect(m_contextmenu, &ContextMenu::signal_restore_lexicon_and_settings, m_backupDialog, &BackupDialog::slot_restore_lexicon_and_settings);
+    connect(m_contextmenu, &ContextMenu::signal_backup_lexicon_and_settings, m_backupDialog,
+            &BackupDialog::slot_backup_lexicon_and_settings);
+    connect(m_contextmenu, &ContextMenu::signal_restore_lexicon_and_settings, m_backupDialog,
+            &BackupDialog::slot_restore_lexicon_and_settings);
 
     // 系统事件过滤器发出的信号
     // m_x11EventMonitor --> m_contextmenu
@@ -130,7 +132,8 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
     // m_textEditWin --> m_inputWin
     connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_inputWin, &InputWin::slot_load_setting_data);
     // m_textEditWin --> m_usrGenWordDialog
-    connect(m_textEditWin, &TextEditWin::signal_userWord_file_saved, m_usrGenWordDialog, &UsrGenWordDialog::slot_userWord_file_saved);
+    connect(m_textEditWin, &TextEditWin::signal_userWord_file_saved, m_usrGenWordDialog,
+            &UsrGenWordDialog::slot_userWord_file_saved);
 
     // 词典工具箱发送的信号
     // m_lexicontoolWin --> m_kimAgent
@@ -142,9 +145,12 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
 
     // 配置数据改变发送的信号
     connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_fcitx, m_kimAgent, &KimAgent::ReloadConfig);
-    connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_toolbar, &ToolbarWin::slot_load_setting_data);
-    connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_virtualKeyboard, &Keyboard::slot_load_setting_data);
-    connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_inputWin, &InputWin::slot_load_setting_data);
+    connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_toolbar,
+            &ToolbarWin::slot_load_setting_data);
+    connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_virtualKeyboard,
+            &Keyboard::slot_load_setting_data);
+    connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_inputWin,
+            &InputWin::slot_load_setting_data);
 }
 
 MainProgram::~MainProgram()
@@ -181,13 +187,15 @@ MainProgram::~MainProgram()
 void MainProgram::create_host_dbus_service()
 {
     // 注册本地ＤＢＵＳ服务与对象
-    if (!QDBusConnection::connectToBus(QDBusConnection::SessionBus, FREEWUBI_SETTINGS_BUSNAME).registerService(FREEWUBI_SETTINGS_SERVICENAME))
+    if (!QDBusConnection::connectToBus(QDBusConnection::SessionBus, FREEWUBI_SETTINGS_BUSNAME)
+             .registerService(FREEWUBI_SETTINGS_SERVICENAME))
     {
         qWarning() << "create host service failed!";
         return;
     }
 
-    QDBusConnection::connectToBus(QDBusConnection::SessionBus, FREEWUBI_SETTINGS_BUSNAME).registerObject(FREEWUBI_SETTINGS_OBJECTPATH, this, QDBusConnection::ExportAllSlots);
+    QDBusConnection::connectToBus(QDBusConnection::SessionBus, FREEWUBI_SETTINGS_BUSNAME)
+        .registerObject(FREEWUBI_SETTINGS_OBJECTPATH, this, QDBusConnection::ExportAllSlots);
 }
 
 void MainProgram::slot_delete_freewb_panel()

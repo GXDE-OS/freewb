@@ -37,9 +37,9 @@
 
 #define ICO_CHECKED ":/image/toolbar/checked.png"
 
-#define QSS_MENU                                                                                                                                                                                                                                                                                           \
-    "QMenu::item{color: rgb(56, 56, 56);}"                                                                                                                                                                                                                                                                 \
-    "QMenu::item:selected:enabled{background-color:#DFDFDF;color: rgb(56, 56, 56)}"                                                                                                                                                                                                                        \
+#define QSS_MENU                                                                                                                 \
+    "QMenu::item{color: rgb(56, 56, 56);}"                                                                                       \
+    "QMenu::item:selected:enabled{background-color:#DFDFDF;color: rgb(56, 56, 56)}"                                              \
     "QMenu::item:!enabled{color: rgba(56, 56, 56, 128);}"
 
 //"QMenu::icon:unchecked{border-image: url(:/image/toolbar/checked.png);}"
@@ -165,8 +165,11 @@ void ContextMenu::slot_button_pressed(int button)
     if (isVisible())
     {
         QPoint p = QCursor::pos();
-        if (!geometry().adjusted(-5, -5, 5, 5).contains(p) && !(m_menu1.geometry().contains(p) && m_menu1.isVisible()) && !(m_menu2.geometry().contains(p) && m_menu2.isVisible()) && !(m_menu4.geometry().contains(p) && m_menu4.isVisible()) &&
-            !(m_menu21.geometry().contains(p) && m_menu21.isVisible()) && !(m_menu22.geometry().contains(p) && m_menu22.isVisible()))
+        if (!geometry().adjusted(-5, -5, 5, 5).contains(p) && !(m_menu1.geometry().contains(p) && m_menu1.isVisible()) &&
+            !(m_menu2.geometry().contains(p) && m_menu2.isVisible()) &&
+            !(m_menu4.geometry().contains(p) && m_menu4.isVisible()) &&
+            !(m_menu21.geometry().contains(p) && m_menu21.isVisible()) &&
+            !(m_menu22.geometry().contains(p) && m_menu22.isVisible()))
         {
 #ifdef DEBUG
 // qDebug() << "close";

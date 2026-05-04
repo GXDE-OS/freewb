@@ -72,9 +72,8 @@ QString customShortcutItemLabel(const std::string &value)
 const std::vector<std::string> &singleShortcutCandidates()
 {
     static const std::vector<std::string> k = {
-        "KEY_NONE",      "KEY_SEMICOLON",     "KEY_QUOTE",     "KEY_COMMA",      "KEY_PERIOD",      "KEY_BACKQUOTE",
-        "KEY_LEFT_BRACKET", "KEY_RIGHT_BRACKET", "KEY_BACK_SLASH", "KEY_SLASH",       "KEY_u",          "KEY_i",
-        "KEY_v",         "KEY_z",
+        "KEY_NONE",          "KEY_SEMICOLON",  "KEY_QUOTE", "KEY_COMMA", "KEY_PERIOD", "KEY_BACKQUOTE", "KEY_LEFT_BRACKET",
+        "KEY_RIGHT_BRACKET", "KEY_BACK_SLASH", "KEY_SLASH", "KEY_u",     "KEY_i",      "KEY_v",         "KEY_z",
     };
     return k;
 }
@@ -84,15 +83,66 @@ const std::vector<std::string> &singleShortcutCandidates()
 const std::vector<std::string> &customShortcutCandidates()
 {
     static const std::vector<std::string> k = {
-        "KEY_NONE",   "KEY_INSERT",     "KEY_DEL",           "KEY_ESC",       "KEY_BACKSPACE",  "KEY_HOME",      "KEY_END",
-        "KEY_LEFT",   "KEY_RIGHT",      "KEY_UP",            "KEY_DOWN",      "KEY_QUOTE",      "KEY_SEMICOLON", "KEY_BACK_SLASH",
-        "KEY_LEFT_BRACKET", "KEY_RIGHT_BRACKET", "KEY_COMMA",        "KEY_PERIOD",    "KEY_SLASH",      "KEY_BACKQUOTE", "KEY_EQUAL",
-        "KEY_DASH",   "KEY_F1",         "KEY_F2",            "KEY_F3",        "KEY_F4",         "KEY_F5",        "KEY_F6",
-        "KEY_F7",     "KEY_F8",         "KEY_F9",            "KEY_F10",       "KEY_F11",        "KEY_F12",       "KEY_A",
-        "KEY_B",      "KEY_C",          "KEY_D",             "KEY_E",         "KEY_F",          "KEY_G",         "KEY_H",
-        "KEY_I",      "KEY_J",          "KEY_K",             "KEY_L",         "KEY_M",          "KEY_N",         "KEY_O",
-        "KEY_P",      "KEY_Q",          "KEY_R",             "KEY_S",         "KEY_T",          "KEY_U",         "KEY_V",
-        "KEY_W",      "KEY_X",          "KEY_Y",             "KEY_Z",
+        "KEY_NONE",
+        "KEY_INSERT",
+        "KEY_DEL",
+        "KEY_ESC",
+        "KEY_BACKSPACE",
+        "KEY_HOME",
+        "KEY_END",
+        "KEY_LEFT",
+        "KEY_RIGHT",
+        "KEY_UP",
+        "KEY_DOWN",
+        "KEY_QUOTE",
+        "KEY_SEMICOLON",
+        "KEY_BACK_SLASH",
+        "KEY_LEFT_BRACKET",
+        "KEY_RIGHT_BRACKET",
+        "KEY_COMMA",
+        "KEY_PERIOD",
+        "KEY_SLASH",
+        "KEY_BACKQUOTE",
+        "KEY_EQUAL",
+        "KEY_DASH",
+        "KEY_F1",
+        "KEY_F2",
+        "KEY_F3",
+        "KEY_F4",
+        "KEY_F5",
+        "KEY_F6",
+        "KEY_F7",
+        "KEY_F8",
+        "KEY_F9",
+        "KEY_F10",
+        "KEY_F11",
+        "KEY_F12",
+        "KEY_A",
+        "KEY_B",
+        "KEY_C",
+        "KEY_D",
+        "KEY_E",
+        "KEY_F",
+        "KEY_G",
+        "KEY_H",
+        "KEY_I",
+        "KEY_J",
+        "KEY_K",
+        "KEY_L",
+        "KEY_M",
+        "KEY_N",
+        "KEY_O",
+        "KEY_P",
+        "KEY_Q",
+        "KEY_R",
+        "KEY_S",
+        "KEY_T",
+        "KEY_U",
+        "KEY_V",
+        "KEY_W",
+        "KEY_X",
+        "KEY_Y",
+        "KEY_Z",
     };
     return k;
 }
@@ -109,20 +159,20 @@ struct CustomShortcutAccessor
 /* 14 项自定义功能键 accessor 表；顺序与 settingwin.ui 中 cmbFunction 下拉项严格对应。
  * 如需增减或改序，必须同步调整 .ui 中的条目顺序。 */
 const std::array<CustomShortcutAccessor, 14> kCustomShortcutAccessors = {{
-    {&settings::Settings::get_backFindCode, &settings::Settings::set_backFindCode},           // 反查编码
-    {&settings::Settings::get_onlineAddWord, &settings::Settings::set_onlineAddWord},         // 在线加词
-    {&settings::Settings::get_onlineDelWord, &settings::Settings::set_onlineDelWord},         // 在线删词
-    {&settings::Settings::get_switchVKb, &settings::Settings::set_switchVKb},                 // 切换软键盘
-    {&settings::Settings::get_switchCharSet, &settings::Settings::set_switchCharSet},         // 切换字符集
-    {&settings::Settings::get_switchInputMode, &settings::Settings::set_switchInputMode},     // 切换输入模式
-    {&settings::Settings::get_switchChttrans, &settings::Settings::set_switchChttrans},       // 切换简入繁出
-    {&settings::Settings::get_setupOption, &settings::Settings::set_setupOption},             // 打开系统设置
-    {&settings::Settings::get_showHideToolbar, &settings::Settings::set_showHideToolbar},     // 显/隐状态栏
-    {&settings::Settings::get_showHideCandiWin, &settings::Settings::set_showHideCandiWin},   // 显/隐候选窗
-    {&settings::Settings::get_switchLexicon, &settings::Settings::set_switchLexicon},         // 切换词库
-    {&settings::Settings::get_switchSkin, &settings::Settings::set_switchSkin},               // 切换皮肤
+    {&settings::Settings::get_backFindCode, &settings::Settings::set_backFindCode},             // 反查编码
+    {&settings::Settings::get_onlineAddWord, &settings::Settings::set_onlineAddWord},           // 在线加词
+    {&settings::Settings::get_onlineDelWord, &settings::Settings::set_onlineDelWord},           // 在线删词
+    {&settings::Settings::get_switchVKb, &settings::Settings::set_switchVKb},                   // 切换软键盘
+    {&settings::Settings::get_switchCharSet, &settings::Settings::set_switchCharSet},           // 切换字符集
+    {&settings::Settings::get_switchInputMode, &settings::Settings::set_switchInputMode},       // 切换输入模式
+    {&settings::Settings::get_switchChttrans, &settings::Settings::set_switchChttrans},         // 切换简入繁出
+    {&settings::Settings::get_setupOption, &settings::Settings::set_setupOption},               // 打开系统设置
+    {&settings::Settings::get_showHideToolbar, &settings::Settings::set_showHideToolbar},       // 显/隐状态栏
+    {&settings::Settings::get_showHideCandiWin, &settings::Settings::set_showHideCandiWin},     // 显/隐候选窗
+    {&settings::Settings::get_switchLexicon, &settings::Settings::set_switchLexicon},           // 切换词库
+    {&settings::Settings::get_switchSkin, &settings::Settings::set_switchSkin},                 // 切换皮肤
     {&settings::Settings::get_quickDelScreenItem, &settings::Settings::set_quickDelScreenItem}, // 快删上屏项
-    {&settings::Settings::get_markAutoPair, &settings::Settings::set_markAutoPair},           // 标点自动配对
+    {&settings::Settings::get_markAutoPair, &settings::Settings::set_markAutoPair},             // 标点自动配对
 }};
 
 const CustomShortcutAccessor *customShortcutAccessor(int funcIndex)
@@ -153,7 +203,8 @@ void customShortcutSetValue(settings::Settings &cfg, int funcIndex, const std::s
     (cfg.*(accessor->setter))(value);
 }
 
-void swBuildSingleShortcutCombo(QComboBox *combo, const std::string &selected, const std::string &forbiddenA, const std::string &forbiddenB)
+void swBuildSingleShortcutCombo(QComboBox *combo, const std::string &selected, const std::string &forbiddenA,
+                                const std::string &forbiddenB)
 {
     combo->clear();
     const auto &candidates = singleShortcutCandidates();
@@ -265,7 +316,8 @@ int candiPagePresetIndex(const std::string &prev, const std::string &next)
 /* 以预设表为数据源填充下拉：每项 text 来自 keyPairPresetLabel，
  * userData 存"预设索引"，activated 槽凭 userData 回查。
  */
-template <typename Preset, size_t N> void swBuildKeyPairCombo(QComboBox *combo, const std::array<Preset, N> &presets, int currentIndex)
+template <typename Preset, size_t N>
+void swBuildKeyPairCombo(QComboBox *combo, const std::array<Preset, N> &presets, int currentIndex)
 {
     combo->clear();
     for (size_t i = 0; i < presets.size(); ++i)
@@ -280,14 +332,14 @@ template <typename Preset, size_t N> void swBuildKeyPairCombo(QComboBox *combo, 
 // 设置窗口样式表
 #define QSS_FILE ":/qss/settingwin.qss"
 
-#define QSS_TOOL_TIPS                                                                                                                                                                                                                                                                                      \
-    "color: rgb(56, 56, 56);"                                                                                                                                                                                                                                                                              \
-    "font: 12pt \"Ubuntu\";"                                                                                                                                                                                                                                                                               \
-    "padding: 10px;"                                                                                                                                                                                                                                                                                       \
-    "background-color: rgb(254, 255, 226);"                                                                                                                                                                                                                                                                \
-    "border-radius: 5px;"                                                                                                                                                                                                                                                                                  \
-    "border-width: 2px;"                                                                                                                                                                                                                                                                                   \
-    "border-style: solid;"                                                                                                                                                                                                                                                                                 \
+#define QSS_TOOL_TIPS                                                                                                            \
+    "color: rgb(56, 56, 56);"                                                                                                    \
+    "font: 12pt \"Ubuntu\";"                                                                                                     \
+    "padding: 10px;"                                                                                                             \
+    "background-color: rgb(254, 255, 226);"                                                                                      \
+    "border-radius: 5px;"                                                                                                        \
+    "border-width: 2px;"                                                                                                         \
+    "border-style: solid;"                                                                                                       \
     "border-color: rgb(200, 200, 200);"
 
 #define QSS_BORDER_ACTIVE "color: rgb(255, 255, 255);background-color: rgb(10, 120, 203);"
@@ -391,11 +443,14 @@ void SettingWin::init_member_data()
     m_kbCustomKeyMark->move(40, 120);
 
     // 自定义软键盘点击
-    connect(m_kbCustomKeyChar, SIGNAL(signal_custom_key_clicked(SymbolKeyIdx, const QString &, const CustomKeyValue &)), this, SLOT(slot_custom_keyboard_char_clicked(SymbolKeyIdx, const QString &, const CustomKeyValue &)));
-    connect(m_kbCustomKeyMark, SIGNAL(signal_custom_key_clicked(SymbolKeyIdx, const QString &, const CustomKeyValue &)), this, SLOT(slot_custom_keyboard_mark_clicked(SymbolKeyIdx, const QString &, const CustomKeyValue &)));
+    connect(m_kbCustomKeyChar, SIGNAL(signal_custom_key_clicked(SymbolKeyIdx, const QString &, const CustomKeyValue &)), this,
+            SLOT(slot_custom_keyboard_char_clicked(SymbolKeyIdx, const QString &, const CustomKeyValue &)));
+    connect(m_kbCustomKeyMark, SIGNAL(signal_custom_key_clicked(SymbolKeyIdx, const QString &, const CustomKeyValue &)), this,
+            SLOT(slot_custom_keyboard_mark_clicked(SymbolKeyIdx, const QString &, const CustomKeyValue &)));
 
     m_customKeyDialog = new CustomKeyDialog();
-    connect(m_customKeyDialog, SIGNAL(signal_custom_ok_btn_clicked(const QString &, const QString &)), this, SLOT(slot_custom_btn_ok_clicked(const QString &, const QString &)));
+    connect(m_customKeyDialog, SIGNAL(signal_custom_ok_btn_clicked(const QString &, const QString &)), this,
+            SLOT(slot_custom_btn_ok_clicked(const QString &, const QString &)));
 }
 
 void SettingWin::init_mouse_hover_tips()
@@ -709,7 +764,8 @@ void SettingWin::update_listwidget_item()
     {
         m_listItemUi = new QListWidgetItem(_("Interface settings"), ui->listWidget);
         m_listItemCandidateWinUi = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Candidate window interface"), ui->listWidget);
-        m_listItemCandidateWinOption = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Candidate window options"), ui->listWidget);
+        m_listItemCandidateWinOption =
+            new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Candidate window options"), ui->listWidget);
     }
 
     m_listItemShortcutKey = new QListWidgetItem(_("Setting shortcut keys"), ui->listWidget);
@@ -825,19 +881,22 @@ void SettingWin::update_custom_shortkey_cmb()
 // 设置界面--更新临时英文选项框
 void SettingWin::update_tmp_engish_cmb()
 {
-    swBuildSingleShortcutCombo(ui->cmbTmpEnglish, settings::instance().get_tempEnglish(), settings::instance().get_shortcutInput(), settings::instance().get_tempPinyin());
+    swBuildSingleShortcutCombo(ui->cmbTmpEnglish, settings::instance().get_tempEnglish(),
+                               settings::instance().get_shortcutInput(), settings::instance().get_tempPinyin());
 }
 
 // 设置界面--更新快捷输入选项框
 void SettingWin::update_short_input_cmb()
 {
-    swBuildSingleShortcutCombo(ui->cmbShortcutInput, settings::instance().get_shortcutInput(), settings::instance().get_tempEnglish(), settings::instance().get_tempPinyin());
+    swBuildSingleShortcutCombo(ui->cmbShortcutInput, settings::instance().get_shortcutInput(),
+                               settings::instance().get_tempEnglish(), settings::instance().get_tempPinyin());
 }
 
 // 设置界面--更新临时拼音选项框
 void SettingWin::update_tmp_pinyin_cmb()
 {
-    swBuildSingleShortcutCombo(ui->cmbTmpPinyin, settings::instance().get_tempPinyin(), settings::instance().get_tempEnglish(), settings::instance().get_shortcutInput());
+    swBuildSingleShortcutCombo(ui->cmbTmpPinyin, settings::instance().get_tempPinyin(), settings::instance().get_tempEnglish(),
+                               settings::instance().get_shortcutInput());
 }
 
 void SettingWin::init_ui_setting_page()
@@ -991,12 +1050,19 @@ void SettingWin::update_fram_candidate_win()
         QColor gradienColor0 = swQColorFromSpec(settings::instance().get_gradientColor0());
         QColor gradienColor1 = swQColorFromSpec(settings::instance().get_gradientColor1());
 
-        QString borderColorStyle = QString("border-color:rgb(%1,%2,%3);").arg(boderColor.red()).arg(boderColor.green()).arg(boderColor.blue());
+        QString borderColorStyle =
+            QString("border-color:rgb(%1,%2,%3);").arg(boderColor.red()).arg(boderColor.green()).arg(boderColor.blue());
 
         if (settings::instance().get_useGradientColor())
         {
-            QString gradienColorStyle =
-                QString("background-color:qlineargradient(spread:pad,x1:0, y1:0, x2:0, y2:1,stop:0 rgb(%1,%2,%3),stop:1 rgb(%4,%5,%6));").arg(gradienColor0.red()).arg(gradienColor0.green()).arg(gradienColor0.blue()).arg(gradienColor1.red()).arg(gradienColor1.green()).arg(gradienColor1.blue());
+            QString gradienColorStyle = QString("background-color:qlineargradient(spread:pad,x1:0, y1:0, x2:0, y2:1,stop:0 "
+                                                "rgb(%1,%2,%3),stop:1 rgb(%4,%5,%6));")
+                                            .arg(gradienColor0.red())
+                                            .arg(gradienColor0.green())
+                                            .arg(gradienColor0.blue())
+                                            .arg(gradienColor1.red())
+                                            .arg(gradienColor1.green())
+                                            .arg(gradienColor1.blue());
             style = QString("#framCandidateWin{"
                             "border-width:1px;"
                             "border-style:solid;"
@@ -1010,7 +1076,9 @@ void SettingWin::update_fram_candidate_win()
         }
         else if (settings::instance().get_useBgImage())
         {
-            QString bgImageStyle = QString("%1:url(%2);").arg(settings::instance().get_enableTiled() ? "background-image" : "border-image").arg(toQStringUtf8(settings::instance().get_bgImage()));
+            QString bgImageStyle = QString("%1:url(%2);")
+                                       .arg(settings::instance().get_enableTiled() ? "background-image" : "border-image")
+                                       .arg(toQStringUtf8(settings::instance().get_bgImage()));
 
             style = QString("#framCandidateWin{"
                             "border-width:1px;"
@@ -1073,7 +1141,8 @@ void SettingWin::update_fram_candidate_win()
 void SettingWin::init_candidate_option_page()
 {
     swBuildKeyPairCombo(ui->cmb23RecodeSelect, recodeSelectPresets(),
-                        recodeSelectPresetIndex(settings::instance().get_secondRecodeKey(), settings::instance().get_thirdRecodeKey()));
+                        recodeSelectPresetIndex(settings::instance().get_secondRecodeKey(),
+                                                settings::instance().get_thirdRecodeKey()));
     swBuildKeyPairCombo(ui->cmbPrevNextPage, candiPagePresets(),
                         candiPagePresetIndex(settings::instance().get_prevPageKey(), settings::instance().get_nextPageKey()));
     // ui->ledt2ndRecode->setText( QChar(settings::instance().get_second_recode_key()) );
@@ -1337,7 +1406,8 @@ void SettingWin::on_cmbSwitchCnEn_activated(int index)
     {
         m_msgBox = new QMessageBox(this);
         m_msgBox->setIcon(QMessageBox::Warning);
-        m_msgBox->setText(_("The shortcut key you set will conflict with the second and third recode selection key, confirm setting?"));
+        m_msgBox->setText(
+            _("The shortcut key you set will conflict with the second and third recode selection key, confirm setting?"));
         m_msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         m_msgBox->button(QMessageBox::Yes)->setIcon(QIcon());
         m_msgBox->button(QMessageBox::Yes)->setText(_("Yes(&Y)"));
@@ -1446,11 +1516,13 @@ void SettingWin::slot_custom_btn_ok_clicked(const QString &commSymbol, const QSt
         m_kbCustomKeyMark->update_customkey_button(m_curSymbolKeyIdx, commSymbol, shiftSymbol);
     }
 #ifdef DEBUG
-    qDebug() << m_curCustomKeyValue.commChar << m_curCustomKeyValue.shiftChar << m_curCustomKeyValue.commMark << m_curCustomKeyValue.shiftMark;
+    qDebug() << m_curCustomKeyValue.commChar << m_curCustomKeyValue.shiftChar << m_curCustomKeyValue.commMark
+             << m_curCustomKeyValue.shiftMark;
 #endif
     std::string chars = settings::instance().get_CoustomChar();
     std::string marks = settings::instance().get_CoustomMark();
-    if (freewb_custom_key_info_apply_to_values(chars, marks, static_cast<int>(m_curSymbolKeyIdx), KEY_SYMBOL_NUM, customKeyFromQt(m_curCustomKeyValue)))
+    if (freewb_custom_key_info_apply_to_values(chars, marks, static_cast<int>(m_curSymbolKeyIdx), KEY_SYMBOL_NUM,
+                                               customKeyFromQt(m_curCustomKeyValue)))
     {
         settings::instance().set_CoustomChar(chars);
         settings::instance().set_CoustomMark(marks);
@@ -1591,7 +1663,8 @@ void SettingWin::on_btnCandiBg_clicked()
 {
     if (settings::instance().get_useBgImage())
     {
-        QString file = QFileDialog::getOpenFileName(this, _("Select background image"), qgetenv("HOME"), "Images(*.png *.bmp *.jpg)");
+        QString file =
+            QFileDialog::getOpenFileName(this, _("Select background image"), qgetenv("HOME"), "Images(*.png *.bmp *.jpg)");
         settings::instance().set_bgImage(fromStdUtf8(file));
         update_fram_candidate_win();
     }
@@ -1653,7 +1726,8 @@ void SettingWin::on_btnCandiAutoWord_clicked()
     {
         QColor color = dialog.selectedColor();
         settings::instance().set_candiWordTextColor(fromStdUtf8(color.name(QColor::HexArgb)));
-        ui->btnCandiAutoWord->setStyleSheet(QString("color:rgb(%1,%2,%3);").arg(color.red()).arg(color.green()).arg(color.blue()));
+        ui->btnCandiAutoWord->setStyleSheet(
+            QString("color:rgb(%1,%2,%3);").arg(color.red()).arg(color.green()).arg(color.blue()));
         g_settingsNotifier.notifySettingDataChangedToLocal();
     }
 }
@@ -1771,7 +1845,8 @@ void SettingWin::on_cmb23RecodeSelect_activated(int index)
         delete m_msgBox;
         if (ret == QMessageBox::No)
         {
-            ui->cmb23RecodeSelect->setCurrentIndex(recodeSelectPresetIndex(settings::instance().get_secondRecodeKey(), settings::instance().get_thirdRecodeKey()));
+            ui->cmb23RecodeSelect->setCurrentIndex(
+                recodeSelectPresetIndex(settings::instance().get_secondRecodeKey(), settings::instance().get_thirdRecodeKey()));
             return;
         }
     }
@@ -1796,7 +1871,8 @@ void SettingWin::on_cmbPrevNextPage_activated(int index)
     {
         m_msgBox = new QMessageBox(this);
         m_msgBox->setIcon(QMessageBox::Warning);
-        m_msgBox->setText(_("The shortcut key you set will conflict with the second and third recode selection key, confirm setting?"));
+        m_msgBox->setText(
+            _("The shortcut key you set will conflict with the second and third recode selection key, confirm setting?"));
         m_msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         m_msgBox->button(QMessageBox::Yes)->setIcon(QIcon());
         m_msgBox->button(QMessageBox::Yes)->setText(_("Yes(&Y)"));
@@ -1807,7 +1883,8 @@ void SettingWin::on_cmbPrevNextPage_activated(int index)
         delete m_msgBox;
         if (ret == QMessageBox::No)
         {
-            ui->cmbPrevNextPage->setCurrentIndex(candiPagePresetIndex(settings::instance().get_prevPageKey(), settings::instance().get_nextPageKey()));
+            ui->cmbPrevNextPage->setCurrentIndex(
+                candiPagePresetIndex(settings::instance().get_prevPageKey(), settings::instance().get_nextPageKey()));
             return;
         }
     }

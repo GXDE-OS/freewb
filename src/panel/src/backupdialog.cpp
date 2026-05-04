@@ -75,7 +75,8 @@ void BackupWorker::start_backup()
     }
     else
     {
-        backupFile.seek(sizeof(g_backupFileHead) + sizeof(lexiconNameSize) + sizeof(wbTableSize) + sizeof(pyTableSize) + sizeof(userTableSize) + sizeof(quickTableSize) + sizeof(settingFileSize));
+        backupFile.seek(sizeof(g_backupFileHead) + sizeof(lexiconNameSize) + sizeof(wbTableSize) + sizeof(pyTableSize) +
+                        sizeof(userTableSize) + sizeof(quickTableSize) + sizeof(settingFileSize));
         QDataStream dataStream;
         char *bytebuf = new char[BUF_SIZE];
 
@@ -210,7 +211,8 @@ void BackupWorker::start_backup()
 
         // 写入文件头部信息
         backupFile.seek(0);
-        backupStream << g_backupFileHead << lexiconNameSize << wbTableSize << pyTableSize << userTableSize << quickTableSize << settingFileSize;
+        backupStream << g_backupFileHead << lexiconNameSize << wbTableSize << pyTableSize << userTableSize << quickTableSize
+                     << settingFileSize;
 
         backupFile.close();
         delete[] bytebuf;
@@ -253,15 +255,18 @@ void BackupWorker::start_restore()
     else
     {
         // 读取文件头部信息
-        quint32 dataHeadSize = sizeof(g_backupFileHead) + sizeof(lexiconNameSize) + sizeof(wbTableSize) + sizeof(pyTableSize) + sizeof(userTableSize) + sizeof(quickTableSize) + sizeof(settingFileSize);
-        backupStream >> backupFileHead >> lexiconNameSize >> wbTableSize >> pyTableSize >> userTableSize >> quickTableSize >> settingFileSize;
+        quint32 dataHeadSize = sizeof(g_backupFileHead) + sizeof(lexiconNameSize) + sizeof(wbTableSize) + sizeof(pyTableSize) +
+                               sizeof(userTableSize) + sizeof(quickTableSize) + sizeof(settingFileSize);
+        backupStream >> backupFileHead >> lexiconNameSize >> wbTableSize >> pyTableSize >> userTableSize >> quickTableSize >>
+            settingFileSize;
 
         char str[128] = {0};
         Q_ASSERT(lexiconNameSize < 128);
         backupStream.readRawData(str, lexiconNameSize);
         QString backupLexiconName(str);
 
-        quint32 dataSize = static_cast<quint32>(lexiconNameSize + wbTableSize + pyTableSize + userTableSize + quickTableSize + settingFileSize);
+        quint32 dataSize =
+            static_cast<quint32>(lexiconNameSize + wbTableSize + pyTableSize + userTableSize + quickTableSize + settingFileSize);
         // 判断备份文件是否有效
         if ((backupFileHead != g_backupFileHead) || (dataHeadSize + dataSize != backupFile.size()))
         {
@@ -361,7 +366,8 @@ void BackupWorker::start_restore()
             }
             else
             {
-                backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize) + static_cast<quint32>(pyTableSize));
+                backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize) +
+                                static_cast<quint32>(pyTableSize));
                 dataStream.setDevice(&userTableFile);
                 qint32 readBytes = 0, totalWriteBytes = 0;
                 while (totalWriteBytes < userTableSize)
@@ -396,7 +402,8 @@ void BackupWorker::start_restore()
             }
             else
             {
-                backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize) + static_cast<quint32>(pyTableSize) + static_cast<quint32>(userTableSize));
+                backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize) +
+                                static_cast<quint32>(pyTableSize) + static_cast<quint32>(userTableSize));
                 dataStream.setDevice(&quickTableFile);
                 qint32 readBytes = 0, totalWriteBytes = 0;
                 while (totalWriteBytes < quickTableSize)
@@ -431,7 +438,9 @@ void BackupWorker::start_restore()
             }
             else
             {
-                backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize) + static_cast<quint32>(pyTableSize) + static_cast<quint32>(userTableSize) + static_cast<quint32>(quickTableSize));
+                backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize) +
+                                static_cast<quint32>(pyTableSize) + static_cast<quint32>(userTableSize) +
+                                static_cast<quint32>(quickTableSize));
                 dataStream.setDevice(&settingFile);
                 qint32 readBytes = 0, totalWriteBytes = 0;
                 while (totalWriteBytes < settingFileSize)

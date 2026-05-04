@@ -1,13 +1,13 @@
 #include "module.h"
 
 #include <fcitx-utils/event.h>
+
 #include "types.h"
 
 FreewbIMModule::FreewbIMModule(fcitx::Instance *instance) : instance_(instance)
 {
-    freewb_ = std::make_unique<freewb::Freewb>(instance->eventLoop().nativeHandle(), [this](const std::string &text) {
-        commitString(text);
-    });
+    freewb_ = std::make_unique<freewb::Freewb>(instance->eventLoop().nativeHandle(),
+                                               [this](const std::string &text) { commitString(text); });
 }
 
 FreewbIMModule::~FreewbIMModule()
@@ -24,7 +24,8 @@ void FreewbIMModule::keyEvent(const fcitx::InputMethodEntry &entry, fcitx::KeyEv
 
     updateCursorPosition();
 
-    bool processed = freewb_->processKey(static_cast<FreewbKeySym>(keyEvent.key().sym()), static_cast<FreewbKeyState>(keyEvent.key().states().toInteger()));
+    bool processed = freewb_->processKey(static_cast<FreewbKeySym>(keyEvent.key().sym()),
+                                         static_cast<FreewbKeyState>(keyEvent.key().states().toInteger()));
     if (processed)
     {
         keyEvent.filterAndAccept();
