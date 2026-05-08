@@ -428,8 +428,6 @@ void InputWin::install_evt_filter()
 
 bool InputWin::eventFilter(QObject *obj, QEvent *event)
 {
-    // qDebug() << obj->objectName() << event->type();
-
     bool isProcessed = false;
 
     if (event->type() == QEvent::Leave)
@@ -516,8 +514,6 @@ void InputWin::adjust_candi_win_width()
     len += (ui->labelLeft->width() + ui->labelRight->width());
 
     m_winWidth = len;
-
-    // qDebug() << lenPreEdtLine << lenTable << lenPrompt << len;
 }
 
 void InputWin::adjust_candi_win_height()
@@ -803,7 +799,6 @@ void InputWin::set_candidate_text(int idx, const QString &label, const QString &
 {
     Q_ASSERT(idx < MAX_CANDIDATE_WORD_COUNT);
 
-    qDebug() << "label : " << label << ",wordText : " << wordText << ",promptText : " << promptText;
     CandidateItem *item = nullptr;
 
     if (m_displayMode == CWDM_ONE_ROW)
@@ -874,9 +869,7 @@ void InputWin::set_candiwin_op_help_info()
 {
     QString tips;
     quint32 oti = OTI_LOGO;
-#ifdef DEBUG
-    qDebug() << "快捷键捕捉……………";
-#endif
+
     if (m_preEidtText.isEmpty())
         return;
 
@@ -1165,7 +1158,6 @@ void InputWin::slot_dict_find(const QString &wordText)
     {
         QString str = m_dictquery.rstrip(wordText);
         findInfo.insert(0, QString("<p><font color='#ef2929'>【 %1 】</font></p>\n").arg(str));
-        // qDebug() << findInfo;
     }
 
     findInfo.replace("\n", "<p></p>");
@@ -1178,25 +1170,21 @@ void InputWin::slot_dict_find(const QString &wordText)
 
 void InputWin::slot_btnPrevPage_clicked()
 {
-    //    qDebug() << "";
     emit signal_candidate_page_up();
 }
 
 void InputWin::slot_btnNextPage_clicked()
 {
-    //    qDebug() << "";
     emit signal_candidate_page_down();
 }
 
 void InputWin::on_btnCharWidth_clicked()
 {
-    //    qDebug() << "";
     emit signal_btn_charWidth_clicked();
 }
 
 void InputWin::on_btnMark_clicked()
 {
-    //    qDebug() << "";
     emit signal_btn_mark_clicked();
 }
 
@@ -1216,7 +1204,6 @@ void InputWin::on_tableWidget_cellClicked(int row, int column)
 
 void InputWin::slot_caret_blink()
 {
-    // qDebug() << m_caretPos << m_caretPhase;
     QString str = ui->labelPreEdit->text();
     if (m_caretPos >= 0)
     {
@@ -1239,8 +1226,6 @@ void InputWin::slot_caret_blink()
 // isShow: 切换到中文输入后是否在光标处出现短暂的提示信息， 辅助窗口显示
 void InputWin::slot_kim_ShowAux(bool enable)
 {
-    //    printf("kim_showAux\n");
-    //    qDebug() << enable;
     if (enable)
     {
         m_labelImPrompt->move(m_imPromptPosition);
@@ -1372,7 +1357,6 @@ void InputWin::slot_kim_SetLookupTable(const QStringList &label, const QStringLi
 // position: 预编辑输入框中的光标位置，全角字符宽度为2,半角字符宽度为1，例如: "1.。|" 中光标位置=4
 void InputWin::slot_kim_UpdatePreeditCaret(int position)
 {
-    // qDebug() << position;
     QString str = m_preEidtText;
     if (!str.isEmpty() && str.at(0) != '#')
     {
@@ -1429,7 +1413,6 @@ void InputWin::slot_kim_ShowPreedit(bool enable)
 void InputWin::slot_kim_UpdatePreeditText(const QString &text, const QString &attr)
 {
     Q_UNUSED(attr);
-    // qDebug() << text << attr;
     m_preEidtText = text;
     QString str = text;
     if (!str.isEmpty() && str.at(0) == '#')
@@ -1451,7 +1434,6 @@ void InputWin::slot_kim_UpdatePreeditText(const QString &text, const QString &at
 void InputWin::slot_kim_UpdateAux(const QString &text, const QString &attr)
 {
     Q_UNUSED(attr);
-    // qDebug() << text << attr;
     m_labelImPrompt->setText(text);
     m_labelImPrompt->adjustSize();
 }
