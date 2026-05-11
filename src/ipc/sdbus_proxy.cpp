@@ -3,6 +3,7 @@
 #include <cerrno>
 #include <cstdarg>
 #include <string>
+#include <vector>
 
 #include <systemd/sd-bus.h>
 #include <systemd/sd-event.h>
@@ -39,9 +40,9 @@ static int appendSetCandidateBody(sd_bus_message *m, const CandidatePayload &pay
 {
     std::vector<char *> strvLabels;
     std::vector<char *> strvTexts;
-    std::vector<char *> strvAttrs;
+    std::vector<char *> strvPrompt;
 
-    int r = sd_bus_message_append_strv(m, makeStrv(payload.labels, strvLabels));
+    int r = sd_bus_message_append_strv(m, makeStrv(payload.fullCodes, strvLabels));
     if (r < 0)
     {
         return r;
@@ -51,7 +52,7 @@ static int appendSetCandidateBody(sd_bus_message *m, const CandidatePayload &pay
     {
         return r;
     }
-    r = sd_bus_message_append_strv(m, makeStrv(payload.attrs, strvAttrs));
+    r = sd_bus_message_append_strv(m, makeStrv(payload.prompts, strvPrompt));
     if (r < 0)
     {
         return r;
@@ -192,8 +193,8 @@ void SDBusProxy::emitUpdateCandidate(const CandidatePayload &payload)
         FREEWB_ERROR("emitUpdateCandidate skipped: bus={} available_={}", static_cast<const void *>(bus_), available_);
         return;
     }
-    FREEWB_DEBUG("emitUpdateCandidate: labels={} texts={} attrs={} hasPrev={} hasNext={} cursor={} layout={}",
-                 payload.labels.size(), payload.texts.size(), payload.attrs.size(), payload.hasPrev, payload.hasNext,
+    FREEWB_DEBUG("emitUpdateCandidate: texts={} prompts={} hasPrev={} hasNext={} cursor={} layout={}",
+                 payload.texts.size(), payload.prompts.size(), payload.hasPrev, payload.hasNext,
                  payload.cursor, static_cast<int>(payload.layout));
 
     sd_bus_message *m = nullptr;
@@ -220,7 +221,7 @@ void SDBusProxy::emitUpdateCandidate(const CandidatePayload &payload)
         FREEWB_ERROR("emitUpdateCandidate: sd_bus_send(SetLookupTable) failed: {} ({})", sendR, strerror(-sendR));
         return;
     }
-    const bool hasLookup = !payload.labels.empty() || !payload.texts.empty();
+    const bool hasLookup = !payload.texts.empty();
     emitImeSignal("ShowLookupTable", "b", hasLookup);
 }
 
