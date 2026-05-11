@@ -2,10 +2,12 @@
 #define ENGINEMANAGER_H
 
 #include <memory>
+#include <string>
 #include <utility>
 #include <vector>
 
 #include "candidatelist.h"
+#include "committer.h"
 #include "en.h"
 #include "engine.h"
 #include "keysym.h"
@@ -20,7 +22,7 @@ namespace freewb
 class EngineManager
 {
 public:
-    explicit EngineManager(CandidateList *candidateList = nullptr);
+    explicit EngineManager(CandidateList *candidateList = nullptr, Committer *committer = nullptr);
     ~EngineManager();
 
     void nextEngine();
@@ -31,10 +33,14 @@ public:
     void refreshEngineResult();
     void reset();
 
+    bool isCurrentPreeditExactDictionaryKey(const std::string &preedit) const;
+
 private:
     void initAllEngines();
     void loadDefaultEngines();
     IFreewbEngine *findEngineByName(const char *name) const;
+    /** 顶字：先按 prefix 出候选并提交首项，再将 suffix 作为新 preedit（可空）。 */
+    void commitPreeditOverflow(IFreewbEngine *engine, const std::string &prefix, const std::string &suffix);
 
 private:
     std::unique_ptr<WbzxEngine> wbzxEngine_ = nullptr;
@@ -46,6 +52,7 @@ private:
     std::vector<std::pair<const char *, std::unique_ptr<IFreewbEngine>>> engines_;
 
     CandidateList *candidateList_ = nullptr;
+    Committer *committer_ = nullptr;
 };
 
 } // namespace freewb

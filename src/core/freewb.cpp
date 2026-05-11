@@ -13,8 +13,8 @@ Freewb::Freewb(void *sd_event_handle, CommitCallback commitCallback) : log_("/tm
     sdbusProxy_ = new ipc::SDBusProxy(sd_event_handle);
     punc_ = new Punc();
     candidateList_ = new CandidateList();
-    engineManager_ = new EngineManager(candidateList_);
     committer_ = new Committer(std::move(commitCallback), this);
+    engineManager_ = new EngineManager(candidateList_, committer_);
 }
 
 Freewb::~Freewb()
@@ -28,6 +28,11 @@ Freewb::~Freewb()
     {
         delete engineManager_;
         engineManager_ = nullptr;
+    }
+    if (committer_ != nullptr)
+    {
+        delete committer_;
+        committer_ = nullptr;
     }
     if (candidateList_ != nullptr)
     {
@@ -53,7 +58,7 @@ void Freewb::deactivate()
     sdbusProxy_->emitHideToolbar();
     sdbusProxy_->emitUpdatePreeditText({.text = "", .caret = 0, .show = false});
     sdbusProxy_->emitUpdateCandidate(
-        {.labels = {}, .texts = {}, .attrs = {}, .hasPrev = false, .hasNext = false, .cursor = -1, .layout = Horizontal});
+        {.fullCodes = {}, .texts = {}, .prompts = {}, .hasPrev = false, .hasNext = false, .cursor = -1, .layout = Horizontal});
 }
 
 ipc::SDBusProxy *Freewb::sdbusProxy() const
@@ -95,6 +100,7 @@ bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
     processed = engineManager_->processKey(keysym, state);
     if (processed)
     {
+        committer_->tryExactDictionarySingleCandidateCommit();
         return true;
     }
 
@@ -288,9 +294,9 @@ void Freewb::updateCandidateAndPreeditToUI()
                                         .caret = candidateList_->cursor(),
                                         .show = !candidateList_->preeditText().empty()});
     sdbusProxy_->emitUpdatePreeditCaret(candidateList_->cursor());
-    sdbusProxy_->emitUpdateCandidate({.labels = {},
+    sdbusProxy_->emitUpdateCandidate({.fullCodes = {},
                                       .texts = candidateList_->candidateTexts(),
-                                      .attrs = {},
+                                      .prompts = candidateList_->candidatePrompts(),
                                       .hasPrev = candidateList_->hasPrev(),
                                       .hasNext = candidateList_->hasNext(),
                                       .cursor = -1,

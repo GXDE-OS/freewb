@@ -1,16 +1,16 @@
 #ifndef CANDIDATELIST_H
 #define CANDIDATELIST_H
 
+#include <string>
+#include <vector>
+
 #include "chttrans.h"
-#include "types.h"
 
 namespace freewb
 {
 class CandidateList
 {
 public:
-    CandidateList(CandidatePayload &&candidatePayload);
-    CandidateList(std::vector<std::string> texts, int cursor = 0);
     CandidateList();
     ~CandidateList();
 
@@ -21,13 +21,18 @@ public:
     void setCursor(int cursor);
     int cursor() const;
 
+    /** 当前页可见候选条数（与每页字数有关）。 */
     int size() const;
+    /** 引擎本次返回的候选总条数。 */
+    int totalCandidateCount() const;
 
     void clear();
 
-    void setCandidateTexts(std::vector<std::string> text);
+    void setCandidates(std::vector<std::string> texts, std::vector<std::string> prompts);
     const std::string &selectCandidateText(int index) const;
+    const std::string &firstVisibleCandidateOrPreedit() const;
     std::vector<std::string> candidateTexts() const;
+    std::vector<std::string> candidatePrompts() const;
 
     void setPreeditText(const std::string &text);
     const std::string &preeditText() const;
@@ -40,7 +45,9 @@ private:
 private:
     int cursor_;
     std::vector<std::string> allTexts_;
+    std::vector<std::string> allPrompts_;
     std::vector<std::string> currentPageTexts_;
+    std::vector<std::string> currentPagePrompts_;
     int pageIndex_ = 0;
     int totalPages_ = 0;
     int wordCount_ = 5;

@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "freewb.h"
 #include "key.h"
+#include "types.h"
 
 namespace freewb
 {
@@ -19,6 +19,8 @@ public:
 
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
     const std::string &lastCommitString() const;
+    void commitFirstCandidate();
+    bool tryExactDictionarySingleCandidateCommit();
 
 private:
     void loadSettings();

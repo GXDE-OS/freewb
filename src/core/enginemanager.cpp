@@ -1,16 +1,19 @@
 #include "enginemanager.h"
 
 #include <cstring>
+#include <string>
 
 #include "ifreewb.h"
 #include "key.h"
 #include "log.h"
 #include "settings.h"
+#include "wbpy.h"
 
 namespace freewb
 {
 
-EngineManager::EngineManager(CandidateList *candidateList) : candidateList_(candidateList)
+EngineManager::EngineManager(CandidateList *candidateList, Committer *committer)
+    : candidateList_(candidateList), committer_(committer)
 {
     initAllEngines();
     loadDefaultEngines();
@@ -52,6 +55,15 @@ void EngineManager::initAllEngines()
         wbpyEngine_ = std::unique_ptr<Wbpy>(new Wbpy(wbzx, py));
         const char *wbpyName = wbpyEngine_->name();
         engines_.emplace_back(wbpyName, std::move(wbpyEngine_));
+    }
+
+    // 五笔字型引擎供拼音单字 [xxxx] 反查
+    auto *wbzxForHint = dynamic_cast<WbzxEngine *>(findEngineByName("engine:wbzx"));
+    auto *pyForHint = dynamic_cast<PyEngine *>(findEngineByName("engine:py"));
+    if (wbzxForHint != nullptr && pyForHint != nullptr)
+    {
+        pyForHint->setWubiPrimaryCodeLookupCallback(
+            [wbzxForHint](const std::string &hz) { return wbzxForHint->primaryWubiCodeForSingleHanziUtf8(hz); });
     }
 
     FREEWB_DEBUG("engines size: {}", engines_.size());
@@ -124,6 +136,34 @@ const char *EngineManager::currentEngineName() const
     return engine->name();
 }
 
+void EngineManager::commitPreeditOverflow(IFreewbEngine *engine, const std::string &prefix, const std::string &suffix)
+{
+    engine->reset();
+    candidateList_->setPreeditText(prefix);
+    refreshEngineResult();
+
+    if (committer_ == nullptr)
+    {
+        candidateList_->clear();
+        reset();
+    }
+    else if (candidateList_->size() == 0)
+    {
+        reset();
+        candidateList_->clear();
+    }
+    else
+    {
+        committer_->commitFirstCandidate();
+    }
+
+    if (!suffix.empty())
+    {
+        candidateList_->setPreeditText(suffix);
+        refreshEngineResult();
+    }
+}
+
 bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
 {
     auto *engine = dynamic_cast<IFreewbEngine *>(currentEngine_);
@@ -143,15 +183,22 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return false;
     }
 
-    candidateList_->setPreeditText(candidateList_->preeditText() + key);
-    engine->putKey(candidateList_->preeditText().c_str());
-    candidateList_->setCandidateTexts(currentEngine_->getResult().texts);
-
-    if (static_cast<int>(candidateList_->preeditText().length()) >= engine->inputCodeLength())
+    if (candidateList_ == nullptr)
     {
-        candidateList_->clear();
-        engine->reset();
-        return true;
+        return false;
+    }
+
+    const std::string pre = candidateList_->preeditText();
+    const std::string full = pre + key;
+
+    if (engine->isPreeditOverflow(key, pre, full))
+    {
+        commitPreeditOverflow(engine, pre, std::string(key));
+    }
+    else
+    {
+        candidateList_->setPreeditText(full);
+        refreshEngineResult();
     }
     return true;
 }
@@ -171,7 +218,9 @@ void EngineManager::refreshEngineResult()
     }
 
     engine->putKey(candidateList_->preeditText().c_str());
-    candidateList_->setCandidateTexts(currentEngine_->getResult().texts);
+
+    CandidatePayload payload = engine->getResult();
+    candidateList_->setCandidates(std::move(payload.texts), std::move(payload.prompts));
 }
 
 void EngineManager::reset()
@@ -186,6 +235,16 @@ void EngineManager::reset()
         return;
     }
     engine->reset();
+}
+
+bool EngineManager::isCurrentPreeditExactDictionaryKey(const std::string &preedit) const
+{
+    const auto *engine = dynamic_cast<const IFreewbEngine *>(currentEngine_);
+    if (engine == nullptr)
+    {
+        return false;
+    }
+    return engine->isExactDictionaryKey(preedit);
 }
 
 void EngineManager::changeEngine(const std::string &engineName)

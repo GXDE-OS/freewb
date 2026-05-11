@@ -3,6 +3,7 @@
 #include <utility>
 
 #include "dbus.h"
+#include "freewb.h"
 #include "log.h"
 #include "settings.h"
 
@@ -40,7 +41,12 @@ void Committer::connectDBusCallback()
 
 bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
 {
-    if (!commitCallback_ || (freewb_->candidateList()->size() == 0))
+    if (!commitCallback_)
+    {
+        return false;
+    }
+    CandidateList *candidates = freewb_->candidateList();
+    if (candidates->size() == 0 && candidates->preeditText().empty())
     {
         return false;
     }
@@ -63,7 +69,7 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
         }
         else if (index >= freewb_->candidateList()->size())
         {
-            commit(freewb_->candidateList()->selectCandidateText(0));
+            commit(candidates->firstVisibleCandidateOrPreedit());
         }
         else
         {
@@ -76,14 +82,19 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     if ((keysym == secondRecodeKey_ && state == FreewbKeyState_None) ||
         (keysym == thirdRecodeKey_ && state == FreewbKeyState_None))
     {
-        commit(freewb_->candidateList()->selectCandidateText(keysym == secondRecodeKey_ ? 1 : 2));
+        const int idx = keysym == secondRecodeKey_ ? 1 : 2;
+        if (freewb_->candidateList()->size() <= idx)
+        {
+            return false;
+        }
+        commit(freewb_->candidateList()->selectCandidateText(idx));
         return true;
     }
 
     // 空格上屏
     if (keysym == FreewbKey_space && state == FreewbKeyState_None)
     {
-        commit(freewb_->candidateList()->selectCandidateText(0));
+        commit(candidates->firstVisibleCandidateOrPreedit());
         return true;
     }
 
@@ -102,22 +113,43 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
         if (autoPair.first != nullptr && autoPair.second != nullptr)
         {
             FREEWB_DEBUG("auto pair: {} {}", autoPair.first, autoPair.second);
-            commit(autoPair.first + freewb_->candidateList()->selectCandidateText(0) + autoPair.second);
+            commit(autoPair.first + candidates->firstVisibleCandidateOrPreedit() + autoPair.second);
         }
         else
         {
             FREEWB_DEBUG("no auto pair: {}", keyString);
-            commit(freewb_->candidateList()->selectCandidateText(0) + keyString);
+            commit(candidates->firstVisibleCandidateOrPreedit() + keyString);
         }
         return true;
     }
-
     return false;
+}
+
+bool Committer::tryExactDictionarySingleCandidateCommit()
+{
+    if (!commitCallback_ || (freewb_->candidateList()->size() == 0))
+    {
+        return false;
+    }
+
+    const std::string &pre = freewb_->candidateList()->preeditText();
+    if (freewb_->candidateList()->totalCandidateCount() != 1 || !freewb_->engineManager()->isCurrentPreeditExactDictionaryKey(pre))
+    {
+        return false;
+    }
+
+    commitFirstCandidate();
+    return true;
 }
 
 const std::string &Committer::lastCommitString() const
 {
     return lastCommitString_;
+}
+
+void Committer::commitFirstCandidate()
+{
+    commit(freewb_->candidateList()->selectCandidateText(0));
 }
 
 void Committer::commit(const std::string &text)
