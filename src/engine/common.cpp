@@ -4,17 +4,16 @@
 #include <vector>
 
 #include "log.h"
-#include "utils.h"
 
 namespace freewb
 {
 const uint32_t kMaxHzFieldBytes = 7U * 30U;
 
-void MbDictionaryTable::collectCandidatesForPrefix(const std::string &prefix,
-                                                   const std::unordered_map<std::string, std::vector<std::string>> &dict,
-                                                   std::vector<std::string> &out)
+void MbDictionaryTable::collectCandidateItemsForPrefix(const std::string &prefix,
+                                                       const std::unordered_map<std::string, std::vector<std::string>> &dict,
+                                                       CandidatePayload &out)
 {
-    if (out.size() >= maxCandidatesPages_)
+    if (out.texts.size() >= maxCandidatesPages_)
     {
         return;
     }
@@ -35,7 +34,7 @@ void MbDictionaryTable::collectCandidatesForPrefix(const std::string &prefix,
     std::sort(keys.begin(), keys.end());
     for (const std::string &k : keys)
     {
-        if (out.size() >= maxCandidatesPages_)
+        if (out.texts.size() >= maxCandidatesPages_)
         {
             return;
         }
@@ -44,14 +43,15 @@ void MbDictionaryTable::collectCandidatesForPrefix(const std::string &prefix,
         {
             continue;
         }
-        for (const auto &hz : it->second)
+        for (const std::string &hz : it->second)
         {
             if (hz.empty())
             {
                 continue;
             }
-            out.push_back(hz);
-            if (out.size() >= maxCandidatesPages_)
+            out.texts.push_back(hz);
+            out.fullCodes.push_back(k);
+            if (out.texts.size() >= maxCandidatesPages_)
             {
                 return;
             }
@@ -146,6 +146,8 @@ bool MbDictionaryTable::loadFromStream(std::ifstream &in, const char *linePrefix
         clear();
         return false;
     }
+    singleChardict_.clear();
+    multiChardict_.clear();
     for (uint32_t i = 0; i < recordCount_; ++i)
     {
         uint32_t codeFieldLen = 0;
@@ -199,7 +201,7 @@ bool MbDictionaryTable::loadFromStream(std::ifstream &in, const char *linePrefix
         }
         (void)typ;
         std::string hz(hzBuf.data());
-        const size_t nChar = utf8CharCount(hz);
+        const size_t nChar = MbDictionaryTable::utf8CharCount(hz);
         if (nChar == 1U)
         {
             singleChardict_[strCode].push_back(std::move(hz));
@@ -217,10 +219,10 @@ bool MbDictionaryTable::loadFromStream(std::ifstream &in, const char *linePrefix
     return true;
 }
 
-void MbDictionaryTable::appendCandidatesForPrefix(const std::string &prefix, std::vector<std::string> &out) const
+void MbDictionaryTable::appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const
 {
-    collectCandidatesForPrefix(prefix, singleChardict_, out);
-    collectCandidatesForPrefix(prefix, multiChardict_, out);
+    collectCandidateItemsForPrefix(prefix, singleChardict_, out);
+    collectCandidateItemsForPrefix(prefix, multiChardict_, out);
 }
 
 const std::string &MbDictionaryTable::strInputCode() const
@@ -231,6 +233,43 @@ const std::string &MbDictionaryTable::strInputCode() const
 int MbDictionaryTable::codeLength() const
 {
     return static_cast<int>(iCodeLength_);
+}
+
+bool MbDictionaryTable::hasExactCode(const std::string &code) const
+{
+    if (code.empty())
+    {
+        return false;
+    }
+    return singleChardict_.find(code) != singleChardict_.end() || multiChardict_.find(code) != multiChardict_.end();
+}
+
+bool MbDictionaryTable::hasCandidateForPrefix(const std::string &prefix) const
+{
+    if (prefix.empty())
+    {
+        return false;
+    }
+    const auto scan = [&prefix](const std::unordered_map<std::string, std::vector<std::string>> &dict) -> bool
+    {
+        for (const auto &kv : dict)
+        {
+            const std::string &key = kv.first;
+            if (key.size() < prefix.size() || key.compare(0, prefix.size(), prefix) != 0)
+            {
+                continue;
+            }
+            for (const std::string &hz : kv.second)
+            {
+                if (!hz.empty())
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+    return scan(singleChardict_) || scan(multiChardict_);
 }
 
 void MbDictionaryTable::readNulTerminatedField(std::ifstream &in, std::string &out)
@@ -268,32 +307,31 @@ bool MbDictionaryTable::readExact(std::ifstream &in, void *dst, std::streamsize 
     return in && in.gcount() == len;
 }
 
-size_t MbDictionaryTable::utf8CharCount(const std::string &s)
+std::size_t MbDictionaryTable::utf8CharCount(const std::string &s)
 {
-    size_t n = 0;
-    const char *p = s.c_str();
-    while (*p)
+    std::size_t n = 0;
+    for (std::size_t i = 0; i < s.size();)
     {
-        const unsigned char c = static_cast<unsigned char>(*p);
+        const unsigned char c = static_cast<unsigned char>(s[i]);
         if (c < 0x80U)
         {
-            ++p;
+            ++i;
         }
-        else if ((c >> 5) == 6U)
+        else if ((c >> 5U) == 6U)
         {
-            p += 2;
+            i += 2;
         }
-        else if ((c >> 4) == 14U)
+        else if ((c >> 4U) == 14U)
         {
-            p += 3;
+            i += 3;
         }
-        else if ((c >> 3) == 30U)
+        else if ((c >> 3U) == 30U)
         {
-            p += 4;
+            i += 4;
         }
         else
         {
-            ++p;
+            ++i;
             continue;
         }
         ++n;

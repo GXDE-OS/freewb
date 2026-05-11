@@ -30,9 +30,7 @@ void Wbpy::changeAvailable()
 
 void Wbpy::putKey(const char *strCode)
 {
-    result_.labels.clear();
-    result_.attrs.clear();
-    result_.texts.clear();
+    result_.clearRows();
 
     if (strCode == nullptr)
     {
@@ -51,15 +49,22 @@ void Wbpy::putKey(const char *strCode)
     const CandidatePayload &py = pyEngine_->getResult();
 
     result_.texts.reserve(wb.texts.size() + py.texts.size());
-    for (const std::string &t : wb.texts)
+    result_.fullCodes.reserve(wb.texts.size() + py.texts.size());
+    result_.prompts.reserve(wb.texts.size() + py.texts.size());
+
+    for (std::size_t i = 0; i < wb.texts.size(); ++i)
     {
-        if (!t.empty())
+        if (wb.texts[i].empty())
         {
-            result_.texts.push_back(t);
+            continue;
         }
+        result_.texts.push_back(wb.texts[i]);
+        result_.fullCodes.push_back(i < wb.fullCodes.size() ? wb.fullCodes[i] : std::string{});
+        result_.prompts.push_back(i < wb.prompts.size() ? wb.prompts[i] : std::string{});
     }
-    for (const std::string &t : py.texts)
+    for (std::size_t i = 0; i < py.texts.size(); ++i)
     {
+        const std::string &t = py.texts[i];
         if (t.empty())
         {
             continue;
@@ -76,6 +81,8 @@ void Wbpy::putKey(const char *strCode)
         if (!duplicate)
         {
             result_.texts.push_back(t);
+            result_.fullCodes.push_back(i < py.fullCodes.size() ? py.fullCodes[i] : std::string{});
+            result_.prompts.push_back(i < py.prompts.size() ? py.prompts[i] : std::string{});
         }
     }
 }
@@ -89,17 +96,54 @@ void Wbpy::reset()
 {
     wbzxEngine_->reset();
     pyEngine_->reset();
-    result_ = CandidatePayload{};
+    result_.clearRows();
 }
 
 int Wbpy::inputCodeLength() const
 {
-    return std::min(wbzxEngine_->inputCodeLength(), pyEngine_->inputCodeLength());
+    if (wbzxEngine_ == nullptr && pyEngine_ == nullptr)
+    {
+        return 4;
+    }
+    if (wbzxEngine_ == nullptr)
+    {
+        return pyEngine_->inputCodeLength();
+    }
+    if (pyEngine_ == nullptr)
+    {
+        return wbzxEngine_->inputCodeLength();
+    }
+    return std::max(wbzxEngine_->inputCodeLength(), pyEngine_->inputCodeLength());
 }
 
 bool Wbpy::shouldProcessKey(const char *key) const
 {
     return wbzxEngine_->shouldProcessKey(key) || pyEngine_->shouldProcessKey(key);
+}
+
+bool Wbpy::isExactDictionaryKey(const std::string &preedit) const
+{
+    if (wbzxEngine_ == nullptr || pyEngine_ == nullptr)
+    {
+        return false;
+    }
+    return wbzxEngine_->isExactDictionaryKey(preedit) || pyEngine_->isExactDictionaryKey(preedit);
+}
+
+bool Wbpy::isPreeditOverflow(const char *key, const std::string &pre, const std::string &full) const
+{
+    if (key == nullptr || pre.empty())
+    {
+        return false;
+    }
+    const bool hasDictContinuation =
+        (wbzxEngine_ != nullptr && wbzxEngine_->hasLongerCodeContinuation(full))
+        || (pyEngine_ != nullptr && pyEngine_->hasLongerCodeContinuation(full));
+    if (hasDictContinuation)
+    {
+        return false;
+    }
+    return true;
 }
 
 } // namespace freewb

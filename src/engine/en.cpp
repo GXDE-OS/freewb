@@ -1,7 +1,6 @@
 #include "en.h"
 
 #include "log.h"
-#include "settings.h"
 
 namespace freewb
 {
@@ -28,7 +27,8 @@ void En::putKey(const char *strCode)
 
 const CandidatePayload &En::getResult() const
 {
-    return CandidatePayload{};
+    static const CandidatePayload kEmpty{};
+    return kEmpty;
 }
 
 void En::reset()
@@ -43,6 +43,20 @@ int En::inputCodeLength() const
 
 bool En::shouldProcessKey(const char *key) const
 {
+    return false;
+}
+
+bool En::isExactDictionaryKey(const std::string &preedit) const
+{
+    (void)preedit;
+    return false;
+}
+
+bool En::isPreeditOverflow(const char *key, const std::string &pre, const std::string &full) const
+{
+    (void)key;
+    (void)pre;
+    (void)full;
     return false;
 }
 } // namespace freewb

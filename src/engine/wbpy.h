@@ -2,6 +2,7 @@
 #define WBPY_H
 
 #include <string>
+#include <vector>
 
 #include "engine.h"
 #include "ifreewb.h"
@@ -27,6 +28,8 @@ public:
 
     int inputCodeLength() const override;
     bool shouldProcessKey(const char *key) const override;
+    bool isExactDictionaryKey(const std::string &preedit) const override;
+    bool isPreeditOverflow(const char *key, const std::string &pre, const std::string &full) const override;
 
 private:
     WbzxEngine *wbzxEngine_ = nullptr;

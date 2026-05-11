@@ -32,6 +32,38 @@ bool UserDict::contains(const std::string &code) const
     return entries_.find(code) != entries_.end();
 }
 
+bool UserDict::hasEntryStartingWithPrefix(const std::string &prefix) const
+{
+    if (prefix.empty())
+    {
+        return false;
+    }
+    if (contains(prefix))
+    {
+        return true;
+    }
+    for (const auto &kv : entries_)
+    {
+        const std::string &key = kv.first;
+        if (key.size() < prefix.size())
+        {
+            continue;
+        }
+        if (key.compare(0, prefix.size(), prefix) != 0)
+        {
+            continue;
+        }
+        for (const auto &hz : kv.second)
+        {
+            if (!hz.empty())
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 const std::vector<std::string> &UserDict::lookup(const std::string &code) const
 {
     auto it = entries_.find(code);

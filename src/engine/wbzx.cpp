@@ -1,5 +1,6 @@
 #include "wbzx.h"
 
+#include <cctype>
 #include <fstream>
 #include <vector>
 
@@ -32,11 +33,39 @@ void WbzxEngine::changeAvailable()
     available_ = !available_;
 }
 
+void WbzxEngine::fillCandidatePayloadPrompts(const std::string &preedit, CandidatePayload &payload) const
+{
+    const std::size_t n = payload.texts.size();
+    const std::size_t rawLen = preedit.size();
+    payload.prompts.assign(n, std::string{});
+
+    for (std::size_t i = 0; i < n; ++i)
+    {
+        const std::string &fullCode =
+            (i < payload.fullCodes.size() && !payload.fullCodes[i].empty()) ? payload.fullCodes[i] : preedit;
+        if (fullCode.size() > rawLen)
+        {
+            payload.prompts[i].assign(fullCode, rawLen, std::string::npos);
+        }
+    }
+}
+
+bool WbzxEngine::isPreeditOverflow(const char *key, const std::string &pre, const std::string &full) const
+{
+    if (key == nullptr || pre.empty())
+    {
+        return false;
+    }
+    if (hasLongerCodeContinuation(full))
+    {
+        return false;
+    }
+    return true;
+}
+
 void WbzxEngine::putKey(const char *strCode)
 {
-    result_.labels.clear();
-    result_.attrs.clear();
-    result_.texts.clear();
+    result_.clearRows();
 
     if (strCode == nullptr)
     {
@@ -44,16 +73,16 @@ void WbzxEngine::putKey(const char *strCode)
     }
 
     const std::string prefix(strCode);
-
     if (userDict_.contains(prefix))
     {
         const std::vector<std::string> &userTexts = userDict_.lookup(prefix);
         result_.texts.insert(result_.texts.end(), userTexts.begin(), userTexts.end());
+        result_.fullCodes.insert(result_.fullCodes.end(), userTexts.size(), std::string{});
+        fillCandidatePayloadPrompts(prefix, result_);
+        return;
     }
-
-    std::vector<std::string> engineTexts;
-    mbTable_.appendCandidatesForPrefix(prefix, engineTexts);
-    result_.texts.insert(result_.texts.end(), engineTexts.begin(), engineTexts.end());
+    mbTable_.appendCandidatesForPrefix(prefix, result_);
+    fillCandidatePayloadPrompts(prefix, result_);
 }
 
 const CandidatePayload &WbzxEngine::getResult() const
@@ -64,7 +93,53 @@ const CandidatePayload &WbzxEngine::getResult() const
 void WbzxEngine::clearMbLoadState()
 {
     mbTable_.clear();
-    result_ = CandidatePayload{};
+    singleHanziPrimaryCode_.clear();
+    result_.clearRows();
+}
+
+void WbzxEngine::initSingleHanziPrimaryCodeFromMbTable()
+{
+    /* 仅首字节是字母的编码参与；剔除 /xxx 等特殊键。
+     * 对已入选者仅当新编码更长时替换；等长时保留先记录的。 */
+    singleHanziPrimaryCode_.clear();
+    for (const auto &kv : mbTable_.singleCharLexicon())
+    {
+        const std::string &code = kv.first;
+        if (code.empty() || !std::isalpha(static_cast<unsigned char>(code[0])))
+        {
+            continue;
+        }
+        for (const std::string &hz : kv.second)
+        {
+            if (MbDictionaryTable::utf8CharCount(hz) != 1U)
+            {
+                continue;
+            }
+            const auto it = singleHanziPrimaryCode_.find(hz);
+            if (it == singleHanziPrimaryCode_.end())
+            {
+                singleHanziPrimaryCode_.emplace(hz, code);
+            }
+            else if (code.size() > it->second.size())
+            {
+                it->second = code;
+            }
+        }
+    }
+}
+
+std::string WbzxEngine::primaryWubiCodeForSingleHanziUtf8(const std::string &hz) const
+{
+    if (hz.empty())
+    {
+        return {};
+    }
+    const auto it = singleHanziPrimaryCode_.find(hz);
+    if (it == singleHanziPrimaryCode_.end())
+    {
+        return {};
+    }
+    return it->second;
 }
 
 void WbzxEngine::loadDictionary()
@@ -84,14 +159,17 @@ void WbzxEngine::loadDictionary()
     if (!mbTable_.loadFromStream(in, nullptr))
     {
         mbTable_.clear();
-        result_ = CandidatePayload{};
+        singleHanziPrimaryCode_.clear();
+        result_.clearRows();
+        return;
     }
+    initSingleHanziPrimaryCodeFromMbTable();
 }
 
 void WbzxEngine::reset()
 {
     inputCodes_.clear();
-    result_ = CandidatePayload{};
+    result_.clearRows();
 }
 
 int WbzxEngine::inputCodeLength() const
@@ -102,6 +180,20 @@ int WbzxEngine::inputCodeLength() const
 bool WbzxEngine::shouldProcessKey(const char *key) const
 {
     return mbTable_.strInputCode().find(key) != std::string::npos;
+}
+
+bool WbzxEngine::isExactDictionaryKey(const std::string &preedit) const
+{
+    return mbTable_.hasExactCode(preedit) || userDict_.contains(preedit);
+}
+
+bool WbzxEngine::hasLongerCodeContinuation(const std::string &raw) const
+{
+    if (raw.empty())
+    {
+        return false;
+    }
+    return mbTable_.hasCandidateForPrefix(raw) || userDict_.hasEntryStartingWithPrefix(raw);
 }
 
 } // namespace freewb
