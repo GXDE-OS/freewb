@@ -30,23 +30,30 @@ void testWbzxEngine()
 
     engine.putKey("g");
     const auto &results1 = engine.getResult();
-    std::cout << "results1 : " << results1.texts[0] << std::endl;
-    std::cout << "results1 : " << results1.texts[1] << std::endl;
-    std::cout << "results1 : " << results1.texts[2] << std::endl;
-    std::cout << "results1 : " << results1.texts[3] << std::endl;
+    auto lineAt = [](const freewb::CandidatePayload &p, std::size_t i) -> std::string {
+        if (i >= p.texts.size())
+        {
+            return {};
+        }
+        return p.texts[i] + (i < p.prompts.size() ? p.prompts[i] : std::string{});
+    };
+    std::cout << "results1 : " << lineAt(results1, 0) << std::endl;
+    std::cout << "results1 : " << lineAt(results1, 1) << std::endl;
+    std::cout << "results1 : " << lineAt(results1, 2) << std::endl;
+    std::cout << "results1 : " << lineAt(results1, 3) << std::endl;
 
     engine.putKey("e");
     engine.putKey("x");
     const auto &results3 = engine.getResult();
-    for (const auto &text : results3.texts)
+    for (std::size_t i = 0; i < results3.texts.size(); ++i)
     {
-        std::cout << text << std::endl;
+        std::cout << lineAt(results3, i) << std::endl;
     }
     engine.putKey("k");
     const auto &results4 = engine.getResult();
-    for (const auto &text : results4.texts)
+    for (std::size_t i = 0; i < results4.texts.size(); ++i)
     {
-        std::cout << text << std::endl;
+        std::cout << lineAt(results4, i) << std::endl;
     }
 }
 

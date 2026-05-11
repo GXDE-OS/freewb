@@ -2,7 +2,6 @@
 
 #include "log.h"
 #include "py.h"
-#include "utils.h"
 
 int main()
 {
@@ -16,9 +15,10 @@ int main()
         return 1;
     }
 
-    for (const auto &text : results.texts)
+    for (std::size_t i = 0; i < results.texts.size(); ++i)
     {
-        std::cout << text << std::endl;
+        const std::string trail = (i < results.prompts.size()) ? results.prompts[i] : std::string{};
+        std::cout << results.texts[i] + trail << std::endl;
     }
     std::cout << "freewb-test-engine-py: ok\n";
     return 0;

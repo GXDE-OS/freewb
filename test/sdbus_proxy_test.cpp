@@ -64,9 +64,9 @@ std::vector<std::string> splitTokens(const std::string &line)
 
 void initDemoPayloads(DemoState &s)
 {
-    s.candidate.labels = {"1.", "2.", "3."};
+    s.candidate.fullCodes = {};
     s.candidate.texts = {"ni", "hao", "ma"};
-    s.candidate.attrs = {"", "", ""};
+    s.candidate.prompts = {"", "", ""};
     s.candidate.hasPrev = false;
     s.candidate.hasNext = true;
     s.candidate.cursor = 0;
@@ -240,8 +240,8 @@ void handleCommand(DemoState &s, const std::string &cmd)
 
     if (cmd == "0")
     {
-        FREEWB_WARN("cmd=0 before emitCandidateFrame: cand labels={} texts={} preedit=\"{}\" aux=\"{}\"",
-                    s.candidate.labels.size(), s.candidate.texts.size(), s.preedit.text, s.aux.text);
+        FREEWB_WARN("cmd=0 before emitCandidateFrame: cand texts={} prompts={} preedit=\"{}\" aux=\"{}\"",
+                    s.candidate.texts.size(), s.candidate.prompts.size(), s.preedit.text, s.aux.text);
         emitCandidateFrame(proxy, s.spotRect, s.candidate, s.preedit, s.aux);
         FREEWB_WARN("cmd=0 after emitCandidateFrame (full)");
         std::cout << "ok\n";
