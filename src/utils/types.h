@@ -24,13 +24,20 @@ struct SpotRectPayload
 
 struct CandidatePayload
 {
-    std::vector<std::string> labels;
+    std::vector<std::string> fullCodes;
     std::vector<std::string> texts;
-    std::vector<std::string> attrs;
+    std::vector<std::string> prompts;
     bool hasPrev = false;
     bool hasNext = false;
     int cursor = -1;
     LayoutType layout = Horizontal;
+
+    void clearRows()
+    {
+        fullCodes.clear();
+        texts.clear();
+        prompts.clear();
+    }
 };
 
 struct PreeditPayload
