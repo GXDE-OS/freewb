@@ -1259,7 +1259,6 @@ void InputWin::slot_kim_UpdateLookupTable(const QStringList &label, const QStrin
                                           bool hasPrev, bool hasNext)
 {
     Q_UNUSED(label);
-    Q_UNUSED(attr);
 
     m_candiWordCount = text.length();
 
@@ -1278,10 +1277,8 @@ void InputWin::slot_kim_UpdateLookupTable(const QStringList &label, const QStrin
         const bool visible = (i < len);
         if (visible)
         {
-            const QString candidate = text.value(i);
-            const int splitPos = candidate.indexOf(':');
-            QString word = (splitPos >= 0) ? candidate.left(splitPos) : candidate;
-            const QString prompt = (splitPos >= 0) ? candidate.mid(splitPos + 1) : QString();
+            QString word = text.value(i);
+            const QString prompt = attr.value(i);
             const QString indexLabel = QString::number(i + 1) + m_separateChar;
 
             word.remove(QRegExp("\\s* +$"));

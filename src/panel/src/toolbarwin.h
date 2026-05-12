@@ -277,6 +277,7 @@ private slots:
     void on_btnSetting_clicked();
     void on_btnCharFont_clicked();
     void on_btnCharSet_clicked();
+    void slot_apply_pending_kim_property();
 
 private:
     // 静态数据成员
@@ -302,6 +303,9 @@ private:
     bool m_extendMenuOpenState;
 
     QTimer m_hideDelayTimer;
+    /** UpdateProperty 防抖：焦点切换时可能连发多条，合并后再决定工具条显隐。 */
+    QTimer m_kimPropertyDebounceTimer;
+    QString m_pendingKimProperty;
 
     QWidget m_tooltipsWin;
     QLabel *m_tooltipsLabel;

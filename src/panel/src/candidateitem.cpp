@@ -89,7 +89,7 @@ void CandidateItem::clear_text()
 void CandidateItem::set_text_font(const QFont &font)
 {
     ui->labelWord->setFont(font);
-    // ui->labelPrompt->setFont( font );
+    ui->labelPrompt->setFont(font);
 }
 
 // 设置鼠标在候选词上停留时的颜色

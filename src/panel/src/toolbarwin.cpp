@@ -190,6 +190,10 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_hideDelayTimer.setSingleShot(true);
     connect(&m_hideDelayTimer, &QTimer::timeout, this, &ToolbarWin::slot_hide_toolbar);
 
+    m_kimPropertyDebounceTimer.setSingleShot(true);
+    m_kimPropertyDebounceTimer.setInterval(80);
+    connect(&m_kimPropertyDebounceTimer, &QTimer::timeout, this, &ToolbarWin::slot_apply_pending_kim_property);
+
     s_capsFlg = Keyboard::get_caps_flg();
     // printf("执行Freewb时加载slot-open-toolbar\n");
 }
@@ -1056,7 +1060,15 @@ void ToolbarWin::slot_kim_RegisterProperties(const QStringList &prop)
 // prop: 切换输入法时提示的输入法本身描述信息
 void ToolbarWin::slot_kim_UpdateProperty(const QString &prop)
 {
-    FREEWB_DEBUG("ToolbarWin::slot_kim_UpdateProperty: prop={}", prop.toUtf8().constData());
+    FREEWB_DEBUG("ToolbarWin::slot_kim_UpdateProperty: prop={} (debounced)", prop.toUtf8().constData());
+    m_pendingKimProperty = prop;
+    m_kimPropertyDebounceTimer.start();
+}
+
+void ToolbarWin::slot_apply_pending_kim_property()
+{
+    const QString &prop = m_pendingKimProperty;
+    FREEWB_DEBUG("ToolbarWin::slot_apply_pending_kim_property: prop={}", prop.toUtf8().constData());
     FREEWB_DEBUG("switch ime: {}", prop.toUtf8().constData());
     if (prop.contains("/Fcitx/im:Freewb") || prop.contains("/Fcitx/im:极点五笔"))
     {
