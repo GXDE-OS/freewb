@@ -50,17 +50,14 @@ void WbzxEngine::fillCandidatePayloadPrompts(const std::string &preedit, Candida
     }
 }
 
-bool WbzxEngine::isPreeditOverflow(const char *key, const std::string &pre, const std::string &full) const
+bool WbzxEngine::isPreeditOverflow(const std::string &full) const
 {
-    if (key == nullptr || pre.empty())
+    if (full.empty())
     {
         return false;
     }
-    if (hasLongerCodeContinuation(full))
-    {
-        return false;
-    }
-    return true;
+
+    return !mbTable_.hasCandidateForPrefix(full) && !userDict_.hasEntryStartingWithPrefix(full);
 }
 
 void WbzxEngine::putKey(const char *strCode)
@@ -180,15 +177,6 @@ bool WbzxEngine::shouldProcessKey(const char *key) const
 bool WbzxEngine::isExactDictionaryKey(const std::string &preedit) const
 {
     return mbTable_.hasExactCode(preedit) || userDict_.contains(preedit);
-}
-
-bool WbzxEngine::hasLongerCodeContinuation(const std::string &raw) const
-{
-    if (raw.empty())
-    {
-        return false;
-    }
-    return mbTable_.hasCandidateForPrefix(raw) || userDict_.hasEntryStartingWithPrefix(raw);
 }
 
 } // namespace freewb

@@ -47,10 +47,8 @@ bool En::isExactDictionaryKey(const std::string &preedit) const
     return false;
 }
 
-bool En::isPreeditOverflow(const char *key, const std::string &pre, const std::string &full) const
+bool En::isPreeditOverflow(const std::string &full) const
 {
-    (void)key;
-    (void)pre;
     (void)full;
     return false;
 }

@@ -100,7 +100,6 @@ bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
     processed = engineManager_->processKey(keysym, state);
     if (processed)
     {
-        committer_->tryExactDictionarySingleCandidateCommit();
         return true;
     }
 

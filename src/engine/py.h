@@ -31,10 +31,7 @@ public:
 
     bool shouldProcessKey(const char *key) const override;
     bool isExactDictionaryKey(const std::string &preedit) const override;
-    bool isPreeditOverflow(const char *key, const std::string &pre, const std::string &full) const override;
-
-    /** 词典是否存在以 @p raw 为真前缀的更长编码键；供五笔拼音组合引擎查询。 */
-    bool hasLongerCodeContinuation(const std::string &raw) const;
+    bool isPreeditOverflow(const std::string &full) const override;
 
     /** 单字五笔首选码查询 */
     void setWubiPrimaryCodeLookupCallback(WubiPrimaryCodeLookupCallback callback);

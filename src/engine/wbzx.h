@@ -29,12 +29,9 @@ public:
 
     bool shouldProcessKey(const char *key) const override;
     bool isExactDictionaryKey(const std::string &preedit) const override;
-    bool isPreeditOverflow(const char *key, const std::string &pre, const std::string &full) const override;
+    bool isPreeditOverflow(const std::string &full) const override;
     /** 主五笔码表单字 UTF-8 → 首选码；无索引或查无则空串。供拼音 [xxxx] 反查等。 */
     std::string primaryWubiCodeForSingleHanziUtf8(const std::string &hz) const;
-
-    /** 词典是否存在以 @p raw 为真前缀的更长编码键；供五笔拼音组合引擎查询。 */
-    bool hasLongerCodeContinuation(const std::string &raw) const;
 
 private:
     void clearMbLoadState();

@@ -113,20 +113,14 @@ bool Wbpy::isExactDictionaryKey(const std::string &preedit) const
     return wbzxEngine_->isExactDictionaryKey(preedit) || pyEngine_->isExactDictionaryKey(preedit);
 }
 
-bool Wbpy::isPreeditOverflow(const char *key, const std::string &pre, const std::string &full) const
+bool Wbpy::isPreeditOverflow(const std::string &full) const
 {
-    if (key == nullptr || pre.empty())
+    if (wbzxEngine_ == nullptr || pyEngine_ == nullptr)
     {
         return false;
     }
-    const bool hasDictContinuation =
-        (wbzxEngine_ != nullptr && wbzxEngine_->hasLongerCodeContinuation(full))
-        || (pyEngine_ != nullptr && pyEngine_->hasLongerCodeContinuation(full));
-    if (hasDictContinuation)
-    {
-        return false;
-    }
-    return true;
+
+    return wbzxEngine_->isPreeditOverflow(full) && pyEngine_->isPreeditOverflow(full);
 }
 
 } // namespace freewb

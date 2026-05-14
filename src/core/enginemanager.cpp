@@ -191,7 +191,7 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
     const std::string pre = candidateList_->preeditText();
     const std::string full = pre + key;
 
-    if (engine->isPreeditOverflow(key, pre, full))
+    if (!pre.empty() && engine->isPreeditOverflow(full))
     {
         commitPreeditOverflow(engine, pre, std::string(key));
     }
@@ -200,6 +200,9 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
         candidateList_->setPreeditText(full);
         refreshEngineResult();
     }
+
+    committer_->tryExactDictionarySingleCandidateCommit();
+
     return true;
 }
 

@@ -64,17 +64,14 @@ void PyEngine::fillCandidatePayloadPrompts(const std::string &preedit, Candidate
     }
 }
 
-bool PyEngine::isPreeditOverflow(const char *key, const std::string &pre, const std::string &full) const
+bool PyEngine::isPreeditOverflow(const std::string &full) const
 {
-    if (key == nullptr || pre.empty())
+    if (full.empty())
     {
         return false;
     }
-    if (hasLongerCodeContinuation(full))
-    {
-        return false;
-    }
-    return true;
+
+    return !mbTable_.hasCandidateForPrefix(full);
 }
 
 void PyEngine::setWubiPrimaryCodeLookupCallback(WubiPrimaryCodeLookupCallback callback)
@@ -115,11 +112,6 @@ bool PyEngine::shouldProcessKey(const char *key) const
 bool PyEngine::isExactDictionaryKey(const std::string &preedit) const
 {
     return mbTable_.hasExactCode(preedit);
-}
-
-bool PyEngine::hasLongerCodeContinuation(const std::string &raw) const
-{
-    return !raw.empty() && mbTable_.hasCandidateForPrefix(raw);
 }
 
 void PyEngine::clearMbLoadState()

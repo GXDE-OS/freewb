@@ -40,7 +40,7 @@ public:
      * 本键按下后（pre + key = full）：续码在词库中不可接且 pre 非空时为 preedit 顶字溢出，返回 true；
      * 返回 false 表示将 full 写入 preedit 并刷新候选。
      */
-    virtual bool isPreeditOverflow(const char *key, const std::string &pre, const std::string &full) const = 0;
+    virtual bool isPreeditOverflow(const std::string &full) const = 0;
 };
 
 } // namespace freewb
