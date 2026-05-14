@@ -14,6 +14,7 @@ WbzxEngine::WbzxEngine()
 {
     clearMbLoadState();
     loadDictionary();
+    initSingleHanziPrimaryCodeFromMbTable();
 }
 
 WbzxEngine::~WbzxEngine() = default;
@@ -160,7 +161,6 @@ void WbzxEngine::loadDictionary()
         result_.clearRows();
         return;
     }
-    initSingleHanziPrimaryCodeFromMbTable();
 }
 
 void WbzxEngine::reset()
