@@ -99,23 +99,6 @@ void Wbpy::reset()
     result_.clearRows();
 }
 
-int Wbpy::inputCodeLength() const
-{
-    if (wbzxEngine_ == nullptr && pyEngine_ == nullptr)
-    {
-        return 4;
-    }
-    if (wbzxEngine_ == nullptr)
-    {
-        return pyEngine_->inputCodeLength();
-    }
-    if (pyEngine_ == nullptr)
-    {
-        return wbzxEngine_->inputCodeLength();
-    }
-    return std::max(wbzxEngine_->inputCodeLength(), pyEngine_->inputCodeLength());
-}
-
 bool Wbpy::shouldProcessKey(const char *key) const
 {
     return wbzxEngine_->shouldProcessKey(key) || pyEngine_->shouldProcessKey(key);

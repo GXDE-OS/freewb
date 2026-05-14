@@ -24,7 +24,6 @@ public:
     /** 向 @p out 追加候选：与 texts 同步写入 fullCodes（完整编码键）。 */
     void appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const;
     const std::string &strInputCode() const;
-    int codeLength() const;
     bool hasExactCode(const std::string &code) const;
     /** 是否与 appendCandidatesForPrefix 至少产出一条一致（非空 hz）；供引擎续码判断 */
     bool hasCandidateForPrefix(const std::string &prefix) const;

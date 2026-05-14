@@ -22,7 +22,6 @@ public:
     const CandidatePayload &getResult() const override;
     void reset() override;
 
-    int inputCodeLength() const override;
     bool shouldProcessKey(const char *key) const override;
     bool isExactDictionaryKey(const std::string &preedit) const override;
     bool isPreeditOverflow(const char *key, const std::string &pre, const std::string &full) const override;

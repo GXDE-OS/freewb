@@ -107,11 +107,6 @@ void PyEngine::reset()
     result_.clearRows();
 }
 
-int PyEngine::inputCodeLength() const
-{
-    return 128;
-}
-
 bool PyEngine::shouldProcessKey(const char *key) const
 {
     return mbTable_.strInputCode().find(key) != std::string::npos;

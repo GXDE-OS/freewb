@@ -36,11 +36,6 @@ void En::reset()
     return;
 }
 
-int En::inputCodeLength() const
-{
-    return 128;
-}
-
 bool En::shouldProcessKey(const char *key) const
 {
     return false;

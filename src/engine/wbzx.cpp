@@ -172,11 +172,6 @@ void WbzxEngine::reset()
     result_.clearRows();
 }
 
-int WbzxEngine::inputCodeLength() const
-{
-    return mbTable_.codeLength();
-}
-
 bool WbzxEngine::shouldProcessKey(const char *key) const
 {
     return mbTable_.strInputCode().find(key) != std::string::npos;

@@ -230,11 +230,6 @@ const std::string &MbDictionaryTable::strInputCode() const
     return strInputCode_;
 }
 
-int MbDictionaryTable::codeLength() const
-{
-    return static_cast<int>(iCodeLength_);
-}
-
 bool MbDictionaryTable::hasExactCode(const std::string &code) const
 {
     if (code.empty())
