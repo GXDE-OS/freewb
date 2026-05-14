@@ -136,18 +136,12 @@ const char *EngineManager::currentEngineName() const
     return engine->name();
 }
 
-void EngineManager::commitPreeditOverflow(IFreewbEngine *engine, const std::string &prefix, const std::string &suffix)
+void EngineManager::commitPreeditOverflow(const std::string &prefix)
 {
-    engine->reset();
     candidateList_->setPreeditText(prefix);
     refreshEngineResult();
 
-    if (committer_ == nullptr)
-    {
-        candidateList_->clear();
-        reset();
-    }
-    else if (candidateList_->size() == 0)
+    if (committer_ == nullptr || candidateList_->size() == 0)
     {
         reset();
         candidateList_->clear();
@@ -155,12 +149,6 @@ void EngineManager::commitPreeditOverflow(IFreewbEngine *engine, const std::stri
     else
     {
         committer_->commitFirstCandidate();
-    }
-
-    if (!suffix.empty())
-    {
-        candidateList_->setPreeditText(suffix);
-        refreshEngineResult();
     }
 }
 
@@ -193,13 +181,15 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
 
     if (!pre.empty() && engine->isPreeditOverflow(full))
     {
-        commitPreeditOverflow(engine, pre, std::string(key));
+        commitPreeditOverflow(pre);
+        candidateList_->setPreeditText(key);
     }
     else
     {
         candidateList_->setPreeditText(full);
-        refreshEngineResult();
     }
+
+    refreshEngineResult();
 
     committer_->tryExactDictionarySingleCandidateCommit();
 

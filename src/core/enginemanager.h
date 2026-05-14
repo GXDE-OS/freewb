@@ -40,7 +40,7 @@ private:
     void loadDefaultEngines();
     IFreewbEngine *findEngineByName(const char *name) const;
     /** 顶字：先按 prefix 出候选并提交首项，再将 suffix 作为新 preedit（可空）。 */
-    void commitPreeditOverflow(IFreewbEngine *engine, const std::string &prefix, const std::string &suffix);
+    void commitPreeditOverflow(const std::string &prefix);
 
 private:
     std::unique_ptr<WbzxEngine> wbzxEngine_ = nullptr;
