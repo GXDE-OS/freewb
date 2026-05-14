@@ -19,13 +19,11 @@ public:
 
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
     const std::string &lastCommitString() const;
-    void commitFirstCandidate();
-    bool tryExactDictionarySingleCandidateCommit();
+    void commit(const std::string &text);
 
 private:
     void loadSettings();
     void connectDBusCallback();
-    void commit(const std::string &text);
 
 private:
     Freewb *freewb_;

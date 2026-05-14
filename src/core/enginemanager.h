@@ -39,8 +39,9 @@ private:
     void initAllEngines();
     void loadDefaultEngines();
     IFreewbEngine *findEngineByName(const char *name) const;
-    /** 顶字：先按 prefix 出候选并提交首项，再将 suffix 作为新 preedit（可空）。 */
+
     void commitPreeditOverflow(const std::string &prefix);
+    void tryExactDictionarySingleCandidateCommit();
 
 private:
     std::unique_ptr<WbzxEngine> wbzxEngine_ = nullptr;

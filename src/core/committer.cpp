@@ -125,31 +125,9 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     return false;
 }
 
-bool Committer::tryExactDictionarySingleCandidateCommit()
-{
-    if (!commitCallback_ || (freewb_->candidateList()->size() == 0))
-    {
-        return false;
-    }
-
-    const std::string &pre = freewb_->candidateList()->preeditText();
-    if (freewb_->candidateList()->totalCandidateCount() != 1 || !freewb_->engineManager()->isCurrentPreeditExactDictionaryKey(pre))
-    {
-        return false;
-    }
-
-    commitFirstCandidate();
-    return true;
-}
-
 const std::string &Committer::lastCommitString() const
 {
     return lastCommitString_;
-}
-
-void Committer::commitFirstCandidate()
-{
-    commit(freewb_->candidateList()->selectCandidateText(0));
 }
 
 void Committer::commit(const std::string &text)

@@ -148,8 +148,24 @@ void EngineManager::commitPreeditOverflow(const std::string &prefix)
     }
     else
     {
-        committer_->commitFirstCandidate();
+        committer_->commit(candidateList_->selectCandidateText(0));
     }
+}
+
+void EngineManager::tryExactDictionarySingleCandidateCommit()
+{
+    if (committer_ == nullptr || candidateList_->size() == 0)
+    {
+        return;
+    }
+
+    const std::string &pre = candidateList_->preeditText();
+    if (candidateList_->totalCandidateCount() != 1 || !isCurrentPreeditExactDictionaryKey(pre))
+    {
+        return;
+    }
+
+    committer_->commit(candidateList_->selectCandidateText(0));
 }
 
 bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
@@ -191,7 +207,7 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
 
     refreshEngineResult();
 
-    committer_->tryExactDictionarySingleCandidateCommit();
+    tryExactDictionarySingleCandidateCommit();
 
     return true;
 }
