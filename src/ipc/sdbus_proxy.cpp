@@ -364,6 +364,21 @@ void SDBusProxy::callToggleCapsStateMethod()
     callSettingsMethod("slot_dbus_switch_caps_state", "");
 }
 
+void SDBusProxy::callImeTableLoadOkMethod()
+{
+    callSettingsMethod("slot_dbus_ime_table_load_ok", "");
+}
+
+void SDBusProxy::callUsrWordLoadOkMethod()
+{
+    callSettingsMethod("slot_dbus_usr_word_load_ok", "");
+}
+
+void SDBusProxy::callQuickTableLoadOkMethod()
+{
+    callSettingsMethod("slot_dbus_quick_table_load_ok", "");
+}
+
 void SDBusProxy::emitRegisterPropertiesSignal(const std::vector<std::string> &props)
 {
     if (!bus_ || !available_)

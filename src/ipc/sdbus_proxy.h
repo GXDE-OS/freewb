@@ -171,6 +171,13 @@ public: // settings 通过 D-Bus 调用 freewb-settings 服务的方法
     /** @brief 切换大小写状态。 */
     void callToggleCapsStateMethod();
 
+    /** @brief 通知面板主码表已重新加载。 */
+    void callImeTableLoadOkMethod();
+    /** @brief 通知面板用户词库已重新加载。 */
+    void callUsrWordLoadOkMethod();
+    /** @brief 通知面板快捷码表已重新加载。 */
+    void callQuickTableLoadOkMethod();
+
 private:
     static std::string toolbarPayloadToPropertyLine(const ToolbarPropertiesPayload &p);
 
