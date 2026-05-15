@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "log.h"
+#include "settings.h"
 #include "utils.h"
 
 namespace freewb
@@ -167,6 +168,11 @@ void WbzxEngine::reset()
 {
     inputCodes_.clear();
     result_.clearRows();
+    const bool userWordFlg = settings::instance().get_userWordFlg();
+    if (userWordFlg)
+    {
+        userDict_.reload();
+    }
 }
 
 bool WbzxEngine::shouldProcessKey(const char *key) const
