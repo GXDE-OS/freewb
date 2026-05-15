@@ -189,7 +189,7 @@ signals:
     void signal_open_vk(VirtualKeyboardMode mode);
     void signal_open_dict_query_win(const QString &queryText);
     void signal_switch_char_set();
-    void signal_switch_char_font();
+    void signal_switch_chttrans();
     void signal_traditional_mode_changed(bool isTraditional);
 
     // 以下信号发给输入面板
@@ -197,9 +197,7 @@ signals:
     void signal_btn_mark_clicked();
 
     // 以下信号发给fcitx
-    void signal_fcitx_switch_inputmethod();
     void signal_request_next_input_mode();
-    void signal_fcitx_switch_char_font(const QString &param);
     void signal_fcitx_switch_char_width(const QString &param);
     void signal_fcitx_switch_mark(const QString &param);
 

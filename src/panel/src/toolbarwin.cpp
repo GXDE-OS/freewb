@@ -790,7 +790,7 @@ void ToolbarWin::slot_update_char_width_mode_ico()
 void ToolbarWin::slot_set_traditional_mode(bool isTraditional)
 {
     set_traditional_mode(isTraditional);
-    emit signal_switch_char_font();
+    emit signal_switch_chttrans();
 }
 
 // 更新工具条上的中英文标点指示图标
@@ -993,7 +993,6 @@ void ToolbarWin::update_mark_mode_ico(MarkMode markMode)
 void ToolbarWin::set_traditional_mode(bool isTraditional)
 {
     s_isTraditionalMode = isTraditional;
-    settings::instance().set_simpTradFlg(s_isTraditionalMode);
     update_char_font_ico();
     update_input_mode_ico(s_inputMode);
 }
@@ -1009,9 +1008,7 @@ void ToolbarWin::on_btnCharFont_clicked()
     Sound::play(SOUND_LETTER);
 
     slot_set_traditional_mode(!s_isTraditionalMode);
-
     emit signal_traditional_mode_changed(s_isTraditionalMode);
-    emit signal_fcitx_switch_char_font("/Fcitx/chttrans");
 }
 
 void ToolbarWin::on_btnCharSet_clicked()

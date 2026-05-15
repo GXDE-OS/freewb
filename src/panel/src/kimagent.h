@@ -43,9 +43,10 @@ Q_SIGNALS:
     Q_SCRIPTABLE void LookupTablePageUp();
     Q_SCRIPTABLE void ReloadConfig();
     Q_SCRIPTABLE void SelectCandidate(int index);
-    Q_SCRIPTABLE void TriggerProperty(const QString &key);
     Q_SCRIPTABLE void SwitchPunctuation();
     Q_SCRIPTABLE void SwitchFullWidth();
+    Q_SCRIPTABLE void SwitchChttrans();
+    Q_SCRIPTABLE void RequestNextInputMode();
 
     // 以下信号是接收到fcitx对应的信号后转发出去的程序内部信号
     void signal_ShowPreedit(bool);

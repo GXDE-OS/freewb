@@ -84,7 +84,6 @@ public slots:                                              // 提供给外部进
 
 protected slots:
     void slot_delete_freewb_panel();
-    void slot_request_next_input_mode();
 
 private:
     X11EventMonitor *m_x11EventMonitor; // X11系统事件监视器

@@ -1,6 +1,5 @@
 #include "mainprogram.h"
 
-#include <QDBusMessage>
 #include <QDebug>
 
 #include "../../ipc/ipc.h"
@@ -58,13 +57,10 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
 
     // 工具条发送的信号
     // m_toolbar --> m_kimAgent
-    connect(m_toolbar, &ToolbarWin::signal_request_next_input_mode, this, &MainProgram::slot_request_next_input_mode);
-    connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_char_font, m_kimAgent, &KimAgent::TriggerProperty);
-
+    connect(m_toolbar, &ToolbarWin::signal_request_next_input_mode, m_kimAgent, &KimAgent::RequestNextInputMode);
     connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_char_width, m_kimAgent, &KimAgent::SwitchFullWidth);
-
     connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_mark, m_kimAgent, &KimAgent::SwitchPunctuation);
-    connect(m_toolbar, &ToolbarWin::signal_switch_char_font, m_kimAgent, &KimAgent::ReloadConfig);
+    connect(m_toolbar, &ToolbarWin::signal_switch_chttrans, m_kimAgent, &KimAgent::SwitchChttrans);
     connect(m_toolbar, &ToolbarWin::signal_switch_char_set, m_kimAgent, &KimAgent::ReloadConfig);
 
     // m_toolbar --> m_settingWin
@@ -202,12 +198,6 @@ void MainProgram::slot_delete_freewb_panel()
 {
     m_toolbar->hide();
     m_inputWin->hide();
-}
-
-void MainProgram::slot_request_next_input_mode()
-{
-    QDBusMessage msg = QDBusMessage::createSignal(FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE, "RequestNextInputMode");
-    QDBusConnection::sessionBus().send(msg);
 }
 
 /********************************* 以下槽函数供输入法引擎通过DBUS调用 ***************************************/
