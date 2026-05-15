@@ -70,7 +70,7 @@ enum class ValueType
     X(quickTableFlg, Misc, Int, "0", Misc, "")                                                                                   \
     X(imeTableChanged, Misc, Int, "0", Misc, "")                                                                                 \
     X(simpTradFlg, Misc, Bool, "false", Misc, "")                                                                                \
-    X(userWordFlg, Misc, Int, "1", Misc, "")                                                                                     \
+    X(userWordFlg, Misc, Int, "0", Misc, "")                                                                                     \
     X(vkMode, Misc, Int, "-1", Misc, "")                                                                                         \
     X(separateChar, CandidateWinUi, String, ".", CandidateWinUi, "")                                                             \
     X(cnEnSwitch, ShortcutKey, String, "KEY_SHIFT", ShortcutKey, "")                                                             \
