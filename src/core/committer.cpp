@@ -12,7 +12,6 @@ namespace freewb
 Committer::Committer(CommitCallback commitCallback, Freewb *freewb) : commitCallback_(std::move(commitCallback)), freewb_(freewb)
 {
     loadSettings();
-    connectDBusCallback();
 }
 
 Committer::~Committer() = default;
@@ -24,19 +23,6 @@ void Committer::loadSettings()
 
     prevPageKey_ = Key::keySymFromUniqueName(settings::instance().get_prevPageKey().c_str());
     nextPageKey_ = Key::keySymFromUniqueName(settings::instance().get_nextPageKey().c_str());
-}
-
-void Committer::connectDBusCallback()
-{
-    freewb_->sdbusProxy()->bindDBusSignalCallback(
-        [this](const char *member, int index)
-        {
-            if (std::strcmp(member, "SelectCandidate") != 0)
-            {
-                return;
-            }
-            this->commit(freewb_->candidateList()->selectCandidateText(index));
-        });
 }
 
 bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
@@ -60,22 +46,7 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     // 数字键支持上屏
     if (Key::isKey09(keysym, state))
     {
-        int index = keysym - FreewbKey_1;
-        if (index < 0)
-        {
-            freewb_->candidateList()->clear();
-            freewb_->engineManager()->reset();
-            return false;
-        }
-        else if (index >= freewb_->candidateList()->size())
-        {
-            commit(candidates->firstVisibleCandidateOrPreedit());
-        }
-        else
-        {
-            commit(freewb_->candidateList()->selectCandidateText(index));
-        }
-        return true;
+        return selectCandidate(static_cast<int>(keysym - FreewbKey_1));
     }
 
     // 二三重码上屏
@@ -138,4 +109,25 @@ void Committer::commit(const std::string &text)
     freewb_->candidateList()->clear();
     freewb_->engineManager()->reset();
 }
+
+bool Committer::selectCandidate(int index)
+{
+    CandidateList *candidates = freewb_->candidateList();
+    if (index < 0)
+    {
+        candidates->clear();
+        freewb_->engineManager()->reset();
+        return false;
+    }
+    else if (index >= freewb_->candidateList()->size())
+    {
+        commit(candidates->firstVisibleCandidateOrPreedit());
+    }
+    else
+    {
+        commit(freewb_->candidateList()->selectCandidateText(index));
+    }
+    return true;
+}
+
 } // namespace freewb

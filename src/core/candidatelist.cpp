@@ -10,14 +10,14 @@
 
 namespace freewb
 {
-CandidateList::CandidateList() : cursor_(-1)
+CandidateList::CandidateList(Chttrans *chttrans) : cursor_(-1), chttrans_(chttrans)
 {
-    init();
+    loadSettings();
 }
 
 CandidateList::~CandidateList() = default;
 
-void CandidateList::init()
+void CandidateList::loadSettings()
 {
     wordCount_ = settings::instance().get_candiWordCount();
     if (wordCount_ <= 0)
@@ -50,7 +50,7 @@ void CandidateList::syncVisiblePage()
     const int start = pageIndex_ * wordCount_;
     const int end = std::min(start + wordCount_, total);
     const bool codeRemind = settings::instance().get_codeRemind();
-    const bool simpTradOn = settings::instance().get_simpTradFlg();
+    const bool simpTradOn = chttrans_ != nullptr && chttrans_->available();
     const int nVisible = end - start;
     const auto n = static_cast<std::size_t>(nVisible);
 
@@ -63,7 +63,10 @@ void CandidateList::syncVisiblePage()
         const std::size_t dst = static_cast<std::size_t>(j);
 
         currentPageTexts_[dst] = allTexts_[src];
-        chttrans_.simpToTrad(currentPageTexts_[dst]);
+        if (chttrans_ != nullptr)
+        {
+            chttrans_->simpToTrad(currentPageTexts_[dst]);
+        }
 
         const bool showTradHint = simpTradOn && currentPageTexts_[dst] != allTexts_[src];
 

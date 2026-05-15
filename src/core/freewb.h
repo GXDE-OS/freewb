@@ -24,6 +24,7 @@ public:
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
     void updateCandidateAndPreeditToUI();
     void reset();
+    void reloadConfig();
 
     ipc::SDBusProxy *sdbusProxy() const;
     EngineManager *engineManager() const;
@@ -33,11 +34,13 @@ public:
 private:
     bool handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state);
     bool handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state);
+    void connectDBusCallback();
 
 private:
     FreewbLog log_;
     ipc::SDBusProxy *sdbusProxy_ = nullptr;
     EngineManager *engineManager_ = nullptr;
+    Chttrans *chttrans_ = nullptr;
     CandidateList *candidateList_ = nullptr;
     Committer *committer_ = nullptr;
     Punc *punc_ = nullptr;

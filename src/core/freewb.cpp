@@ -12,9 +12,11 @@ Freewb::Freewb(void *sd_event_handle, CommitCallback commitCallback) : log_("/tm
 {
     sdbusProxy_ = new ipc::SDBusProxy(sd_event_handle);
     punc_ = new Punc();
-    candidateList_ = new CandidateList();
+    chttrans_ = new Chttrans();
+    candidateList_ = new CandidateList(chttrans_);
     committer_ = new Committer(std::move(commitCallback), this);
     engineManager_ = new EngineManager(candidateList_, committer_);
+    connectDBusCallback();
 }
 
 Freewb::~Freewb()
@@ -38,6 +40,11 @@ Freewb::~Freewb()
     {
         delete candidateList_;
         candidateList_ = nullptr;
+    }
+    if (chttrans_ != nullptr)
+    {
+        delete chttrans_;
+        chttrans_ = nullptr;
     }
     if (punc_ != nullptr)
     {
@@ -118,6 +125,24 @@ void Freewb::reset()
     candidateList_->clear();
 }
 
+void Freewb::reloadConfig()
+{
+    settings::instance().reload();
+
+    const bool userWordFlg = settings::instance().get_userWordFlg();
+
+    committer_->loadSettings();
+    candidateList_->loadSettings();
+
+    if (userWordFlg)
+    {
+        engineManager_->reloadDictionaries();
+        sdbusProxy_->callUsrWordLoadOkMethod();
+    }
+
+    updateCandidateAndPreeditToUI();
+}
+
 bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
 {
     {
@@ -189,6 +214,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
+            chttrans_->changeAvailable();
             sdbusProxy_->callSwitchChttransMethod();
             return true;
         }
@@ -285,6 +311,46 @@ bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     return false;
+}
+
+void Freewb::connectDBusCallback()
+{
+    sdbusProxy_->bindDBusSignalCallback(
+        [this](const char *member, int index)
+        {
+            if (std::strcmp(member, "SelectCandidate") == 0)
+            {
+                this->committer_->selectCandidate(static_cast<int>(index));
+            }
+            else if (std::strcmp(member, "LookupTablePageUp") == 0)
+            {
+                this->candidateList_->prev();
+                this->updateCandidateAndPreeditToUI();
+            }
+            else if (std::strcmp(member, "LookupTablePageDown") == 0)
+            {
+                this->candidateList_->next();
+                this->updateCandidateAndPreeditToUI();
+            }
+            else if (std::strcmp(member, "ReloadConfig") == 0)
+            {
+                this->reloadConfig();
+            }
+            else if (std::strcmp(member, "RequestNextInputMode") == 0)
+            {
+                this->engineManager_->nextEngine();
+                const std::string nextEngine = this->engineManager_->currentEngineName();
+                this->sdbusProxy_->callSwitchInputModeMethod(nextEngine.c_str());
+            }
+            else if (std::strcmp(member, "SwitchPunctuation") == 0)
+            {
+                this->punc_->changeAvailable();
+            }
+            else if (std::strcmp(member, "SwitchChttrans") == 0)
+            {
+                this->chttrans_->changeAvailable();
+            }
+        });
 }
 
 void Freewb::updateCandidateAndPreeditToUI()

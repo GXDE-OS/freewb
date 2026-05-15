@@ -20,11 +20,10 @@ public:
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
     const std::string &lastCommitString() const;
     void commit(const std::string &text);
+    bool selectCandidate(int index);
+    void loadSettings();
 
 private:
-    void loadSettings();
-    void connectDBusCallback();
-
 private:
     Freewb *freewb_;
 

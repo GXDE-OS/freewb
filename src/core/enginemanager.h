@@ -32,6 +32,7 @@ public:
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
     void refreshEngineResult();
     void reset();
+    void reloadDictionaries();
 
     bool isCurrentPreeditExactDictionaryKey(const std::string &preedit) const;
 

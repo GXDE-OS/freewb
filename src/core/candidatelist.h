@@ -11,9 +11,10 @@ namespace freewb
 class CandidateList
 {
 public:
-    CandidateList();
+    CandidateList(Chttrans *chttrans);
     ~CandidateList();
 
+    void loadSettings();
     void prev();
     bool hasPrev() const;
     void next();
@@ -39,7 +40,6 @@ public:
     void popPreeditText();
 
 private:
-    void init();
     void syncVisiblePage();
 
 private:
@@ -52,7 +52,7 @@ private:
     int totalPages_ = 0;
     int wordCount_ = 5;
     std::string preeditText_;
-    Chttrans chttrans_;
+    Chttrans *chttrans_ = nullptr;
 };
 } // namespace freewb
 

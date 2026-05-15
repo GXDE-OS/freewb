@@ -269,4 +269,13 @@ void EngineManager::changeEngine(const std::string &engineName)
     }
 }
 
+void EngineManager::reloadDictionaries()
+{
+    IFreewbEngine *engine = findEngineByName("engine:wbzx");
+    if (engine != nullptr)
+    {
+        engine->reset();
+    }
+}
+
 } // namespace freewb

@@ -34,6 +34,7 @@ void Chttrans::loadPair(const std::string &s2tProfile, const std::string &t2sPro
 Chttrans::Chttrans()
 {
     loadPair(std::string(), std::string());
+    available_ = settings::instance().get_simpTradFlg();
 }
 
 const char *Chttrans::name() const
@@ -54,11 +55,6 @@ void Chttrans::changeAvailable()
 void Chttrans::simpToTrad(std::string &text) const
 {
     if (!available_ || !s2t_)
-    {
-        FREEWB_WARN("available_ is false or s2t_ is nullptr");
-        return;
-    }
-    if (!settings::instance().get_simpTradFlg())
     {
         return;
     }
