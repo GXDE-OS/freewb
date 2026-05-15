@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "candidatelist.h"
+#include "chttrans.h"
 #include "log.h"
 #include "settings.h"
 
@@ -46,12 +47,14 @@ int main()
 {
     FreewbLog log("/tmp/freewb-candidate-list-test.log");
 
+    freewb::Chttrans chttrans;
+
     const int wc = settings::instance().get_candiWordCount();
     REQUIRE(wc > 0, "candiWordCount should be positive");
 
     // 默认构造 + clear
     {
-        freewb::CandidateList cl;
+        freewb::CandidateList cl(&chttrans);
         cl.clear();
         REQUIRE(cl.size() == 0, "size after clear");
         REQUIRE(cl.candidateTexts().empty(), "candidateTexts empty");
@@ -59,7 +62,7 @@ int main()
 
     // setCandidates：单条、合法下标 select
     {
-        freewb::CandidateList cl;
+        freewb::CandidateList cl(&chttrans);
         setFromCommits(cl, {"hello"});
         REQUIRE(cl.size() == 1, "single item size");
         REQUIRE(cl.candidateTexts().size() == 1u, "candidateTexts size");
@@ -68,7 +71,7 @@ int main()
 
     // cursor + 首屏切片
     {
-        freewb::CandidateList cl;
+        freewb::CandidateList cl(&chttrans);
         setFromCommits(cl, {u8"\u7532", u8"\u4e59"});
         cl.setCursor(42);
         REQUIRE(cl.cursor() == 42, "cursor from setCursor");
@@ -87,7 +90,7 @@ int main()
             all.push_back("c" + std::to_string(i));
         }
 
-        freewb::CandidateList cl;
+        freewb::CandidateList cl(&chttrans);
         setFromCommits(cl, std::move(all));
         REQUIRE(static_cast<int>(cl.candidateTexts().size()) == wc, "page 0 width");
         REQUIRE(cl.hasPrev() == false, "page 0 has no prev");
@@ -117,7 +120,7 @@ int main()
         pushRow(texts, attrs, "hello", "ab");
         pushRow(texts, attrs, "snow", "");
         pushRow(texts, attrs, "gate", "xy");
-        freewb::CandidateList cl;
+        freewb::CandidateList cl(&chttrans);
         cl.setCandidates(std::move(texts), std::move(attrs));
         REQUIRE(cl.selectCandidateText(0) == "hello", "commit text row");
         REQUIRE(cl.candidateTexts()[0] == "hello", "main column commit");
@@ -135,7 +138,7 @@ int main()
         std::vector<std::string> texts;
         std::vector<std::string> attrs;
         pushRow(texts, attrs, "hello", "");
-        freewb::CandidateList cl;
+        freewb::CandidateList cl(&chttrans);
         cl.setCandidates(std::move(texts), std::move(attrs));
         REQUIRE(cl.candidateTexts()[0] == "hello", "main column");
         if (settings::instance().get_codeRemind())
@@ -146,7 +149,7 @@ int main()
 
     // 结构化词条 + attrs
     {
-        freewb::CandidateList cl;
+        freewb::CandidateList cl(&chttrans);
         std::vector<std::string> texts;
         std::vector<std::string> attrs;
         pushRow(texts, attrs, "a", "1");
@@ -162,7 +165,7 @@ int main()
 
     // setCandidates 将页码拉回第一页
     {
-        freewb::CandidateList cl;
+        freewb::CandidateList cl(&chttrans);
         std::vector<std::string> a;
         for (int i = 0; i < 2 * wc + 3; ++i)
         {
@@ -178,7 +181,7 @@ int main()
 
     // clear
     {
-        freewb::CandidateList cl;
+        freewb::CandidateList cl(&chttrans);
         setFromCommits(cl, {"a", "b"});
         cl.clear();
         REQUIRE(cl.size() == 0, "clear");
