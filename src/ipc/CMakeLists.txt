@@ -21,6 +21,7 @@ endif()
 
 if(NOT DBUS1_FOUND AND NOT SDBus_FOUND)
     message(WARNING "freewb-ipc: neither DBus1 nor systemd (sd-bus) was found; ${PROJECT_NAME}-ipc will be built with no IPC sources. Install libdbus-1 and/or systemd development packages.")
+    return()
 endif()
 
 add_library(${PROJECT_NAME}-ipc SHARED ${IPC_SOURCES})
