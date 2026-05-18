@@ -14,6 +14,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -23,6 +24,24 @@
 
 namespace
 {
+
+std::string expectedTodayYmdArabic()
+{
+    const std::time_t now = std::time(nullptr);
+    std::tm local{};
+    localtime_r(&now, &local);
+    char buf[64];
+    std::snprintf(buf, sizeof(buf), "%d年%d月%d日", local.tm_year + 1900, local.tm_mon + 1, local.tm_mday);
+    return buf;
+}
+
+freewb::CandidatePayload candidatesFor(const freewb::UserDict &dict, const std::string &prefix)
+{
+    freewb::CandidatePayload out;
+    dict.appendCandidatesForPrefix(prefix, out);
+    return out;
+}
+
 int g_failed = 0;
 
 #define EXPECT(cond)                                                                                                             \
@@ -116,7 +135,7 @@ void testMissingFile()
 
     freewb::UserDict dict;
     EXPECT(!dict.contains("anything"));
-    EXPECT(dict.lookup("anything").empty());
+    EXPECT(candidatesFor(dict, "anything").texts.empty());
 
     removeRecursively(home);
 }
@@ -135,24 +154,24 @@ void testBasicParse()
     freewb::UserDict dict;
 
     EXPECT(dict.contains("date"));
-    const auto &dateValues = dict.lookup("date");
-    EXPECT(dateValues.size() == 2);
-    if (dateValues.size() == 2)
+    const auto dateCand = candidatesFor(dict, "date");
+    EXPECT(dateCand.texts.size() == 2);
+    if (dateCand.texts.size() == 2)
     {
-        EXPECT(dateValues[0] == "$Y年$M月$D日");
-        EXPECT(dateValues[1] == "$y年$m月$d日");
+        EXPECT(dateCand.texts[0].find('$') == std::string::npos);
+        EXPECT(dateCand.texts[1] == expectedTodayYmdArabic());
     }
 
     EXPECT(dict.contains("joke"));
-    const auto &jokeValues = dict.lookup("joke");
-    EXPECT(jokeValues.size() == 1);
-    if (!jokeValues.empty())
+    const auto jokeCand = candidatesFor(dict, "joke");
+    EXPECT(jokeCand.texts.size() == 1);
+    if (!jokeCand.texts.empty())
     {
-        EXPECT(jokeValues[0] == "hello");
+        EXPECT(jokeCand.texts[0] == "hello");
     }
 
     EXPECT(!dict.contains("missing"));
-    EXPECT(dict.lookup("missing").empty());
+    EXPECT(candidatesFor(dict, "missing").texts.empty());
 
     removeRecursively(home);
 }
@@ -175,10 +194,12 @@ void testTolerantParse()
     freewb::UserDict dict;
 
     EXPECT(dict.contains("nohead"));
-    EXPECT(dict.lookup("nohead").size() == 1 && dict.lookup("nohead")[0] == "ok");
+    const auto noheadCand = candidatesFor(dict, "nohead");
+    EXPECT(noheadCand.texts.size() == 1 && noheadCand.texts[0] == "ok");
 
     EXPECT(dict.contains("spaced"));
-    EXPECT(dict.lookup("spaced").size() == 1 && dict.lookup("spaced")[0] == "trimmed");
+    const auto spacedCand = candidatesFor(dict, "spaced");
+    EXPECT(spacedCand.texts.size() == 1 && spacedCand.texts[0] == "trimmed");
 
     EXPECT(!dict.contains(""));
     EXPECT(!dict.contains("bad line without eq"));
@@ -194,15 +215,16 @@ void testReload()
     EXPECT(prepareUserWord(home, "[UserWord]\nfoo=one\n"));
     freewb::UserDict dict;
     EXPECT(dict.contains("foo"));
-    EXPECT(dict.lookup("foo").size() == 1);
+    EXPECT(candidatesFor(dict, "foo").texts.size() == 1);
 
     EXPECT(prepareUserWord(home, "[UserWord]\nfoo=one\nfoo=two\nbar=baz\n"));
     dict.reload();
 
     EXPECT(dict.contains("foo"));
-    EXPECT(dict.lookup("foo").size() == 2);
+    EXPECT(candidatesFor(dict, "foo").texts.size() == 2);
     EXPECT(dict.contains("bar"));
-    EXPECT(dict.lookup("bar").size() == 1 && dict.lookup("bar")[0] == "baz");
+    const auto barCand = candidatesFor(dict, "bar");
+    EXPECT(barCand.texts.size() == 1 && barCand.texts[0] == "baz");
 
     removeRecursively(home);
 }
