@@ -24,7 +24,6 @@ public:
     void loadSettings();
 
 private:
-private:
     Freewb *freewb_;
 
     CommitCallback commitCallback_;
