@@ -36,6 +36,9 @@ public:
 
     bool isCurrentPreeditExactDictionaryKey(const std::string &preedit) const;
 
+    /** 按五笔码表造词规则计算词组编码；失败返回空串。 */
+    std::string calculateWubiPhraseCode(const std::string &phrase) const;
+
 private:
     void initAllEngines();
     void loadDefaultEngines();

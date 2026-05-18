@@ -1,7 +1,9 @@
 #include "committer.h"
 
+#include <algorithm>
 #include <utility>
 
+#include "common.h"
 #include "dbus.h"
 #include "freewb.h"
 #include "log.h"
@@ -101,10 +103,45 @@ const std::string &Committer::lastCommitString() const
     return lastCommitString_;
 }
 
+void Committer::appendCommittedText(const std::string &text)
+{
+    const std::size_t charCount = MbDictionaryTable::utf8CharCount(text);
+    for (std::size_t i = 0; i < charCount; ++i)
+    {
+        const std::string textChar = MbDictionaryTable::utf8CharAt(text, i);
+        if (textChar.empty())
+        {
+            continue;
+        }
+        if (committedTexts_.size() >= kMaxCommittedTextRecords)
+        {
+            committedTexts_.erase(committedTexts_.begin());
+        }
+        committedTexts_.push_back(textChar);
+    }
+}
+
+std::string Committer::committedText(std::size_t charCount) const
+{
+    if (committedTexts_.empty() || charCount == 0)
+    {
+        return {};
+    }
+    const std::size_t n = std::min(charCount, committedTexts_.size());
+    const std::size_t start = committedTexts_.size() - n;
+    std::string text;
+    for (std::size_t i = start; i < committedTexts_.size(); ++i)
+    {
+        text += committedTexts_[i];
+    }
+    return text;
+}
+
 void Committer::commit(const std::string &text)
 {
     FREEWB_DEBUG("committer will commit text : {}", text);
     lastCommitString_ = text;
+    appendCommittedText(text);
     commitCallback_(text);
     freewb_->candidateList()->clear();
     freewb_->engineManager()->reset();

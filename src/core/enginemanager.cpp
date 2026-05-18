@@ -256,6 +256,16 @@ bool EngineManager::isCurrentPreeditExactDictionaryKey(const std::string &preedi
     return engine->isExactDictionaryKey(preedit);
 }
 
+std::string EngineManager::calculateWubiPhraseCode(const std::string &phrase) const
+{
+    auto *wbzx = dynamic_cast<WbzxEngine *>(findEngineByName("engine:wbzx"));
+    if (wbzx == nullptr)
+    {
+        return {};
+    }
+    return wbzx->calculateWubiPhraseCode(phrase);
+}
+
 void EngineManager::changeEngine(const std::string &engineName)
 {
     if (engineName.empty())

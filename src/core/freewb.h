@@ -9,6 +9,7 @@
 #include "punc.h"
 #include "sdbus_proxy.h"
 #include "types.h"
+#include "userphrase.h"
 
 namespace freewb
 {
@@ -44,6 +45,7 @@ private:
     CandidateList *candidateList_ = nullptr;
     Committer *committer_ = nullptr;
     Punc *punc_ = nullptr;
+    UserPhrase *userPhrase_ = nullptr;
 };
 } // namespace freewb
 
