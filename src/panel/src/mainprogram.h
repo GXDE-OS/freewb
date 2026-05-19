@@ -34,8 +34,8 @@ private:
     void connectSettingsDBus();
 
     X11EventMonitor *m_x11EventMonitor = nullptr;
-    QDBusPanelService *m_panelDBusService = nullptr;
-    QDBusSettingsService *m_settingsDBusService = nullptr;
+    freewb::ipc::QDBusPanelService *m_panelDBusService = nullptr;
+    freewb::ipc::QDBusSettingsService *m_settingsDBusService = nullptr;
 
     ContextMenu *m_contextmenu = nullptr;
     ToolbarWin *m_toolbar = nullptr;

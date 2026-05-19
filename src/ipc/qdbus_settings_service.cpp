@@ -3,7 +3,11 @@
 #include <QClipboard>
 #include <QGuiApplication>
 #include <QDBusConnection>
-#include <QDebug>
+
+#include "log.h"
+
+namespace freewb::ipc
+{
 
 QDBusSettingsService::QDBusSettingsService(QObject *parent) : QObject(parent) 
 {
@@ -20,13 +24,13 @@ void QDBusSettingsService::registerQDBusService()
     if (!QDBusConnection::connectToBus(QDBusConnection::SessionBus, FREEWUBI_SETTINGS_BUSNAME)
              .registerService(FREEWUBI_SETTINGS_SERVICENAME))
     {
-        qWarning() << "QDBusSettingsService: registerService failed";
+        FREEWB_ERROR("QDBusSettingsService: registerService failed");
         return;
     }
 
     const bool ok = QDBusConnection::connectToBus(QDBusConnection::SessionBus, FREEWUBI_SETTINGS_BUSNAME)
                         .registerObject(FREEWUBI_SETTINGS_OBJECTPATH, this, QDBusConnection::ExportAllSlots);
-    qDebug() << "QDBusSettingsService: registerObject" << ok;
+    FREEWB_DEBUG("QDBusSettingsService: registerObject {}", ok);
 }
 
 void QDBusSettingsService::unRegisterQDBusService()
@@ -193,3 +197,6 @@ void QDBusSettingsService::slot_dbus_set_recode_calib_flg(int flg)
 {
     emit signal_set_recode_calib_flg(flg);
 }
+
+
+} // namespace freewb::ipc

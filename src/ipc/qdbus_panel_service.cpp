@@ -1,6 +1,9 @@
 #include "qdbus_panel_service.h"
 
-QDBusPanelService::QDBusPanelService(QObject *parent) : QObject(parent)
+namespace freewb::ipc
+{
+
+QDBusPanelService::QDBusPanelService(QObject *parent) : QObject(parent) 
 {
     registerQDBusService();
 }
@@ -92,3 +95,6 @@ void QDBusPanelService::SetSpotRect(int x, int y, int w, int h)
 {
     emit signal_SetSpotLocation(x, y, w, h);
 }
+
+
+} // namespace freewb::ipc

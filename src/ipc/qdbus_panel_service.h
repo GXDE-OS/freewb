@@ -1,5 +1,5 @@
-#ifndef QDBUS_PANEL_H
-#define QDBUS_PANEL_H
+#ifndef QDBUS_PANEL_SERVICE_H
+#define QDBUS_PANEL_SERVICE_H
 
 #include <QDBusConnection>
 #include <QObject>
@@ -8,7 +8,10 @@
 
 #include "ipc.h"
 
-class QDBusPanelService : public QObject
+namespace freewb::ipc
+{
+
+class QDBusPanelService final : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", FREEWUBI_PANEL_INTERFACE)
@@ -65,4 +68,6 @@ private:
     void unRegisterQDBusService();
 };
 
-#endif // QDBUS_PANEL_H
+} // namespace freewb::ipc
+
+#endif // QDBUS_PANEL_SERVICE_H

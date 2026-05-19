@@ -1,12 +1,15 @@
-#ifndef QDBUS_SETTINGS_H
-#define QDBUS_SETTINGS_H
+#ifndef QDBUS_SETTINGS_SERVICE_H
+#define QDBUS_SETTINGS_SERVICE_H
 
 #include <QObject>
 #include <QString>
 
 #include "ipc.h"
 
-class QDBusSettingsService : public QObject
+namespace freewb::ipc
+{
+
+class QDBusSettingsService final : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", FREEWUBI_SETTINGS_INTERFACE)
@@ -83,4 +86,6 @@ private:
     void unRegisterQDBusService();
 };
 
-#endif // QDBUS_SETTINGS_H
+} // namespace freewb::ipc
+
+#endif // QDBUS_SETTINGS_SERVICE_H
