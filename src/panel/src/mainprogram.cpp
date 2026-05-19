@@ -5,6 +5,7 @@
 #include "../../ipc/ipc.h"
 #include "config.h"
 #include "settings.h"
+#include "log.h"
 
 MainProgram::MainProgram(QObject *parent) : QObject(parent)
 {
@@ -242,6 +243,8 @@ void MainProgram::slot_dbus_generate_usr_word(int flg, const QString &wordText, 
     {
         m_usrGenWordDialog->add_user_word(wordText, wordCode);
         m_inputWin->close_user_word_operation_prompt();
+        settings::instance().set_userWordFlg(1);
+        m_kimAgent->ReloadConfig();
     }
     else if (flg == 2) // 取消造词
     {
@@ -267,6 +270,8 @@ void MainProgram::slot_dbus_delete_usr_word(int flg, const QString &wordText, co
     {
         m_usrGenWordDialog->delete_user_word(wordText, wordCode);
         m_inputWin->close_user_word_operation_prompt();
+        settings::instance().set_userWordFlg(1);
+        m_kimAgent->ReloadConfig();
     }
     else if (flg == 2) // 取消删词
     {
@@ -427,6 +432,7 @@ void MainProgram::slot_dbus_set_charWidth_and_markMode(int charWidth, int markMo
 QString MainProgram::slot_dbus_get_clipboard_text()
 {
     QClipboard *clipboard = QApplication::clipboard();
+    FREEWB_DEBUG("clipboard: {}", clipboard->text().toUtf8().data());
     return clipboard->text();
 }
 

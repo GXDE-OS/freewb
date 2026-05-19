@@ -820,17 +820,12 @@ void InputWin::set_candidate_text(int idx, const QString &label, const QString &
     // printf("[%s]\n[%s]",word.toUtf8().constData(),str.toUtf8().constData());
 
     item->set_text(str, wordText, promptText);
-    // set candwin width
-    int width = str.length() + wordText.length(); //+2;
-    if (promptText.length() == 0)
-        width += 1;
-    else
-        width += promptText.length();
 
-    QFont font = freewb_candi_text_qfont(settings::instance());
-
-    QSize sz(width * font.pointSize(), 20);
-    item->setMinimumSize(sz);
+    const QFont font = freewb_candi_text_qfont(settings::instance());
+    const QFontMetrics fm(font);
+    const QString cellText = str + wordText + promptText;
+    const int cellWidth = fm.horizontalAdvance(cellText) + fm.horizontalAdvance(QLatin1Char(' '));
+    item->setMinimumSize(QSize(cellWidth, fm.height()));
 }
 
 void InputWin::clear_candidate_text(int idx)
