@@ -9,7 +9,7 @@
 #define FREEWUBI_PANEL_SERVICENAME "org.ukui.freewubi.panel"
 #define FREEWUBI_PANEL_OBJECTPATH "/org/ukui/freewubi/panel"
 #define FREEWUBI_PANEL_INTERFACE "org.ukui.freewubi.panel"
-#define FREEWUBI_SESSION_BUSNAME "freewubi_session_bus"
+#define FREEWUBI_PANEL_BUSNAME "freewubi_panel_bus"
 
 /***************　极点五笔输入法设置 dbus服务名　*****************/
 #define FREEWUBI_SETTINGS_SERVICENAME "org.ukui.freewubi.settings"
