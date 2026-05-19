@@ -1,38 +1,89 @@
 #ifndef LIBDBUS_PROXY_H
 #define LIBDBUS_PROXY_H
 
+#include <string>
+#include <vector>
+
 #include <dbus/dbus.h>
 
-void FreeWubiServiceAddUsrParse(DBusConnection *conn, int flg, char *wordText, char *wordCode);
-void FreeWubiServiceDeleteUsrParse(DBusConnection *conn, int flg, char *wordText, char *wordCode);
-void FreeWubiServiceResetUerWordFlag(DBusConnection *conn);
-void FreeWubiServiceResetQuickTableFlag(DBusConnection *conn);
-void FreeWubiServiceResetTableFlag(DBusConnection *conn);
-void FreeWubiServiceExitFreewbPanel(DBusConnection *conn);
-void FreeWubiServiceDictQuery(DBusConnection *conn, char *wordText);
-void FreeWubiServiceSwitchFreeIm(DBusConnection *conn, int imState);
-void FreeWubiServiceSwitchToolbarState(DBusConnection *conn);
-void FreeWubiServiceSwitchCandiwinState(DBusConnection *conn);
-void FreeWubiServiceSwitchSkin(DBusConnection *conn);
-void FreeWubiServiceSwitchVk(DBusConnection *conn, int flg);
-void FreeWubiServiceSwitchSmartPunc(DBusConnection *conn, int flg);
-void FreeWubiServiceSwitchCharSet(DBusConnection *conn);
-void FreeWubiServiceSwitchRecodeProof(DBusConnection *conn, int flg);
-void FreeWubiServiceSwitchUncommon(DBusConnection *conn, char *wordText, int flg); // 词组常用与非常用切换成功
-void FreeWubiServiceSwitchChttrans(DBusConnection *conn);
-void FreeWubiServiceOpenSysConf(DBusConnection *conn);
-void FreeWubiServiceShowVersion(DBusConnection *conn);
-void FreeWubiServiceOpenProfessionalConf(DBusConnection *conn);
-void FreeWubiServiceModQuickTable(DBusConnection *conn);
-void FreeWubiServiceModUserTable(DBusConnection *conn);
-void FreeWubiServiceModWubiTable(DBusConnection *conn);
-void FreeWubiServiceModPinyinTable(DBusConnection *conn);
-void FreeWubiServiceOpenConfDir(DBusConnection *conn);
-void FreeWubiServiceCloseVkBoard(DBusConnection *conn);
-void FreeWubiServiceSwitchTable(DBusConnection *conn);
-void FreeWubiServiceSetCharWidth(DBusConnection *conn, int charWidth, int PuncMode);
-int FreeWubiServiceCreateFreewbPanel(DBusConnection *conn);
-char *FreeWubiServiceGetClipboard(DBusConnection *conn);
-void FreeWubiServiceSwitchCapState(DBusConnection *conn);
+#include "dbus.h"
+#include "ifreewb.h"
 
-#endif // LIBDBUS_PROXY_H
+namespace freewb::ipc
+{
+
+/** libdbus-1 会话总线上的 IDBus，并实现 freewb::IFreewb。 */
+class LibDbusProxy final : public IDBus, public ::freewb::IFreewb
+{
+public:
+    explicit LibDbusProxy(void *dbus_connection = nullptr);
+    ~LibDbusProxy() override;
+
+    const char *name() const override;
+    bool available() const override;
+    void changeAvailable() override;
+
+    bool bindDBusSignalCallback(DBusSignalCallback callback) override;
+
+    void callPanelUpdateProperties(const ToolbarPropertiesPayload &payload) override;
+    void callPanelShowToolbar() override;
+    void callPanelHideToolbar() override;
+    void callPanelUpdateSpotRect(const SpotRectPayload &payload) override;
+    void callPanelUpdateCandidate(const CandidatePayload &payload) override;
+    void callPanelUpdatePreeditText(const PreeditPayload &payload) override;
+    void callPanelUpdatePreeditCaret(int caret) override;
+    void callPanelUpdateAux(const CandidateAuxPayload &payload) override;
+
+    void callPanelSwitchInputModeMethod(const std::string &inputMode);
+    void callPanelSwitchCharSetMethod();
+    void callPanelSwitchChttransMethod();
+    void callPanelSwitchCharWidthModeMethod();
+    void callPanelSwitchPuncModeMethod();
+    void callPanelToggleCapsStateMethod();
+
+    void callAddUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText);
+    void callDeleteUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText);
+    void callDictQueryMethod(const std::string &wordText);
+    void callSwitchSkinMethod();
+    void callSwitchRecodeProofMethod();
+    void callSwitchUncommonParseStateMethod(const std::string &wordText, int flg);
+    void callOpenUiSettingMethod();
+    void callShowVersionInfoMethod();
+    void callOpenProfessionalSettingMethod();
+    void callModQuickTableMethod();
+    void callModUserTableMethod();
+    void callModWubiTableMethod();
+    void callModPinyinTableMethod();
+    void callOpenConfDirMethod();
+    void callSwitchVirtualKeyboardModeMethod(int flg);
+    void callCloseVkBoardMethod();
+    void callSwitchTableMethod();
+    std::string callGetClipboardMethod();
+    void callImeTableLoadOkMethod();
+    void callUsrWordLoadOkMethod();
+    void callQuickTableLoadOkMethod();
+
+private:
+    static std::string toolbarPayloadToPropertyLine(const ToolbarPropertiesPayload &p);
+
+    void sendPanelMethod(const char *member, const char *types, ...) const;
+    void sendPanelRegisterProperties(const std::vector<std::string> &props) const;
+    void callSettingsMethod(const char *member, const char *types, ...) const;
+    std::string callSettingsMethodReplyString(const char *member) const;
+
+    static DBusHandlerResult handlePanelSignal(DBusConnection *conn, DBusMessage *msg, void *userdata);
+
+    bool registerPanelMatches();
+    void clearMatches();
+    void closeBus();
+
+private:
+    DBusConnection *conn_ = nullptr;
+    DBusSignalCallback onDBusSignal_;
+    bool filterAdded_ = false;
+    bool available_ = true;
+};
+
+} // namespace freewb::ipc
+
+#endif
