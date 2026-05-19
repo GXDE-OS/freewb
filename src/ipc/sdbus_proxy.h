@@ -181,16 +181,14 @@ public: // settings 通过 D-Bus 调用 freewb-settings 服务的方法
 private:
     static std::string toolbarPayloadToPropertyLine(const ToolbarPropertiesPayload &p);
 
-    void emitRegisterPropertiesSignal(const std::vector<std::string> &props);
-    void emitImeSignal(const char *member, const char *types, ...) const;
     void sendPanelMethod(const char *member, const char *types, ...) const;
+    void sendPanelRegisterProperties(const std::vector<std::string> &props) const;
     void callSettingsMethod(const char *member, const char *types, ...) const;
     std::string callSettingsMethodReplyString(const char *member) const;
 
     static int handlePanelSignal(sd_bus_message *m, void *userdata, sd_bus_error *retError);
 
     bool registerPanelMatches();
-    bool registerInputMethodObject();
     void clearSlots();
     void closeBus();
 

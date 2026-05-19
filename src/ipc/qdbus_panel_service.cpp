@@ -3,41 +3,11 @@
 QDBusPanelService::QDBusPanelService(QObject *parent) : QObject(parent)
 {
     registerQDBusService();
-
-    connectDBusSignals();
 }
 
 QDBusPanelService::~QDBusPanelService()
 {
     unRegisterQDBusService();
-}
-
-void QDBusPanelService::connectDBusSignals()
-{
-    QDBusConnection(FREEWUBI_PANEL_BUSNAME)
-        .connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "ShowPreedit", this, SIGNAL(signal_ShowPreedit(bool)));
-    QDBusConnection(FREEWUBI_PANEL_BUSNAME)
-        .connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "ShowAux", this, SIGNAL(signal_ShowAux(bool)));
-    QDBusConnection(FREEWUBI_PANEL_BUSNAME)
-        .connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "ShowLookupTable", this, SIGNAL(signal_ShowLookupTable(bool)));
-    QDBusConnection(FREEWUBI_PANEL_BUSNAME)
-        .connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdateLookupTable", this,
-                 SIGNAL(signal_UpdateLookupTable(QStringList, QStringList, QStringList, bool, bool)));
-    QDBusConnection(FREEWUBI_PANEL_BUSNAME)
-        .connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdatePreeditCaret", this, SIGNAL(signal_UpdatePreeditCaret(int)));
-    QDBusConnection(FREEWUBI_PANEL_BUSNAME)
-        .connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdatePreeditText", this,
-                 SIGNAL(signal_UpdatePreeditText(QString, QString)));
-    QDBusConnection(FREEWUBI_PANEL_BUSNAME)
-        .connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdateAux", this, SIGNAL(signal_UpdateAux(QString, QString)));
-    QDBusConnection(FREEWUBI_PANEL_BUSNAME)
-        .connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdateSpotLocation", this,
-                 SIGNAL(signal_UpdateSpotLocation(int, int)));
-    QDBusConnection(FREEWUBI_PANEL_BUSNAME)
-        .connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "UpdateProperty", this, SIGNAL(signal_UpdateProperty(QString)));
-    QDBusConnection(FREEWUBI_PANEL_BUSNAME)
-        .connect("", "", FREEWUBI_INPUTMETHOD_SERVICENAME, "RegisterProperties", this,
-                 SIGNAL(signal_RegisterProperties(QStringList)));
 }
 
 void QDBusPanelService::unRegisterQDBusService()
@@ -56,12 +26,63 @@ void QDBusPanelService::registerQDBusService()
     }
 
     QDBusConnection::connectToBus(QDBusConnection::SessionBus, FREEWUBI_PANEL_BUSNAME)
-                        .registerObject(FREEWUBI_PANEL_OBJECTPATH, this,
-                                        QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals);
+        .registerObject(FREEWUBI_PANEL_OBJECTPATH, this,
+                        QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals);
+}
+
+void QDBusPanelService::ShowPreedit(bool show)
+{
+    emit signal_ShowPreedit(show);
+}
+
+void QDBusPanelService::ShowAux(bool show)
+{
+    emit signal_ShowAux(show);
+}
+
+void QDBusPanelService::ShowLookupTable(bool show)
+{
+    emit signal_ShowLookupTable(show);
+}
+
+void QDBusPanelService::UpdateLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev,
+                                          bool hasNext)
+{
+    emit signal_UpdateLookupTable(label, text, attr, hasPrev, hasNext);
+}
+
+void QDBusPanelService::UpdatePreeditCaret(int position)
+{
+    emit signal_UpdatePreeditCaret(position);
+}
+
+void QDBusPanelService::UpdatePreeditText(const QString &text, const QString &attr)
+{
+    emit signal_UpdatePreeditText(text, attr);
+}
+
+void QDBusPanelService::UpdateAux(const QString &text, const QString &attr)
+{
+    emit signal_UpdateAux(text, attr);
+}
+
+void QDBusPanelService::UpdateSpotLocation(int x, int y)
+{
+    emit signal_UpdateSpotLocation(x, y);
+}
+
+void QDBusPanelService::UpdateProperty(const QString &prop)
+{
+    emit signal_UpdateProperty(prop);
+}
+
+void QDBusPanelService::RegisterProperties(const QStringList &props)
+{
+    emit signal_RegisterProperties(props);
 }
 
 void QDBusPanelService::SetLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev,
-                                    bool hasNext, int cursor, int layout)
+                                       bool hasNext, int cursor, int layout)
 {
     Q_UNUSED(layout);
     emit signal_SetLookupTable(label, text, attr, hasPrev, hasNext, cursor);

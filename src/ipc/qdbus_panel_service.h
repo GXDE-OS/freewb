@@ -18,7 +18,7 @@ public:
     ~QDBusPanelService() override;
 
 Q_SIGNALS:
-    // 由 Fcitx 插件监听：Panel UI → 输入法引擎
+    // Panel UI → 输入法引擎
     Q_SCRIPTABLE void LookupTablePageDown();
     Q_SCRIPTABLE void LookupTablePageUp();
     Q_SCRIPTABLE void ReloadConfig();
@@ -28,7 +28,25 @@ Q_SIGNALS:
     Q_SCRIPTABLE void SwitchChttrans();
     Q_SCRIPTABLE void RequestNextInputMode();
 
-    // 输入法引擎信号转发：引擎 → Panel 内部 UI
+public Q_SLOTS:
+    // Panel UI → 引擎 D-Bus 方法
+    Q_SCRIPTABLE void ShowPreedit(bool show);
+    Q_SCRIPTABLE void ShowAux(bool show);
+    Q_SCRIPTABLE void ShowLookupTable(bool show);
+    Q_SCRIPTABLE void UpdateLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev,
+                                        bool hasNext);
+    Q_SCRIPTABLE void UpdatePreeditCaret(int position);
+    Q_SCRIPTABLE void UpdatePreeditText(const QString &text, const QString &attr);
+    Q_SCRIPTABLE void UpdateAux(const QString &text, const QString &attr);
+    Q_SCRIPTABLE void UpdateSpotLocation(int x, int y);
+    Q_SCRIPTABLE void UpdateProperty(const QString &prop);
+    Q_SCRIPTABLE void RegisterProperties(const QStringList &props);
+    Q_SCRIPTABLE void SetLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev,
+                                     bool hasNext, int cursor, int layout);
+    Q_SCRIPTABLE void SetSpotRect(int x, int y, int w, int h);
+
+    Q_SIGNALS:
+    // UI内部信号
     void signal_ShowPreedit(bool);
     void signal_ShowAux(bool);
     void signal_ShowLookupTable(bool);
@@ -39,20 +57,11 @@ Q_SIGNALS:
     void signal_UpdateSpotLocation(int, int);
     void signal_UpdateProperty(const QString &);
     void signal_RegisterProperties(const QStringList &);
-
-    // 引擎方法调用转发：引擎 → Panel 内部 UI
     void signal_SetSpotLocation(int, int, int, int);
     void signal_SetLookupTable(const QStringList &, const QStringList &, const QStringList &, bool, bool, int);
 
-public Q_SLOTS:
-    Q_SCRIPTABLE void SetLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev,
-                                     bool hasNext, int cursor, int layout);
-
-    Q_SCRIPTABLE void SetSpotRect(int x, int y, int w, int h);
-
 private:
     void registerQDBusService();
-    void connectDBusSignals();
     void unRegisterQDBusService();
 };
 

@@ -153,31 +153,22 @@ bool SDBusProxy::bindDBusSignalCallback(DBusSignalCallback callback)
     {
         return true;
     }
-    if (!registerPanelMatches())
-    {
-        return false;
-    }
-    if (!registerInputMethodObject())
-    {
-        clearSlots();
-        return false;
-    }
-    return true;
+    return registerPanelMatches();
 }
 
 void SDBusProxy::emitUpdateProperties(const ToolbarPropertiesPayload &payload)
 {
-    emitRegisterPropertiesSignal({toolbarPayloadToPropertyLine(payload)});
+    sendPanelRegisterProperties({toolbarPayloadToPropertyLine(payload)});
 }
 
 void SDBusProxy::emitShowToolbar()
 {
-    emitImeSignal("UpdateProperty", "s", "/Fcitx/im:Freewb");
+    sendPanelMethod("UpdateProperty", "s", "/Fcitx/im:Freewb");
 }
 
 void SDBusProxy::emitHideToolbar()
 {
-    emitImeSignal("UpdateProperty", "s", "/Fcitx/im:us");
+    sendPanelMethod("UpdateProperty", "s", "/Fcitx/im:us");
 }
 
 void SDBusProxy::emitUpdateSpotRect(const SpotRectPayload &payload)
@@ -221,27 +212,27 @@ void SDBusProxy::emitUpdateCandidate(const CandidatePayload &payload)
         FREEWB_ERROR("emitUpdateCandidate: sd_bus_send(SetLookupTable) failed: {} ({})", sendR, strerror(-sendR));
         return;
     }
-    const bool hasLookup = !payload.texts.empty();
-    emitImeSignal("ShowLookupTable", "b", hasLookup);
+    const int hasLookup = !payload.texts.empty() ? 1 : 0;
+    sendPanelMethod("ShowLookupTable", "b", hasLookup);
 }
 
 void SDBusProxy::emitUpdatePreeditText(const PreeditPayload &payload)
 {
     static const char *const kEmptyAttr = "";
-    emitImeSignal("UpdatePreeditText", "ss", payload.text.c_str(), kEmptyAttr);
-    emitImeSignal("ShowPreedit", "b", payload.show);
+    sendPanelMethod("UpdatePreeditText", "ss", payload.text.c_str(), kEmptyAttr);
+    sendPanelMethod("ShowPreedit", "b", payload.show ? 1 : 0);
 }
 
 void SDBusProxy::emitUpdatePreeditCaret(int caret)
 {
-    emitImeSignal("UpdatePreeditCaret", "i", caret);
+    sendPanelMethod("UpdatePreeditCaret", "i", caret);
 }
 
 void SDBusProxy::emitUpdateAux(const CandidateAuxPayload &payload)
 {
     static const char *const kEmptyAttr = "";
-    emitImeSignal("UpdateAux", "ss", payload.text.c_str(), kEmptyAttr);
-    emitImeSignal("ShowAux", "b", payload.show);
+    sendPanelMethod("UpdateAux", "ss", payload.text.c_str(), kEmptyAttr);
+    sendPanelMethod("ShowAux", "b", payload.show ? 1 : 0);
 }
 
 void SDBusProxy::callAddUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText)
@@ -379,28 +370,6 @@ void SDBusProxy::callQuickTableLoadOkMethod()
     callSettingsMethod("slot_dbus_quick_table_load_ok", "");
 }
 
-void SDBusProxy::emitRegisterPropertiesSignal(const std::vector<std::string> &props)
-{
-    if (!bus_ || !available_)
-    {
-        return;
-    }
-    sd_bus_message *m = nullptr;
-    if (sd_bus_message_new_signal(bus_, &m, FREEWUBI_INPUTMETHOD_OBJECTPATH, FREEWUBI_INPUTMETHOD_SERVICENAME,
-                                  "RegisterProperties") < 0)
-    {
-        return;
-    }
-    std::vector<char *> strv;
-    if (sd_bus_message_append_strv(m, makeStrv(props, strv)) < 0)
-    {
-        sd_bus_message_unref(m);
-        return;
-    }
-    sd_bus_send(bus_, m, nullptr);
-    sd_bus_message_unref(m);
-}
-
 int SDBusProxy::handlePanelSignal(sd_bus_message *m, void *userdata, sd_bus_error *)
 {
     auto *self = static_cast<SDBusProxy *>(userdata);
@@ -468,28 +437,23 @@ void SDBusProxy::sendPanelMethod(const char *member, const char *types, ...) con
     sd_bus_message_unref(m);
 }
 
-void SDBusProxy::emitImeSignal(const char *member, const char *types, ...) const
+void SDBusProxy::sendPanelRegisterProperties(const std::vector<std::string> &props) const
 {
-    if (!bus_ || !available_ || !member)
+    if (!bus_ || !available_)
     {
         return;
     }
     sd_bus_message *m = nullptr;
-    if (sd_bus_message_new_signal(bus_, &m, FREEWUBI_INPUTMETHOD_OBJECTPATH, FREEWUBI_INPUTMETHOD_SERVICENAME, member) < 0)
+    if (sd_bus_message_new_method_call(bus_, &m, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE,
+                                       "RegisterProperties") < 0)
     {
         return;
     }
-    if (types && types[0] != '\0')
+    std::vector<char *> strv;
+    if (sd_bus_message_append_strv(m, makeStrv(props, strv)) < 0)
     {
-        va_list ap;
-        va_start(ap, types);
-        const int r = sd_bus_message_appendv(m, types, ap);
-        va_end(ap);
-        if (r < 0)
-        {
-            sd_bus_message_unref(m);
-            return;
-        }
+        sd_bus_message_unref(m);
+        return;
     }
     sd_bus_send(bus_, m, nullptr);
     sd_bus_message_unref(m);
@@ -571,16 +535,6 @@ bool SDBusProxy::registerPanelMatches()
     const int r = sd_bus_match_signal(bus_, &panelSignalSlot_, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH,
                                       FREEWUBI_PANEL_INTERFACE, nullptr, &SDBusProxy::handlePanelSignal, this);
     return r >= 0;
-}
-
-bool SDBusProxy::registerInputMethodObject()
-{
-    if (!bus_)
-    {
-        return false;
-    }
-    const int r = sd_bus_request_name(bus_, FREEWUBI_INPUTMETHOD_SERVICENAME, 0);
-    return r >= 0 || r == -EALREADY;
 }
 
 void SDBusProxy::clearSlots()

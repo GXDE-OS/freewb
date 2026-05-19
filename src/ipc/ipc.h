@@ -1,9 +1,5 @@
-#ifndef IPC_IPC_H
-#define IPC_IPC_H
-
-/***************　极点五笔输入法插件dbus服务名　*****************/
-#define FREEWUBI_INPUTMETHOD_SERVICENAME "org.ukui.freewubi.inputmethod"
-#define FREEWUBI_INPUTMETHOD_OBJECTPATH "/org/ukui/freewubi/inputmethod"
+#ifndef IPC_H
+#define IPC_H
 
 /***************　极点五笔输入法UI dbus服务名　*****************/
 #define FREEWUBI_PANEL_SERVICENAME "org.ukui.freewubi.panel"
