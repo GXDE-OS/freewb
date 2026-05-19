@@ -5,6 +5,9 @@
 #include <unordered_map>
 #include <vector>
 
+#include "special.h"
+#include "types.h"
+
 namespace freewb
 {
 class UserDict
@@ -17,7 +20,7 @@ public:
     bool contains(const std::string &code) const;
     /** 某词条编码 key 以 @p prefix 为前缀或等于 prefix（超长拆码 bhasMatch）。 */
     bool hasEntryStartingWithPrefix(const std::string &prefix) const;
-    const std::vector<std::string> &lookup(const std::string &code) const;
+    void appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const;
 
 private:
     std::string filePath() const;
@@ -27,7 +30,7 @@ private:
 private:
     std::string filePath_;
     std::unordered_map<std::string, std::vector<std::string>> entries_;
-    std::vector<std::string> emptyTexts_;
+    Special special_;
 };
 } // namespace freewb
 

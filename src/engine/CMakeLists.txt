@@ -1,6 +1,6 @@
 message(STATUS "Building engine module")
 
-add_library(${PROJECT_NAME}-engine-wbzx SHARED wbzx.cpp userdict.cpp common.cpp)
+add_library(${PROJECT_NAME}-engine-wbzx SHARED wbzx.cpp userdict.cpp common.cpp special.cpp)
 target_include_directories(${PROJECT_NAME}-engine-wbzx PUBLIC ${CMAKE_SOURCE_DIR}/src/engine)
 target_link_libraries(${PROJECT_NAME}-engine-wbzx PUBLIC ${PROJECT_NAME}-utils)
 install(TARGETS ${PROJECT_NAME}-engine-wbzx DESTINATION ${FREEWB_INSTALL_LIBDIR})

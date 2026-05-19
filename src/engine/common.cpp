@@ -334,4 +334,54 @@ std::size_t MbDictionaryTable::utf8CharCount(const std::string &s)
     return n;
 }
 
+std::string MbDictionaryTable::utf8CharAt(const std::string &s, std::size_t index)
+{
+    for (std::size_t i = 0, n = 0; i < s.size();)
+    {
+        const std::size_t start = i;
+        const unsigned char c = static_cast<unsigned char>(s[i]);
+        if (c < 0x80U)
+        {
+            ++i;
+        }
+        else if ((c >> 5U) == 6U)
+        {
+            i += 2;
+        }
+        else if ((c >> 4U) == 14U)
+        {
+            i += 3;
+        }
+        else if ((c >> 3U) == 30U)
+        {
+            i += 4;
+        }
+        else
+        {
+            ++i;
+            continue;
+        }
+        if (n == index)
+        {
+            return s.substr(start, i - start);
+        }
+        ++n;
+    }
+    return {};
+}
+
+std::string MbDictionaryTable::utf8CharAtFromEnd(const std::string &s, std::size_t which)
+{
+    if (which == 0)
+    {
+        return {};
+    }
+    const std::size_t len = utf8CharCount(s);
+    if (which > len)
+    {
+        return {};
+    }
+    return utf8CharAt(s, len - which);
+}
+
 } // namespace freewb

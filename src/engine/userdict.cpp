@@ -2,6 +2,7 @@
 
 #include <sys/stat.h>
 
+#include <algorithm>
 #include <fstream>
 
 #include "utils.h"
@@ -64,14 +65,44 @@ bool UserDict::hasEntryStartingWithPrefix(const std::string &prefix) const
     return false;
 }
 
-const std::vector<std::string> &UserDict::lookup(const std::string &code) const
+void UserDict::appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const
 {
-    auto it = entries_.find(code);
-    if (it == entries_.end())
+    if (prefix.empty())
     {
-        return emptyTexts_;
+        return;
     }
-    return it->second;
+
+    std::vector<std::string> keys;
+    keys.reserve(entries_.size());
+    for (const auto &kv : entries_)
+    {
+        const std::string &key = kv.first;
+        if (key.size() < prefix.size() || key.compare(0, prefix.size(), prefix) != 0)
+        {
+            continue;
+        }
+        keys.push_back(key);
+    }
+    std::sort(keys.begin(), keys.end());
+    for (const std::string &key : keys)
+    {
+        const auto it = entries_.find(key);
+        if (it == entries_.end())
+        {
+            continue;
+        }
+        for (const std::string &text : it->second)
+        {
+            if (text.empty())
+            {
+                continue;
+            }
+            std::string display = text;
+            special_.format(display);
+            out.texts.push_back(std::move(display));
+            out.fullCodes.push_back(key);
+        }
+    }
 }
 
 std::string UserDict::filePath() const

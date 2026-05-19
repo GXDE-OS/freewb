@@ -32,6 +32,8 @@ public:
     bool isPreeditOverflow(const std::string &full) const override;
     /** 主五笔码表单字 UTF-8 → 首选码；无索引或查无则空串。供拼音 [xxxx] 反查等。 */
     std::string primaryWubiCodeForSingleHanziUtf8(const std::string &hz) const;
+    /** 按码表造词规则为 UTF-8 词组计算五笔编码；失败或非五笔引擎返回空串。 */
+    std::string calculateWubiPhraseCode(const std::string &phrase) const;
 
 private:
     void clearMbLoadState();

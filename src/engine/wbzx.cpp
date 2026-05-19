@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <fstream>
+#include <unordered_set>
 #include <vector>
 
 #include "log.h"
@@ -47,7 +48,10 @@ void WbzxEngine::fillCandidatePayloadPrompts(const std::string &preedit, Candida
             (i < payload.fullCodes.size() && !payload.fullCodes[i].empty()) ? payload.fullCodes[i] : preedit;
         if (fullCode.size() > rawLen)
         {
-            payload.prompts[i].assign(fullCode, rawLen, std::string::npos);
+            const std::size_t suffixLen = fullCode.size() - rawLen;
+            payload.prompts[i].reserve(suffixLen + 1);
+            payload.prompts[i].push_back(' ');
+            payload.prompts[i].append(fullCode, rawLen, std::string::npos);
         }
     }
 }
@@ -72,14 +76,7 @@ void WbzxEngine::putKey(const char *strCode)
     }
 
     const std::string prefix(strCode);
-    if (userDict_.contains(prefix))
-    {
-        const std::vector<std::string> &userTexts = userDict_.lookup(prefix);
-        result_.texts.insert(result_.texts.end(), userTexts.begin(), userTexts.end());
-        result_.fullCodes.insert(result_.fullCodes.end(), userTexts.size(), std::string{});
-        fillCandidatePayloadPrompts(prefix, result_);
-        return;
-    }
+    userDict_.appendCandidatesForPrefix(prefix, result_);
     mbTable_.appendCandidatesForPrefix(prefix, result_);
     fillCandidatePayloadPrompts(prefix, result_);
 }
@@ -139,6 +136,89 @@ std::string WbzxEngine::primaryWubiCodeForSingleHanziUtf8(const std::string &hz)
         return {};
     }
     return it->second;
+}
+
+std::string WbzxEngine::calculateWubiPhraseCode(const std::string &phrase) const
+{
+    if (phrase.empty() || mbTable_.phraseEncodeRules().empty())
+    {
+        return {};
+    }
+
+    const uint32_t codeLength = mbTable_.codeLength();
+    if (codeLength == 0)
+    {
+        return {};
+    }
+
+    const std::size_t charCount = MbDictionaryTable::utf8CharCount(phrase);
+    if (charCount < 2)
+    {
+        return {};
+    }
+
+    uint8_t ruleFlag = 0;
+    uint8_t ruleWords = 0;
+    if (charCount >= codeLength)
+    {
+        ruleWords = static_cast<uint8_t>(codeLength);
+        ruleFlag = 1;
+    }
+    else
+    {
+        ruleWords = static_cast<uint8_t>(charCount);
+        ruleFlag = 0;
+    }
+
+    const EngineRuleBlock *block = nullptr;
+    for (const EngineRuleBlock &candidate : mbTable_.phraseEncodeRules())
+    {
+        if (candidate.iWords == ruleWords && candidate.iFlag == ruleFlag)
+        {
+            block = &candidate;
+            break;
+        }
+    }
+    if (block == nullptr || block->cells.size() < codeLength)
+    {
+        return {};
+    }
+
+    std::string code;
+    code.reserve(codeLength);
+    for (uint32_t k = 0; k < codeLength; ++k)
+    {
+        const EngineRuleCell &cell = block->cells[k];
+        std::string hz;
+        if (cell.iFlag != 0)
+        {
+            if (cell.iWhich == 0)
+            {
+                return {};
+            }
+            hz = MbDictionaryTable::utf8CharAt(phrase, static_cast<std::size_t>(cell.iWhich - 1));
+        }
+        else
+        {
+            if (cell.iWhich == 0 || charCount < cell.iWhich)
+            {
+                return {};
+            }
+            hz = MbDictionaryTable::utf8CharAtFromEnd(phrase, cell.iWhich);
+        }
+        if (hz.empty())
+        {
+            return {};
+        }
+
+        const std::string singleCode = primaryWubiCodeForSingleHanziUtf8(hz);
+        if (singleCode.empty() || cell.iIndex == 0 || singleCode.size() < cell.iIndex)
+        {
+            return {};
+        }
+        code.push_back(singleCode[cell.iIndex - 1]);
+    }
+    return code;
 }
 
 void WbzxEngine::loadDictionary()

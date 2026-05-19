@@ -18,6 +18,10 @@ class MbDictionaryTable
 public:
     /** UTF-8 字节串中的字符数（按首字节判定宽度；非法序列按单字节步进）。 */
     static std::size_t utf8CharCount(const std::string &s);
+    /** 取 UTF-8 串中从 0 起第 @p index 个字符（越界返回空串）。 */
+    static std::string utf8CharAt(const std::string &s, std::size_t index);
+    /** 取 UTF-8 串中从末尾起第 @p which 个字符（1 表示最后一字）。 */
+    static std::string utf8CharAtFromEnd(const std::string &s, std::size_t which);
 
     void clear();
     bool loadFromStream(std::ifstream &in, const char *linePrefix = nullptr);
@@ -32,6 +36,9 @@ public:
     {
         return singleChardict_;
     }
+
+    const std::vector<EngineRuleBlock> &phraseEncodeRules() const { return rules_; }
+    uint32_t codeLength() const { return static_cast<uint32_t>(iCodeLength_); }
 
 private:
     static void collectCandidateItemsForPrefix(const std::string &prefix,
