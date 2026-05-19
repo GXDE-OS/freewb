@@ -27,7 +27,8 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/src/../utils
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/src/fakekey
-    ${PROJECT_BINARY_DIR} )
+    ${PROJECT_BINARY_DIR}
+    ${PROJECT_SOURCE_DIR}/src/ipc )
 
 
 #链接外部动态库
@@ -44,7 +45,8 @@ target_link_libraries(${PROJECT_NAME}-panel PRIVATE
     Qt${QT_VERSION_MAJOR}::Multimedia
     Qt${QT_VERSION_MAJOR}::DBus
     ${EXTERN_LIBS}
-    freewb-utils
+    ${PROJECT_NAME}-utils
+    ${PROJECT_NAME}-ipc
     )
 
 

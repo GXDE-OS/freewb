@@ -12,7 +12,7 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
     m_x11EventMonitor = new X11EventMonitor(this);
     m_x11EventMonitor->start();
 
-    m_kimAgent = new KimAgent(this); // 创建与fcitx通信的代理对象
+    m_panelDBusService = new QDBusPanelService(this);
 
     m_virtualKeyboard = new Keyboard;
     m_toolbar = new ToolbarWin;
@@ -30,26 +30,26 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
     // org.fcitx.FcitxConfigGtk3
     // org.freedesktop.Aplication
     // fcitx通信代理发出的信号
-    // m_kimAgent --> m_inputWin
-    connect(m_kimAgent, &KimAgent::signal_ShowPreedit, m_inputWin, &InputWin::slot_kim_ShowPreedit);
-    connect(m_kimAgent, &KimAgent::signal_ShowAux, m_inputWin, &InputWin::slot_kim_ShowAux);
-    connect(m_kimAgent, &KimAgent::signal_ShowLookupTable, m_inputWin, &InputWin::slot_kim_ShowLookupTable);
-    connect(m_kimAgent, &KimAgent::signal_UpdateLookupTable, m_inputWin, &InputWin::slot_kim_UpdateLookupTable);
-    connect(m_kimAgent, &KimAgent::signal_SetLookupTable, m_inputWin, &InputWin::slot_kim_SetLookupTable);
-    connect(m_kimAgent, &KimAgent::signal_UpdatePreeditCaret, m_inputWin, &InputWin::slot_kim_UpdatePreeditCaret);
-    connect(m_kimAgent, &KimAgent::signal_UpdatePreeditText, m_inputWin, &InputWin::slot_kim_UpdatePreeditText);
-    connect(m_kimAgent, &KimAgent::signal_UpdateAux, m_inputWin, &InputWin::slot_kim_UpdateAux);
-    connect(m_kimAgent, &KimAgent::signal_UpdateSpotLocation, m_inputWin, &InputWin::slot_kim_UpdateSpotLocation);
-    connect(m_kimAgent, &KimAgent::signal_SetSpotLocation, m_inputWin, &InputWin::slot_kim_SetSpotLocation);
-    // m_kimAgent --> m_toolbar
-    connect(m_kimAgent, &KimAgent::signal_UpdateProperty, m_toolbar, &ToolbarWin::slot_kim_UpdateProperty);
-    connect(m_kimAgent, &KimAgent::signal_RegisterProperties, m_toolbar, &ToolbarWin::slot_kim_RegisterProperties);
+    // m_panelDBusService --> m_inputWin
+    connect(m_panelDBusService, &QDBusPanelService::signal_ShowPreedit, m_inputWin, &InputWin::slot_kim_ShowPreedit);
+    connect(m_panelDBusService, &QDBusPanelService::signal_ShowAux, m_inputWin, &InputWin::slot_kim_ShowAux);
+    connect(m_panelDBusService, &QDBusPanelService::signal_ShowLookupTable, m_inputWin, &InputWin::slot_kim_ShowLookupTable);
+    connect(m_panelDBusService, &QDBusPanelService::signal_UpdateLookupTable, m_inputWin, &InputWin::slot_kim_UpdateLookupTable);
+    connect(m_panelDBusService, &QDBusPanelService::signal_SetLookupTable, m_inputWin, &InputWin::slot_kim_SetLookupTable);
+    connect(m_panelDBusService, &QDBusPanelService::signal_UpdatePreeditCaret, m_inputWin, &InputWin::slot_kim_UpdatePreeditCaret);
+    connect(m_panelDBusService, &QDBusPanelService::signal_UpdatePreeditText, m_inputWin, &InputWin::slot_kim_UpdatePreeditText);
+    connect(m_panelDBusService, &QDBusPanelService::signal_UpdateAux, m_inputWin, &InputWin::slot_kim_UpdateAux);
+    connect(m_panelDBusService, &QDBusPanelService::signal_UpdateSpotLocation, m_inputWin, &InputWin::slot_kim_UpdateSpotLocation);
+    connect(m_panelDBusService, &QDBusPanelService::signal_SetSpotLocation, m_inputWin, &InputWin::slot_kim_SetSpotLocation);
+    // m_panelDBusService --> m_toolbar
+    connect(m_panelDBusService, &QDBusPanelService::signal_UpdateProperty, m_toolbar, &ToolbarWin::slot_kim_UpdateProperty);
+    connect(m_panelDBusService, &QDBusPanelService::signal_RegisterProperties, m_toolbar, &ToolbarWin::slot_kim_RegisterProperties);
 
     // 输入面板发送的信号
-    // m_inputWin --> m_kimAgent
-    connect(m_inputWin, &InputWin::signal_candidate_select, m_kimAgent, &KimAgent::SelectCandidate);
-    connect(m_inputWin, &InputWin::signal_candidate_page_up, m_kimAgent, &KimAgent::LookupTablePageUp);
-    connect(m_inputWin, &InputWin::signal_candidate_page_down, m_kimAgent, &KimAgent::LookupTablePageDown);
+    // m_inputWin --> m_panelDBusService
+    connect(m_inputWin, &InputWin::signal_candidate_select, m_panelDBusService, &QDBusPanelService::SelectCandidate);
+    connect(m_inputWin, &InputWin::signal_candidate_page_up, m_panelDBusService, &QDBusPanelService::LookupTablePageUp);
+    connect(m_inputWin, &InputWin::signal_candidate_page_down, m_panelDBusService, &QDBusPanelService::LookupTablePageDown);
     // m_inputWin --> m_toolbar
     connect(m_inputWin, &InputWin::signal_btn_charWidth_clicked, m_toolbar, &ToolbarWin::on_btnCharWidth_clicked);
     connect(m_inputWin, &InputWin::signal_btn_mark_clicked, m_toolbar, &ToolbarWin::on_btnMark_clicked);
@@ -57,12 +57,12 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
     connect(m_inputWin, &InputWin::signal_open_context_menu, m_contextmenu, &ContextMenu::slot_show_context_menu);
 
     // 工具条发送的信号
-    // m_toolbar --> m_kimAgent
-    connect(m_toolbar, &ToolbarWin::signal_request_next_input_mode, m_kimAgent, &KimAgent::RequestNextInputMode);
-    connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_char_width, m_kimAgent, &KimAgent::SwitchFullWidth);
-    connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_mark, m_kimAgent, &KimAgent::SwitchPunctuation);
-    connect(m_toolbar, &ToolbarWin::signal_switch_chttrans, m_kimAgent, &KimAgent::SwitchChttrans);
-    connect(m_toolbar, &ToolbarWin::signal_switch_char_set, m_kimAgent, &KimAgent::ReloadConfig);
+    // m_toolbar --> m_panelDBusService
+    connect(m_toolbar, &ToolbarWin::signal_request_next_input_mode, m_panelDBusService, &QDBusPanelService::RequestNextInputMode);
+    connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_char_width, m_panelDBusService, &QDBusPanelService::SwitchFullWidth);
+    connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_mark, m_panelDBusService, &QDBusPanelService::SwitchPunctuation);
+    connect(m_toolbar, &ToolbarWin::signal_switch_chttrans, m_panelDBusService, &QDBusPanelService::SwitchChttrans);
+    connect(m_toolbar, &ToolbarWin::signal_switch_char_set, m_panelDBusService, &QDBusPanelService::ReloadConfig);
 
     // m_toolbar --> m_settingWin
     connect(m_toolbar, &ToolbarWin::signal_open_setting_win, m_settingWin, &SettingWin::slot_open_win);
@@ -79,14 +79,14 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
     // m_toolbar --> m_dictQueryWin
     connect(m_toolbar, &ToolbarWin::signal_open_dict_query_win, m_dictQueryWin, &DictQueryWin::slot_open_win);
 
-    // m_virtualKeyboard --> m_kimAgent
-    connect(m_virtualKeyboard, &Keyboard::signal_vk_flg_changed, m_kimAgent, &KimAgent::ReloadConfig);
+    // m_virtualKeyboard --> m_panelDBusService
+    connect(m_virtualKeyboard, &Keyboard::signal_vk_flg_changed, m_panelDBusService, &QDBusPanelService::ReloadConfig);
     // m_virtualKeyboard --> m_toolbar
     connect(m_virtualKeyboard, &Keyboard::signal_kb_caps_changed, m_toolbar, &ToolbarWin::slot_kb_caps_changed);
 
     // 右键菜单发出的信号
-    // m_contextmenu --> m_kimAgent
-    connect(m_contextmenu, &ContextMenu::signal_ime_table_changed, m_kimAgent, &KimAgent::ReloadConfig);
+    // m_contextmenu --> m_panelDBusService
+    connect(m_contextmenu, &ContextMenu::signal_ime_table_changed, m_panelDBusService, &QDBusPanelService::ReloadConfig);
     // m_contextmenu --> m_lexicontoolWin
     connect(m_contextmenu, &ContextMenu::signal_open_lexicon_tool, m_lexicontoolWin, &LexiconToolWin::open_win);
     // m_contextmenu --> m_settingWin
@@ -114,14 +114,14 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
     connect(m_x11EventMonitor, &X11EventMonitor::signal_key_clicked, m_virtualKeyboard, &Keyboard::slot_key_clicked);
 
     // 造词对话框发送的信号
-    // m_usrGenWordDialog --> m_kimAgent
-    connect(m_usrGenWordDialog, &UsrGenWordDialog::signal_user_word_changed, m_kimAgent, &KimAgent::ReloadConfig);
+    // m_usrGenWordDialog --> m_panelDBusService
+    connect(m_usrGenWordDialog, &UsrGenWordDialog::signal_user_word_changed, m_panelDBusService, &QDBusPanelService::ReloadConfig);
 
     // 用户手动编辑文本文件改变发送的信号
-    // m_textEditWin --> m_kimAgent
-    connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_kimAgent, &KimAgent::ReloadConfig);
-    connect(m_textEditWin, &TextEditWin::signal_quickTable_file_saved, m_kimAgent, &KimAgent::ReloadConfig);
-    connect(m_textEditWin, &TextEditWin::signal_imTable_file_changed, m_kimAgent, &KimAgent::ReloadConfig);
+    // m_textEditWin --> m_panelDBusService
+    connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_panelDBusService, &QDBusPanelService::ReloadConfig);
+    connect(m_textEditWin, &TextEditWin::signal_quickTable_file_saved, m_panelDBusService, &QDBusPanelService::ReloadConfig);
+    connect(m_textEditWin, &TextEditWin::signal_imTable_file_changed, m_panelDBusService, &QDBusPanelService::ReloadConfig);
     // m_textEditWin --> m_toolbar
     connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_toolbar, &ToolbarWin::slot_load_setting_data);
     // m_textEditWin --> m_virtualKeyboard
@@ -133,15 +133,15 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
             &UsrGenWordDialog::slot_userWord_file_saved);
 
     // 词典工具箱发送的信号
-    // m_lexicontoolWin --> m_kimAgent
-    connect(m_lexicontoolWin, &LexiconToolWin::signal_user_word_file_changed, m_kimAgent, &KimAgent::ReloadConfig);
+    // m_lexicontoolWin --> m_panelDBusService
+    connect(m_lexicontoolWin, &LexiconToolWin::signal_user_word_file_changed, m_panelDBusService, &QDBusPanelService::ReloadConfig);
 
     // 备份窗口发送的信号
-    // m_backupDialog --> m_kimAgent
-    connect(m_backupDialog, &BackupDialog::signal_restore_lexicon_and_settings_ok, m_kimAgent, &KimAgent::ReloadConfig);
+    // m_backupDialog --> m_panelDBusService
+    connect(m_backupDialog, &BackupDialog::signal_restore_lexicon_and_settings_ok, m_panelDBusService, &QDBusPanelService::ReloadConfig);
 
     // 配置数据改变发送的信号
-    connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_fcitx, m_kimAgent, &KimAgent::ReloadConfig);
+    connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_fcitx, m_panelDBusService, &QDBusPanelService::ReloadConfig);
     connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_toolbar,
             &ToolbarWin::slot_load_setting_data);
     connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_virtualKeyboard,
@@ -372,7 +372,7 @@ void MainProgram::slot_dbus_switch_lexicon()
             settings::instance().set_pinyinTable(lexicon + "/attach.mb");
             settings::instance().set_imeTableChanged(1);
             m_contextmenu->update_lexicon_checked_ico();
-            m_kimAgent->ReloadConfig();
+            m_panelDBusService->ReloadConfig();
             break;
         }
     }

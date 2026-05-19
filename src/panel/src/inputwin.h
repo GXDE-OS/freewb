@@ -26,7 +26,6 @@
 #include "candidateitem.h"
 #include "contextmenu.h"
 #include "dictquery.h"
-#include "kimagent.h"
 #include "settingshelper.h"
 
 namespace Ui

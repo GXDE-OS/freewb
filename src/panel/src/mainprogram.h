@@ -27,7 +27,7 @@
 #include "dictquerywin.h"
 #include "inputwin.h"
 #include "keyboard.h"
-#include "kimagent.h"
+#include "qdbus_panel.h"
 #include "lexicontoolwin.h"
 #include "settingshelper.h"
 #include "settingwin.h"
@@ -35,6 +35,8 @@
 #include "toolbarwin.h"
 #include "usrgenworddialog.h"
 #include "x11eventmonitor.h"
+
+#include "ipc.h"
 
 class MainProgram : public QObject
 {
@@ -88,7 +90,7 @@ protected slots:
 private:
     X11EventMonitor *m_x11EventMonitor; // X11系统事件监视器
 
-    KimAgent *m_kimAgent; // 跟FCITX通信的代理类
+    QDBusPanelService *m_panelDBusService; // 与输入法引擎的 D-Bus 桥接
 
     ContextMenu *m_contextmenu;           // 桌面右键菜单
     ToolbarWin *m_toolbar;                // 桌面工具条
