@@ -15,9 +15,6 @@ public:
     explicit QDBusSettingsService(QObject *parent = nullptr);
     ~QDBusSettingsService() override;
 
-    void start();
-    void stop();
-
 Q_SIGNALS:
     void signal_switch_input_mode(const QString &inputMode);
     void signal_dict_query(const QString &text);

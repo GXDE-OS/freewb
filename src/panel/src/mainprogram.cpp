@@ -15,7 +15,6 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
 
     m_panelDBusService = new QDBusPanelService(this);
     m_settingsDBusService = new QDBusSettingsService(this);
-    m_settingsDBusService->start();
 
     m_virtualKeyboard = new Keyboard;
     m_toolbar = new ToolbarWin;

@@ -5,19 +5,12 @@
 #include <QDBusConnection>
 #include <QDebug>
 
-QDBusSettingsService::QDBusSettingsService(QObject *parent) : QObject(parent) {}
-
-QDBusSettingsService::~QDBusSettingsService()
-{
-    stop();
-}
-
-void QDBusSettingsService::start()
+QDBusSettingsService::QDBusSettingsService(QObject *parent) : QObject(parent) 
 {
     registerQDBusService();
 }
 
-void QDBusSettingsService::stop()
+QDBusSettingsService::~QDBusSettingsService()
 {
     unRegisterQDBusService();
 }
