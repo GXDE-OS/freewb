@@ -60,6 +60,32 @@ void MainProgram::connectPanelDBus()
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_UpdateProperty, m_toolbar, &ToolbarWin::slot_kim_UpdateProperty);
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_RegisterProperties, m_toolbar, &ToolbarWin::slot_kim_RegisterProperties);
 
+    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_switch_input_mode, this,
+            [this](const QString &inputMode) {
+                if (inputMode == ToolbarWin::get_input_mode())
+                {
+                    return;
+                }
+                m_virtualKeyboard->switch_caps_flg(0);
+                ToolbarWin::set_input_mode(inputMode);
+                m_toolbar->slot_update_input_mode_ico();
+            });
+    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_switch_char_set, m_toolbar, &ToolbarWin::switch_char_set);
+    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_switch_simp_or_trad, m_toolbar, [this]() {
+        m_toolbar->set_traditional_mode(!ToolbarWin::is_traditional_mode());
+    });
+    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_set_charWidth_and_markMode, this,
+            [this](int charWidth, int markMode) {
+                if (charWidth)
+                {
+                    m_toolbar->update_char_width_mode_ico(static_cast<CharWidthMode>(0));
+                }
+                if (markMode)
+                {
+                    m_toolbar->update_mark_mode_ico(static_cast<MarkMode>(0));
+                }
+            });
+
     connect(m_inputWin, &InputWin::signal_candidate_select, m_panelDBusService, &freewb::ipc::QDBusPanelService::SelectCandidate);
     connect(m_inputWin, &InputWin::signal_candidate_page_up, m_panelDBusService, &freewb::ipc::QDBusPanelService::LookupTablePageUp);
     connect(m_inputWin, &InputWin::signal_candidate_page_down, m_panelDBusService, &freewb::ipc::QDBusPanelService::LookupTablePageDown);

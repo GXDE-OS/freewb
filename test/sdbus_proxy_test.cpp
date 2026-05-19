@@ -181,19 +181,19 @@ void handleCommand(DemoState &s, const std::string &cmd)
         else if (action == "del" && tokens.size() >= 5)
             proxy.callDeleteUsrParseMethod(toInt(tokens[2]), tokens[4], tokens[3]);
         else if (action == "switch_input_mode" && tokens.size() >= 3)
-            proxy.callSwitchInputModeMethod(tokens[2]);
+            proxy.callPanelSwitchInputModeMethod(tokens[2]);
         else if (action == "switch_skin")
             proxy.callSwitchSkinMethod();
         else if (action == "switch_vk" && tokens.size() >= 3)
             proxy.callSwitchVirtualKeyboardModeMethod(toInt(tokens[2]));
         else if (action == "switch_charset")
-            proxy.callSwitchCharSetMethod();
+            proxy.callPanelSwitchCharSetMethod();
         else if (action == "switch_recode_proof")
             proxy.callSwitchRecodeProofMethod();
         else if (action == "switch_uncommon" && tokens.size() >= 4)
             proxy.callSwitchUncommonParseStateMethod(tokens[2], toInt(tokens[3]));
         else if (action == "switch_chttrans")
-            proxy.callSwitchChttransMethod();
+            proxy.callPanelSwitchChttransMethod();
         else if (action == "open_sys_conf")
             proxy.callOpenUiSettingMethod();
         else if (action == "show_version")
@@ -216,8 +216,8 @@ void handleCommand(DemoState &s, const std::string &cmd)
             proxy.callSwitchTableMethod();
         else if (action == "set_char_width")
         {
-            proxy.callSwitchCharWidthModeMethod();
-            proxy.callSwitchPuncModeMethod();
+            proxy.callPanelSwitchCharWidthModeMethod();
+            proxy.callPanelSwitchPuncModeMethod();
         }
         else if (action == "clipboard")
         {
@@ -329,7 +329,7 @@ void handleCommand(DemoState &s, const std::string &cmd)
     {
         // settings no-arg methods smoke test
         proxy.callSwitchSkinMethod();
-        proxy.callSwitchCharSetMethod();
+        proxy.callPanelSwitchCharSetMethod();
         proxy.callOpenUiSettingMethod();
         proxy.callShowVersionInfoMethod();
         proxy.callOpenProfessionalSettingMethod();
@@ -350,13 +350,13 @@ void handleCommand(DemoState &s, const std::string &cmd)
         proxy.callAddUsrParseMethod(0, "cs", u8"\u6d4b\u8bd5\u8bcd");
         proxy.callDeleteUsrParseMethod(0, "cs", u8"\u6d4b\u8bd5\u8bcd");
         proxy.callDictQueryMethod(u8"\u6d4b\u8bd5");
-        proxy.callSwitchInputModeMethod("engine:wbpy");
+        proxy.callPanelSwitchInputModeMethod("engine:wbpy");
         proxy.callSwitchVirtualKeyboardModeMethod(0);
         proxy.callSwitchRecodeProofMethod();
         proxy.callSwitchUncommonParseStateMethod(u8"\u6d4b\u8bd5\u8bcd", 1);
-        proxy.callSwitchChttransMethod();
-        proxy.callSwitchCharWidthModeMethod();
-        proxy.callSwitchPuncModeMethod();
+        proxy.callPanelSwitchChttransMethod();
+        proxy.callPanelSwitchCharWidthModeMethod();
+        proxy.callPanelSwitchPuncModeMethod();
         FREEWB_WARN("cmd=8 settings arg methods sent");
         std::cout << "settings arg methods sent\n";
     }

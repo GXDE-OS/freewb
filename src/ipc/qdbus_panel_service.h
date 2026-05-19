@@ -48,6 +48,11 @@ public Q_SLOTS:
                                      bool hasNext, int cursor, int layout);
     Q_SCRIPTABLE void SetSpotRect(int x, int y, int w, int h);
 
+    Q_SCRIPTABLE void SwitchInputMode(const QString &inputMode);
+    Q_SCRIPTABLE void SwitchCharSet();
+    Q_SCRIPTABLE void SwitchSimpOrTrad();
+    Q_SCRIPTABLE void SetCharWidthAndMarkMode(int charWidth, int markMode);
+
     Q_SIGNALS:
     // UI内部信号
     void signal_ShowPreedit(bool);
@@ -62,6 +67,10 @@ public Q_SLOTS:
     void signal_RegisterProperties(const QStringList &);
     void signal_SetSpotLocation(int, int, int, int);
     void signal_SetLookupTable(const QStringList &, const QStringList &, const QStringList &, bool, bool, int);
+    void signal_switch_input_mode(const QString &inputMode);
+    void signal_switch_char_set();
+    void signal_switch_simp_or_trad();
+    void signal_set_charWidth_and_markMode(int charWidth, int markMode);
 
 private:
     void registerQDBusService();

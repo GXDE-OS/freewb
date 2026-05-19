@@ -250,9 +250,9 @@ void SDBusProxy::callDictQueryMethod(const std::string &wordText)
     callSettingsMethod("slot_dbus_dict_query", "s", wordText.c_str());
 }
 
-void SDBusProxy::callSwitchInputModeMethod(const std::string &inputMode)
+void SDBusProxy::callPanelSwitchInputModeMethod(const std::string &inputMode)
 {
-    callSettingsMethod("slot_switch_input_mode", "s", inputMode.c_str());
+    sendPanelMethod("SwitchInputMode", "s", inputMode.c_str());
 }
 
 void SDBusProxy::callSwitchSkinMethod()
@@ -265,9 +265,9 @@ void SDBusProxy::callSwitchVirtualKeyboardModeMethod(int flg)
     callSettingsMethod("slot_dbus_switch_vk", "i", flg);
 }
 
-void SDBusProxy::callSwitchCharSetMethod()
+void SDBusProxy::callPanelSwitchCharSetMethod()
 {
-    callSettingsMethod("slot_dbus_switch_char_set", "");
+    sendPanelMethod("SwitchCharSet", "");
 }
 
 void SDBusProxy::callSwitchRecodeProofMethod()
@@ -280,9 +280,9 @@ void SDBusProxy::callSwitchUncommonParseStateMethod(const std::string &wordText,
     callSettingsMethod("slot_dbus_word_freq_switch_ok", "is", flg, wordText.c_str());
 }
 
-void SDBusProxy::callSwitchChttransMethod()
+void SDBusProxy::callPanelSwitchChttransMethod()
 {
-    callSettingsMethod("slot_dbus_switch_simp_or_trad", "");
+    sendPanelMethod("SwitchSimpOrTrad", "");
 }
 
 void SDBusProxy::callOpenUiSettingMethod()
@@ -335,14 +335,14 @@ void SDBusProxy::callSwitchTableMethod()
     callSettingsMethod("slot_dbus_switch_lexicon", "");
 }
 
-void SDBusProxy::callSwitchCharWidthModeMethod()
+void SDBusProxy::callPanelSwitchCharWidthModeMethod()
 {
-    callSettingsMethod("slot_dbus_set_charWidth_and_markMode", "ii", 0, 0);
+    sendPanelMethod("SetCharWidthAndMarkMode", "ii", 1, 0);
 }
 
-void SDBusProxy::callSwitchPuncModeMethod()
+void SDBusProxy::callPanelSwitchPuncModeMethod()
 {
-    callSettingsMethod("slot_dbus_set_charWidth_and_markMode", "ii", 0, 0);
+    sendPanelMethod("SetCharWidthAndMarkMode", "ii", 0, 1);
 }
 
 std::string SDBusProxy::callGetClipboardMethod()
@@ -350,7 +350,7 @@ std::string SDBusProxy::callGetClipboardMethod()
     return callSettingsMethodReplyString("slot_dbus_get_clipboard_text");
 }
 
-void SDBusProxy::callToggleCapsStateMethod()
+void SDBusProxy::callPanelToggleCapsStateMethod()
 {
     callSettingsMethod("slot_dbus_switch_caps_state", "");
 }

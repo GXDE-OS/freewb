@@ -60,6 +60,37 @@ public:
      */
     void callPanelUpdateAux(const CandidateAuxPayload &payload) override;
 
+    /**
+     * @brief 按输入模式切换输入法。
+     * @param inputMode 输入模式字符串（如 "engine:wbzx"）。
+     */
+     void callPanelSwitchInputModeMethod(const std::string &inputMode);
+
+    /** @brief 切换字符集（GB/GBK）。 */
+    void callPanelSwitchCharSetMethod();
+
+    /**
+     * @brief 切换简繁体输出模式。
+     * @param flg 0-简体，1-繁体。
+    */
+     void callPanelSwitchChttransMethod();
+
+    /**
+     * @brief 切换全角半角
+     * @param flg 0-不切换字符宽度，非0-切换一次字符宽度（全角/半角）。
+     */
+    void callPanelSwitchCharWidthModeMethod();
+
+    /**
+     * @brief 切换中英文标点
+     * @param flg 0-不切换标点模式，非0-切换一次标点模式（中/英文标点）。
+     */
+    void callPanelSwitchPuncModeMethod();
+
+    /** @brief 切换大小写状态。 */
+    void callPanelToggleCapsStateMethod();
+
+
 public: // settings 通过 D-Bus 调用 freewb-settings 服务的方法
     /**
      * @brief 添加用户词组
@@ -83,17 +114,8 @@ public: // settings 通过 D-Bus 调用 freewb-settings 服务的方法
      */
     void callDictQueryMethod(const std::string &wordText);
 
-    /**
-     * @brief 按输入模式切换输入法。
-     * @param inputMode 输入模式字符串（如 "engine:wbzx"）。
-     */
-    void callSwitchInputModeMethod(const std::string &inputMode);
-
     /** @brief 切换皮肤。 */
     void callSwitchSkinMethod();
-
-    /** @brief 切换字符集（GB/GBK）。 */
-    void callSwitchCharSetMethod();
 
     /**
      * @brief 启用/禁用重码上屏校对
@@ -107,12 +129,6 @@ public: // settings 通过 D-Bus 调用 freewb-settings 服务的方法
      * @param flg 0-常用，1-非常用。
      */
     void callSwitchUncommonParseStateMethod(const std::string &wordText, int flg);
-
-    /**
-     * @brief 切换简繁体输出模式。
-     * @param flg 0-简体，1-繁体。
-     */
-    void callSwitchChttransMethod();
 
     /** @brief 打开界面设置。 */
     void callOpenUiSettingMethod();
@@ -151,30 +167,17 @@ public: // settings 通过 D-Bus 调用 freewb-settings 服务的方法
     void callSwitchTableMethod();
 
     /**
-     * @brief 切换全角半角
-     * @param flg 0-不切换字符宽度，非0-切换一次字符宽度（全角/半角）。
-     */
-    void callSwitchCharWidthModeMethod();
-
-    /**
-     * @brief 切换中英文标点
-     * @param flg 0-不切换标点模式，非0-切换一次标点模式（中/英文标点）。
-     */
-    void callSwitchPuncModeMethod();
-
-    /**
      * @brief 获取系统剪贴板内容。
      * @return 剪贴板文本。
      */
     std::string callGetClipboardMethod();
 
-    /** @brief 切换大小写状态。 */
-    void callToggleCapsStateMethod();
-
     /** @brief 通知面板主码表已重新加载。 */
     void callImeTableLoadOkMethod();
+
     /** @brief 通知面板用户词库已重新加载。 */
     void callUsrWordLoadOkMethod();
+
     /** @brief 通知面板快捷码表已重新加载。 */
     void callQuickTableLoadOkMethod();
 

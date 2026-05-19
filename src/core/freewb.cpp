@@ -253,7 +253,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            sdbusProxy_->callSwitchCharSetMethod();
+            sdbusProxy_->callPanelSwitchCharSetMethod();
             return true;
         }
     }
@@ -263,7 +263,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             chttrans_->changeAvailable();
-            sdbusProxy_->callSwitchChttransMethod();
+            sdbusProxy_->callPanelSwitchChttransMethod();
             return true;
         }
     }
@@ -274,7 +274,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         {
             engineManager_->nextEngine();
             const char *nextEngine = engineManager_->currentEngineName();
-            sdbusProxy_->callSwitchInputModeMethod(nextEngine);
+            sdbusProxy_->callPanelSwitchInputModeMethod(nextEngine);
             return true;
         }
     }
@@ -389,7 +389,7 @@ void Freewb::connectDBusCallback()
             {
                 this->engineManager_->nextEngine();
                 const std::string nextEngine = this->engineManager_->currentEngineName();
-                this->sdbusProxy_->callSwitchInputModeMethod(nextEngine.c_str());
+                this->sdbusProxy_->callPanelSwitchInputModeMethod(nextEngine.c_str());
             }
             else if (std::strcmp(member, "SwitchPunctuation") == 0)
             {

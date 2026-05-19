@@ -96,5 +96,24 @@ void QDBusPanelService::SetSpotRect(int x, int y, int w, int h)
     emit signal_SetSpotLocation(x, y, w, h);
 }
 
+void QDBusPanelService::SwitchInputMode(const QString &inputMode)
+{
+    emit signal_switch_input_mode(inputMode);
+}
+
+void QDBusPanelService::SwitchCharSet()
+{
+    emit signal_switch_char_set();
+}
+
+void QDBusPanelService::SwitchSimpOrTrad()
+{
+    emit signal_switch_simp_or_trad();
+}
+
+void QDBusPanelService::SetCharWidthAndMarkMode(int charWidth, int markMode)
+{
+    emit signal_set_charWidth_and_markMode(charWidth, markMode);
+}
 
 } // namespace freewb::ipc
