@@ -1,4 +1,4 @@
-#include "qdbus_panel.h"
+#include "qdbus_panel_service.h"
 
 QDBusPanelService::QDBusPanelService(QObject *parent) : QObject(parent)
 {

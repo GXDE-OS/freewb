@@ -1,4 +1,4 @@
-#include "qdbus_settings.h"
+#include "qdbus_settings_service.h"
 
 #include <QClipboard>
 #include <QGuiApplication>

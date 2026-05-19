@@ -23,7 +23,7 @@ find_package(Qt5 COMPONENTS DBus Gui)
 if(Qt5DBus_FOUND)
     message(STATUS "${PROJECT_NAME}-ipc: Qt5DBus")
     set(CMAKE_AUTOMOC ON)
-    list(APPEND IPC_SOURCES qdbus_panel.cpp qdbus_settings.cpp)
+    list(APPEND IPC_SOURCES qdbus_panel_service.cpp qdbus_settings_service.cpp)
     list(APPEND IPC_LINK_LIBS Qt5::DBus Qt5::Gui)
 endif()
 
