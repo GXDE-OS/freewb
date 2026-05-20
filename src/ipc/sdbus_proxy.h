@@ -77,6 +77,7 @@ private:
     void clearSlots();
     void closeBus();
 
+private:
     sd_bus *bus_ = nullptr;
     DBusSignalCallback onDBusSignal_ = nullptr;
     sd_bus_slot *panelSignalSlot_ = nullptr;
