@@ -15,7 +15,7 @@ file(GLOB QRC_FILES "src/*.qrc")
 
 #寻找Qt依赖库
 find_package(QT NAMES Qt5 REQUIRED)
-find_package(Qt5 ${QT_VERSION} REQUIRED COMPONENTS Core Gui Widgets Multimedia DBus)
+find_package(Qt5 ${QT_VERSION} REQUIRED COMPONENTS Core Gui Widgets DBus)
 if (NOT Qt${QT_VERSION_MAJOR}_FOUND)
     message(FATAL_ERROR "Qt${QT_VERSION_MAJOR} not found!")
     return()
@@ -42,7 +42,6 @@ target_link_libraries(${PROJECT_NAME}-panel PRIVATE
     Qt${QT_VERSION_MAJOR}::Core 
     Qt${QT_VERSION_MAJOR}::Gui
     Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Multimedia
     Qt${QT_VERSION_MAJOR}::DBus
     ${EXTERN_LIBS}
     ${PROJECT_NAME}-utils
