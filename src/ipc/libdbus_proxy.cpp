@@ -5,12 +5,10 @@
 #include <cstring>
 #include <vector>
 
-#include <dbus/dbus.h>
-
 #include "ipc.h"
 #include "log.h"
 
-namespace freewb::ipc
+namespace
 {
 
 bool appendDBusArgs(DBusMessage *msg, const char *types, va_list ap)
@@ -80,7 +78,7 @@ bool appendStringArray(DBusMessageIter *parent, const std::vector<std::string> &
 }
 
 /** Append @p payload as SetLookupTable D-Bus body: as, as, as, b, b, i, i. */
-bool appendSetCandidateBody(DBusMessage *msg, const CandidatePayload &payload)
+bool appendSetCandidateBody(DBusMessage *msg, const freewb::CandidatePayload &payload)
 {
     DBusMessageIter args;
     dbus_message_iter_init_append(msg, &args);
@@ -99,7 +97,12 @@ bool appendSetCandidateBody(DBusMessage *msg, const CandidatePayload &payload)
            dbus_message_iter_append_basic(&args, DBUS_TYPE_INT32, &layout);
 }
 
-std::string LibDbusProxy::toolbarPayloadToPropertyLine(const ToolbarPropertiesPayload &p)
+} // namespace
+
+namespace freewb::ipc
+{
+
+std::string LibDbusProxy::toolbarPayloadToPropertyLine(const ::freewb::ToolbarPropertiesPayload &p)
 {
     if (p.uniqueName == "fullwidth" || p.uniqueName == "punc")
     {
@@ -160,7 +163,7 @@ bool LibDbusProxy::bindDBusSignalCallback(DBusSignalCallback callback)
     return registerPanelMatches();
 }
 
-void LibDbusProxy::callPanelUpdateProperties(const ToolbarPropertiesPayload &payload)
+void LibDbusProxy::callPanelUpdateProperties(const ::freewb::ToolbarPropertiesPayload &payload)
 {
     sendPanelRegisterProperties({toolbarPayloadToPropertyLine(payload)});
 }
@@ -175,13 +178,13 @@ void LibDbusProxy::callPanelHideToolbar()
     sendPanelMethod("UpdateProperty", "s", "/Fcitx/im:us");
 }
 
-void LibDbusProxy::callPanelUpdateSpotRect(const SpotRectPayload &payload)
+void LibDbusProxy::callPanelUpdateSpotRect(const ::freewb::SpotRectPayload &payload)
 {
     FREEWB_DEBUG("callPanelUpdateSpotRect x={} y={} w={} h={}", payload.x, payload.y, payload.w, payload.h);
     sendPanelMethod("SetSpotRect", "iiii", payload.x, payload.y, payload.w, payload.h);
 }
 
-void LibDbusProxy::callPanelUpdateCandidate(const CandidatePayload &payload)
+void LibDbusProxy::callPanelUpdateCandidate(const ::freewb::CandidatePayload &payload)
 {
     if (!conn_ || !available_)
     {
@@ -220,7 +223,7 @@ void LibDbusProxy::callPanelUpdateCandidate(const CandidatePayload &payload)
     sendPanelMethod("ShowLookupTable", "b", hasLookup);
 }
 
-void LibDbusProxy::callPanelUpdatePreeditText(const PreeditPayload &payload)
+void LibDbusProxy::callPanelUpdatePreeditText(const ::freewb::PreeditPayload &payload)
 {
     static const char *const kEmptyAttr = "";
     sendPanelMethod("UpdatePreeditText", "ss", payload.text.c_str(), kEmptyAttr);
@@ -232,7 +235,7 @@ void LibDbusProxy::callPanelUpdatePreeditCaret(int caret)
     sendPanelMethod("UpdatePreeditCaret", "i", caret);
 }
 
-void LibDbusProxy::callPanelUpdateAux(const CandidateAuxPayload &payload)
+void LibDbusProxy::callPanelUpdateAux(const ::freewb::CandidateAuxPayload &payload)
 {
     static const char *const kEmptyAttr = "";
     sendPanelMethod("UpdateAux", "ss", payload.text.c_str(), kEmptyAttr);

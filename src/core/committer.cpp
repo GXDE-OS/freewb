@@ -4,7 +4,6 @@
 #include <utility>
 
 #include "common.h"
-#include "dbus.h"
 #include "freewb.h"
 #include "log.h"
 #include "settings.h"

@@ -6,7 +6,7 @@
 
 #include <dbus/dbus.h>
 
-#include "dbus.h"
+#include "idbus.h"
 #include "ifreewb.h"
 
 namespace freewb::ipc
@@ -25,46 +25,46 @@ public:
 
     bool bindDBusSignalCallback(DBusSignalCallback callback) override;
 
-    void callPanelUpdateProperties(const ToolbarPropertiesPayload &payload) override;
+    void callPanelUpdateProperties(const ::freewb::ToolbarPropertiesPayload &payload) override;
     void callPanelShowToolbar() override;
     void callPanelHideToolbar() override;
-    void callPanelUpdateSpotRect(const SpotRectPayload &payload) override;
-    void callPanelUpdateCandidate(const CandidatePayload &payload) override;
-    void callPanelUpdatePreeditText(const PreeditPayload &payload) override;
+    void callPanelUpdateSpotRect(const ::freewb::SpotRectPayload &payload) override;
+    void callPanelUpdateCandidate(const ::freewb::CandidatePayload &payload) override;
+    void callPanelUpdatePreeditText(const ::freewb::PreeditPayload &payload) override;
     void callPanelUpdatePreeditCaret(int caret) override;
-    void callPanelUpdateAux(const CandidateAuxPayload &payload) override;
+    void callPanelUpdateAux(const ::freewb::CandidateAuxPayload &payload) override;
 
-    void callPanelSwitchInputModeMethod(const std::string &inputMode);
-    void callPanelSwitchCharSetMethod();
-    void callPanelSwitchChttransMethod();
-    void callPanelSwitchCharWidthModeMethod();
-    void callPanelSwitchPuncModeMethod();
-    void callPanelToggleCapsStateMethod();
+    void callPanelSwitchInputModeMethod(const std::string &inputMode) override;
+    void callPanelSwitchCharSetMethod() override;
+    void callPanelSwitchChttransMethod() override;
+    void callPanelSwitchCharWidthModeMethod() override;
+    void callPanelSwitchPuncModeMethod() override;
+    void callPanelToggleCapsStateMethod() override;
 
-    void callAddUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText);
-    void callDeleteUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText);
-    void callDictQueryMethod(const std::string &wordText);
-    void callSwitchSkinMethod();
-    void callSwitchRecodeProofMethod();
-    void callSwitchUncommonParseStateMethod(const std::string &wordText, int flg);
-    void callOpenUiSettingMethod();
-    void callShowVersionInfoMethod();
-    void callOpenProfessionalSettingMethod();
-    void callModQuickTableMethod();
-    void callModUserTableMethod();
-    void callModWubiTableMethod();
-    void callModPinyinTableMethod();
-    void callOpenConfDirMethod();
-    void callSwitchVirtualKeyboardModeMethod(int flg);
-    void callCloseVkBoardMethod();
-    void callSwitchTableMethod();
-    std::string callGetClipboardMethod();
-    void callImeTableLoadOkMethod();
-    void callUsrWordLoadOkMethod();
-    void callQuickTableLoadOkMethod();
+    void callAddUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText) override;
+    void callDeleteUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText) override;
+    void callDictQueryMethod(const std::string &wordText) override;
+    void callSwitchSkinMethod() override;
+    void callSwitchRecodeProofMethod() override;
+    void callSwitchUncommonParseStateMethod(const std::string &wordText, int flg) override;
+    void callOpenUiSettingMethod() override;
+    void callShowVersionInfoMethod() override;
+    void callOpenProfessionalSettingMethod() override;
+    void callModQuickTableMethod() override;
+    void callModUserTableMethod() override;
+    void callModWubiTableMethod() override;
+    void callModPinyinTableMethod() override;
+    void callOpenConfDirMethod() override;
+    void callSwitchVirtualKeyboardModeMethod(int flg) override;
+    void callCloseVkBoardMethod() override;
+    void callSwitchTableMethod() override;
+    std::string callGetClipboardMethod() override;
+    void callImeTableLoadOkMethod() override;
+    void callUsrWordLoadOkMethod() override;
+    void callQuickTableLoadOkMethod() override;
 
 private:
-    static std::string toolbarPayloadToPropertyLine(const ToolbarPropertiesPayload &p);
+    static std::string toolbarPayloadToPropertyLine(const ::freewb::ToolbarPropertiesPayload &p);
 
     void sendPanelMethod(const char *member, const char *types, ...) const;
     void sendPanelRegisterProperties(const std::vector<std::string> &props) const;

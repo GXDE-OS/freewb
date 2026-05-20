@@ -6,7 +6,7 @@
 
 #include <systemd/sd-bus.h>
 
-#include "dbus.h"
+#include "idbus.h"
 #include "ifreewb.h"
 
 namespace freewb::ipc
@@ -25,161 +25,43 @@ public:
 
     bool bindDBusSignalCallback(DBusSignalCallback callback) override;
 
-    /** @brief 更新属性。 */
-    /** @param payload 属性。 */
     void callPanelUpdateProperties(const ToolbarPropertiesPayload &payload) override;
-
-    /** @brief 显示工具栏。 */
     void callPanelShowToolbar() override;
-
-    /** @brief 隐藏工具栏。 */
     void callPanelHideToolbar() override;
-
-    /** @brief 更新候选框位置
-     * @param payload 候选框位置。
-     */
     void callPanelUpdateSpotRect(const SpotRectPayload &payload) override;
-
-    /** @brief 更新候选框
-     * @param payload 候选框。
-     */
     void callPanelUpdateCandidate(const CandidatePayload &payload) override;
-
-    /** @brief 更新候选框文本
-     * @param payload 候选框文本。
-     */
     void callPanelUpdatePreeditText(const PreeditPayload &payload) override;
-
-    /** @brief 更新候选框光标位置
-     * @param caret 光标位置。
-     */
     void callPanelUpdatePreeditCaret(int caret) override;
-
-    /** @brief 更新候选框辅助文本
-     * @param payload 候选框辅助文本。
-     */
     void callPanelUpdateAux(const CandidateAuxPayload &payload) override;
 
-    /**
-     * @brief 按输入模式切换输入法。
-     * @param inputMode 输入模式字符串（如 "engine:wbzx"）。
-     */
-     void callPanelSwitchInputModeMethod(const std::string &inputMode);
+    void callPanelSwitchInputModeMethod(const std::string &inputMode) override;
+    void callPanelSwitchCharSetMethod() override;
+    void callPanelSwitchChttransMethod() override;
+    void callPanelSwitchCharWidthModeMethod() override;
+    void callPanelSwitchPuncModeMethod() override;
+    void callPanelToggleCapsStateMethod() override;
 
-    /** @brief 切换字符集（GB/GBK）。 */
-    void callPanelSwitchCharSetMethod();
-
-    /**
-     * @brief 切换简繁体输出模式。
-     * @param flg 0-简体，1-繁体。
-    */
-     void callPanelSwitchChttransMethod();
-
-    /**
-     * @brief 切换全角半角
-     * @param flg 0-不切换字符宽度，非0-切换一次字符宽度（全角/半角）。
-     */
-    void callPanelSwitchCharWidthModeMethod();
-
-    /**
-     * @brief 切换中英文标点
-     * @param flg 0-不切换标点模式，非0-切换一次标点模式（中/英文标点）。
-     */
-    void callPanelSwitchPuncModeMethod();
-
-    /** @brief 切换大小写状态。 */
-    void callPanelToggleCapsStateMethod();
-
-
-public: // settings 通过 D-Bus 调用 freewb-settings 服务的方法
-    /**
-     * @brief 添加用户词组
-     * @param flg 操作标志：0-显示待造词提示，1-确认造词，2-取消造词，3-自定义词组编码。
-     * @param wordCode 词组编码。
-     * @param wordText 词组文本。
-     */
-    void callAddUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText);
-
-    /**
-     * @brief 删除用户词组
-     * @param flg 操作标志：0-显示待删词提示，1-确认删词，2-取消删词。
-     * @param wordCode 词组编码。
-     * @param wordText 词组文本。
-     */
-    void callDeleteUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText);
-
-    /**
-     * @brief 查询词典
-     * @param wordText 查询文本（词条）。
-     */
-    void callDictQueryMethod(const std::string &wordText);
-
-    /** @brief 切换皮肤。 */
-    void callSwitchSkinMethod();
-
-    /**
-     * @brief 启用/禁用重码上屏校对
-     * @param flg 0-关闭，1-开启。
-     */
-    void callSwitchRecodeProofMethod();
-
-    /**
-     * @brief 切换词组常用/非常用状态。
-     * @param wordText 词组文本。
-     * @param flg 0-常用，1-非常用。
-     */
-    void callSwitchUncommonParseStateMethod(const std::string &wordText, int flg);
-
-    /** @brief 打开界面设置。 */
-    void callOpenUiSettingMethod();
-
-    /** @brief 显示版本信息。 */
-    void callShowVersionInfoMethod();
-
-    /** @brief 打开专业设置。 */
-    void callOpenProfessionalSettingMethod();
-
-    /** @brief 编辑快捷码表。 */
-    void callModQuickTableMethod();
-
-    /** @brief 编辑用户码表。 */
-    void callModUserTableMethod();
-
-    /** @brief 编辑五笔码表。 */
-    void callModWubiTableMethod();
-
-    /** @brief 编辑拼音码表。 */
-    void callModPinyinTableMethod();
-
-    /** @brief 打开极点目录。 */
-    void callOpenConfDirMethod();
-
-    /**
-     * @brief 切换虚拟键盘模式。
-     * @param flg 切换方向：0-向后切换，1-向前切换。
-     */
-    void callSwitchVirtualKeyboardModeMethod(int flg);
-
-    /** @brief 关闭虚拟键盘。 */
-    void callCloseVkBoardMethod();
-
-    /** @brief 切换词库。 */
-    void callSwitchTableMethod();
-
-    /**
-     * @brief 获取系统剪贴板内容。
-     * @return 剪贴板文本。
-     */
-    std::string callGetClipboardMethod();
-
-    /** @brief 通知面板主码表已重新加载。 */
-    void callImeTableLoadOkMethod();
-
-    /** @brief 通知面板用户词库已重新加载。 */
-    void callUsrWordLoadOkMethod();
-
-    /** @brief 通知面板快捷码表已重新加载。 */
-    void callQuickTableLoadOkMethod();
+    void callAddUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText) override;
+    void callDeleteUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText) override;
+    void callDictQueryMethod(const std::string &wordText) override;
+    void callSwitchSkinMethod() override;
+    void callSwitchRecodeProofMethod() override;
+    void callSwitchUncommonParseStateMethod(const std::string &wordText, int flg) override;
+    void callOpenUiSettingMethod() override;
+    void callShowVersionInfoMethod() override;
+    void callOpenProfessionalSettingMethod() override;
+    void callModQuickTableMethod() override;
+    void callModUserTableMethod() override;
+    void callModWubiTableMethod() override;
+    void callModPinyinTableMethod() override;
+    void callOpenConfDirMethod() override;
+    void callSwitchVirtualKeyboardModeMethod(int flg) override;
+    void callCloseVkBoardMethod() override;
+    void callSwitchTableMethod() override;
+    std::string callGetClipboardMethod() override;
+    void callImeTableLoadOkMethod() override;
+    void callUsrWordLoadOkMethod() override;
+    void callQuickTableLoadOkMethod() override;
 
 private:
     static std::string toolbarPayloadToPropertyLine(const ToolbarPropertiesPayload &p);
@@ -195,7 +77,6 @@ private:
     void clearSlots();
     void closeBus();
 
-private:
     sd_bus *bus_ = nullptr;
     DBusSignalCallback onDBusSignal_ = nullptr;
     sd_bus_slot *panelSignalSlot_ = nullptr;
