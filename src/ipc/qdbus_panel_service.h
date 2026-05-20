@@ -32,7 +32,7 @@ Q_SIGNALS:
     Q_SCRIPTABLE void RequestNextInputMode();
 
 public Q_SLOTS:
-    // Panel UI → 引擎 D-Bus 方法
+    // 输入法引擎 → Panel UI
     Q_SCRIPTABLE void ShowPreedit(bool show);
     Q_SCRIPTABLE void ShowAux(bool show);
     Q_SCRIPTABLE void ShowLookupTable(bool show);
