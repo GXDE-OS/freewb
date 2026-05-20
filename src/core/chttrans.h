@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 
-#include <opencc.h>
+#include "opencc.h"
 
 #include "ifreewb.h"
 
