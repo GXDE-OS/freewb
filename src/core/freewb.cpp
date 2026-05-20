@@ -9,16 +9,15 @@
 namespace freewb
 {
 
-Freewb::Freewb(void *sd_event_handle, CommitCallback commitCallback) : log_("/tmp/freewb-engine.log")
+Freewb::Freewb(ipc::IDBus *dbusProxy, CommitCallback commitCallback) : log_("/tmp/freewb-engine.log"), dbusProxy_(dbusProxy)
 {
-    sdbusProxy_ = new ipc::SDBusProxy(sd_event_handle);
     punc_ = new Punc();
     chttrans_ = new Chttrans();
     candidateList_ = new CandidateList(chttrans_);
     committer_ = new Committer(std::move(commitCallback), this);
     engineManager_ = new EngineManager(candidateList_, committer_);
     userPhrase_ = new UserPhrase(
-        sdbusProxy_,
+        dbusProxy_,
         [this](const std::string &phrase) { return engineManager_->calculateWubiPhraseCode(phrase); },
         [this](int charCount) { return committer_->committedText(static_cast<std::size_t>(charCount)); });
     connectDBusCallback();
@@ -26,11 +25,6 @@ Freewb::Freewb(void *sd_event_handle, CommitCallback commitCallback) : log_("/tm
 
 Freewb::~Freewb()
 {
-    if (sdbusProxy_ != nullptr)
-    {
-        delete sdbusProxy_;
-        sdbusProxy_ = nullptr;
-    }
     if (engineManager_ != nullptr)
     {
         delete engineManager_;
@@ -65,7 +59,7 @@ Freewb::~Freewb()
 
 void Freewb::activate()
 {
-    sdbusProxy_->callPanelShowToolbar();
+    dbusProxy_->callPanelShowToolbar();
 }
 
 void Freewb::deactivate()
@@ -73,15 +67,10 @@ void Freewb::deactivate()
     userPhrase_->reset();
     engineManager_->reset();
     candidateList_->clear();
-    sdbusProxy_->callPanelHideToolbar();
-    sdbusProxy_->callPanelUpdatePreeditText({.text = "", .caret = 0, .show = false});
-    sdbusProxy_->callPanelUpdateCandidate(
+    dbusProxy_->callPanelHideToolbar();
+    dbusProxy_->callPanelUpdatePreeditText({.text = "", .caret = 0, .show = false});
+    dbusProxy_->callPanelUpdateCandidate(
         {.fullCodes = {}, .texts = {}, .prompts = {}, .hasPrev = false, .hasNext = false, .cursor = -1, .layout = Horizontal});
-}
-
-ipc::SDBusProxy *Freewb::sdbusProxy() const
-{
-    return sdbusProxy_;
 }
 
 EngineManager *Freewb::engineManager() const
@@ -97,6 +86,11 @@ CandidateList *Freewb::candidateList() const
 Punc *Freewb::punc() const
 {
     return punc_;
+}
+
+ipc::IDBus *Freewb::dbusProxy() const
+{
+    return dbusProxy_;
 }
 
 bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
@@ -155,7 +149,7 @@ void Freewb::reloadConfig()
     if (userWordFlg)
     {
         engineManager_->reloadDictionaries();
-        sdbusProxy_->callUsrWordLoadOkMethod();
+        dbusProxy_->callUsrWordLoadOkMethod();
     }
 
     updateCandidateAndPreeditToUI();
@@ -168,7 +162,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            sdbusProxy_->callDictQueryMethod(committer_->lastCommitString());
+            dbusProxy_->callDictQueryMethod(committer_->lastCommitString());
             return true;
         }
     }
@@ -244,7 +238,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            sdbusProxy_->callOpenUiSettingMethod();
+            dbusProxy_->callOpenUiSettingMethod();
             return true;
         }
     }
@@ -253,7 +247,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            sdbusProxy_->callPanelSwitchCharSetMethod();
+            dbusProxy_->callPanelSwitchCharSetMethod();
             return true;
         }
     }
@@ -263,7 +257,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
             chttrans_->changeAvailable();
-            sdbusProxy_->callPanelSwitchChttransMethod();
+            dbusProxy_->callPanelSwitchChttransMethod();
             return true;
         }
     }
@@ -274,7 +268,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         {
             engineManager_->nextEngine();
             const char *nextEngine = engineManager_->currentEngineName();
-            sdbusProxy_->callPanelSwitchInputModeMethod(nextEngine);
+            dbusProxy_->callPanelSwitchInputModeMethod(nextEngine);
             return true;
         }
     }
@@ -283,7 +277,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            sdbusProxy_->callSwitchTableMethod();
+            dbusProxy_->callSwitchTableMethod();
             return true;
         }
     }
@@ -292,7 +286,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            sdbusProxy_->callSwitchSkinMethod();
+            dbusProxy_->callSwitchSkinMethod();
             return true;
         }
     }
@@ -302,7 +296,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            sdbusProxy_->callSwitchVirtualKeyboardModeMethod(0);
+            dbusProxy_->callSwitchVirtualKeyboardModeMethod(0);
             return true;
         }
     }
@@ -364,7 +358,7 @@ bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
 
 void Freewb::connectDBusCallback()
 {
-    sdbusProxy_->bindDBusSignalCallback(
+    dbusProxy_->bindDBusSignalCallback(
         [this](const char *member, int index)
         {
             if (std::strcmp(member, "SelectCandidate") == 0)
@@ -389,7 +383,7 @@ void Freewb::connectDBusCallback()
             {
                 this->engineManager_->nextEngine();
                 const std::string nextEngine = this->engineManager_->currentEngineName();
-                this->sdbusProxy_->callPanelSwitchInputModeMethod(nextEngine.c_str());
+                this->dbusProxy_->callPanelSwitchInputModeMethod(nextEngine.c_str());
             }
             else if (std::strcmp(member, "SwitchPunctuation") == 0)
             {
@@ -404,11 +398,11 @@ void Freewb::connectDBusCallback()
 
 void Freewb::updateCandidateAndPreeditToUI()
 {
-    sdbusProxy_->callPanelUpdatePreeditText({.text = candidateList_->preeditText(),
+    dbusProxy_->callPanelUpdatePreeditText({.text = candidateList_->preeditText(),
                                              .caret = candidateList_->cursor(),
                                              .show = !candidateList_->preeditText().empty()});
-    sdbusProxy_->callPanelUpdatePreeditCaret(candidateList_->cursor());
-    sdbusProxy_->callPanelUpdateCandidate({.fullCodes = {},
+    dbusProxy_->callPanelUpdatePreeditCaret(candidateList_->cursor());
+    dbusProxy_->callPanelUpdateCandidate({.fullCodes = {},
                                       .texts = candidateList_->candidateTexts(),
                                       .prompts = candidateList_->candidatePrompts(),
                                       .hasPrev = candidateList_->hasPrev(),

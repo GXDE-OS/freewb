@@ -5,7 +5,7 @@
 #include <string>
 
 #include "keysym.h"
-#include "sdbus_proxy.h"
+#include "idbus.h"
 
 namespace freewb
 {
@@ -34,7 +34,7 @@ public:
 class AddUserPhraseState : public IUserPhraseState
 {
 public:
-    AddUserPhraseState(ipc::SDBusProxy *proxy, PhraseFromHistoryCallback phraseFromHistory,
+    AddUserPhraseState(ipc::IDBus *dbusProxy, PhraseFromHistoryCallback phraseFromHistory,
                        CalculateWubiPhraseCodeCallback &calculateWubiPhraseCode);
 
     bool beginFromHistory();
@@ -54,7 +54,7 @@ private:
     void refreshPhrase();
     void updatePhraseInfoToUI();
 
-    ipc::SDBusProxy *proxy_;
+    ipc::IDBus *dbusProxy_;
     std::string originalText_; // 造词源串
     std::string wordText_; // 词组文本
     std::string wordCode_; // 词组编码
@@ -68,7 +68,7 @@ private:
 class DeleteUserPhraseState : public IUserPhraseState
 {
 public:
-    DeleteUserPhraseState(ipc::SDBusProxy *proxy, CalculateWubiPhraseCodeCallback &calculateWubiPhraseCode);
+    DeleteUserPhraseState(ipc::IDBus *dbusProxy, CalculateWubiPhraseCodeCallback &calculateWubiPhraseCode);
 
     bool begin(const std::string &wordText);
 
@@ -76,7 +76,7 @@ public:
     void cancel() override;
 
 private:
-    ipc::SDBusProxy *proxy_;
+    ipc::IDBus *dbusProxy_;
     std::string wordText_;
     std::string wordCode_;
     CalculateWubiPhraseCodeCallback &calculateWubiPhraseCode_;
@@ -85,7 +85,7 @@ private:
 class UserPhrase
 {
 public:
-    UserPhrase(ipc::SDBusProxy *proxy, CalculateWubiPhraseCodeCallback calculateWubiPhraseCode,
+    UserPhrase(ipc::IDBus *dbusProxy, CalculateWubiPhraseCodeCallback calculateWubiPhraseCode,
                PhraseFromHistoryCallback phraseFromHistory);
 
     bool isActive() const { return current_ != &idle_; }

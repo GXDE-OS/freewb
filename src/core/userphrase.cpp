@@ -3,7 +3,7 @@
 #include <cstdint>
 
 #include "common.h"
-#include "sdbus_proxy.h"
+#include "idbus.h"
 #include "log.h"
 
 namespace freewb
@@ -16,9 +16,9 @@ bool IdleState::processKey(FreewbKeySym /*keysym*/, FreewbKeyState /*state*/)
 
 void IdleState::cancel() {}
 
-AddUserPhraseState::AddUserPhraseState(ipc::SDBusProxy *proxy, PhraseFromHistoryCallback phraseFromHistory,
+AddUserPhraseState::AddUserPhraseState(ipc::IDBus *dbusProxy, PhraseFromHistoryCallback phraseFromHistory,
                                        CalculateWubiPhraseCodeCallback &calculateWubiPhraseCode)
-    : proxy_(proxy),
+    : dbusProxy_(dbusProxy),
       calculateWubiPhraseCode_(calculateWubiPhraseCode),
       phraseFromHistoryCallback_(std::move(phraseFromHistory))
 {
@@ -88,7 +88,7 @@ bool AddUserPhraseState::beginFromHistory()
 {
     FREEWB_DEBUG("beginFromHistory");
     fromClipboard_ = false;
-    if (proxy_ == nullptr || !phraseFromHistoryCallback_)
+    if (dbusProxy_ == nullptr || !phraseFromHistoryCallback_)
     {
         return false;
     }
@@ -128,12 +128,12 @@ bool AddUserPhraseState::beginFromClipboard()
 {
     FREEWB_DEBUG("beginFromClipboard");
     fromClipboard_ = true;
-    if (proxy_ == nullptr)
+    if (dbusProxy_ == nullptr)
     {
         return false;
     }
 
-    originalText_ = filterNonHanziContent(proxy_->callGetClipboardMethod());
+    originalText_ = filterNonHanziContent(dbusProxy_->callGetClipboardMethod());
     FREEWB_DEBUG("clip: {}", originalText_);
     sourceCharCount_ = static_cast<int>(MbDictionaryTable::utf8CharCount(originalText_));
     if (sourceCharCount_ <= 1 || sourceCharCount_ >= kPhraseMaxLength)
@@ -156,15 +156,15 @@ bool AddUserPhraseState::beginFromClipboard()
 
 void AddUserPhraseState::cancel()
 {
-    if (proxy_ != nullptr)
+    if (dbusProxy_ != nullptr)
     {
-        proxy_->callAddUsrParseMethod(2, "", "");
+        dbusProxy_->callAddUsrParseMethod(2, "", "");
     }
 }
 
 void AddUserPhraseState::updatePhraseInfoToUI()
 {
-    if (proxy_ == nullptr)
+    if (dbusProxy_ == nullptr)
     {
         return;
     }
@@ -176,12 +176,12 @@ void AddUserPhraseState::updatePhraseInfoToUI()
     // 3: 自定义词组编码
     const int flg = (wordCode_.empty() && !fromClipboard_) ? 3 : 0;
     FREEWB_DEBUG("flg: {}, wordCode: {}, wordText: {}", flg, wordCode_, wordText_);
-    proxy_->callAddUsrParseMethod(flg, wordCode_, wordText_);
+    dbusProxy_->callAddUsrParseMethod(flg, wordCode_, wordText_);
 }
 
 bool AddUserPhraseState::processKey(FreewbKeySym keysym, FreewbKeyState state)
 {
-    if (proxy_ == nullptr)
+    if (dbusProxy_ == nullptr)
     {
         return true;
     }
@@ -219,13 +219,13 @@ bool AddUserPhraseState::processKey(FreewbKeySym keysym, FreewbKeyState state)
         // Ctrl + Return：更新编码
         if (state & FreewbKeyState_Ctrl)
         {
-            proxy_->callAddUsrParseMethod(3, wordCode_, wordText_);
+            dbusProxy_->callAddUsrParseMethod(3, wordCode_, wordText_);
             return false;
         }
         // Return：确认
         if (state == FreewbKeyState_None)
         {
-            proxy_->callAddUsrParseMethod(1, wordCode_, wordText_);
+            dbusProxy_->callAddUsrParseMethod(1, wordCode_, wordText_);
             return false;
         }
         return true;
@@ -234,15 +234,15 @@ bool AddUserPhraseState::processKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 }
 
-DeleteUserPhraseState::DeleteUserPhraseState(ipc::SDBusProxy *proxy,
+DeleteUserPhraseState::DeleteUserPhraseState(ipc::IDBus *dbusProxy,
                                              CalculateWubiPhraseCodeCallback &calculateWubiPhraseCode)
-    : proxy_(proxy), calculateWubiPhraseCode_(calculateWubiPhraseCode)
+    : dbusProxy_(dbusProxy), calculateWubiPhraseCode_(calculateWubiPhraseCode)
 {
 }
 
 bool DeleteUserPhraseState::begin(const std::string &wordText)
 {
-    if (wordText.empty() || proxy_ == nullptr)
+    if (wordText.empty() || dbusProxy_ == nullptr)
     {
         return false;
     }
@@ -250,39 +250,39 @@ bool DeleteUserPhraseState::begin(const std::string &wordText)
     wordText_ = wordText;
     wordCode_.clear();
     wordCode_ = calculateWubiPhraseCode_(wordText_);
-    proxy_->callDeleteUsrParseMethod(0, wordCode_, wordText_);
+    dbusProxy_->callDeleteUsrParseMethod(0, wordCode_, wordText_);
     return true;
 }
 
 void DeleteUserPhraseState::cancel()
 {
-    if (proxy_ != nullptr)
+    if (dbusProxy_ != nullptr)
     {
-        proxy_->callDeleteUsrParseMethod(2, "", "");
+        dbusProxy_->callDeleteUsrParseMethod(2, "", "");
     }
 }
 
 bool DeleteUserPhraseState::processKey(FreewbKeySym keysym, FreewbKeyState state)
 {
-    if (proxy_ == nullptr)
+    if (dbusProxy_ == nullptr)
     {
         return true;
     }
 
     if (keysym == FreewbKey_Return && state == FreewbKeyState_None)
     {
-        proxy_->callDeleteUsrParseMethod(1, wordCode_, wordText_);
+        dbusProxy_->callDeleteUsrParseMethod(1, wordCode_, wordText_);
         return false;
     }
     return true;
 }
 
-UserPhrase::UserPhrase(ipc::SDBusProxy *proxy, CalculateWubiPhraseCodeCallback calculateWubiPhraseCode,
+UserPhrase::UserPhrase(ipc::IDBus *dbusProxy, CalculateWubiPhraseCodeCallback calculateWubiPhraseCode,
                        PhraseFromHistoryCallback phraseFromHistory)
     : calculateWubiPhraseCodeCallback_(std::move(calculateWubiPhraseCode)),
       current_(&idle_),
-      add_(proxy, std::move(phraseFromHistory), calculateWubiPhraseCodeCallback_),
-      del_(proxy, calculateWubiPhraseCodeCallback_)
+      add_(dbusProxy, std::move(phraseFromHistory), calculateWubiPhraseCodeCallback_),
+      del_(dbusProxy, calculateWubiPhraseCodeCallback_)
 {
 }
 

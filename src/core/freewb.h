@@ -18,7 +18,7 @@ class Committer;
 class Freewb
 {
 public:
-    Freewb(void *sd_event_handle, CommitCallback commitCallback);
+    Freewb(ipc::IDBus *dbusProxy, CommitCallback commitCallback);
     ~Freewb();
     void activate();
     void deactivate();
@@ -27,7 +27,7 @@ public:
     void reset();
     void reloadConfig();
 
-    ipc::SDBusProxy *sdbusProxy() const;
+    ipc::IDBus *dbusProxy() const;
     EngineManager *engineManager() const;
     CandidateList *candidateList() const;
     Punc *punc() const;
@@ -39,7 +39,7 @@ private:
 
 private:
     FreewbLog log_;
-    ipc::SDBusProxy *sdbusProxy_ = nullptr;
+    ipc::IDBus *dbusProxy_ = nullptr;
     EngineManager *engineManager_ = nullptr;
     Chttrans *chttrans_ = nullptr;
     CandidateList *candidateList_ = nullptr;

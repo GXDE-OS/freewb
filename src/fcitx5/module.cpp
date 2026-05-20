@@ -3,10 +3,11 @@
 #include <fcitx-utils/event.h>
 
 #include "types.h"
+#include "sdbus_proxy.h"
 
 FreewbIMModule::FreewbIMModule(fcitx::Instance *instance) : instance_(instance)
 {
-    freewb_ = std::make_unique<freewb::Freewb>(instance->eventLoop().nativeHandle(),
+    freewb_ = std::make_unique<freewb::Freewb>(dynamic_cast<freewb::ipc::IDBus *>(new freewb::ipc::SDBusProxy(instance->eventLoop().nativeHandle())),
                                                [this](const std::string &text) { commitString(text); });
 }
 
@@ -74,7 +75,7 @@ void FreewbIMModule::updateCursorPosition()
     fcitx::InputContext *inputContext = instance_->lastFocusedInputContext();
     if (inputContext == nullptr)
     {
-        freewb_->sdbusProxy()->callPanelUpdateSpotRect(spotRect);
+        freewb_->dbusProxy()->callPanelUpdateSpotRect(spotRect);
         return;
     }
 
@@ -83,7 +84,7 @@ void FreewbIMModule::updateCursorPosition()
     spotRect.y = rect.top();
     spotRect.w = rect.width();
     spotRect.h = rect.height();
-    freewb_->sdbusProxy()->callPanelUpdateSpotRect(spotRect);
+    freewb_->dbusProxy()->callPanelUpdateSpotRect(spotRect);
 }
 
 void FreewbIMModule::commitString(const std::string &text) const
