@@ -7,7 +7,7 @@
 #include "keysym.h"
 #include "log.h"
 #include "punc.h"
-#include "sdbus_proxy.h"
+#include "idbus.h"
 #include "types.h"
 namespace freewb
 {
