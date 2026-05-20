@@ -65,7 +65,7 @@ Freewb::~Freewb()
 
 void Freewb::activate()
 {
-    sdbusProxy_->emitShowToolbar();
+    sdbusProxy_->callPanelShowToolbar();
 }
 
 void Freewb::deactivate()
@@ -73,9 +73,9 @@ void Freewb::deactivate()
     userPhrase_->reset();
     engineManager_->reset();
     candidateList_->clear();
-    sdbusProxy_->emitHideToolbar();
-    sdbusProxy_->emitUpdatePreeditText({.text = "", .caret = 0, .show = false});
-    sdbusProxy_->emitUpdateCandidate(
+    sdbusProxy_->callPanelHideToolbar();
+    sdbusProxy_->callPanelUpdatePreeditText({.text = "", .caret = 0, .show = false});
+    sdbusProxy_->callPanelUpdateCandidate(
         {.fullCodes = {}, .texts = {}, .prompts = {}, .hasPrev = false, .hasNext = false, .cursor = -1, .layout = Horizontal});
 }
 
@@ -404,16 +404,11 @@ void Freewb::connectDBusCallback()
 
 void Freewb::updateCandidateAndPreeditToUI()
 {
-    if (userPhrase_->isActive())
-    {
-        return;
-    }
-
-    sdbusProxy_->emitUpdatePreeditText({.text = candidateList_->preeditText(),
-                                        .caret = candidateList_->cursor(),
-                                        .show = !candidateList_->preeditText().empty()});
-    sdbusProxy_->emitUpdatePreeditCaret(candidateList_->cursor());
-    sdbusProxy_->emitUpdateCandidate({.fullCodes = {},
+    sdbusProxy_->callPanelUpdatePreeditText({.text = candidateList_->preeditText(),
+                                             .caret = candidateList_->cursor(),
+                                             .show = !candidateList_->preeditText().empty()});
+    sdbusProxy_->callPanelUpdatePreeditCaret(candidateList_->cursor());
+    sdbusProxy_->callPanelUpdateCandidate({.fullCodes = {},
                                       .texts = candidateList_->candidateTexts(),
                                       .prompts = candidateList_->candidatePrompts(),
                                       .hasPrev = candidateList_->hasPrev(),

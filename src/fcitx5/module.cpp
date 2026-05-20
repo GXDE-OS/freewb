@@ -74,7 +74,7 @@ void FreewbIMModule::updateCursorPosition()
     fcitx::InputContext *inputContext = instance_->lastFocusedInputContext();
     if (inputContext == nullptr)
     {
-        freewb_->sdbusProxy()->emitUpdateSpotRect(spotRect);
+        freewb_->sdbusProxy()->callPanelUpdateSpotRect(spotRect);
         return;
     }
 
@@ -83,7 +83,7 @@ void FreewbIMModule::updateCursorPosition()
     spotRect.y = rect.top();
     spotRect.w = rect.width();
     spotRect.h = rect.height();
-    freewb_->sdbusProxy()->emitUpdateSpotRect(spotRect);
+    freewb_->sdbusProxy()->callPanelUpdateSpotRect(spotRect);
 }
 
 void FreewbIMModule::commitString(const std::string &text) const

@@ -27,38 +27,38 @@ public:
 
     /** @brief 更新属性。 */
     /** @param payload 属性。 */
-    void emitUpdateProperties(const ToolbarPropertiesPayload &payload) override;
+    void callPanelUpdateProperties(const ToolbarPropertiesPayload &payload) override;
 
     /** @brief 显示工具栏。 */
-    void emitShowToolbar() override;
+    void callPanelShowToolbar() override;
 
     /** @brief 隐藏工具栏。 */
-    void emitHideToolbar() override;
+    void callPanelHideToolbar() override;
 
     /** @brief 更新候选框位置
      * @param payload 候选框位置。
      */
-    void emitUpdateSpotRect(const SpotRectPayload &payload) override;
+    void callPanelUpdateSpotRect(const SpotRectPayload &payload) override;
 
     /** @brief 更新候选框
      * @param payload 候选框。
      */
-    void emitUpdateCandidate(const CandidatePayload &payload) override;
+    void callPanelUpdateCandidate(const CandidatePayload &payload) override;
 
     /** @brief 更新候选框文本
      * @param payload 候选框文本。
      */
-    void emitUpdatePreeditText(const PreeditPayload &payload) override;
+    void callPanelUpdatePreeditText(const PreeditPayload &payload) override;
 
     /** @brief 更新候选框光标位置
      * @param caret 光标位置。
      */
-    void emitUpdatePreeditCaret(int caret) override;
+    void callPanelUpdatePreeditCaret(int caret) override;
 
     /** @brief 更新候选框辅助文本
      * @param payload 候选框辅助文本。
      */
-    void emitUpdateAux(const CandidateAuxPayload &payload) override;
+    void callPanelUpdateAux(const CandidateAuxPayload &payload) override;
 
 public: // settings 通过 D-Bus 调用 freewb-settings 服务的方法
     /**

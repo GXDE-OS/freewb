@@ -156,28 +156,28 @@ bool SDBusProxy::bindDBusSignalCallback(DBusSignalCallback callback)
     return registerPanelMatches();
 }
 
-void SDBusProxy::emitUpdateProperties(const ToolbarPropertiesPayload &payload)
+void SDBusProxy::callPanelUpdateProperties(const ToolbarPropertiesPayload &payload)
 {
     sendPanelRegisterProperties({toolbarPayloadToPropertyLine(payload)});
 }
 
-void SDBusProxy::emitShowToolbar()
+void SDBusProxy::callPanelShowToolbar()
 {
     sendPanelMethod("UpdateProperty", "s", "/Fcitx/im:Freewb");
 }
 
-void SDBusProxy::emitHideToolbar()
+void SDBusProxy::callPanelHideToolbar()
 {
     sendPanelMethod("UpdateProperty", "s", "/Fcitx/im:us");
 }
 
-void SDBusProxy::emitUpdateSpotRect(const SpotRectPayload &payload)
+void SDBusProxy::callPanelUpdateSpotRect(const SpotRectPayload &payload)
 {
     FREEWB_DEBUG("emitUpdateSpotRect x={} y={} w={} h={}", payload.x, payload.y, payload.w, payload.h);
     sendPanelMethod("SetSpotRect", "iiii", payload.x, payload.y, payload.w, payload.h);
 }
 
-void SDBusProxy::emitUpdateCandidate(const CandidatePayload &payload)
+void SDBusProxy::callPanelUpdateCandidate(const CandidatePayload &payload)
 {
     if (!bus_ || !available_)
     {
@@ -216,19 +216,19 @@ void SDBusProxy::emitUpdateCandidate(const CandidatePayload &payload)
     sendPanelMethod("ShowLookupTable", "b", hasLookup);
 }
 
-void SDBusProxy::emitUpdatePreeditText(const PreeditPayload &payload)
+void SDBusProxy::callPanelUpdatePreeditText(const PreeditPayload &payload)
 {
     static const char *const kEmptyAttr = "";
     sendPanelMethod("UpdatePreeditText", "ss", payload.text.c_str(), kEmptyAttr);
     sendPanelMethod("ShowPreedit", "b", payload.show ? 1 : 0);
 }
 
-void SDBusProxy::emitUpdatePreeditCaret(int caret)
+void SDBusProxy::callPanelUpdatePreeditCaret(int caret)
 {
     sendPanelMethod("UpdatePreeditCaret", "i", caret);
 }
 
-void SDBusProxy::emitUpdateAux(const CandidateAuxPayload &payload)
+void SDBusProxy::callPanelUpdateAux(const CandidateAuxPayload &payload)
 {
     static const char *const kEmptyAttr = "";
     sendPanelMethod("UpdateAux", "ss", payload.text.c_str(), kEmptyAttr);

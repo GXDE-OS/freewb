@@ -22,11 +22,11 @@ namespace
 void emitCandidateFrame(freewb::ipc::SDBusProxy &proxy, const freewb::SpotRectPayload &spot, const freewb::CandidatePayload &cand,
                         const freewb::PreeditPayload &preedit, const freewb::CandidateAuxPayload &aux)
 {
-    proxy.emitUpdateSpotRect(spot);
-    proxy.emitUpdateCandidate(cand);
-    proxy.emitUpdatePreeditText(preedit);
-    proxy.emitUpdatePreeditCaret(preedit.caret);
-    proxy.emitUpdateAux(aux);
+    proxy.callPanelUpdateSpotRect(spot);
+    proxy.callPanelUpdateCandidate(cand);
+    proxy.callPanelUpdatePreeditText(preedit);
+    proxy.callPanelUpdatePreeditCaret(preedit.caret);
+    proxy.callPanelUpdateAux(aux);
 }
 
 struct DemoState
@@ -267,13 +267,13 @@ void handleCommand(DemoState &s, const std::string &cmd)
     }
     else if (cmd == "3")
     {
-        proxy.emitShowToolbar();
+        proxy.callPanelShowToolbar();
         FREEWB_WARN("cmd=3 emitShowToolbar");
         std::cout << "UpdateProperty Freewb\n";
     }
     else if (cmd == "4")
     {
-        proxy.emitHideToolbar();
+        proxy.callPanelHideToolbar();
         FREEWB_WARN("cmd=4 emitHideToolbar");
         std::cout << "UpdateProperty us\n";
     }
@@ -282,21 +282,21 @@ void handleCommand(DemoState &s, const std::string &cmd)
         freewb::ToolbarPropertiesPayload im;
         im.uniqueName = "Freewb";
         im.name = "freewb-test";
-        proxy.emitUpdateProperties(im);
+        proxy.callPanelUpdateProperties(im);
 
         freewb::ToolbarPropertiesPayload fw;
         fw.uniqueName = "fullwidth";
         fw.shortDescription = "Half";
         fw.longDescription = "Half width";
         fw.active = false;
-        proxy.emitUpdateProperties(fw);
+        proxy.callPanelUpdateProperties(fw);
 
         freewb::ToolbarPropertiesPayload punc;
         punc.uniqueName = "punc";
         punc.shortDescription = "EN";
         punc.longDescription = "English punctuation";
         punc.active = false;
-        proxy.emitUpdateProperties(punc);
+        proxy.callPanelUpdateProperties(punc);
 
         FREEWB_WARN("cmd=5 emitUpdateProperties x3 (half/EN punct)");
         std::cout << "three RegisterProperties signals sent\n";
@@ -306,21 +306,21 @@ void handleCommand(DemoState &s, const std::string &cmd)
         freewb::ToolbarPropertiesPayload im;
         im.uniqueName = "Freewb";
         im.name = "freewb-test";
-        proxy.emitUpdateProperties(im);
+        proxy.callPanelUpdateProperties(im);
 
         freewb::ToolbarPropertiesPayload fw;
         fw.uniqueName = "fullwidth";
         fw.shortDescription = "Full";
         fw.longDescription = "Full width";
         fw.active = true;
-        proxy.emitUpdateProperties(fw);
+        proxy.callPanelUpdateProperties(fw);
 
         freewb::ToolbarPropertiesPayload punc;
         punc.uniqueName = "punc";
         punc.shortDescription = "CN";
         punc.longDescription = "Chinese punctuation";
         punc.active = true;
-        proxy.emitUpdateProperties(punc);
+        proxy.callPanelUpdateProperties(punc);
 
         FREEWB_WARN("cmd=6 emitUpdateProperties x3 (full/CN punct)");
         std::cout << "three RegisterProperties signals sent\n";

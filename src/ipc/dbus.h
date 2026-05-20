@@ -14,17 +14,17 @@ public:
     virtual bool bindDBusSignalCallback(DBusSignalCallback callback) = 0;
 
     // toolbar
-    virtual void emitUpdateProperties(const ::freewb::ToolbarPropertiesPayload &payload) = 0;
-    virtual void emitShowToolbar() = 0;
-    virtual void emitHideToolbar() = 0;
+    virtual void callPanelUpdateProperties(const ::freewb::ToolbarPropertiesPayload &payload) = 0;
+    virtual void callPanelShowToolbar() = 0;
+    virtual void callPanelHideToolbar() = 0;
 
     // candidate
-    virtual void emitUpdateSpotRect(const ::freewb::SpotRectPayload &payload) = 0;
-    virtual void emitUpdateCandidate(const ::freewb::CandidatePayload &payload) = 0;
+    virtual void callPanelUpdateSpotRect(const ::freewb::SpotRectPayload &payload) = 0;
+    virtual void callPanelUpdateCandidate(const ::freewb::CandidatePayload &payload) = 0;
 
-    virtual void emitUpdatePreeditText(const ::freewb::PreeditPayload &payload) = 0;
-    virtual void emitUpdatePreeditCaret(int caret) = 0;
-    virtual void emitUpdateAux(const ::freewb::CandidateAuxPayload &payload) = 0;
+    virtual void callPanelUpdatePreeditText(const ::freewb::PreeditPayload &payload) = 0;
+    virtual void callPanelUpdatePreeditCaret(int caret) = 0;
+    virtual void callPanelUpdateAux(const ::freewb::CandidateAuxPayload &payload) = 0;
 };
 
 } // namespace freewb::ipc
