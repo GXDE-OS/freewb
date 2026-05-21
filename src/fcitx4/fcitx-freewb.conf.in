@@ -12,5 +12,4 @@ Category=InputMethod
 Enabled=True
 Library=libfreewb-fcitx4.so
 Type=SharedLibrary
-Dependency=fcitx-punc
 IMRegisterMethod=ConfigFile

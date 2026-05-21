@@ -1,55 +1,35 @@
 message(STATUS "Building fcitx4 module")
 
-find_package(DBus1 REQUIRED)
-if (DBUS1_FOUND)
-    include_directories(${DBus1_INCLUDE_DIRS})
-    link_directories(${DBus1_LIBRARY_DIRS})
-endif()
-
 add_definitions(-D__FCITX4__)
 
 find_package(Fcitx 4.2.7 REQUIRED)
-if (FCITX_FOUND)
-  include_directories(${FCITX4_FCITX_INCLUDE_DIRS})
-  include_directories(${FCITX4_FCITX_CONFIG_INCLUDE_DIRS})
-  include_directories(${FCITX4_FCITX_UTILS_INCLUDE_DIRS})
-  message(STATUS "fcitx4 is found, libraries is: ${FCITX4_FCITX_LIBRARIES}")
+find_package(DBus1 REQUIRED)
+
+if (NOT FCITX_FOUND)
+  message(WARNING "fcitx4 is not found")
+  return()
 endif()
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
-include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${FCITX4_FCITX_INCLUDE_DIRS})
+include_directories(${FCITX4_FCITX_CONFIG_INCLUDE_DIRS})
+include_directories(${FCITX4_FCITX_UTILS_INCLUDE_DIRS})
+message(STATUS "fcitx4 is found, libraries is: ${FCITX4_FCITX_LIBRARIES}")
 
-set(fcitx_freewubi_sources
-  freewubi-config.c
-  freewubi.c
-  ini.c
-  freedict.c
-  freespecial.c
-  virtual_keyboard.c
-  panelproxy.c
-  inputstate.c
-)
-
-set(fcitx_freewubi_headers
-  ini.h
-  freewubi-config.h
-  freewubi-internal.h
-  freedict.h
-  utf8_in_gb18030.h
-  freespecial.h
-  virtual_keyboard.h
-  panelproxy.h
-  inputstate.h
-)
-
-fcitx_add_addon(lib${PROJECT_NAME}-fcitx4 SHARED ${fcitx_freewubi_sources} ${fcitx_freewubi_headers})
+fcitx_add_addon(lib${PROJECT_NAME}-fcitx4 SHARED module.cpp)
 
 target_link_libraries(lib${PROJECT_NAME}-fcitx4
-    ${LIBINTL_LIBRARIES}
-    ${LIBICONV_LIBRARIES}
-    ${DBus1_LIBRARY_DIRS}
     ${PROJECT_NAME}-ipc
+    ${PROJECT_NAME}-core
+    ${PROJECT_NAME}-utils
     ${FCITX4_FCITX_LIBRARIES}
+    ${DBus1_LIBRARIES}
+)
+
+target_include_directories(lib${PROJECT_NAME}-fcitx4 PRIVATE
+  ${DBus1_INCLUDE_DIRS}
+  ${CMAKE_SOURCE_DIR}/src/utils
+  ${CMAKE_SOURCE_DIR}/src/core
+  ${CMAKE_SOURCE_DIR}/src/ipc
 )
 
 configure_file(freewb.conf.in ${CMAKE_CURRENT_BINARY_DIR}/freewb.conf IMMEDIATE @ONLY)
