@@ -179,6 +179,8 @@ void MainProgram::connectSettingsDBus()
                 {
                     m_usrGenWordDialog->add_user_word(wordText, wordCode);
                     m_inputWin->close_user_word_operation_prompt();
+                    settings::instance().set_userWordFlg(1);
+                    m_panelDBusService->ReloadConfig();
                 }
                 else if (flg == 2)
                 {
@@ -201,6 +203,8 @@ void MainProgram::connectSettingsDBus()
                 {
                     m_usrGenWordDialog->delete_user_word(wordText, wordCode);
                     m_inputWin->close_user_word_operation_prompt();
+                    settings::instance().set_userWordFlg(1);
+                    m_panelDBusService->ReloadConfig();
                 }
                 else if (flg == 2)
                 {
