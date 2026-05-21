@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "special.h"
 #include "types.h"
 
 namespace freewb
@@ -30,7 +29,6 @@ private:
 private:
     std::string filePath_;
     std::unordered_map<std::string, std::vector<std::string>> entries_;
-    Special special_;
 };
 } // namespace freewb
 

@@ -97,9 +97,7 @@ void UserDict::appendCandidatesForPrefix(const std::string &prefix, CandidatePay
             {
                 continue;
             }
-            std::string display = text;
-            special_.format(display);
-            out.texts.push_back(std::move(display));
+            out.texts.push_back(text);
             out.fullCodes.push_back(key);
         }
     }
