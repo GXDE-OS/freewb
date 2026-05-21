@@ -226,7 +226,7 @@ void handleCommand(DemoState &s, const std::string &cmd)
             return;
         }
         else if (action == "switch_cap_state")
-            proxy.callToggleCapsStateMethod();
+            proxy.callPanelToggleCapsStateMethod();
         else
         {
             std::cout << "unknown settings action, use: s help\n";
@@ -340,7 +340,7 @@ void handleCommand(DemoState &s, const std::string &cmd)
         proxy.callOpenConfDirMethod();
         proxy.callCloseVkBoardMethod();
         proxy.callSwitchTableMethod();
-        proxy.callToggleCapsStateMethod();
+        proxy.callPanelToggleCapsStateMethod();
         FREEWB_WARN("cmd=7 settings no-arg smoke methods sent");
         std::cout << "settings no-arg methods sent\n";
     }

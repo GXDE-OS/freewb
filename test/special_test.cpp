@@ -5,7 +5,9 @@
 #include <cstdio>
 #include <ctime>
 #include <iostream>
+#include <optional>
 #include <string>
+#include <vector>
 
 #include "special.h"
 
@@ -119,6 +121,32 @@ bool test_unavailable_skips_format()
     return true;
 }
 
+bool test_format_money_digit()
+{
+    freewb::Special special;
+    std::string text = "1";
+    special.format(text);
+    CHECK(text.find("壹") != std::string::npos, "format(1) expands to money form");
+    return true;
+}
+
+bool test_format_special_values_for_one()
+{
+    freewb::Special special;
+    const std::vector<std::string> cands = special.formatSpecialValues("1");
+    CHECK(!cands.empty(), "formatSpecialValues(1) not empty");
+    CHECK(cands[0].find("壹") != std::string::npos, "first special value is money form");
+    return true;
+}
+
+bool test_format_special_values_for_date()
+{
+    freewb::Special special;
+    const std::vector<std::string> cands = special.formatSpecialValues("2005.8.26");
+    CHECK(cands.size() == 3U, "formatSpecialValues(2005.8.26) has three candidates like legacy");
+    return true;
+}
+
 } // namespace
 
 int main()
@@ -141,6 +169,18 @@ int main()
         ++failed;
     }
     if (!test_unavailable_skips_format())
+    {
+        ++failed;
+    }
+    if (!test_format_money_digit())
+    {
+        ++failed;
+    }
+    if (!test_format_special_values_for_one())
+    {
+        ++failed;
+    }
+    if (!test_format_special_values_for_date())
     {
         ++failed;
     }

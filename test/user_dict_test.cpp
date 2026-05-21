@@ -14,7 +14,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -24,16 +23,6 @@
 
 namespace
 {
-
-std::string expectedTodayYmdArabic()
-{
-    const std::time_t now = std::time(nullptr);
-    std::tm local{};
-    localtime_r(&now, &local);
-    char buf[64];
-    std::snprintf(buf, sizeof(buf), "%d年%d月%d日", local.tm_year + 1900, local.tm_mon + 1, local.tm_mday);
-    return buf;
-}
 
 freewb::CandidatePayload candidatesFor(const freewb::UserDict &dict, const std::string &prefix)
 {
@@ -158,8 +147,8 @@ void testBasicParse()
     EXPECT(dateCand.texts.size() == 2);
     if (dateCand.texts.size() == 2)
     {
-        EXPECT(dateCand.texts[0].find('$') == std::string::npos);
-        EXPECT(dateCand.texts[1] == expectedTodayYmdArabic());
+        EXPECT(dateCand.texts[0] == "$Y年$M月$D日");
+        EXPECT(dateCand.texts[1] == "$y年$m月$d日");
     }
 
     EXPECT(dict.contains("joke"));
