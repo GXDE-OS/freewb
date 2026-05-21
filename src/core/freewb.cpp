@@ -3,8 +3,11 @@
 #include <cstring>
 #include <utility>
 
+#include "chttrans.h"
 #include "key.h"
 #include "settings.h"
+#include "special.h"
+#include "statemanager.h"
 
 namespace freewb
 {
@@ -12,14 +15,12 @@ namespace freewb
 Freewb::Freewb(ipc::IDBus *dbusProxy, CommitCallback commitCallback) : log_("/tmp/freewb-engine.log"), dbusProxy_(dbusProxy)
 {
     punc_ = new Punc();
+    special_ = new Special();
     chttrans_ = new Chttrans();
-    candidateList_ = new CandidateList(chttrans_);
+    candidateList_ = new CandidateList(this);
     committer_ = new Committer(std::move(commitCallback), this);
     engineManager_ = new EngineManager(candidateList_, committer_);
-    userPhrase_ = new UserPhrase(
-        dbusProxy_,
-        [this](const std::string &phrase) { return engineManager_->calculateWubiPhraseCode(phrase); },
-        [this](int charCount) { return committer_->committedText(static_cast<std::size_t>(charCount)); });
+    stateManager_ = new StateManager(this);
     connectDBusCallback();
 }
 
@@ -50,10 +51,15 @@ Freewb::~Freewb()
         delete punc_;
         punc_ = nullptr;
     }
-    if (userPhrase_ != nullptr)
+    if (special_ != nullptr)
     {
-        delete userPhrase_;
-        userPhrase_ = nullptr;
+        delete special_;
+        special_ = nullptr;
+    }
+    if (stateManager_ != nullptr)
+    {
+        delete stateManager_;
+        stateManager_ = nullptr;
     }
 }
 
@@ -64,7 +70,7 @@ void Freewb::activate()
 
 void Freewb::deactivate()
 {
-    userPhrase_->reset();
+    stateManager_->reset();
     engineManager_->reset();
     candidateList_->clear();
     dbusProxy_->callPanelHideToolbar();
@@ -93,11 +99,26 @@ ipc::IDBus *Freewb::dbusProxy() const
     return dbusProxy_;
 }
 
+Committer *Freewb::committer() const
+{
+    return committer_;
+}
+
+Chttrans *Freewb::chttrans() const
+{
+    return chttrans_;
+}
+
+Special *Freewb::special() const
+{
+    return special_;
+}
+
 bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
 {
     FREEWB_DEBUG("keysym: {}, state: {}", static_cast<int>(keysym), static_cast<int>(state));
     bool processed = false;
-    processed = userPhrase_->processKey(keysym, state);
+    processed = stateManager_->processKey(keysym, state);
     if (processed)
     {
         return true;
@@ -132,7 +153,7 @@ bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
 
 void Freewb::reset()
 {
-    userPhrase_->reset();
+    stateManager_->reset();
     engineManager_->reset();
     candidateList_->clear();
 }
@@ -182,14 +203,8 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            const char *engine = engineManager_->currentEngineName();
-            if (engine != nullptr && std::strcmp(engine, "engine:py") == 0)
-            {
-                return false;
-            }
             // 在线造词，使用历史上屏的文本
-            userPhrase_->enterAddPhraseState(false);
-            return true;
+            return stateManager_->enterAddPhraseState(false);
         }
     }
     {
@@ -198,14 +213,8 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeyState wantState = static_cast<FreewbKeyState>(FreewbKeyState_Ctrl | FreewbKeyState_Alt);
         if (keysym == keySym && state == wantState)
         {
-            const char *engine = engineManager_->currentEngineName();
-            if (engine != nullptr && std::strcmp(engine, "engine:py") == 0)
-            {
-                return false;
-            }
             // 在线造词，使用剪贴板的文本
-            userPhrase_->enterAddPhraseState(true);
-            return true;
+            return stateManager_->enterAddPhraseState(true);
         }
     }
     {
@@ -213,15 +222,9 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            const char *engine = engineManager_->currentEngineName();
-            if (engine != nullptr && std::strcmp(engine, "engine:py") == 0)
-            {
-                return false;
-            }
             // 在线删词
             const std::string &delText = committer_->lastCommitString();
-            userPhrase_->enterDeletePhraseState(delText);
-            return true;
+            return stateManager_->enterDeletePhraseState(delText);
         }
     }
     {
@@ -313,7 +316,7 @@ bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
 
     if (keysym == FreewbKey_Escape)
     {
-        userPhrase_->reset();
+        stateManager_->reset();
         candidateList_->clear();
         engineManager_->reset();
         return true;
@@ -351,6 +354,16 @@ bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         candidateList_->popPreeditText();
         engineManager_->refreshEngineResult();
         return true;
+    }
+
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_tempEnglish().c_str());
+        const FreewbKeySym tempEnglishKey = Key::keySymFromUniqueName(keyString);
+        if (keysym == tempEnglishKey)
+        {
+            const char *const commandPrefix = Key::keySymToName(keysym);
+            return stateManager_->enterTempEnglishState(commandPrefix != nullptr ? std::string(commandPrefix) : std::string());
+        }
     }
 
     return false;
@@ -398,6 +411,11 @@ void Freewb::connectDBusCallback()
 
 void Freewb::updateCandidateAndPreeditToUI()
 {
+    // 用户造词/删词状态，不更新候选窗UI
+    // 由状态机更新造词/删词的相关信息到UI
+    if (stateManager_->isUserPhraseState()) {
+        return;
+    }
     dbusProxy_->callPanelUpdatePreeditText({.text = candidateList_->preeditText(),
                                              .caret = candidateList_->cursor(),
                                              .show = !candidateList_->preeditText().empty()});

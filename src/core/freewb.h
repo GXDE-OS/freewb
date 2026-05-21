@@ -9,11 +9,12 @@
 #include "punc.h"
 #include "sdbus_proxy.h"
 #include "types.h"
-#include "userphrase.h"
-
 namespace freewb
 {
 class Committer;
+class Chttrans;
+class Special;
+class StateManager;
 
 class Freewb
 {
@@ -30,7 +31,10 @@ public:
     ipc::IDBus *dbusProxy() const;
     EngineManager *engineManager() const;
     CandidateList *candidateList() const;
+    Committer *committer() const;
+    Chttrans *chttrans() const;
     Punc *punc() const;
+    Special *special() const;
 
 private:
     bool handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state);
@@ -45,7 +49,8 @@ private:
     CandidateList *candidateList_ = nullptr;
     Committer *committer_ = nullptr;
     Punc *punc_ = nullptr;
-    UserPhrase *userPhrase_ = nullptr;
+    Special *special_ = nullptr;
+    StateManager *stateManager_ = nullptr;
 };
 } // namespace freewb
 

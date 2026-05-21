@@ -5,12 +5,15 @@
 #include <string>
 #include <utility>
 
+#include "chttrans.h"
+#include "freewb.h"
 #include "log.h"
 #include "settings.h"
+#include "special.h"
 
 namespace freewb
 {
-CandidateList::CandidateList(Chttrans *chttrans) : cursor_(-1), chttrans_(chttrans)
+CandidateList::CandidateList(Freewb *freewb) : cursor_(-1), freewb_(freewb)
 {
     loadSettings();
 }
@@ -50,7 +53,10 @@ void CandidateList::syncVisiblePage()
     const int start = pageIndex_ * wordCount_;
     const int end = std::min(start + wordCount_, total);
     const bool codeRemind = settings::instance().get_codeRemind();
-    const bool simpTradOn = chttrans_ != nullptr && chttrans_->available();
+    Chttrans *const chttrans = freewb_ != nullptr ? freewb_->chttrans() : nullptr;
+    Special *const special = freewb_ != nullptr ? freewb_->special() : nullptr;
+    const bool simpTradOn = chttrans != nullptr && chttrans->available();
+    const bool specialOn = special != nullptr && special->available();
     const int nVisible = end - start;
     const auto n = static_cast<std::size_t>(nVisible);
 
@@ -63,12 +69,17 @@ void CandidateList::syncVisiblePage()
         const std::size_t dst = static_cast<std::size_t>(j);
 
         currentPageTexts_[dst] = allTexts_[src];
-        if (chttrans_ != nullptr)
+        bool showTradHint = false;
+        if (chttrans != nullptr)
         {
-            chttrans_->simpToTrad(currentPageTexts_[dst]);
+            const std::string &raw = allTexts_[src];
+            chttrans->simpToTrad(currentPageTexts_[dst]);
+            showTradHint = simpTradOn && currentPageTexts_[dst] != raw;
         }
-
-        const bool showTradHint = simpTradOn && currentPageTexts_[dst] != allTexts_[src];
+        if (specialOn)
+        {
+            special->format(currentPageTexts_[dst]);
+        }
 
         std::string prompt;
         if (showTradHint)

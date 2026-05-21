@@ -4,14 +4,14 @@
 #include <string>
 #include <vector>
 
-#include "chttrans.h"
-
 namespace freewb
 {
+class Freewb;
+
 class CandidateList
 {
 public:
-    CandidateList(Chttrans *chttrans);
+    explicit CandidateList(Freewb *freewb);
     ~CandidateList();
 
     void loadSettings();
@@ -52,7 +52,7 @@ private:
     int totalPages_ = 0;
     int wordCount_ = 5;
     std::string preeditText_;
-    Chttrans *chttrans_ = nullptr;
+    Freewb *freewb_ = nullptr;
 };
 } // namespace freewb
 
