@@ -19,7 +19,7 @@ bool CandidateItem::eventFilter(QObject *obj, QEvent *event)
 {
     bool isProcessed = false;
 
-    if (obj == ui->labelWord)
+    if (obj == ui->labelWord && !m_wordText.isEmpty())
     {
         if (event->type() == QEvent::Enter)
         {
@@ -65,14 +65,14 @@ void CandidateItem::set_text(const QString &label, const QString &wordText, cons
 {
     m_wordText = wordText;
     QString tmp = wordText;
-
     if (tmp.length() > m_maxCharCount + 3)
     {
-        tmp = tmp.left(m_maxCharCount - 2) + "…" + tmp.right(2);
+        tmp = tmp.left(m_maxCharCount - 2) + QStringLiteral("…") + tmp.right(2);
     }
-    // puts(tmp.toUtf8().constData());
     ui->labelWord->setText(label + tmp);
     ui->labelPrompt->setText(promptText);
+    ui->labelPrompt->setVisible(!promptText.isEmpty());
+    ui->labelWord->setCursor(QCursor(Qt::PointingHandCursor));
     adjustSize();
 }
 
@@ -80,8 +80,15 @@ void CandidateItem::set_text(const QString &label, const QString &wordText, cons
 void CandidateItem::clear_text()
 {
     m_wordText.clear();
+    m_hoverFlg = false;
+    if (m_hoverTimer != nullptr)
+    {
+        m_hoverTimer->stop();
+    }
     ui->labelWord->clear();
     ui->labelPrompt->clear();
+    ui->labelPrompt->setVisible(false);
+    ui->labelWord->setCursor(Qt::ArrowCursor);
     adjustSize();
 }
 

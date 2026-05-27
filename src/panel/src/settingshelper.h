@@ -22,7 +22,9 @@
 #include <vector>
 
 #include <QFont>
+#include <QIcon>
 #include <QObject>
+#include <QSize>
 #include <QString>
 
 // ─── 软键盘按键索引（keyboard + settingwin 共用）─────────────────────────────────────
@@ -183,6 +185,9 @@ bool freewb_custom_key_info_apply_to_values(std::string &chars, std::string &mar
 
 QFont freewb_candi_text_qfont(const settings::Settings &cfg);
 void freewb_candi_text_font_apply_qfont(settings::Settings &cfg, const QFont &font);
+
+/** 皮肤目录下图标路径 → QIcon：.svg 按逻辑尺寸栅格化，其余格式使用 QIcon(path)。 */
+QIcon freewb_icon_from_skin_path(const QString &path, const QSize &logicalSize, qreal devicePixelRatio);
 
 // ═════════════════════════════════════════════════════════════════════════════════════
 // 配置变更通知：在面板各窗口 / 引擎侧之间转发 signal

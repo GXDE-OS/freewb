@@ -1,6 +1,7 @@
 #include "toolbarwin.h"
 
 #include <QDebug>
+#include <QFile>
 #include <QLabel>
 
 #include "config.h"
@@ -15,7 +16,7 @@
 #define QSS_BG1 QString("border-image: url(%1);").arg(m_skinData.bg1ImagePath)
 #define QSS_MENU_EXTEND_OPEN QString("border-image: url(%1);").arg(m_skinData.stbMenuExtendBtn.closeIcoPath)
 #define QSS_MENU_EXTEND_CLOSE QString("border-image: url(%1);").arg(m_skinData.stbMenuExtendBtn.openIcoPath)
-#define QSS_INPUT_MODE QString("border-image: url(:/image/transparent.png);font: 12pt \"Ubuntu\";color: rgb(55, 126, 236);")
+#define QSS_MODE_BTN QStringLiteral("border:none;padding:0;margin:0;background:transparent;")
 #define QSS_FULL_WIDTH QString("border-image: url(%1);").arg(m_skinData.stbFullHalfBtn.fullIcoPath)
 #define QSS_HALF_WIDTH QString("border-image: url(%1);").arg(m_skinData.stbFullHalfBtn.halfIcoPath)
 #define QSS_MARK_CN QString("border-image: url(%1);").arg(m_skinData.stbCnEnMarkBtn.cnMarkIcoPath)
@@ -280,11 +281,11 @@ void ToolbarWin::slot_load_skin(const QString &skinId)
 
     m_skinData.stbModeBtn.isExist = settings.value("btnModeFlg").toInt();
     m_skinData.stbModeBtn.rect = settings.value("btnModeGeometry").toRect();
-    //    m_skinData.stbModeBtn.wbFontIcoPath = skinFolder + settings.value( "btnModewbFontImg" ).toString();
-    //    m_skinData.stbModeBtn.wbPinyinIcoPath = skinFolder + settings.value( "btnModewbPyImg" ).toString();
-    //    m_skinData.stbModeBtn.stdPinyinIcoPath = skinFolder + settings.value( "btnModeStdPyImg" ).toString();
-    //    m_skinData.stbModeBtn.englishIcoPath = skinFolder + settings.value( "btnModeEnglishImg" ).toString();
-    //    m_skinData.stbModeBtn.capsIcoPath = skinFolder + settings.value( "btnModeCapsImg" ).toString();
+    m_skinData.stbModeBtn.wbFontIcoPath = skinFolder + settings.value("btnModewbFontImg").toString();
+    m_skinData.stbModeBtn.wbPinyinIcoPath = skinFolder + settings.value("btnModewbPyImg").toString();
+    m_skinData.stbModeBtn.stdPinyinIcoPath = skinFolder + settings.value("btnModeStdPyImg").toString();
+    m_skinData.stbModeBtn.englishIcoPath = skinFolder + settings.value("btnModeEnglishImg").toString();
+    m_skinData.stbModeBtn.capsIcoPath = skinFolder + settings.value("btnModeCapsImg").toString();
 
     m_skinData.stbFullHalfBtn.isExist = settings.value("btnCharWidthFlg").toInt();
     m_skinData.stbFullHalfBtn.rect = settings.value("btnCharWidthGeometry").toRect();
@@ -356,8 +357,6 @@ void ToolbarWin::update_skin()
     if (m_skinData.stbModeBtn.isExist)
     {
         ui->btnMode->setGeometry(m_skinData.stbModeBtn.rect);
-        ui->btnMode->setStyleSheet(QSS_INPUT_MODE);
-        ui->btnMode->setFont(freewb_candi_text_qfont(settings::instance()));
         slot_update_input_mode_ico();
     }
     else
@@ -732,46 +731,32 @@ void ToolbarWin::update_extend_menu_ico()
 void ToolbarWin::slot_update_input_mode_ico()
 {
     s_capsFlg = Keyboard::get_caps_flg();
-    const QString &engineName = get_input_mode();
+    ui->btnMode->setText(QString());
 
+    const QString &inputMode = get_input_mode();
+    QString iconPath = m_skinData.stbModeBtn.wbFontIcoPath;
     if (s_capsFlg)
     {
-        ui->btnMode->setText(_("Capital letters"));
-    }
-    else if (engineName == kEngineWbzx)
-    {
-        ui->btnMode->setText(_(" Wubi font"));
-    }
-    else if (engineName == kEngineWbpy)
-    {
-        ui->btnMode->setText(_(" Wubi pinyin"));
-    }
-    else if (engineName == kEnginePy)
-    {
-        ui->btnMode->setText(_("Pinyin input"));
-    }
-}
-
-// 更新工具条上的输入模式指示图标
-void ToolbarWin::update_input_mode_ico(const QString &inputMode)
-{
-    s_capsFlg = Keyboard::get_caps_flg();
-    if (s_capsFlg)
-    {
-        ui->btnMode->setText(_("Capital letters"));
-    }
-    else if (inputMode == kEngineWbzx)
-    {
-        ui->btnMode->setText(_(" Wubi font"));
+        iconPath = m_skinData.stbModeBtn.capsIcoPath;
     }
     else if (inputMode == kEngineWbpy)
     {
-        ui->btnMode->setText(_(" Wubi pinyin"));
+        iconPath = m_skinData.stbModeBtn.wbPinyinIcoPath;
     }
     else if (inputMode == kEnginePy)
     {
-        ui->btnMode->setText(_("Pinyin input"));
+        iconPath = m_skinData.stbModeBtn.stdPinyinIcoPath;
     }
+    else if (inputMode == kEngineEn)
+    {
+        iconPath = m_skinData.stbModeBtn.englishIcoPath;
+    }
+
+    ui->btnMode->setStyleSheet(QSS_MODE_BTN);
+    const QSize iconSize = m_skinData.stbModeBtn.rect.size();
+    const qreal dpr = qMax(1.0, ui->btnMode->devicePixelRatioF());
+    ui->btnMode->setIcon(freewb_icon_from_skin_path(iconPath, iconSize, dpr));
+    ui->btnMode->setIconSize(iconSize);
 }
 
 // 更新工具条上的全半角指示图标
@@ -994,7 +979,7 @@ void ToolbarWin::set_traditional_mode(bool isTraditional)
 {
     s_isTraditionalMode = isTraditional;
     update_char_font_ico();
-    update_input_mode_ico(s_inputMode);
+    slot_update_input_mode_ico();
 }
 
 void ToolbarWin::switch_char_set()

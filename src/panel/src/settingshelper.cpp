@@ -3,6 +3,10 @@
 #include <array>
 #include <vector>
 
+#include <QPainter>
+#include <QPixmap>
+#include <QSvgRenderer>
+
 #include "key.h"
 #include "settings.h"
 
@@ -111,6 +115,28 @@ void freewb_candi_text_font_apply_qfont(settings::Settings &cfg, const QFont &fo
         psz = font.pixelSize() > 0 ? font.pixelSize() : 14;
     cfg.set_candiTextFontName(fromStdUtf8(font.family()));
     cfg.set_candiTextFontSize(psz);
+}
+
+QIcon freewb_icon_from_skin_path(const QString &path, const QSize &logicalSize, qreal devicePixelRatio)
+{
+    if (!path.endsWith(QLatin1String(".svg"), Qt::CaseInsensitive))
+    {
+        return QIcon(path);
+    }
+
+    const qreal dpr = qMax(1.0, devicePixelRatio);
+    const int pixmapW = qMax(1, qRound(logicalSize.width() * dpr));
+    const int pixmapH = qMax(1, qRound(logicalSize.height() * dpr));
+    QPixmap pixmap(pixmapW, pixmapH);
+    pixmap.fill(Qt::transparent);
+    QSvgRenderer renderer(path);
+    if (renderer.isValid())
+    {
+        QPainter painter(&pixmap);
+        renderer.render(&painter, QRectF(0, 0, pixmapW, pixmapH));
+    }
+    pixmap.setDevicePixelRatio(dpr);
+    return QIcon(pixmap);
 }
 
 const std::vector<std::string> &freewb_runtime_skin_list()

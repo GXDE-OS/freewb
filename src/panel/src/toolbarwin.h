@@ -72,11 +72,11 @@ typedef struct
 {
     bool isExist;
     QRect rect;
-    //    QString wbFontIcoPath;
-    //    QString wbPinyinIcoPath;
-    //    QString stdPinyinIcoPath;
-    //    QString englishIcoPath;
-    //    QString capsIcoPath;
+    QString wbFontIcoPath;
+    QString wbPinyinIcoPath;
+    QString stdPinyinIcoPath;
+    QString englishIcoPath;
+    QString capsIcoPath;
 } SkinToolBarModeBtn;
 
 // 工具条界面按钮-全半角按钮
@@ -253,7 +253,6 @@ protected:
     void update_mark_mode_ico();
     void update_char_set_ico();
     void update_vk_mode_ckecked_state(VirtualKeyboardMode mode);
-    void update_input_mode_ico(const QString &inputMode);
 
     void fcitx_charFont_updated(const QString &param);
     void fcitx_charWidth_updated(const QString &param);

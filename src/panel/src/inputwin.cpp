@@ -119,8 +119,10 @@ InputWin::InputWin(QWidget *parent) : QWidget(parent), ui(new Ui::InputWin)
     m_mouseLastPosition = QPoint();
     m_isUserWordMode = false;
 
-    m_dictFindWin.setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+    m_dictFindWin.setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint |
+                                  Qt::WindowDoesNotAcceptFocus);
     m_dictFindWin.setAttribute(Qt::WA_TranslucentBackground);
+    m_dictFindWin.setAttribute(Qt::WA_ShowWithoutActivating, true);
     m_dictFindLabel = new QLabel(&m_dictFindWin);
     m_dictFindLabel->setWordWrap(true);
     m_dictFindLabel->setTextFormat(Qt::RichText);
@@ -275,6 +277,14 @@ void InputWin::init_ui_table()
     ui->tableWidget->setCellWidget(0, MAX_CANDIDATE_WORD_COUNT + 2, m_btnNextPage);
     connect(m_btnPrevPage, &QPushButton::clicked, this, &InputWin::slot_btnPrevPage_clicked);
     connect(m_btnNextPage, &QPushButton::clicked, this, &InputWin::slot_btnNextPage_clicked);
+
+    // 候选列与翻页按钮之间的占位列（会被拉宽），避免空白区仍显示手型/悬停
+    QWidget *paddingCell = new QWidget(ui->tableWidget);
+    paddingCell->setCursor(Qt::ArrowCursor);
+    paddingCell->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    ui->tableWidget->setCellWidget(0, MAX_CANDIDATE_WORD_COUNT, paddingCell);
+
+    ui->tableWidget->setCursor(Qt::ArrowCursor);
 }
 
 void InputWin::slot_load_skin(const QString &skinId)
@@ -815,17 +825,27 @@ void InputWin::set_candidate_text(int idx, const QString &label, const QString &
     QString str = label;
     str.replace('.', m_separateChar);
 
-    // item->set_text( " " + str + " ", wordText, promptText );
+    QString displayPrompt = promptText;
+    if (m_displayMode == CWDM_ONE_ROW)
+    {
+        // 单行：词与编码提示之间一格；项末与下一序号之间两格
+        if (!promptText.isEmpty())
+        {
+            displayPrompt = QLatin1Char(' ') + promptText + QStringLiteral("  ");
+        }
+        else
+        {
+            displayPrompt = QStringLiteral("  ");
+        }
+    }
 
-    // printf("[%s]\n[%s]",word.toUtf8().constData(),str.toUtf8().constData());
-
-    item->set_text(str, wordText, promptText);
+    item->set_text(str, wordText, displayPrompt);
 
     const QFont font = freewb_candi_text_qfont(settings::instance());
     const QFontMetrics fm(font);
-    const QString cellText = str + wordText + promptText;
-    const int cellWidth = fm.horizontalAdvance(cellText) + fm.horizontalAdvance(QLatin1Char(' '));
-    item->setMinimumSize(QSize(cellWidth, fm.height()));
+    const int cellWidth = item->sizeHint().width();
+    const int cellHeight = fm.height();
+    item->setFixedSize(cellWidth, cellHeight);
 }
 
 void InputWin::clear_candidate_text(int idx)
