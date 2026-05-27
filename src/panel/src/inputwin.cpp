@@ -1,5 +1,8 @@
 #include "inputwin.h"
 
+#include <QHBoxLayout>
+#include <QRegExp>
+
 #include "config.h"
 #include "key.h"
 #include "log.h"
@@ -64,11 +67,7 @@ QString cnEnSwitchDisplayText(const std::string &token)
 
 } // namespace
 
-#define MIN_WIN_WIDTH 250           // 最小候选窗口宽度
-#define MAX_CANDIDATE_WORD_COUNT 10 // 能够显示候选词组的最多个数
-
-#define TABLE_ROW MAX_CANDIDATE_WORD_COUNT
-#define TABLE_COLUMN (MAX_CANDIDATE_WORD_COUNT + 3) // 空白列＋上下翻页按钮
+#define MIN_WIN_WIDTH 250 // 最小候选窗口宽度
 
 #define QSS_IM_PROMPT "color:rgb(136, 138, 133);"
 
@@ -118,9 +117,15 @@ InputWin::InputWin(QWidget *parent) : QWidget(parent), ui(new Ui::InputWin)
     m_mouseIsPressed = false;
     m_mouseLastPosition = QPoint();
     m_isUserWordMode = false;
+    m_candiWordItem = 0;
+    for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; ++i)
+    {
+        m_candidateItems[i] = nullptr;
+        m_multiRowRows[i] = nullptr;
+    }
 
     m_dictFindWin.setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint |
-                                  Qt::WindowDoesNotAcceptFocus);
+                                 Qt::WindowDoesNotAcceptFocus);
     m_dictFindWin.setAttribute(Qt::WA_TranslucentBackground);
     m_dictFindWin.setAttribute(Qt::WA_ShowWithoutActivating, true);
     m_dictFindLabel = new QLabel(&m_dictFindWin);
@@ -129,7 +134,7 @@ InputWin::InputWin(QWidget *parent) : QWidget(parent), ui(new Ui::InputWin)
     m_dictFindLabel->setStyleSheet(QSS_DICT_INFO_WIN);
 
     init_im_prompt_lable();
-    init_ui_table();
+    init_ui_candidates();
     install_evt_filter();
     slot_load_setting_data();
 
@@ -204,38 +209,9 @@ void InputWin::slot_load_setting_data()
     CandidateItem *item;
     for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; i++)
     {
-        item = qobject_cast<CandidateItem *>(ui->tableWidget->cellWidget(0, i));
+        item = m_candidateItems[i];
         Q_ASSERT(item);
-        item->set_text_font(font);
-        item->set_hover_color(qRgb(255, 0, 0));
-
-        if (i == 0)
-        {
-            // item->set_word_text_color( qRgb(55,126,236) );
-            item->set_word_text_color(qRgb(0, 0, 255));
-        }
-        else
-        {
-            item->set_word_text_color(wordCcolor);
-        }
-        item->set_prompt_text_color(promptColor);
-        item->set_disp_max_char_count(m_candiCharCount);
-
-        item = qobject_cast<CandidateItem *>(ui->tableWidget->cellWidget(i, 0));
-        Q_ASSERT(item);
-        item->set_text_font(font);
-
-        item->set_hover_color(qRgb(255, 0, 0));
-        if (i == 0)
-        {
-            item->set_word_text_color(qRgb(0, 0, 255));
-        }
-        else
-        {
-            item->set_word_text_color(wordCcolor);
-        }
-        item->set_prompt_text_color(promptColor);
-        item->set_disp_max_char_count(m_candiCharCount);
+        style_candidate_item(item, i, font, wordCcolor, promptColor);
     }
 
     // 载入皮肤
@@ -249,42 +225,135 @@ void InputWin::slot_load_setting_data()
     }
 }
 
-void InputWin::init_ui_table()
+void InputWin::style_candidate_item(CandidateItem *item, int idx, const QFont &font, const QColor &wordColor,
+                                    const QColor &promptColor)
 {
-    ui->tableWidget->setRowCount(TABLE_ROW);
-    ui->tableWidget->setColumnCount(TABLE_COLUMN);
-    for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; i++)
+    item->set_text_font(font);
+    item->set_hover_color(qRgb(255, 0, 0));
+    if (idx == 0)
     {
-        for (int j = 0; j < MAX_CANDIDATE_WORD_COUNT; j++)
+        item->set_word_text_color(qRgb(0, 0, 255));
+    }
+    else
+    {
+        item->set_word_text_color(wordColor);
+    }
+    item->set_prompt_text_color(promptColor);
+    item->set_disp_max_char_count(m_candiCharCount);
+}
+
+void InputWin::init_ui_candidates()
+{
+    for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; ++i)
+    {
+        m_candidateItems[i] = new CandidateItem(ui->widgetCandiOneRow);
+        m_candidateItems[i]->set_word_text_cursor();
+        connect(m_candidateItems[i], &CandidateItem::signal_cursor_hover, this, &InputWin::slot_dict_find);
+        connect(m_candidateItems[i], &CandidateItem::signal_clicked, this, [this, i]() { on_candidate_clicked(i); });
+        ui->hLayoutCandiOneRow->addWidget(m_candidateItems[i]);
+
+        m_multiRowRows[i] = new QWidget(ui->widgetCandiMultiRow);
+        m_multiRowRows[i]->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Fixed);
+        auto *rowLayout = new QHBoxLayout(m_multiRowRows[i]);
+        rowLayout->setContentsMargins(0, 0, 0, 0);
+        rowLayout->setSpacing(0);
+        rowLayout->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        rowLayout->addStretch(1);
+        ui->vLayoutCandiMultiRows->addWidget(m_multiRowRows[i], 0, Qt::AlignTop);
+    }
+
+    ui->vLayoutCandiMultiRows->setAlignment(Qt::AlignTop);
+    ui->hLayoutCandiMultiOuter->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    for (int i = 0; i < ui->hLayoutCandiMultiOuter->count(); ++i)
+    {
+        if (QLayoutItem *layoutItem = ui->hLayoutCandiMultiOuter->itemAt(i))
         {
-            if ((i == 0) || (i != 0 && j == 0))
-            {
-                CandidateItem *item = new CandidateItem(ui->tableWidget);
-                ui->tableWidget->setCellWidget(i, j, item);
-                item->set_word_text_cursor();
-                connect(item, &CandidateItem::signal_cursor_hover, this, &InputWin::slot_dict_find);
-            }
+            layoutItem->setAlignment(Qt::AlignTop);
         }
     }
 
-    m_btnPrevPage = new QPushButton(ui->tableWidget);
-    m_btnNextPage = new QPushButton(ui->tableWidget);
+    ui->hLayoutCandiOneRow->addStretch(1);
+
+    m_btnPrevPage = new QPushButton(ui->widgetCandiOneRow);
+    m_btnNextPage = new QPushButton(ui->widgetCandiOneRow);
     m_btnPrevPage->setFixedWidth(20);
     m_btnNextPage->setFixedWidth(20);
     m_btnPrevPage->setCursor(QCursor(Qt::PointingHandCursor));
     m_btnNextPage->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->tableWidget->setCellWidget(0, MAX_CANDIDATE_WORD_COUNT + 1, m_btnPrevPage);
-    ui->tableWidget->setCellWidget(0, MAX_CANDIDATE_WORD_COUNT + 2, m_btnNextPage);
+    ui->hLayoutCandiOneRow->addWidget(m_btnPrevPage);
+    ui->hLayoutCandiOneRow->addWidget(m_btnNextPage);
+
     connect(m_btnPrevPage, &QPushButton::clicked, this, &InputWin::slot_btnPrevPage_clicked);
     connect(m_btnNextPage, &QPushButton::clicked, this, &InputWin::slot_btnNextPage_clicked);
 
-    // 候选列与翻页按钮之间的占位列（会被拉宽），避免空白区仍显示手型/悬停
-    QWidget *paddingCell = new QWidget(ui->tableWidget);
-    paddingCell->setCursor(Qt::ArrowCursor);
-    paddingCell->setAttribute(Qt::WA_TransparentForMouseEvents, true);
-    ui->tableWidget->setCellWidget(0, MAX_CANDIDATE_WORD_COUNT, paddingCell);
+    ui->widgetCandiArea->setCursor(Qt::ArrowCursor);
+    ui->widgetCandiMultiRow->hide();
+}
 
-    ui->tableWidget->setCursor(Qt::ArrowCursor);
+void InputWin::apply_candidate_container_layout()
+{
+    const bool itemsInOneRowLayout =
+        m_candidateItems[0] != nullptr && m_candidateItems[0]->parentWidget() == ui->widgetCandiOneRow;
+
+    if (m_displayMode == CWDM_ONE_ROW)
+    {
+        ui->widgetCandiOneRow->show();
+        ui->widgetCandiMultiRow->hide();
+
+        if (!itemsInOneRowLayout)
+        {
+            for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; ++i)
+            {
+                m_multiRowRows[i]->layout()->removeWidget(m_candidateItems[i]);
+                m_candidateItems[i]->setParent(ui->widgetCandiOneRow);
+                ui->hLayoutCandiOneRow->insertWidget(i, m_candidateItems[i]);
+            }
+            ui->hLayoutCandiMultiPage->removeWidget(m_btnPrevPage);
+            ui->hLayoutCandiMultiPage->removeWidget(m_btnNextPage);
+            m_btnPrevPage->setParent(ui->widgetCandiOneRow);
+            m_btnNextPage->setParent(ui->widgetCandiOneRow);
+            ui->hLayoutCandiOneRow->addWidget(m_btnPrevPage);
+            ui->hLayoutCandiOneRow->addWidget(m_btnNextPage);
+        }
+    }
+    else
+    {
+        ui->widgetCandiOneRow->hide();
+        ui->widgetCandiMultiRow->show();
+
+        if (itemsInOneRowLayout)
+        {
+            for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; ++i)
+            {
+                ui->hLayoutCandiOneRow->removeWidget(m_candidateItems[i]);
+                m_candidateItems[i]->setParent(m_multiRowRows[i]);
+                qobject_cast<QHBoxLayout *>(m_multiRowRows[i]->layout())->insertWidget(0, m_candidateItems[i]);
+            }
+            ui->hLayoutCandiOneRow->removeWidget(m_btnPrevPage);
+            ui->hLayoutCandiOneRow->removeWidget(m_btnNextPage);
+            m_btnPrevPage->setParent(ui->widgetCandiMultiRow);
+            m_btnNextPage->setParent(ui->widgetCandiMultiRow);
+            ui->hLayoutCandiMultiPage->addWidget(m_btnPrevPage);
+            ui->hLayoutCandiMultiPage->addWidget(m_btnNextPage);
+        }
+    }
+
+    m_btnPrevPage->show();
+    m_btnNextPage->show();
+}
+
+void InputWin::update_candidate_visibility(int activeCount)
+{
+    activeCount = qBound(0, activeCount, MAX_CANDIDATE_WORD_COUNT);
+    for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; ++i)
+    {
+        const bool visible = (i < activeCount);
+        m_candidateItems[i]->setVisible(visible);
+        if (m_displayMode == CWDM_MULTI_ROW)
+        {
+            m_multiRowRows[i]->setVisible(visible);
+        }
+    }
 }
 
 void InputWin::slot_load_skin(const QString &skinId)
@@ -497,29 +566,31 @@ bool InputWin::eventFilter(QObject *obj, QEvent *event)
 
 void InputWin::adjust_candi_win_width()
 {
-    int lenPreEdtLine = 0, lenTable = 0, lenPrompt = 0, len = 0;
-    int tableColumn = ui->tableWidget->columnCount();
+    int lenPreEdtLine = 0;
+    int lenCandi = 0;
+    int lenPrompt = 0;
+    int len = 0;
 
-    // int fontWidth = QFontMetrics( freewb_candi_text_qfont(settings::instance()) ).width("中");
     lenPreEdtLine =
         ui->labelPreEdit->sizeHint().width() + ui->btnCharWidth->width() + ui->btnMark->width() + ui->btnLogo->width();
-    for (int i = 0; i < tableColumn; i++)
+
+    if (m_displayMode == CWDM_ONE_ROW)
     {
-        ui->tableWidget->resizeColumnToContents(i);
-        lenTable += ui->tableWidget->horizontalHeader()->sectionSize(i);
+        lenCandi = ui->widgetCandiOneRow->sizeHint().width();
     }
+    else
+    {
+        lenCandi = ui->widgetCandiMultiRow->sizeHint().width();
+    }
+
     lenPrompt = ui->labelPrompt->sizeHint().width();
-    len = lenPreEdtLine > lenTable ? lenPreEdtLine : lenTable;
+    len = lenPreEdtLine > lenCandi ? lenPreEdtLine : lenCandi;
     len = len > lenPrompt ? len : lenPrompt;
     if (len < MIN_WIN_WIDTH)
     {
         len = MIN_WIN_WIDTH;
     }
-    if (lenTable < len)
-    {
-        ui->tableWidget->setColumnWidth(tableColumn - 3,
-                                        len - lenTable + ui->tableWidget->horizontalHeader()->sectionSize(tableColumn - 3));
-    }
+
     len += ui->horizontalLayout->contentsMargins().left() + ui->horizontalLayout->contentsMargins().right();
     len += (ui->labelLeft->width() + ui->labelRight->width());
 
@@ -536,23 +607,12 @@ void InputWin::adjust_candi_win_height()
     ui->labelPrompt->setFixedHeight(fontHeight);
     for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; i++)
     {
-        ui->tableWidget->setRowHeight(i, fontHeight);
-
-        CandidateItem *item = nullptr;
-        item = qobject_cast<CandidateItem *>(ui->tableWidget->cellWidget(i, 0));
-        Q_ASSERT(item);
-        item->setFixedHeight(fontHeight);
-        item = qobject_cast<CandidateItem *>(ui->tableWidget->cellWidget(0, i));
+        CandidateItem *item = m_candidateItems[i];
         Q_ASSERT(item);
         item->setFixedHeight(fontHeight);
     }
-    QPushButton *item;
-    item = qobject_cast<QPushButton *>(ui->tableWidget->cellWidget(0, MAX_CANDIDATE_WORD_COUNT + 1));
-    Q_ASSERT(item);
-    item->setFixedHeight(fontHeight);
-    item = qobject_cast<QPushButton *>(ui->tableWidget->cellWidget(0, MAX_CANDIDATE_WORD_COUNT + 2));
-    Q_ASSERT(item);
-    item->setFixedHeight(fontHeight);
+    m_btnPrevPage->setFixedHeight(fontHeight);
+    m_btnNextPage->setFixedHeight(fontHeight);
 
     if (m_displayMode == CWDM_ONE_ROW)
     {
@@ -630,6 +690,7 @@ void InputWin::show_dict_find_win()
 
     m_dictFindWin.move(position);
     m_dictFindWin.show();
+    m_dictFindWin.raise();
 }
 
 void InputWin::show_user_word_operation_prompt(int addOrDel, const QString &wordText, const QString &wordCode)
@@ -726,48 +787,17 @@ void InputWin::close_user_word_operation_prompt()
 
 void InputWin::set_display_mode(CandiWinDispMode mode)
 {
-    // 单行模式
+    m_displayMode = mode;
+    apply_candidate_container_layout();
+
     if (mode == CWDM_ONE_ROW)
     {
-        for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; i++)
-        {
-            ui->tableWidget->setColumnHidden(i, false);
-
-            // 行显示处理
-            if (i == 0)
-            {
-                ui->tableWidget->setRowHidden(i, false);
-            }
-            else
-            {
-                ui->tableWidget->setRowHidden(i, true);
-            }
-        }
-
         ui->labelPrompt->hide();
     }
-
-    // 多行模式
     else if (mode == CWDM_MULTI_ROW)
     {
-        for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; i++)
-        {
-            ui->tableWidget->setRowHidden(i, false);
-
-            // 列显示处理
-            if (i == 0)
-            {
-                ui->tableWidget->setColumnHidden(i, false);
-            }
-            else
-            {
-                ui->tableWidget->setColumnHidden(i, true);
-            }
-        }
-
         if (m_showOpRemindInfo)
         {
-            // ui->labelPrompt->setText( "【极点五笔银河麒麟版】" );
             ui->labelPrompt->show();
         }
         else
@@ -776,6 +806,8 @@ void InputWin::set_display_mode(CandiWinDispMode mode)
             ui->labelPrompt->hide();
         }
     }
+
+    update_candidate_visibility(m_candiWordItem);
 }
 
 void InputWin::enter_user_word_mode()
@@ -784,7 +816,7 @@ void InputWin::enter_user_word_mode()
 
     ui->btnCharWidth->hide();
     ui->btnMark->hide();
-    ui->tableWidget->hide();
+    ui->widgetCandiArea->hide();
 
     ui->btnLogo->setStyleSheet(QSS_FREEIME_LOGO);
     ui->btnLogo->show();
@@ -797,7 +829,7 @@ void InputWin::exit_user_word_mode()
 
     ui->btnCharWidth->show();
     ui->btnMark->show();
-    ui->tableWidget->show();
+    ui->widgetCandiArea->show();
 
     ui->btnLogo->hide();
 
@@ -809,17 +841,7 @@ void InputWin::set_candidate_text(int idx, const QString &label, const QString &
 {
     Q_ASSERT(idx < MAX_CANDIDATE_WORD_COUNT);
 
-    CandidateItem *item = nullptr;
-
-    if (m_displayMode == CWDM_ONE_ROW)
-    {
-        item = qobject_cast<CandidateItem *>(ui->tableWidget->cellWidget(0, idx));
-    }
-    else if (m_displayMode == CWDM_MULTI_ROW)
-    {
-        item = qobject_cast<CandidateItem *>(ui->tableWidget->cellWidget(idx, 0));
-    }
-
+    CandidateItem *item = m_candidateItems[idx];
     Q_ASSERT(item);
 
     QString str = label;
@@ -828,7 +850,6 @@ void InputWin::set_candidate_text(int idx, const QString &label, const QString &
     QString displayPrompt = promptText;
     if (m_displayMode == CWDM_ONE_ROW)
     {
-        // 单行：词与编码提示之间一格；项末与下一序号之间两格
         if (!promptText.isEmpty())
         {
             displayPrompt = QLatin1Char(' ') + promptText + QStringLiteral("  ");
@@ -840,32 +861,12 @@ void InputWin::set_candidate_text(int idx, const QString &label, const QString &
     }
 
     item->set_text(str, wordText, displayPrompt);
-
-    const QFont font = freewb_candi_text_qfont(settings::instance());
-    const QFontMetrics fm(font);
-    const int cellWidth = item->sizeHint().width();
-    const int cellHeight = fm.height();
-    item->setFixedSize(cellWidth, cellHeight);
 }
 
 void InputWin::clear_candidate_text(int idx)
 {
     Q_ASSERT(idx < MAX_CANDIDATE_WORD_COUNT);
-
-    CandidateItem *item = nullptr;
-
-    if (m_displayMode == CWDM_ONE_ROW)
-    {
-        item = qobject_cast<CandidateItem *>(ui->tableWidget->cellWidget(0, idx));
-    }
-    else if (m_displayMode == CWDM_MULTI_ROW)
-    {
-        item = qobject_cast<CandidateItem *>(ui->tableWidget->cellWidget(idx, 0));
-    }
-
-    Q_ASSERT(item);
-
-    item->clear_text();
+    m_candidateItems[idx]->clear_text();
 }
 
 void InputWin::handle_candiwin_op_help_info()
@@ -1203,16 +1204,11 @@ void InputWin::on_btnMark_clicked()
     emit signal_btn_mark_clicked();
 }
 
-void InputWin::on_tableWidget_cellClicked(int row, int column)
+void InputWin::on_candidate_clicked(int idx)
 {
-    if (m_displayMode == CWDM_ONE_ROW && column < m_candiWordItem && row == 0)
+    if (idx < m_candiWordItem)
     {
-        emit signal_candidate_select(column);
-        hide();
-    }
-    else if (m_displayMode == CWDM_MULTI_ROW && row < m_candiWordItem && column == 0)
-    {
-        emit signal_candidate_select(row);
+        emit signal_candidate_select(idx);
         hide();
     }
 }
@@ -1303,16 +1299,9 @@ void InputWin::slot_kim_UpdateLookupTable(const QStringList &label, const QStrin
         {
             clear_candidate_text(i);
         }
-
-        if (m_displayMode == CWDM_ONE_ROW)
-        {
-            ui->tableWidget->setColumnHidden(i, !visible);
-        }
-        else
-        {
-            ui->tableWidget->setRowHidden(i, !visible);
-        }
     }
+
+    update_candidate_visibility(len);
 
     if (!hasPrev && !hasNext)
     {

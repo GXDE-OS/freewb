@@ -3,8 +3,7 @@
 **
 ** @说明：
 **      CandidateItem是一个从QWidget类继承而来的UI类，其对应的UI设计文件为candidateitem.ui,该类设
-**      计作为文字输入候选框单元，将在InputWin窗口被设置为QTableWidget控件的单元格widget，中其包显示
-**      内容包括候选词组与提示信息两个部分。
+**      计作为文字输入候选框单元，将在InputWin窗口的布局中显示，内容包括候选词组与提示信息两个部分。
 ******************************************************************************×*********/
 
 #ifndef CANDIDATEITEM_H
@@ -29,6 +28,7 @@ public:
 
 signals:
     void signal_cursor_hover(const QString &wordText);
+    void signal_clicked();
 
 public:
     void set_text(const QString &label, const QString &wordText, const QString &promptText);
@@ -43,6 +43,7 @@ public:
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event) override;
 
 protected slots:
     void slot_cursor_hover_timeout();

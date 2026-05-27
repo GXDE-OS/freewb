@@ -3,8 +3,7 @@
 **
 ** @说明：
 **      InputWin是一个从QWidget类继承而来的UI类，其对应的UI设计文件为inputwin.ui,该类设计作为文
-**      字输入显示面板被MainProgram类所包含实例化，其主要包含了一个QTableWidget部件为用户提供候选
-**      词组等相关信息。
+**      字输入显示面板被MainProgram类所包含实例化，为用户提供候选词组等相关信息。
 ******************************************************************************×*********/
 
 #ifndef INPUTWIN_H
@@ -18,9 +17,11 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QMouseEvent>
+#include <QPushButton>
 #include <QRandomGenerator>
-#include <QTableWidgetItem>
 #include <QTimer>
+#include <QVBoxLayout>
 #include <QWidget>
 
 #include "candidateitem.h"
@@ -39,6 +40,8 @@ typedef enum
     CWDM_ONE_ROW,
     CWDM_MULTI_ROW,
 } CandiWinDispMode;
+
+static const int MAX_CANDIDATE_WORD_COUNT = 10;
 
 // 操作提示信息项
 typedef enum
@@ -146,11 +149,15 @@ public:
     void close_user_word_operation_prompt();
 
 protected:
-    void init_ui_table();
+    void init_ui_candidates();
     void install_evt_filter();
     void init_im_prompt_lable();
 
     void set_display_mode(CandiWinDispMode mode);
+    void apply_candidate_container_layout();
+    void update_candidate_visibility(int activeCount);
+    void style_candidate_item(CandidateItem *item, int idx, const QFont &font, const QColor &wordColor,
+                              const QColor &promptColor);
     void enter_user_word_mode();
     void exit_user_word_mode();
 
@@ -178,7 +185,7 @@ protected slots:
 private slots:
     void on_btnCharWidth_clicked();
     void on_btnMark_clicked();
-    void on_tableWidget_cellClicked(int row, int column);
+    void on_candidate_clicked(int idx);
 
 private:
     Ui::InputWin *ui;
@@ -210,6 +217,9 @@ private:
 
     QPushButton *m_btnPrevPage;
     QPushButton *m_btnNextPage;
+
+    CandidateItem *m_candidateItems[MAX_CANDIDATE_WORD_COUNT];
+    QWidget *m_multiRowRows[MAX_CANDIDATE_WORD_COUNT];
 
     int m_winWidth;
     int m_winHeight; // 根据候选框的显示模式、候选词个数、显示字体确定的候选框固定高度

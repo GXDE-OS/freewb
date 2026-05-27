@@ -1,5 +1,6 @@
 #include "candidateitem.h"
 
+#include <QMouseEvent>
 #include <QTimer>
 
 #include "ui_candidateitem.h"
@@ -7,6 +8,9 @@
 CandidateItem::CandidateItem(QWidget *parent) : QWidget(parent), ui(new Ui::CandidateItem)
 {
     ui->setupUi(this);
+    setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Fixed);
+    ui->labelWord->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    ui->labelPrompt->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     adjustSize();
 }
 
@@ -72,8 +76,18 @@ void CandidateItem::set_text(const QString &label, const QString &wordText, cons
     ui->labelWord->setText(label + tmp);
     ui->labelPrompt->setText(promptText);
     ui->labelPrompt->setVisible(!promptText.isEmpty());
-    ui->labelWord->setCursor(QCursor(Qt::PointingHandCursor));
     adjustSize();
+}
+
+void CandidateItem::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton && !m_wordText.isEmpty())
+    {
+        emit signal_clicked();
+        event->accept();
+        return;
+    }
+    QWidget::mouseReleaseEvent(event);
 }
 
 // 清除候选词与提示信息
