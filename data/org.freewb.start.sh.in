@@ -24,6 +24,14 @@ if [ "$1" != "poweron" ]; then
 fi
 
 # run freewb
-export QT_QPA_PLATFORM=xcb
-@FREEWB_INSTALL_BINDIR@/@PROJECT_NAME@-panel
-unset QT_QPA_PLATFORM
+
+desktop_env=$(echo "$XDG_CURRENT_DESKTOP" | tr '[:upper:]' '[:lower:]')
+session_type=$(echo "$XDG_SESSION_TYPE" | tr '[:upper:]' '[:lower:]')
+
+if [[ "$desktop_env" == *"ukui"* ]] && [[ "$session_type" == "wayland" ]]; then
+    @FREEWB_INSTALL_BINDIR@/@PROJECT_NAME@-panel
+else
+    export QT_QPA_PLATFORM=xcb
+    @FREEWB_INSTALL_BINDIR@/@PROJECT_NAME@-panel
+    unset QT_QPA_PLATFORM
+fi
