@@ -1,6 +1,8 @@
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_INSTALL_RPATH "$ORIGIN;${FREEWB_INSTALL_LIBDIR};")
 
+include_directories("${PROJECT_SOURCE_DIR}/include")
+
 add_subdirectory(utils)
 add_subdirectory(tools)
 add_subdirectory(panel)
