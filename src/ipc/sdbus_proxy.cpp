@@ -335,6 +335,11 @@ void SDBusProxy::callSwitchTableMethod()
     callSettingsMethod("slot_dbus_switch_lexicon", "");
 }
 
+void SDBusProxy::callSwitchToolbarHideFlgMethod()
+{
+    callSettingsMethod("slot_dbus_switch_toolbar_hide_flg", "");
+}
+
 void SDBusProxy::callPanelSwitchCharWidthModeMethod()
 {
     sendPanelMethod("SetCharWidthAndMarkMode", "ii", 1, 0);

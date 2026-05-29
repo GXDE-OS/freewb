@@ -58,6 +58,7 @@ public:
     void callSwitchVirtualKeyboardModeMethod(int flg) override;
     void callCloseVkBoardMethod() override;
     void callSwitchTableMethod() override;
+    void callSwitchToolbarHideFlgMethod() override;
     std::string callGetClipboardMethod() override;
     void callImeTableLoadOkMethod() override;
     void callUsrWordLoadOkMethod() override;

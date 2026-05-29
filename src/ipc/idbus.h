@@ -50,6 +50,7 @@ public:
     virtual void callSwitchVirtualKeyboardModeMethod(int flg) = 0;
     virtual void callCloseVkBoardMethod() = 0;
     virtual void callSwitchTableMethod() = 0;
+    virtual void callSwitchToolbarHideFlgMethod() = 0;
     virtual std::string callGetClipboardMethod() = 0;
     virtual void callImeTableLoadOkMethod() = 0;
     virtual void callUsrWordLoadOkMethod() = 0;

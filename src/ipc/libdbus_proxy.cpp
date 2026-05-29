@@ -342,6 +342,11 @@ void LibDbusProxy::callSwitchTableMethod()
     callSettingsMethod("slot_dbus_switch_lexicon", "");
 }
 
+void LibDbusProxy::callSwitchToolbarHideFlgMethod()
+{
+    callSettingsMethod("slot_dbus_switch_toolbar_hide_flg", "");
+}
+
 void LibDbusProxy::callPanelSwitchCharWidthModeMethod()
 {
     sendPanelMethod("SetCharWidthAndMarkMode", "ii", 1, 0);
