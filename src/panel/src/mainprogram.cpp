@@ -232,15 +232,13 @@ void MainProgram::connectSettingsDBus()
 
     connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_toolbar_hide_flg, this, [this]() {
         const bool hide = !settings::instance().get_hideToolbar();
-        if (hide)
-        {
-            m_toolbar->hide();
-        }
-        else
+        settings::instance().set_hideToolbar(hide);
+        settings::instance().save();
+        g_settingsNotifier.notifySettingDataChangedToLocal();
+        if (!hide)
         {
             m_toolbar->show();
         }
-        settings::instance().set_hideToolbar(hide);
     });
 
     connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_candiwin_hide_flg, this, []() {

@@ -333,7 +333,6 @@ private:
     bool m_autoMenuExpand;        // 工具条菜单自动扩展
     bool m_useUiAudioEffect;      // 是否使用界面音效
     bool m_showRealtimeHelp;      // 是否显示实时提示
-    bool m_hideToolbar;           // 是否隐藏工具条
     int m_transparency;           // 工具条透明度
 };
 

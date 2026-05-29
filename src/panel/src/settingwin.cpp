@@ -1645,6 +1645,7 @@ void SettingWin::on_ckbDispRealHelp_toggled(bool checked)
 void SettingWin::on_ckbHideToolbar_toggled(bool checked)
 {
     settings::instance().set_hideToolbar(checked);
+    g_settingsNotifier.notifySettingDataChangedToLocal();
 }
 
 void SettingWin::on_spbToolbarTransparency_valueChanged(int arg1)

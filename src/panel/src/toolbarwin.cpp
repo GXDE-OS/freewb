@@ -225,8 +225,7 @@ void ToolbarWin::slot_load_setting_data()
     m_useUiAudioEffect = settings::instance().get_uiAudioEffect();    // 是否使用界面音效
     m_showRealtimeHelp = settings::instance().get_showRealtimeHelp(); // 是否显示实时帮助
 
-    m_hideToolbar = settings::instance().get_hideToolbar(); // 是否隐藏工具条
-    if (m_hideToolbar)
+    if (settings::instance().get_hideToolbar())
     {
         hide();
     }
@@ -1068,7 +1067,7 @@ void ToolbarWin::slot_apply_pending_kim_property()
     FREEWB_DEBUG("switch ime: {}", prop.toUtf8().constData());
     if (prop.contains("/Fcitx/im:Freewb") || prop.contains("/Fcitx/im:极点五笔"))
     {
-        if (!m_hideToolbar)
+        if (!settings::instance().get_hideToolbar())
         {
             FREEWB_DEBUG("show toolbar for freewb im");
             show();
