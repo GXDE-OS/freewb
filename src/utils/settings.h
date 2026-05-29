@@ -97,7 +97,6 @@ enum class ValueType
     X(useGradientColor, CandidateWinUi, Bool, "false", CandidateWinUi, "")                                                       \
     X(useBgImage, CandidateWinUi, Bool, "false", CandidateWinUi, "")                                                             \
     X(showCandDictInfo, CandidateWinUi, Bool, "true", CandidateWinUi, "")                                                        \
-    X(hideCandiWin, CandidateWinOptions, Bool, "false", CandidateWinOptions, "")                                                 \
     X(cursorFollow, CandidateWinOptions, Bool, "true", CandidateWinOptions, "")                                                  \
     X(showOpRemindInfo, CandidateWinOptions, Bool, "true", CandidateWinOptions, "")                                              \
     X(shiftSelectRecode, CandidateWinOptions, Bool, "false", CandidateWinOptions, "")                                            \
@@ -137,7 +136,6 @@ enum class ValueType
     X(quickDelScreenItem, ShortcutKey, String, "CTRL+KEY_BACKSPACE", ShortcutKey, "")                                            \
     X(setupOption, ShortcutKey, String, "CTRL+KEY_COMMA", ShortcutKey, "")                                                       \
     X(shortcutInput, ShortcutKey, String, "KEY_QUOTE", ShortcutKey, "")                                                          \
-    X(showHideCandiWin, ShortcutKey, String, "CTRL+KEY_RIGHT", ShortcutKey, "")                                                  \
     X(showHideToolbar, ShortcutKey, String, "CTRL+KEY_LEFT", ShortcutKey, "")                                                    \
     X(switchCharSet, ShortcutKey, String, "CTRL+KEY_M", ShortcutKey, "")                                                         \
     X(switchChttrans, ShortcutKey, String, "CTRL+KEY_J", ShortcutKey, "")                                                        \

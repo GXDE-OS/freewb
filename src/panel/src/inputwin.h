@@ -62,7 +62,6 @@ typedef enum
     //    OTI_SK_SWITCH_WORD_STATE,//切换字词状态
     OTI_SK_SWITCH_S_IN_T_OUT,       // 切换简入繁出
     OTI_SK_SHOW_HIDE_STATUS_BAR,    // 显示/隐藏状态栏
-    OTI_SK_SHOW_HIDE_CANDIDATE_WIN, // 显示/隐藏候选窗
     OTI_SK_SWITCH_WORD_LEXICON,     // 切换词库
     //    OTI_SK_ADD_CHAR_AFTER_OUTPUT,//输出项后加字符
     OTI_SK_SWITCH_SKIN,           // 切换皮肤
@@ -241,7 +240,6 @@ private:
     int m_candiWordItem;            // 候选框显示的候选词行数
     int m_candiCharCount;           // 候选词字数
     bool m_cursorFollow;            // 是否光标跟随
-    bool m_hideCandiWin;            // 是否隐藏候选框
     bool m_showOpRemindInfo;        // 是否显示操作提示信息
 };
 

@@ -42,7 +42,6 @@ uiAudioEffect=false
 
 [CandidateWinOptions]
 cursorFollow=true
-hideCandiWin=false
 prevPageKey=KEY_DASH
 nextPageKey=KEY_EQUAL
 secondRecodeKey=KEY_SEMICOLON
@@ -89,7 +88,6 @@ onlineDelWord=CTRL+KEY_DASH
 quickDelScreenItem=CTRL+KEY_BACKSPACE
 setupOption=CTRL+KEY_COMMA
 shortcutInput=KEY_QUOTE
-showHideCandiWin=CTRL+KEY_RIGHT
 showHideToolbar=CTRL+KEY_LEFT
 switchCharSet=CTRL+KEY_M
 switchChttrans=CTRL+KEY_J

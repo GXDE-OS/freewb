@@ -151,7 +151,6 @@ private slots:
     //    void on_ledt3rdRecode_textChanged(const QString &arg1);
     void on_ckbShiftSelectRecode_toggled(bool checked);
     void on_ckbCursorFollow_stateChanged(int arg1);
-    void on_ckbHideCandiChinese_stateChanged(int arg1);
     void on_ckbDispOpPrompt_toggled(bool checked);
     void on_ckbDispOpDict_toggled(bool checked);
 

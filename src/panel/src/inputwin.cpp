@@ -167,7 +167,6 @@ void InputWin::slot_load_setting_data()
     m_separateChar = freewb_separate_char_from_string(settings::instance().get_separateChar());
     m_candiCharCount = settings::instance().get_candiCharCount();
     m_cursorFollow = settings::instance().get_cursorFollow();
-    m_hideCandiWin = settings::instance().get_hideCandiWin();
     m_radius = settings::instance().get_radius();
 
     m_transparency = settings::instance().get_transparency();
@@ -1001,12 +1000,6 @@ void InputWin::set_candiwin_op_help_info()
         if (!keyText.isEmpty())
             tips = QString(_("【%1 Show/hide status bar】")).arg(keyText);
     }
-    else if (oti == OTI_SK_SHOW_HIDE_CANDIDATE_WIN)
-    {
-        const QString keyText = customShortcutDisplayText(settings::instance().get_showHideCandiWin());
-        if (!keyText.isEmpty())
-            tips = QString(_("【%1 Show/hide candidate window】")).arg(keyText);
-    }
     else if (oti == OTI_SK_SWITCH_WORD_LEXICON)
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_switchLexicon());
@@ -1259,10 +1252,7 @@ void InputWin::slot_kim_ShowLookupTable(bool enable)
 {
     if (enable)
     {
-        if (isHidden() && !m_hideCandiWin)
-        {
-            show();
-        }
+        show();
     }
 }
 
@@ -1391,10 +1381,7 @@ void InputWin::slot_kim_ShowPreedit(bool enable)
 {
     if (enable)
     {
-        if (isHidden() && !m_hideCandiWin)
-        {
-            show();
-        }
+        show();
     }
     else
     {

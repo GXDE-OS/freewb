@@ -275,7 +275,6 @@ void ContextMenu::on_action32_clicked()
                               "jj.    切换简入繁出模式\n"
                               "ff.    查询字词编码及拼音\n"
                               "hh.    显/隐状态栏\n"
-                              "cc.    显/隐候选窗\n"
                               "kk.    打开软键盘\n"
                               "mm.    切换字符集\n"
                               "oo.    进入图形模式设置\n"

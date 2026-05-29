@@ -42,7 +42,6 @@ namespace freewb
     X("dos.", callOpenConfDirMethod)                                                                                       \
     X("tt.", callSwitchRecodeProofMethod)                                                                                  \
     X("hh.", callSwitchToolbarHideFlgMethod)                                                                               \
-    X("cc.", callPanelHideToolbar) /* TODO: 显/隐候选窗 */                                                                 \
     X("mm.", callPanelSwitchCharSetMethod)                                                                                 \
     X("oo.", callOpenUiSettingMethod)                                                                                      \
     X("pp.", callOpenProfessionalSettingMethod)                                                                            \

@@ -241,12 +241,6 @@ void MainProgram::connectSettingsDBus()
         }
     });
 
-    connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_candiwin_hide_flg, this, []() {
-        const bool hide = !settings::instance().get_hideCandiWin();
-        settings::instance().set_hideCandiWin(hide);
-        g_settingsNotifier.notifySettingDataChangedToLocal();
-    });
-
     connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_lexicon, this, [this]() {
         const std::vector<std::string> &lexiconList = freewb_runtime_lexicon_list();
         const std::string &curlexicon = settings::instance().get_curUsedLexicon();

@@ -104,11 +104,6 @@ void QDBusSettingsService::slot_dbus_switch_toolbar_hide_flg()
     emit signal_switch_toolbar_hide_flg();
 }
 
-void QDBusSettingsService::slot_dbus_switch_candiwin_hide_flg()
-{
-    emit signal_switch_candiwin_hide_flg();
-}
-
 void QDBusSettingsService::slot_dbus_switch_lexicon()
 {
     emit signal_switch_lexicon();

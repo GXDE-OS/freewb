@@ -156,9 +156,9 @@ struct CustomShortcutAccessor
     CustomShortcutSetter setter;
 };
 
-/* 14 项自定义功能键 accessor 表；顺序与 settingwin.ui 中 cmbFunction 下拉项严格对应。
+/* 13 项自定义功能键 accessor 表；顺序与 settingwin.ui 中 cmbFunction 下拉项严格对应。
  * 如需增减或改序，必须同步调整 .ui 中的条目顺序。 */
-const std::array<CustomShortcutAccessor, 14> kCustomShortcutAccessors = {{
+const std::array<CustomShortcutAccessor, 13> kCustomShortcutAccessors = {{
     {&settings::Settings::get_backFindCode, &settings::Settings::set_backFindCode},             // 反查编码
     {&settings::Settings::get_onlineAddWord, &settings::Settings::set_onlineAddWord},           // 在线加词
     {&settings::Settings::get_onlineDelWord, &settings::Settings::set_onlineDelWord},           // 在线删词
@@ -168,7 +168,6 @@ const std::array<CustomShortcutAccessor, 14> kCustomShortcutAccessors = {{
     {&settings::Settings::get_switchChttrans, &settings::Settings::set_switchChttrans},         // 切换简入繁出
     {&settings::Settings::get_setupOption, &settings::Settings::set_setupOption},               // 打开系统设置
     {&settings::Settings::get_showHideToolbar, &settings::Settings::set_showHideToolbar},       // 显/隐状态栏
-    {&settings::Settings::get_showHideCandiWin, &settings::Settings::set_showHideCandiWin},     // 显/隐候选窗
     {&settings::Settings::get_switchLexicon, &settings::Settings::set_switchLexicon},           // 切换词库
     {&settings::Settings::get_switchSkin, &settings::Settings::set_switchSkin},                 // 切换皮肤
     {&settings::Settings::get_quickDelScreenItem, &settings::Settings::set_quickDelScreenItem}, // 快删上屏项
@@ -516,7 +515,6 @@ void SettingWin::setUiTexts()
     ui->label_41->setText(_("Previous page"));
     ui->label_42->setText(_("Settings"));
     ui->ckbCursorFollow->setText(_("Candidate window follows caret"));
-    ui->ckbHideCandiChinese->setText(_("Hide Chinese candidate box"));
     ui->ckbDispOpPrompt->setText(_("Show operation hints"));
     ui->ckbShiftSelectRecode->setText(_("Use Shift to select duplicates"));
     ui->ckbDispOpDict->setText(_("Live dictionary on candidates"));
@@ -561,11 +559,10 @@ void SettingWin::setUiTexts()
     ui->cmbFunction->setItemText(6, _("Toggle simplified/traditional output"));
     ui->cmbFunction->setItemText(7, _("Open system settings"));
     ui->cmbFunction->setItemText(8, _("Show/hide status bar"));
-    ui->cmbFunction->setItemText(9, _("Show/hide candidate window"));
-    ui->cmbFunction->setItemText(10, _("Switch lexicon"));
-    ui->cmbFunction->setItemText(11, _("Switch skin"));
-    ui->cmbFunction->setItemText(12, _("Quick delete committed item"));
-    ui->cmbFunction->setItemText(13, _("Auto-pair punctuation"));
+    ui->cmbFunction->setItemText(9, _("Switch lexicon"));
+    ui->cmbFunction->setItemText(10, _("Switch skin"));
+    ui->cmbFunction->setItemText(11, _("Quick delete committed item"));
+    ui->cmbFunction->setItemText(12, _("Auto-pair punctuation"));
     ui->cmbSwitchCnEn->setItemText(0, _("Ctrl+Space"));
     ui->cmbSwitchCnEn->setItemText(1, _("Left Shift"));
     ui->cmbSwitchCnEn->setItemText(2, _("Right Shift"));
@@ -645,7 +642,6 @@ void SettingWin::init_mouse_hover_tips()
     ui->ledt3rdRecode->setToolTip(                         _("Key to select the 3rd candidate, e.g. '.' for users who prefer period."));
     ui->ckbCursorFollow->setToolTip(                         _("When enabled, the candidate window follows the caret; otherwise it stays at the bottom "
                            "(or drag it anywhere)."));
-    ui->ckbHideCandiChinese->setToolTip(_("Hide the candidate window when needed."));
     ui->ckbDispOpPrompt->setToolTip(                         _("Show operation hints at the bottom of the multi-row candidate window, e.g. "
                            "'Ctrl+= add word online'."));
     ui->ckbShiftSelectRecode->setToolTip(                         _("When enabled, Left Shift selects the 2nd candidate and Right Shift the 3rd. Swap in Expert "
@@ -1234,7 +1230,6 @@ void SettingWin::init_candidate_option_page()
     // ui->ledt2ndRecode->setText( QChar(settings::instance().get_second_recode_key()) );
     // ui->ledt3rdRecode->setText( QChar(settings::instance().get_third_recode_key()) );
     ui->ckbCursorFollow->setChecked(settings::instance().get_cursorFollow());
-    ui->ckbHideCandiChinese->setChecked(settings::instance().get_hideCandiWin());
     ui->ckbDispOpPrompt->setChecked(settings::instance().get_showOpRemindInfo());
     ui->ckbDispOpDict->setChecked(settings::instance().get_showCandDictInfo());
     // ui->ledtPrecPage->setText( QChar(settings::instance().get_prevPage_key()) );
@@ -1864,19 +1859,6 @@ void SettingWin::on_ckbCursorFollow_stateChanged(int arg1)
     else if (arg1 == Qt::Unchecked)
     {
         settings::instance().set_cursorFollow(false);
-    }
-    g_settingsNotifier.notifySettingDataChangedToLocal();
-}
-
-void SettingWin::on_ckbHideCandiChinese_stateChanged(int arg1)
-{
-    if (arg1 == Qt::Checked)
-    {
-        settings::instance().set_hideCandiWin(true);
-    }
-    else if (arg1 == Qt::Unchecked)
-    {
-        settings::instance().set_hideCandiWin(false);
     }
     g_settingsNotifier.notifySettingDataChangedToLocal();
 }
