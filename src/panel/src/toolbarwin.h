@@ -307,7 +307,6 @@ private:
     QWidget m_tooltipsWin;
     QLabel *m_tooltipsLabel;
     bool m_tooltipsWinShowFlg;
-    QMap<QWidget *, QString> m_tipsTextMap;
 
     QMenu m_keyboardMenu; // 虚拟键盘工作模式菜单
     QActionGroup *m_kbInputModeAction;

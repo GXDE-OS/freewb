@@ -31,7 +31,7 @@
     </font>
    </property>
    <property name="text">
-    <string>查找内容</string>
+    <string>Find what</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit">
@@ -62,7 +62,7 @@
     <enum>Qt::StrongFocus</enum>
    </property>
    <property name="text">
-    <string>下一个(&amp;N)</string>
+    <string>Next (&amp;N)</string>
    </property>
    <property name="shortcut">
     <string>N</string>
@@ -86,7 +86,7 @@
     <enum>Qt::StrongFocus</enum>
    </property>
    <property name="text">
-    <string>上一个(&amp;P)</string>
+    <string>Previous (&amp;P)</string>
    </property>
    <property name="shortcut">
     <string>P</string>
@@ -105,7 +105,7 @@
     <enum>Qt::StrongFocus</enum>
    </property>
    <property name="text">
-    <string>区分大小写(&amp;C)</string>
+    <string>Match case (&amp;C)</string>
    </property>
    <property name="shortcut">
     <string>C</string>
@@ -124,7 +124,7 @@
     <enum>Qt::StrongFocus</enum>
    </property>
    <property name="text">
-    <string>全词匹配(&amp;W)</string>
+    <string>Whole words (&amp;W)</string>
    </property>
    <property name="shortcut">
     <string>W</string>

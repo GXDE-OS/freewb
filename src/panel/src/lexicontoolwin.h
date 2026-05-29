@@ -107,6 +107,9 @@ private slots:
     void on_btnBatchAdd_clicked();
 
 private:
+    void setUiTexts();
+
+private:
     Ui::LexiconToolWin *ui;
 
     // 用于窗口拖动计算

@@ -36,6 +36,9 @@ private slots:
     void on_btnPrev_clicked();
 
 private:
+    void setUiTexts();
+
+private:
     Ui::TextFindDialog *ui;
 };
 

@@ -41,7 +41,7 @@
       </font>
      </property>
      <property name="text">
-      <string>正在备份，请稍后...</string>
+      <string>Backup in progress, please wait...</string>
      </property>
     </widget>
     <widget class="QProgressBar" name="progressBar">
@@ -92,7 +92,7 @@ margin:0.5px;
       </font>
      </property>
      <property name="text">
-      <string>词库与设置备份完毕，是否查看备份文件？</string>
+      <string>Backup completed. Open the backup file?</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -116,7 +116,7 @@ margin:0.5px;
       <string notr="true">color: rgb(56, 56, 56);</string>
      </property>
      <property name="text">
-      <string>是</string>
+      <string>Yes</string>
      </property>
     </widget>
     <widget class="QPushButton" name="btnNo">
@@ -137,7 +137,7 @@ margin:0.5px;
       <string notr="true">color: rgb(56, 56, 56);</string>
      </property>
      <property name="text">
-      <string>否</string>
+      <string>No</string>
      </property>
     </widget>
    </widget>
@@ -160,7 +160,7 @@ margin:0.5px;
       <string notr="true">color: rgb(56, 56, 56);</string>
      </property>
      <property name="text">
-      <string>确定</string>
+      <string>OK</string>
      </property>
     </widget>
     <widget class="QLabel" name="labelPrompt">
@@ -178,7 +178,7 @@ margin:0.5px;
       </font>
      </property>
      <property name="text">
-      <string>词库与设置恢复完成！</string>
+      <string>Dictionary and settings recovery completed!</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

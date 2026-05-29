@@ -63,7 +63,7 @@
          </font>
         </property>
         <property name="text">
-         <string>查询</string>
+         <string>Query</string>
         </property>
        </widget>
       </item>
@@ -78,7 +78,7 @@
          </font>
         </property>
         <property name="text">
-         <string>切换字典</string>
+         <string>Switch dictionary</string>
         </property>
        </widget>
       </item>
@@ -90,7 +90,7 @@
          </font>
         </property>
         <property name="text">
-         <string>退出</string>
+         <string>Exit</string>
         </property>
        </widget>
       </item>

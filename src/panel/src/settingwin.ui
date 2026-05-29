@@ -77,7 +77,7 @@
        <enum>QFrame::Plain</enum>
       </property>
       <property name="text">
-       <string>常用选项</string>
+       <string>Common options</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbCodeRemind">
@@ -110,7 +110,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>启用编码逐渐提示</string>
+       <string>Enable incremental code hints</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -230,7 +230,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>启用词组联想功能</string>
+       <string>Enable phrase association</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbRemindExistWord">
@@ -347,7 +347,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>提示系统已有词组</string>
+       <string>Remind when phrase exists in lexicon</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbAutoAdjustFreq">
@@ -464,7 +464,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>启动自动调频功能</string>
+       <string>Enable automatic frequency adjustment</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbSpaceFullWhenCharHalf">
@@ -581,7 +581,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>字符半角时空格全角</string>
+       <string>Full-width space when characters are half-width</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbSmartMark">
@@ -698,7 +698,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>启用智能标点功能</string>
+       <string>Enable smart punctuation</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -818,7 +818,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>重码或空码时发声提示</string>
+       <string>Sound alert on duplicate or empty code</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelUseAudioFile">
@@ -842,7 +842,7 @@
        </font>
       </property>
       <property name="text">
-       <string>使用声音文件</string>
+       <string>Use sound files</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbUseAudioFile">
@@ -985,7 +985,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>高级选项</string>
+       <string>Advanced options</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbRepeatCalib">
@@ -1102,7 +1102,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>重码上屏校对模式</string>
+       <string>Duplicate commit proofreading mode</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbTypeEffect">
@@ -1219,7 +1219,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>启用打字音效功能</string>
+       <string>Enable typing sound effects</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbShiftCommitChar">
@@ -1336,7 +1336,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>Shift+字母直接上屏</string>
+       <string>Shift+letter commits directly</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbInputStatistic">
@@ -1453,7 +1453,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>启用输入统计功能</string>
+       <string>Enable input statistics</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_3">
@@ -1476,7 +1476,7 @@
        </font>
       </property>
       <property name="text">
-       <string>自动词组选项</string>
+       <string>Auto phrase options</string>
       </property>
      </widget>
      <widget class="QComboBox" name="ckbAutoWordGroup">
@@ -1500,17 +1500,17 @@
       </property>
       <item>
        <property name="text">
-        <string>禁止自动造词</string>
+        <string>Disable auto phrase creation</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>关闭极点时消失</string>
+        <string>Discard on exit</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>随时保存在词库</string>
+        <string>Save to lexicon immediately</string>
        </property>
       </item>
      </widget>
@@ -1536,7 +1536,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>其它设置</string>
+       <string>Other settings</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_4">
@@ -1556,7 +1556,7 @@
        </font>
       </property>
       <property name="text">
-       <string>自动转英文字符串</string>
+       <string>Auto-switch to English strings</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelAutoEnPrompt">
@@ -1575,8 +1575,8 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>输入以上字符串时极点自动转换为英文，回车后转回中文
-注：字符个数不能超过四个,字符串之间以半角空格分隔，本功能上网冲浪时非常方便。</string>
+       <string>Freewb switches to English when you type these strings; Enter returns to Chinese.
+Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1601,7 +1601,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>选择此项后在中文输入模式下跟随数字后输入的逗号，句号等标点将会自动转为英文半角，此功能对财务人员来说非常方便。</string>
+       <string>In Chinese mode, commas and periods after digits become half-width (useful for finance).</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1633,7 +1633,7 @@
           </font>
          </property>
          <property name="text">
-          <string>字符</string>
+          <string>Character</string>
          </property>
         </widget>
        </item>
@@ -1767,7 +1767,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>数字后自动转半角标点</string>
+       <string>Half-width punctuation after digits</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="ledtAutoToHalf">
@@ -1815,7 +1815,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>界面设置</string>
+       <string>Interface settings</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_24">
@@ -1835,7 +1835,7 @@
        </font>
       </property>
       <property name="text">
-       <string>选项</string>
+       <string>Options</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbAutoLocate">
@@ -1952,7 +1952,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>状态栏自动定位</string>
+       <string>Auto-position toolbar</string>
       </property>
      </widget>
      <widget class="QComboBox" name="cmbWhenLossLocation">
@@ -1976,27 +1976,27 @@
       </property>
       <item>
        <property name="text">
-        <string>隐藏状态栏</string>
+        <string>Hide toolbar</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>桌面左上角</string>
+        <string>Top-left of desktop</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>左面右上角</string>
+        <string>Top-right of desktop</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>桌面左下角</string>
+        <string>Bottom-left of desktop</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>桌面右下角</string>
+        <string>Bottom-right of desktop</string>
        </property>
       </item>
      </widget>
@@ -2020,7 +2020,7 @@
        </font>
       </property>
       <property name="text">
-       <string>无法自动定位时</string>
+       <string>When auto-position fails</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbAutoExtend">
@@ -2137,7 +2137,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>状态栏自动缩展</string>
+       <string>Auto expand/collapse toolbar</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbEnableUiAudioEffect">
@@ -2254,7 +2254,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>启用界面音效</string>
+       <string>Enable UI sound effects</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbDispRealHelp">
@@ -2371,7 +2371,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>显示实时帮助</string>
+       <string>Show realtime help</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbHideToolbar">
@@ -2488,7 +2488,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>隐藏状态栏</string>
+       <string>Hide toolbar</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_26">
@@ -2511,7 +2511,7 @@
        </font>
       </property>
       <property name="text">
-       <string>状态栏透明度</string>
+       <string>Toolbar transparency</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="spbToolbarTransparency">
@@ -2622,7 +2622,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>候选窗界面</string>
+       <string>Candidate window interface</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_28">
@@ -2642,7 +2642,7 @@
        </font>
       </property>
       <property name="text">
-       <string>候选窗样式</string>
+       <string>Candidate window style</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_29">
@@ -2662,7 +2662,7 @@
        </font>
       </property>
       <property name="text">
-       <string>选项</string>
+       <string>Options</string>
       </property>
      </widget>
      <widget class="QComboBox" name="cmbCandiWinMode">
@@ -2683,12 +2683,12 @@
       </property>
       <item>
        <property name="text">
-        <string>单行</string>
+        <string>Single row</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>多行</string>
+        <string>Multi row</string>
        </property>
       </item>
      </widget>
@@ -2712,7 +2712,7 @@
        </font>
       </property>
       <property name="text">
-       <string>候选与序号间隔符</string>
+       <string>Index/candidate separator</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="ledtSeparateChar">
@@ -2852,7 +2852,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>使用渐变背景色</string>
+       <string>Use gradient background</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbUseTile">
@@ -2969,7 +2969,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>平铺</string>
+       <string>Tile</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbUseBgImage">
@@ -3086,7 +3086,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>使用背景图</string>
+       <string>Use background image</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_31">
@@ -3109,7 +3109,7 @@
        </font>
       </property>
       <property name="text">
-       <string>圆角弧度</string>
+       <string>Corner radius</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_32">
@@ -3132,7 +3132,7 @@
        </font>
       </property>
       <property name="text">
-       <string>透  明  度</string>
+       <string>Transparency</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_33">
@@ -3152,7 +3152,7 @@
        </font>
       </property>
       <property name="text">
-       <string>候选项数</string>
+       <string>Number of candidates</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_34">
@@ -3175,7 +3175,7 @@
        </font>
       </property>
       <property name="text">
-       <string>候选字数</string>
+       <string>Characters per candidate</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="spbCornerRadian">
@@ -3281,7 +3281,7 @@
        </font>
       </property>
       <property name="text">
-       <string>候选窗设置 ( 点击下面的文字更换字体、字号、颜色 ）</string>
+       <string>Candidate window (click labels to change font and colors)</string>
       </property>
      </widget>
      <widget class="QFrame" name="framCandidateWin">
@@ -3320,7 +3320,7 @@
         <string notr="true">border-image: url(:/image/transparent.png);</string>
        </property>
        <property name="text">
-        <string>更改字体</string>
+        <string>Change font</string>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -3347,7 +3347,7 @@
         <string notr="true">border-image: url(:/image/transparent.png);</string>
        </property>
        <property name="text">
-        <string>背景起色</string>
+        <string>Gradient start</string>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -3374,7 +3374,7 @@
         <string notr="true">border-image: url(:/image/transparent.png);</string>
        </property>
        <property name="text">
-        <string>背景终色</string>
+        <string>Gradient end</string>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -3401,7 +3401,7 @@
         <string notr="true">border-image: url(:/image/transparent.png);</string>
        </property>
        <property name="text">
-        <string>边框色</string>
+        <string>Border color</string>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -3425,7 +3425,7 @@
         <string notr="true">border-image: url(:/image/transparent.png);</string>
        </property>
        <property name="text">
-        <string>自动词</string>
+        <string>Auto phrase</string>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -3449,7 +3449,7 @@
         <string notr="true">border-image: url(:/image/transparent.png);</string>
        </property>
        <property name="text">
-        <string>提示信息</string>
+        <string>Prompt text</string>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -3476,7 +3476,7 @@
         <string notr="true">border-image: url(:/image/transparent.png);</string>
        </property>
        <property name="text">
-        <string>背景色</string>
+        <string>Background color</string>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -3505,7 +3505,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>候选窗选项</string>
+       <string>Candidate window options</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_36">
@@ -3525,7 +3525,7 @@
        </font>
       </property>
       <property name="text">
-       <string>二三重码选择键</string>
+       <string>2nd/3rd duplicate keys</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_37">
@@ -3548,7 +3548,7 @@
        </font>
       </property>
       <property name="text">
-       <string>第2重码选择</string>
+       <string>2nd duplicate key</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_38">
@@ -3571,7 +3571,7 @@
        </font>
       </property>
       <property name="text">
-       <string>第3重码选择</string>
+       <string>3rd duplicate key</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="ledt2ndRecode">
@@ -3643,7 +3643,7 @@
        </font>
       </property>
       <property name="text">
-       <string>上下翻页键</string>
+       <string>Page up/down keys</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="ledtPrecPage">
@@ -3689,7 +3689,7 @@
        </font>
       </property>
       <property name="text">
-       <string>上一页</string>
+       <string>Previous page</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_41">
@@ -3712,7 +3712,7 @@
        </font>
       </property>
       <property name="text">
-       <string>上一页</string>
+       <string>Previous page</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="ledtNextPage">
@@ -3758,7 +3758,7 @@
        </font>
       </property>
       <property name="text">
-       <string>设置</string>
+       <string>Settings</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbCursorFollow">
@@ -3875,7 +3875,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>候选窗光标跟随</string>
+       <string>Candidate window follows caret</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -3995,7 +3995,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>隐藏汉字候选框</string>
+       <string>Hide Chinese candidate box</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbDispOpPrompt">
@@ -4112,7 +4112,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>显示操作提示信息</string>
+       <string>Show operation hints</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbShiftSelectRecode">
@@ -4229,7 +4229,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>用Shift键选重码</string>
+       <string>Use Shift to select duplicates</string>
       </property>
      </widget>
      <widget class="QComboBox" name="cmb23RecodeSelect">
@@ -4386,7 +4386,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>候选项实时字典</string>
+       <string>Live dictionary on candidates</string>
       </property>
      </widget>
     </widget>
@@ -4411,7 +4411,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>设置快捷键</string>
+       <string>Shortcut settings</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelCustom">
@@ -4431,7 +4431,7 @@
        </font>
       </property>
       <property name="text">
-       <string>自定义快捷键</string>
+       <string>Custom shortcuts</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_11">
@@ -4451,7 +4451,7 @@
        </font>
       </property>
       <property name="text">
-       <string>功能</string>
+       <string>Function</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_12">
@@ -4471,7 +4471,7 @@
        </font>
       </property>
       <property name="text">
-       <string>快捷键</string>
+       <string>Shortcut</string>
       </property>
      </widget>
      <widget class="QComboBox" name="cmbFunction">
@@ -4492,72 +4492,72 @@
       </property>
       <item>
        <property name="text">
-        <string>反查编码</string>
+        <string>Reverse code lookup</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>在线加词</string>
+        <string>Add word online</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>在线删词</string>
+        <string>Delete word online</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>切换软键盘</string>
+        <string>Toggle virtual keyboard</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>切换字符集</string>
+        <string>Switch character set</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>切换输入模式</string>
+        <string>Switch input mode</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>切换简入繁出</string>
+        <string>Toggle simplified/traditional output</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>打开系统设置</string>
+        <string>Open system settings</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>显/隐状态栏</string>
+        <string>Show/hide status bar</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>显/隐候选窗</string>
+        <string>Show/hide candidate window</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>切换词库</string>
+        <string>Switch lexicon</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>切换皮肤</string>
+        <string>Switch skin</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>快删上屏项</string>
+        <string>Quick delete committed item</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>标点自动配对</string>
+        <string>Auto-pair punctuation</string>
        </property>
       </item>
      </widget>
@@ -4598,7 +4598,7 @@
        </font>
       </property>
       <property name="text">
-       <string>禁用所有快捷键</string>
+       <string>Disable all shortcuts</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbDisableFullHalfKey">
@@ -4621,7 +4621,7 @@
        </font>
       </property>
       <property name="text">
-       <string>禁用全半角切换键</string>
+       <string>Disable full/half width shortcut</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_13">
@@ -4644,7 +4644,7 @@
        </font>
       </property>
       <property name="text">
-       <string>快捷输入</string>
+       <string>Shortcut input</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelEasy">
@@ -4664,7 +4664,7 @@
        </font>
       </property>
       <property name="text">
-       <string>便捷功能快捷键</string>
+       <string>Convenience shortcuts</string>
       </property>
      </widget>
      <widget class="QComboBox" name="cmbShortcutInput">
@@ -4727,7 +4727,7 @@
        </font>
       </property>
       <property name="text">
-       <string>临时英文</string>
+       <string>Temporary English</string>
       </property>
      </widget>
      <widget class="QComboBox" name="cmbTmpPinyin">
@@ -4770,8 +4770,8 @@
        </font>
       </property>
       <property name="text">
-       <string>临时拼音
-生僻字</string>
+       <string>Temporary Pinyin
+rare characters</string>
       </property>
      </widget>
      <widget class="QComboBox" name="cmbSwitchCnEn">
@@ -4795,17 +4795,17 @@
       </property>
       <item>
        <property name="text">
-        <string>ctrl+空格</string>
+        <string>Ctrl+Space</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>左Shift</string>
+        <string>Left Shift</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>右Shift</string>
+        <string>Right Shift</string>
        </property>
       </item>
       <item>
@@ -4815,12 +4815,12 @@
       </item>
       <item>
        <property name="text">
-        <string>左Ctrl</string>
+        <string>Left Ctrl</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>右Ctrl</string>
+        <string>Right Ctrl</string>
        </property>
       </item>
       <item>
@@ -4849,7 +4849,7 @@
        </font>
       </property>
       <property name="text">
-       <string>中英文切换</string>
+       <string>Chinese/English switch</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelTwo">
@@ -4869,7 +4869,7 @@
        </font>
       </property>
       <property name="text">
-       <string>便捷键连按两次输出对应符号</string>
+       <string>Double-tap convenience key for symbol</string>
       </property>
      </widget>
      <widget class="QPushButton" name="btnRestoreShortcutKey">
@@ -4889,7 +4889,7 @@
        </font>
       </property>
       <property name="text">
-       <string>恢复默认快捷键</string>
+       <string>Restore default shortcuts</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="cmbCtrl">
@@ -4962,7 +4962,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>自定义软键盘</string>
+       <string>Custom soft keyboard</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelPrompt_1">
@@ -4982,7 +4982,7 @@
        </font>
       </property>
       <property name="text">
-       <string>请点击要修改的软键盘字符</string>
+       <string>Click the soft keyboard character to edit</string>
       </property>
      </widget>
     </widget>
@@ -5007,7 +5007,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>自定义标点</string>
+       <string>Custom punctuation</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelPrompt_2">
@@ -5027,7 +5027,7 @@
        </font>
       </property>
       <property name="text">
-       <string>请点击要修改的标点符号</string>
+       <string>Click the punctuation mark to edit</string>
       </property>
      </widget>
     </widget>
@@ -5052,7 +5052,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>版本信息</string>
+       <string>Version information</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_2">
@@ -5088,7 +5088,7 @@
        </font>
       </property>
       <property name="text">
-       <string>极点五笔银河麒麟版</string>
+       <string>Freewb Kylin Edition</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -5205,7 +5205,7 @@
      </font>
     </property>
     <property name="text">
-     <string>显示【所有】选项</string>
+     <string>Show [all] options</string>
     </property>
     <property name="flat">
      <bool>false</bool>
@@ -5228,7 +5228,7 @@
      </font>
     </property>
     <property name="text">
-     <string>确认</string>
+     <string>OK</string>
     </property>
     <property name="flat">
      <bool>false</bool>
@@ -5251,7 +5251,7 @@
      </font>
     </property>
     <property name="text">
-     <string>取消</string>
+     <string>Cancel</string>
     </property>
     <property name="flat">
      <bool>false</bool>

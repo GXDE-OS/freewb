@@ -43,7 +43,7 @@
      </font>
     </property>
     <property name="text">
-     <string>极点词库工具箱</string>
+     <string>Freewb lexicon toolbox</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -98,7 +98,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>导出</string>
+     <string>Export</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -116,7 +116,7 @@
      </font>
     </property>
     <property name="text">
-     <string>系统词库</string>
+     <string>System lexicon</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -134,7 +134,7 @@
      </font>
     </property>
     <property name="text">
-     <string>拼音词库</string>
+     <string>Pinyin lexicon</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
@@ -152,7 +152,7 @@
      </font>
     </property>
     <property name="text">
-     <string>用户词库</string>
+     <string>User lexicon</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnMarkRareWord">
@@ -168,7 +168,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>标记生僻字</string>
+     <string>Mark rare characters</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnMakeSysLexicon">
@@ -184,7 +184,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>生成词库</string>
+     <string>Generate lexicon</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnHelp">
@@ -200,7 +200,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>帮助</string>
+     <string>Help</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnOptimize">
@@ -216,7 +216,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>优化</string>
+     <string>Optimize</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnMarkThinkWord">
@@ -232,7 +232,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>标记联想词</string>
+     <string>Mark associative words</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnDumpPinyinLexicon">
@@ -248,7 +248,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>导出</string>
+     <string>Export</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnMakePinyinLexicon">
@@ -264,7 +264,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>生成词库</string>
+     <string>Generate lexicon</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnDumpUserLexicon">
@@ -280,7 +280,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>导出</string>
+     <string>Export</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnBatchDel">
@@ -296,7 +296,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>批量删词</string>
+     <string>Batch delete words</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnBatchAdd">
@@ -312,7 +312,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>批量加词</string>
+     <string>Batch add words</string>
     </property>
    </widget>
   </widget>

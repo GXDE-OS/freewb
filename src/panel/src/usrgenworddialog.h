@@ -53,6 +53,9 @@ private slots:
     void on_btnExit_clicked();
 
 private:
+    void setUiTexts();
+
+private:
     Ui::UsrGenWordDialog *ui;
 
     // 用于窗口拖动计算

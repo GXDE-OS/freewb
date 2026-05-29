@@ -84,6 +84,9 @@ private slots:
     void on_btnOk_clicked();
 
 private:
+    void setUiTexts();
+
+private:
     Ui::BackupDialog *ui;
 
     bool m_mouseIsPressed;

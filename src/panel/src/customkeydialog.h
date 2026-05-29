@@ -50,6 +50,9 @@ private slots:
     void on_btnCancle_clicked();
 
 private:
+    void setUiTexts();
+
+private:
     Ui::CustomKeyDialog *ui;
 
     // 用于窗口拖动计算

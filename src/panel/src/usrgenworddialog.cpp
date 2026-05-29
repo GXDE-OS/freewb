@@ -10,6 +10,7 @@
 UsrGenWordDialog::UsrGenWordDialog(QWidget *parent) : QDialog(parent), ui(new Ui::UsrGenWordDialog)
 {
     ui->setupUi(this);
+    setUiTexts();
     // setWindowFlags( Qt::Tool | Qt::FramelessWindowHint );
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
     m_mouseIsPressed = false;
@@ -22,6 +23,15 @@ UsrGenWordDialog::UsrGenWordDialog(QWidget *parent) : QDialog(parent), ui(new Ui
     m_userWordFile = INSTALL_DIR + "/data/user_word.txt";
 
     init_user_word_file();
+}
+
+void UsrGenWordDialog::setUiTexts()
+{
+    setWindowTitle(_("Freewb word creation"));
+    ui->label_3->setText(_("Phrase:"));
+    ui->label_4->setText(_("Code:"));
+    ui->btnOk->setText(_("OK"));
+    ui->btnExit->setText(_("Exit"));
 }
 
 UsrGenWordDialog::~UsrGenWordDialog()

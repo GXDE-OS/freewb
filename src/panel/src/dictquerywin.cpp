@@ -6,6 +6,7 @@
 DictQueryWin::DictQueryWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::DictQueryWin)
 {
     ui->setupUi(this);
+    setUiTexts();
     setWindowTitle(_("Freewb query"));
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
 
@@ -40,6 +41,13 @@ DictQueryWin::DictQueryWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::Di
 
     // ui->textEditBase->setReadOnly( true );
     ui->ledtFind->installEventFilter(this);
+}
+
+void DictQueryWin::setUiTexts()
+{
+    ui->btnQuery->setText(_("Query"));
+    ui->btnSwitchDict->setText(_("Switch dictionary"));
+    ui->btnExit->setText(_("Exit"));
 }
 
 DictQueryWin::~DictQueryWin()

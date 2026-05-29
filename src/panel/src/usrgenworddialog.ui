@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>极点造词</string>
+   <string>Freewb word creation</string>
   </property>
   <widget class="QLineEdit" name="ledtWordText">
    <property name="geometry">
@@ -108,7 +108,7 @@
     <string notr="true">color: rgb(56, 56, 56);</string>
    </property>
    <property name="text">
-    <string>词组:</string>
+    <string>Phrase:</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">
@@ -134,7 +134,7 @@
     <enum>QFrame::Plain</enum>
    </property>
    <property name="text">
-    <string>编码:</string>
+    <string>Code:</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnOk">
@@ -155,7 +155,7 @@
     <string notr="true">color: rgb(56, 56, 56);</string>
    </property>
    <property name="text">
-    <string>确认</string>
+    <string>OK</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnExit">
@@ -176,7 +176,7 @@
     <string notr="true">color: rgb(56, 56, 56);</string>
    </property>
    <property name="text">
-    <string>退出</string>
+    <string>Exit</string>
    </property>
   </widget>
  </widget>

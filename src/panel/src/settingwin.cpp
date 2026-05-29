@@ -355,6 +355,7 @@ void swBuildKeyPairCombo(QComboBox *combo, const std::array<Preset, N> &presets,
 SettingWin::SettingWin(QWidget *parent) : QWidget(parent), ui(new Ui::SettingWin)
 {
     ui->setupUi(this);
+    setUiTexts();
 
     init_member_data(); // 确保相关的数据成员初始化完成后再初始化界面外观
     init_mouse_hover_tips();
@@ -409,10 +410,10 @@ void SettingWin::init_window_appearance()
 
     setWindowIcon(QIcon(":/image/setting/logo.png"));
     setWindowTitle(_("settings"));
+    setAttribute(Qt::WA_AlwaysShowToolTips, true);
     // setFont(freewb_candi_text_qfont(settings::instance()));
 
     ui->labelVersionNum->setText(FREEWB_VERSION);
-    ui->labelVersion->setText(_("freewb"));
 
     // 载入窗口全局UI样式表
     QFile qssFile(QSS_FILE);
@@ -453,187 +454,276 @@ void SettingWin::init_member_data()
             SLOT(slot_custom_btn_ok_clicked(const QString &, const QString &)));
 }
 
+void SettingWin::setUiTexts()
+{
+    ui->labelCommon->setText(_("Common options"));
+    ui->ckbCodeRemind->setText(_("Enable incremental code hints"));
+    ui->ckbWordThink->setText(_("Enable phrase association"));
+    ui->ckbRemindExistWord->setText(_("Remind when phrase exists in lexicon"));
+    ui->ckbAutoAdjustFreq->setText(_("Enable automatic frequency adjustment"));
+    ui->ckbSpaceFullWhenCharHalf->setText(_("Full-width space when characters are half-width"));
+    ui->ckbSmartMark->setText(_("Enable smart punctuation"));
+    ui->ckbAlertWhenEmptyCode->setText(_("Sound alert on duplicate or empty code"));
+    ui->labelUseAudioFile->setText(_("Use sound files"));
+    ui->labelAdvance->setText(_("Advanced options"));
+    ui->ckbRepeatCalib->setText(_("Duplicate commit proofreading mode"));
+    ui->ckbTypeEffect->setText(_("Enable typing sound effects"));
+    ui->ckbShiftCommitChar->setText(_("Shift+letter commits directly"));
+    ui->ckbInputStatistic->setText(_("Enable input statistics"));
+    ui->label_3->setText(_("Auto phrase options"));
+    ui->labelOthers->setText(_("Other settings"));
+    ui->label_4->setText(_("Auto-switch to English strings"));
+    ui->labelAutoEnPrompt->setText(
+        _("Freewb switches to English when you type these strings; Enter returns to Chinese.\n"
+          "Up to four characters, separated by spaces. Useful for browsing."));
+    ui->labelAutoMarkPrompt->setText(
+        _("In Chinese mode, commas and periods after digits become half-width (useful for finance)."));
+    ui->ckbAutoHalfMarkAfterNum->setText(_("Half-width punctuation after digits"));
+    ui->labelUi->setText(_("Interface settings"));
+    ui->label_24->setText(_("Options"));
+    ui->ckbAutoLocate->setText(_("Auto-position toolbar"));
+    ui->labelLossLocate->setText(_("When auto-position fails"));
+    ui->ckbAutoExtend->setText(_("Auto expand/collapse toolbar"));
+    ui->ckbEnableUiAudioEffect->setText(_("Enable UI sound effects"));
+    ui->ckbDispRealHelp->setText(_("Show realtime help"));
+    ui->ckbHideToolbar->setText(_("Hide toolbar"));
+    ui->label_26->setText(_("Toolbar transparency"));
+    ui->labelCandidateWinUi->setText(_("Candidate window interface"));
+    ui->label_28->setText(_("Candidate window style"));
+    ui->label_29->setText(_("Options"));
+    ui->label_30->setText(_("Index/candidate separator"));
+    ui->ckbUseGradientBgColor->setText(_("Use gradient background"));
+    ui->ckbUseTile->setText(_("Tile"));
+    ui->ckbUseBgImage->setText(_("Use background image"));
+    ui->label_31->setText(_("Corner radius"));
+    ui->label_32->setText(_("Transparency"));
+    ui->label_33->setText(_("Number of candidates"));
+    ui->label_34->setText(_("Characters per candidate"));
+    ui->label_35->setText(_("Candidate window (click labels to change font and colors)"));
+    ui->btnCandiFont->setText(_("Change font"));
+    ui->btnCandiBgColor0->setText(_("Gradient start"));
+    ui->btnCandiBgColor1->setText(_("Gradient end"));
+    ui->btnCandiBorderColor->setText(_("Border color"));
+    ui->btnCandiAutoWord->setText(_("Auto phrase"));
+    ui->btnCandiPrompt->setText(_("Prompt text"));
+    ui->btnCandiBg->setText(_("Background color"));
+    ui->labelCandidateWinOption->setText(_("Candidate window options"));
+    ui->label_36->setText(_("2nd/3rd duplicate keys"));
+    ui->label_37->setText(_("2nd duplicate key"));
+    ui->label_38->setText(_("3rd duplicate key"));
+    ui->label_39->setText(_("Page up/down keys"));
+    ui->label_40->setText(_("Previous page"));
+    ui->label_41->setText(_("Previous page"));
+    ui->label_42->setText(_("Settings"));
+    ui->ckbCursorFollow->setText(_("Candidate window follows caret"));
+    ui->ckbHideCandiChinese->setText(_("Hide Chinese candidate box"));
+    ui->ckbDispOpPrompt->setText(_("Show operation hints"));
+    ui->ckbShiftSelectRecode->setText(_("Use Shift to select duplicates"));
+    ui->ckbDispOpDict->setText(_("Live dictionary on candidates"));
+    ui->labelShortcutKey->setText(_("Shortcut settings"));
+    ui->labelCustom->setText(_("Custom shortcuts"));
+    ui->label_11->setText(_("Function"));
+    ui->label_12->setText(_("Shortcut"));
+    ui->ckbDisableAllShortcutKey->setText(_("Disable all shortcuts"));
+    ui->ckbDisableFullHalfKey->setText(_("Disable full/half width shortcut"));
+    ui->label_13->setText(_("Shortcut input"));
+    ui->labelEasy->setText(_("Convenience shortcuts"));
+    ui->label_15->setText(_("Temporary English"));
+    ui->label_16->setText(_("Temporary Pinyin\nrare characters"));
+    ui->labelCnEn->setText(_("Chinese/English switch"));
+    ui->labelTwo->setText(_("Double-tap convenience key for symbol"));
+    ui->btnRestoreShortcutKey->setText(_("Restore default shortcuts"));
+    ui->labelCustomKeyChar->setText(_("Custom soft keyboard"));
+    ui->labelPrompt_1->setText(_("Click the soft keyboard character to edit"));
+    ui->labelCustomKeyMark->setText(_("Custom punctuation"));
+    ui->labelPrompt_2->setText(_("Click the punctuation mark to edit"));
+    ui->labelVersionInfo->setText(_("Version information"));
+    ui->labelVersion->setText(_("Freewb Kylin Edition"));
+    ui->btnSettingOption->setText(_("Show [all] options"));
+    ui->btnOk->setText(_("OK"));
+    ui->btnCancel->setText(_("Cancel"));
+    ui->ckbAutoWordGroup->setItemText(0, _("Disable auto phrase creation"));
+    ui->ckbAutoWordGroup->setItemText(1, _("Discard on exit"));
+    ui->ckbAutoWordGroup->setItemText(2, _("Save to lexicon immediately"));
+    ui->cmbWhenLossLocation->setItemText(0, _("Hide toolbar"));
+    ui->cmbWhenLossLocation->setItemText(1, _("Top-left of desktop"));
+    ui->cmbWhenLossLocation->setItemText(2, _("Top-right of desktop"));
+    ui->cmbWhenLossLocation->setItemText(3, _("Bottom-left of desktop"));
+    ui->cmbWhenLossLocation->setItemText(4, _("Bottom-right of desktop"));
+    ui->cmbCandiWinMode->setItemText(0, _("Single row"));
+    ui->cmbCandiWinMode->setItemText(1, _("Multi row"));
+    ui->cmbFunction->setItemText(0, _("Reverse code lookup"));
+    ui->cmbFunction->setItemText(1, _("Add word online"));
+    ui->cmbFunction->setItemText(2, _("Delete word online"));
+    ui->cmbFunction->setItemText(3, _("Toggle virtual keyboard"));
+    ui->cmbFunction->setItemText(4, _("Switch character set"));
+    ui->cmbFunction->setItemText(5, _("Switch input mode"));
+    ui->cmbFunction->setItemText(6, _("Toggle simplified/traditional output"));
+    ui->cmbFunction->setItemText(7, _("Open system settings"));
+    ui->cmbFunction->setItemText(8, _("Show/hide status bar"));
+    ui->cmbFunction->setItemText(9, _("Show/hide candidate window"));
+    ui->cmbFunction->setItemText(10, _("Switch lexicon"));
+    ui->cmbFunction->setItemText(11, _("Switch skin"));
+    ui->cmbFunction->setItemText(12, _("Quick delete committed item"));
+    ui->cmbFunction->setItemText(13, _("Auto-pair punctuation"));
+    ui->cmbSwitchCnEn->setItemText(0, _("Ctrl+Space"));
+    ui->cmbSwitchCnEn->setItemText(1, _("Left Shift"));
+    ui->cmbSwitchCnEn->setItemText(2, _("Right Shift"));
+    ui->cmbSwitchCnEn->setItemText(3, _("Left Ctrl"));
+    ui->cmbSwitchCnEn->setItemText(4, _("Right Ctrl"));
+}
+
 void SettingWin::init_mouse_hover_tips()
 {
-#define TIPS_FILE INSTALL_DIR + "/data/setting_tips.txt"
-
-    m_tooltipsWin.setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+    m_tooltipsWin.setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint |
+                                 Qt::X11BypassWindowManagerHint | Qt::WindowDoesNotAcceptFocus);
     m_tooltipsWin.setAttribute(Qt::WA_TranslucentBackground);
     m_tooltipsLabel = new QLabel(&m_tooltipsWin);
     m_tooltipsLabel->setStyleSheet(QSS_TOOL_TIPS);
 
-    QFile tipsFile(TIPS_FILE);
-    QTextStream textStream(&tipsFile);
-    if (!tipsFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    ui->ckbCodeRemind->setToolTip(                         _("When you enter code 'a', besides the character for 'a', candidates starting with 'a' "
+                           "are also shown, e.g. entries like '式a 节b'."));
+    ui->ckbSpaceFullWhenCharHalf->setToolTip(                         _("When editing Word documents, paragraph indents of two Chinese characters can be entered "
+                           "conveniently with this option."));
+    ui->ckbWordThink->setToolTip(                         _("When enabled, after typing '中', related phrases such as '中国' and '中国共产党' are "
+                           "listed for selection."));
+    ui->ckbSmartMark->setToolTip(                         _("When enabled, paired punctuation can be entered with the opening mark; e.g. '(' outputs "
+                           "'()' and places the cursor inside. Press Enter to finish."));
+    ui->ckbRemindExistWord->setToolTip(                         _("When enabled, if a phrase exists in the lexicon but you type it character by character, "
+                           "you are prompted. If ignored repeatedly, the phrase may be hidden depending on Advanced "
+                           "settings."));
+    ui->ckbAlertWhenEmptyCode->setToolTip(                         _("When enabled, an alert sounds when the code is empty or has duplicate candidates."));
+    ui->ckbUseAudioFile->setToolTip(_("When enabled, alerts use sound files in the Freewb sound directory."));
+    ui->ckbAutoAdjustFreq->setToolTip(                         _("The selected duplicate candidate is moved to the first position.\nNote: single characters "
+                           "are not adjusted this way; use Ctrl+number instead."));
+
+    ui->ckbShiftCommitChar->setToolTip(                         _("When enabled, Shift+letter outputs the letter directly; otherwise temporary English mode "
+                           "is used and Enter commits the text."));
+    ui->ckbInputStatistic->setToolTip(_("When enabled, typing speed is tracked in real time."));
+    ui->ckbTypeEffect->setToolTip(                         _("Your computer behaves like a typewriter (useful for Wubi beginners)."));
+    ui->ckbRepeatCalib->setToolTip(                         _("When enabled, duplicate or empty codes output the first two candidates or codes for batch "
+                           "proofreading."));
+    ui->ckbAutoWordGroup->setToolTip(                         _("① Disable auto word grouping.\n② Discard on exit: type by character, then use as phrase until "
+                           "exit; not saved to user lexicon.\n③ Save to lexicon: same as ② but selected auto phrases "
+                           "are saved.\n\nNote: use Ctrl+number to select and save auto phrases in candidates."));
+
+    ui->ledtAutoToEnStr->setToolTip(                         _("When typing URLs such as 'www.freewb.org', entering 'www.' switches to English so browser "
+                           "autocomplete can be used."));
+    ui->ledtAutoToHalf->setToolTip(                         _("For numbers like '12,345.9', enter half-width ',.' here to input grouped numbers without "
+                           "wrong full-width punctuation."));
+
+    ui->cmbSkinSelect->setToolTip(_("Shows installed skins; select one to change the appearance."));
+    ui->ckbAutoLocate->setToolTip(                         _("When enabled, the toolbar is placed at the top-right of the active window. Drag it "
+                           "elsewhere if you prefer another corner."));
+    ui->cmbWhenLossLocation->setToolTip(_("Opens a drop-down menu."));
+    ui->ckbAutoExtend->setToolTip(                         _("When enabled, hidden toolbar buttons expand on mouse hover and collapse when the pointer "
+                           "leaves."));
+    ui->ckbEnableUiAudioEffect->setToolTip(                         _("When enabled, toolbar and candidate window actions play sound effects."));
+    ui->ckbDispRealHelp->setToolTip(                         _("When enabled, brief help is shown when hovering toolbar buttons."));
+    ui->ckbHideToolbar->setToolTip(_("Hide the toolbar in games or fullscreen apps to reduce distraction."));
+    ui->spbToolbarTransparency->setToolTip(_("Adjust toolbar transparency."));
+
+    ui->cmbCandiWinMode->setToolTip(                         _("Choose single-row, double-row, or multi-row candidate window layout."));
+    ui->ledtSeparateChar->setToolTip(_("Change the separator between index and candidate text."));
+    ui->ckbUseGradientBgColor->setToolTip(_("Use a gradient background for the candidate window."));
+    ui->ckbUseBgImage->setToolTip(_("Use an image as the candidate window background."));
+    ui->ckbUseTile->setToolTip(                         _("Tile the background image; otherwise stretch it to fill the window."));
+    ui->spbCornerRadian->setToolTip(_("Set the corner radius of the candidate window."));
+    ui->spbCandiTransparency->setToolTip(_("Set candidate window transparency."));
+    ui->spbCandiItemNum->setToolTip(                         _("Number of candidates shown; larger values mean fewer page turns (balance with appearance)."));
+    ui->spbCandiCharNum->setToolTip(                         _("Maximum characters per candidate; very small values show '...' for hidden text."));
+
+    ui->btnCandiFont->setToolTip(_("Open font settings for candidate text."));
+    ui->btnCandiBg->setToolTip(_("Set candidate window background color or image."));
+    ui->btnCandiBgColor0->setToolTip(_("Set the gradient start color."));
+    ui->btnCandiBgColor1->setToolTip(_("Set the gradient end color."));
+    ui->btnCandiBorderColor->setToolTip(_("Set the candidate window border color."));
+    ui->btnCandiAutoWord->setToolTip(_("Set the color for auto-generated brief codes."));
+    ui->btnCandiPrompt->setToolTip(_("Set the candidate window prompt text color."));
+
+    ui->ledt2ndRecode->setToolTip(                         _("Key to select the 2nd candidate, e.g. ',' for users who prefer comma."));
+    ui->ledt3rdRecode->setToolTip(                         _("Key to select the 3rd candidate, e.g. '.' for users who prefer period."));
+    ui->ckbCursorFollow->setToolTip(                         _("When enabled, the candidate window follows the caret; otherwise it stays at the bottom "
+                           "(or drag it anywhere)."));
+    ui->ckbHideCandiChinese->setToolTip(_("Hide the candidate window when needed."));
+    ui->ckbDispOpPrompt->setToolTip(                         _("Show operation hints at the bottom of the multi-row candidate window, e.g. "
+                           "'Ctrl+= add word online'."));
+    ui->ckbShiftSelectRecode->setToolTip(                         _("When enabled, Left Shift selects the 2nd candidate and Right Shift the 3rd. Swap in Expert "
+                           "settings if needed."));
+    ui->ledtPrecPage->setToolTip(                         _("Previous page key, e.g. ',' if you prefer comma and period for paging."));
+    ui->ledtNextPage->setToolTip(                         _("Next page key, e.g. '.' if you prefer comma and period for paging."));
+    ui->cmb23RecodeSelect->setToolTip(_("Keys for selecting 2nd and 3rd duplicate candidates."));
+    ui->cmbPrevNextPage->setToolTip(_("Keys for candidate paging."));
+    ui->ckbDispOpDict->setToolTip(_("Show dictionary lookup when hovering candidates."));
+
+    ui->cmbFunction->setToolTip(                         _("Select a Freewb function such as reverse lookup or online word creation."));
+    ui->cmbShortcutKey->setToolTip(_("Shortcut for the function selected above."));
+    ui->ckbDisableAllShortcutKey->setToolTip(                         _("Disable all Freewb shortcuts to avoid conflicts with other applications."));
+    ui->ckbDisableFullHalfKey->setToolTip(                         _("Shift+Space is the default full/half width shortcut in Fcitx; enable this to disable it."));
+    ui->cmbTmpEnglish->setToolTip(                         _("For short English input (e.g. email), press this key then type English and press Enter to "
+                           "return to Chinese. Also used as a lead key for advanced features."));
+    ui->cmbShortcutInput->setToolTip(                         QString(_("Press this key, then a letter to output a predefined phrase.\nCustom rules: %1\n"
+                                   "(Right-click toolbar → Management tools → Edit shortcut table)."))
+                             .arg(INSTALL_DIR + "/data/quick_table.txt"));
+    ui->cmbTmpPinyin->setToolTip(                         _("When in Wubi mode, press this key for temporary Pinyin input of unknown characters, then "
+                           "return to Wubi. With code already typed, toggles rare-character mode."));
+    ui->cmbSwitchCnEn->setToolTip(                         _("Choose a key to switch Chinese/English without closing or switching the input method."));
+}
+
+void SettingWin::show_mouse_hover_tips(QWidget *widget)
+{
+    QString tips = widget->toolTip();
+    if (tips.isEmpty())
     {
-        qWarning() << TIPS_FILE << "open failed!";
         return;
     }
 
-    QMap<int, QString> tipsMap;
-    QStringList textList = textStream.readAll().split('\n');
-    tipsFile.close();
-    foreach(QString line, textList)
+    // ToolTip may fire repeatedly while the pointer moves (esp. on Wayland); position once like the old build.
+    if (m_tooltipsWinShowFlg)
     {
-        if (line.startsWith("1"))
-        {
-            // QStringList tips = line.split( '=' );
-            QStringList tips;
-            tips << line.left(4);
-            tips << line.mid(5);
-            if (tips.length() > 1)
-            {
-                QString value = tips.at(1);
-                tipsMap.insert(tips.at(0).toInt(), value.replace("\\n", "\n"));
-            }
-        }
+        return;
     }
 
-    m_tipsTextMap.insert(ui->ckbCodeRemind, tipsMap.value(1001));
-    m_tipsTextMap.insert(ui->ckbSpaceFullWhenCharHalf, tipsMap.value(1002));
-    m_tipsTextMap.insert(ui->ckbWordThink, tipsMap.value(1003));
-    m_tipsTextMap.insert(ui->ckbSmartMark, tipsMap.value(1004));
-    m_tipsTextMap.insert(ui->ckbRemindExistWord, tipsMap.value(1005));
-    m_tipsTextMap.insert(ui->ckbAlertWhenEmptyCode, tipsMap.value(1006));
-    m_tipsTextMap.insert(ui->ckbUseAudioFile, tipsMap.value(1007));
-    m_tipsTextMap.insert(ui->ckbAutoAdjustFreq, tipsMap.value(1008));
+    m_tooltipsLabel->setText(tips);
+    m_tooltipsLabel->adjustSize();
+    m_tooltipsWin.adjustSize();
 
-    m_tipsTextMap.insert(ui->ckbShiftCommitChar, tipsMap.value(1101));
-    m_tipsTextMap.insert(ui->ckbInputStatistic, tipsMap.value(1102));
-    m_tipsTextMap.insert(ui->ckbTypeEffect, tipsMap.value(1103));
-    m_tipsTextMap.insert(ui->ckbRepeatCalib, tipsMap.value(1104));
-    m_tipsTextMap.insert(ui->ckbAutoWordGroup, tipsMap.value(1105));
+    QPoint position = QCursor::pos();
+    QSize desktopSize = QApplication::desktop()->size();
+    if (position.x() + m_tooltipsWin.width() > desktopSize.width())
+    {
+        position.setX(desktopSize.width() - m_tooltipsWin.width());
+    }
+    else
+    {
+        position.setX(position.x() + 10);
+    }
 
-    m_tipsTextMap.insert(ui->ledtAutoToEnStr, tipsMap.value(1201));
-    m_tipsTextMap.insert(ui->ledtAutoToHalf, tipsMap.value(1202));
+    if (position.y() + m_tooltipsWin.height() > desktopSize.height() && m_tooltipsWin.height() < position.y())
+    {
+        position.setY(position.y() - m_tooltipsWin.height() - 10);
+    }
+    else
+    {
+        position.setY(position.y() + 10);
+    }
 
-    m_tipsTextMap.insert(ui->cmbSkinSelect, tipsMap.value(1301));
-    m_tipsTextMap.insert(ui->ckbAutoLocate, tipsMap.value(1302));
-    m_tipsTextMap.insert(ui->cmbWhenLossLocation, tipsMap.value(1303));
-    m_tipsTextMap.insert(ui->ckbAutoExtend, tipsMap.value(1304));
-    m_tipsTextMap.insert(ui->ckbEnableUiAudioEffect, tipsMap.value(1305));
-    m_tipsTextMap.insert(ui->ckbDispRealHelp, tipsMap.value(1306));
-    m_tipsTextMap.insert(ui->ckbHideToolbar, tipsMap.value(1307));
-    m_tipsTextMap.insert(ui->spbToolbarTransparency, tipsMap.value(1308));
-
-    m_tipsTextMap.insert(ui->cmbCandiWinMode, tipsMap.value(1401));
-    m_tipsTextMap.insert(ui->ledtSeparateChar, tipsMap.value(1402));
-    m_tipsTextMap.insert(ui->ckbUseGradientBgColor, tipsMap.value(1403));
-    m_tipsTextMap.insert(ui->ckbUseBgImage, tipsMap.value(1404));
-    m_tipsTextMap.insert(ui->ckbUseTile, tipsMap.value(1405));
-    m_tipsTextMap.insert(ui->spbCornerRadian, tipsMap.value(1406));
-    m_tipsTextMap.insert(ui->spbCandiTransparency, tipsMap.value(1407));
-    m_tipsTextMap.insert(ui->spbCandiItemNum, tipsMap.value(1408));
-    m_tipsTextMap.insert(ui->spbCandiCharNum, tipsMap.value(1409));
-
-    m_tipsTextMap.insert(ui->btnCandiFont, tipsMap.value(1410));
-    m_tipsTextMap.insert(ui->btnCandiBg, tipsMap.value(1411));
-    m_tipsTextMap.insert(ui->btnCandiBgColor0, tipsMap.value(1412));
-    m_tipsTextMap.insert(ui->btnCandiBgColor1, tipsMap.value(1413));
-    m_tipsTextMap.insert(ui->btnCandiBorderColor, tipsMap.value(1414));
-    m_tipsTextMap.insert(ui->btnCandiAutoWord, tipsMap.value(1415));
-    m_tipsTextMap.insert(ui->btnCandiPrompt, tipsMap.value(1416));
-
-    m_tipsTextMap.insert(ui->ledt2ndRecode, tipsMap.value(1501));
-    m_tipsTextMap.insert(ui->ledt3rdRecode, tipsMap.value(1502));
-    m_tipsTextMap.insert(ui->ckbCursorFollow, tipsMap.value(1503));
-    m_tipsTextMap.insert(ui->ckbHideCandiChinese, tipsMap.value(1504));
-    m_tipsTextMap.insert(ui->ckbDispOpPrompt, tipsMap.value(1505));
-    m_tipsTextMap.insert(ui->ckbShiftSelectRecode, tipsMap.value(1506));
-    m_tipsTextMap.insert(ui->ledtPrecPage, tipsMap.value(1507));
-    m_tipsTextMap.insert(ui->ledtNextPage, tipsMap.value(1508));
-    m_tipsTextMap.insert(ui->cmb23RecodeSelect, tipsMap.value(1509));
-    m_tipsTextMap.insert(ui->cmbPrevNextPage, tipsMap.value(1510));
-    m_tipsTextMap.insert(ui->ckbDispOpDict, tipsMap.value(1511));
-
-    m_tipsTextMap.insert(ui->cmbFunction, tipsMap.value(1601));
-    m_tipsTextMap.insert(ui->cmbShortcutKey, tipsMap.value(1602));
-    m_tipsTextMap.insert(ui->ckbDisableAllShortcutKey, tipsMap.value(1603));
-    m_tipsTextMap.insert(ui->ckbDisableFullHalfKey, tipsMap.value(1604));
-    m_tipsTextMap.insert(ui->cmbTmpEnglish, tipsMap.value(1605));
-    m_tipsTextMap.insert(ui->cmbShortcutInput, tipsMap.value(1606));
-    m_tipsTextMap.insert(ui->cmbTmpPinyin, tipsMap.value(1607));
-    m_tipsTextMap.insert(ui->cmbSwitchCnEn, tipsMap.value(1608));
+    m_tooltipsWin.move(position);
+    m_tooltipsWin.show();
+    m_tooltipsWinShowFlg = true;
 }
 
 void SettingWin::install_evt_filter()
 {
     installEventFilter(this);
 
-#if 0
-//    QList<QWidget *> widgets = findChildren<QWidget *>();
-//    foreach( QWidget *widget, widgets )
-//    {
-//        widget->installEventFilter( this );
-//    }
-#else
-    ui->ckbCodeRemind->installEventFilter(this);
-    ui->ckbSpaceFullWhenCharHalf->installEventFilter(this);
-    ui->ckbWordThink->installEventFilter(this);
-    ui->ckbSmartMark->installEventFilter(this);
-    ui->ckbRemindExistWord->installEventFilter(this);
-    ui->ckbAlertWhenEmptyCode->installEventFilter(this);
-    ui->ckbUseAudioFile->installEventFilter(this);
-    ui->ckbAutoAdjustFreq->installEventFilter(this);
-
-    ui->ckbShiftCommitChar->installEventFilter(this);
-    ui->ckbInputStatistic->installEventFilter(this);
-    ui->ckbTypeEffect->installEventFilter(this);
-    ui->ckbRepeatCalib->installEventFilter(this);
-    ui->ckbAutoWordGroup->installEventFilter(this);
-
-    ui->ledtAutoToEnStr->installEventFilter(this);
-    ui->ledtAutoToHalf->installEventFilter(this);
-
-    ui->cmbSkinSelect->installEventFilter(this);
-    ui->ckbAutoLocate->installEventFilter(this);
-    ui->cmbWhenLossLocation->installEventFilter(this);
-    ui->ckbAutoExtend->installEventFilter(this);
-    ui->ckbEnableUiAudioEffect->installEventFilter(this);
-    ui->ckbDispRealHelp->installEventFilter(this);
-    ui->ckbHideToolbar->installEventFilter(this);
-    ui->spbToolbarTransparency->installEventFilter(this);
-
-    ui->cmbCandiWinMode->installEventFilter(this);
-    ui->ledtSeparateChar->installEventFilter(this);
-    ui->ckbUseGradientBgColor->installEventFilter(this);
-    ui->ckbUseBgImage->installEventFilter(this);
-    ui->ckbUseTile->installEventFilter(this);
-    ui->spbCornerRadian->installEventFilter(this);
-    ui->spbCandiTransparency->installEventFilter(this);
-    ui->spbCandiItemNum->installEventFilter(this);
-    ui->spbCandiCharNum->installEventFilter(this);
-    ui->cmb23RecodeSelect->installEventFilter(this);
-    ui->cmbPrevNextPage->installEventFilter(this);
-
-    ui->btnCandiFont->installEventFilter(this);
-    ui->btnCandiBg->installEventFilter(this);
-    ui->btnCandiBgColor0->installEventFilter(this);
-    ui->btnCandiBgColor1->installEventFilter(this);
-    ui->btnCandiBorderColor->installEventFilter(this);
-    ui->btnCandiAutoWord->installEventFilter(this);
-    ui->btnCandiPrompt->installEventFilter(this);
-
-    ui->ledt2ndRecode->installEventFilter(this);
-    ui->ledt3rdRecode->installEventFilter(this);
-    ui->ckbCursorFollow->installEventFilter(this);
-    ui->ckbHideCandiChinese->installEventFilter(this);
-    ui->ckbDispOpPrompt->installEventFilter(this);
-    ui->ckbDispOpDict->installEventFilter(this);
-
-    ui->ckbShiftSelectRecode->installEventFilter(this);
-    ui->ledtPrecPage->installEventFilter(this);
-    ui->ledtNextPage->installEventFilter(this);
-
-    ui->cmbFunction->installEventFilter(this);
-    ui->cmbShortcutKey->installEventFilter(this);
-    ui->ckbDisableAllShortcutKey->installEventFilter(this);
-    ui->ckbDisableFullHalfKey->installEventFilter(this);
-    ui->cmbTmpEnglish->installEventFilter(this);
-    ui->cmbShortcutInput->installEventFilter(this);
-    ui->cmbTmpPinyin->installEventFilter(this);
-    ui->cmbSwitchCnEn->installEventFilter(this);
-#endif
+    for (QWidget *widget : findChildren<QWidget *>())
+    {
+        if (!widget->toolTip().isEmpty())
+        {
+            widget->installEventFilter(this);
+        }
+    }
 }
 
 void SettingWin::mousePressEvent(QMouseEvent *event)
@@ -681,25 +771,21 @@ bool SettingWin::eventFilter(QObject *obj, QEvent *event)
     }
     else if (event->type() == QEvent::ToolTip)
     {
-        // qDebug() << obj->objectName();
-        if (m_tipsTextMap.contains(qobject_cast<QWidget *>(obj)))
+        QWidget *widget = qobject_cast<QWidget *>(obj);
+        if (widget && !widget->toolTip().isEmpty())
         {
-            QString tips = m_tipsTextMap.value(qobject_cast<QWidget *>(obj));
-            if (!tips.isEmpty())
-            {
-                m_tooltipsLabel->setText(tips);
-                m_tooltipsLabel->adjustSize();
-                m_tooltipsWin.adjustSize();
-                m_tooltipsWin.move(QCursor::pos().x() + 10, QCursor::pos().y() + 10);
-                m_tooltipsWin.show();
-                m_tooltipsWinShowFlg = true;
-            }
+            show_mouse_hover_tips(widget);
+            isProcessed = true;
         }
     }
-    else if (event->type() == QEvent::Leave && m_tooltipsWinShowFlg)
+    else if (event->type() == QEvent::Leave)
     {
-        m_tooltipsWin.hide();
-        m_tooltipsWinShowFlg = false;
+        QWidget *widget = qobject_cast<QWidget *>(obj);
+        if (widget && !widget->toolTip().isEmpty() && m_tooltipsWinShowFlg)
+        {
+            m_tooltipsWin.hide();
+            m_tooltipsWinShowFlg = false;
+        }
     }
 
     if (isProcessed == false)

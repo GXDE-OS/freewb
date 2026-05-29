@@ -60,6 +60,9 @@ private slots:
     void on_listWidgetCandi_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 
 private:
+    void setUiTexts();
+
+private:
     Ui::DictQueryWin *ui;
 
     QPoint m_defaultPopPosition;

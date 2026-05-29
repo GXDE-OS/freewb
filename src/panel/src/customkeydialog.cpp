@@ -1,10 +1,12 @@
 #include "customkeydialog.h"
 
+#include "config.h"
 #include "ui_customkeydialog.h"
 
 CustomKeyDialog::CustomKeyDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CustomKeyDialog)
 {
     ui->setupUi(this);
+    setUiTexts();
     setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
 
     m_mouseIsPressed = false;
@@ -14,6 +16,16 @@ CustomKeyDialog::CustomKeyDialog(QWidget *parent) : QDialog(parent), ui(new Ui::
     m_defaultPopPosition = QPoint((d->width() - size().width()) / 2, (d->height() - size().height()) / 2);
 
     installEventFilter(this);
+}
+
+void CustomKeyDialog::setUiTexts()
+{
+    setWindowTitle(_("Keyboard character settings"));
+    ui->btnOk->setText(_("OK"));
+    ui->btnCancle->setText(_("Cancel"));
+    ui->label_2->setText(_("Shift character"));
+    ui->label_3->setText(_("Normal character"));
+    ui->label_4->setText(_("Keyboard character to configure:"));
 }
 
 CustomKeyDialog::~CustomKeyDialog()

@@ -489,7 +489,7 @@
                      <string notr="true"/>
                     </property>
                     <property name="text">
-                     <string>极点五笔提示信息</string>
+                     <string>Freewb prompt</string>
                     </property>
                     <property name="scaledContents">
                      <bool>false</bool>

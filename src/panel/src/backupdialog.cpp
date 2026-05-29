@@ -486,6 +486,7 @@ void BackupWorker::start_restore()
 BackupDialog::BackupDialog(QDialog *parent) : QDialog(parent), ui(new Ui::BackupDialog)
 {
     ui->setupUi(this);
+    setUiTexts();
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
 
     m_mouseIsPressed = false;
@@ -501,6 +502,16 @@ BackupDialog::BackupDialog(QDialog *parent) : QDialog(parent), ui(new Ui::Backup
     connect(m_backupWorker, &BackupWorker::signal_process_updated, this, &BackupDialog::slot_progress_updated);
 
     ui->btnClose->installEventFilter(this);
+}
+
+void BackupDialog::setUiTexts()
+{
+    ui->label->setText(_("Backup in progress, please wait..."));
+    ui->label_2->setText(_("Backup completed. Open the backup file?"));
+    ui->btnYes->setText(_("Yes"));
+    ui->btnNo->setText(_("No"));
+    ui->btnOk->setText(_("OK"));
+    ui->labelPrompt->setText(_("Dictionary and settings recovery completed!"));
 }
 
 BackupDialog::~BackupDialog()

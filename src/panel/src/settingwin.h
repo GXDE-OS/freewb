@@ -170,6 +170,10 @@ private slots:
     void on_btnRestoreShortcutKey_clicked();
 
 private:
+    void setUiTexts();
+    void show_mouse_hover_tips(QWidget *widget);
+
+private:
     Ui::SettingWin *ui;
 
     // 用于窗口拖动计算
@@ -182,7 +186,6 @@ private:
     QWidget m_tooltipsWin;
     QLabel *m_tooltipsLabel;
     bool m_tooltipsWinShowFlg;
-    QMap<QWidget *, QString> m_tipsTextMap;
 
     QListWidgetItem *m_listItemCommon;             // 常用选项
     QListWidgetItem *m_listItemAdvance;            // 高级选项

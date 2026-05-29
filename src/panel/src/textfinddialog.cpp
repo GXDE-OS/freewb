@@ -6,8 +6,18 @@
 TextFindDialog::TextFindDialog(QWidget *parent) : QDialog(parent), ui(new Ui::TextFindDialog)
 {
     ui->setupUi(this);
+    setUiTexts();
     setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
     setWindowTitle(_("Find"));
+}
+
+void TextFindDialog::setUiTexts()
+{
+    ui->label->setText(_("Find what"));
+    ui->btnNext->setText(_("Next (&N)"));
+    ui->btnPrev->setText(_("Previous (&P)"));
+    ui->ckbCaseSensitive->setText(_("Match case (&C)"));
+    ui->ckbWholeWordMatch->setText(_("Whole words (&W)"));
 }
 
 TextFindDialog::~TextFindDialog()

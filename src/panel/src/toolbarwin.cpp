@@ -484,54 +484,65 @@ void ToolbarWin::update_mouse_hover_tips()
     auto fmt = [](const std::string &value) -> QString
     {
         const std::string s = freewb_custom_shortcut_format(value);
-        return s.empty() ? QStringLiteral("无") : toQStringUtf8(s);
+        return s.empty() ? QString(_("None")) : toQStringUtf8(s);
     };
-    m_tipsTextMap.insert(ui->btnMenuExtend, "扩展菜单栏切换按钮");
-    m_tipsTextMap.insert(ui->btnMode, QString("输入模式切换按钮\n快捷键：") + fmt(settings::instance().get_switchInputMode()));
-    m_tipsTextMap.insert(ui->btnGenerate, QString("在线造词功能按钮\n快捷键：") + fmt(settings::instance().get_onlineAddWord()));
-    m_tipsTextMap.insert(ui->btnSearch, QString("查询编码与释义按钮\n快捷键：") + fmt(settings::instance().get_backFindCode()));
-    m_tipsTextMap.insert(ui->btnCharWidth, QString("字符全半角切换按钮\n快捷键：Shift+Space"));
-    m_tipsTextMap.insert(ui->btnMark, QString("中英文标点切换按钮\n快捷键：Ctrl+."));
-    m_tipsTextMap.insert(ui->btnKeyboard, QString("开关或切换软键盘按钮\n快捷键：") + fmt(settings::instance().get_switchVKb()));
-    m_tipsTextMap.insert(ui->btnSetting, "打开设置界面按钮");
-    m_tipsTextMap.insert(ui->btnCharFont,
-                         QString("简繁体输出切换按钮\n快捷键：") + fmt(settings::instance().get_switchChttrans()));
-    m_tipsTextMap.insert(ui->btnCharSet, QString("字符集切换按钮\n快捷键：") + fmt(settings::instance().get_switchCharSet()));
+    ui->btnMenuExtend->setToolTip(_("Toggle extended menu bar"));
+    ui->btnMode->setToolTip(                         QString(_("Input mode button\nShortcut: %1")).arg(fmt(settings::instance().get_switchInputMode())));
+    ui->btnGenerate->setToolTip(                         QString(_("Online word creation button\nShortcut: %1"))
+                             .arg(fmt(settings::instance().get_onlineAddWord())));
+    ui->btnSearch->setToolTip(                         QString(_("Code and definition lookup button\nShortcut: %1"))
+                             .arg(fmt(settings::instance().get_backFindCode())));
+    ui->btnCharWidth->setToolTip(_("Character width toggle\nShortcut: Shift+Space"));
+    ui->btnMark->setToolTip(_("Chinese/English punctuation toggle\nShortcut: Ctrl+."));
+    ui->btnKeyboard->setToolTip(                         QString(_("Toggle or switch virtual keyboard\nShortcut: %1"))
+                             .arg(fmt(settings::instance().get_switchVKb())));
+    ui->btnSetting->setToolTip(_("Open settings"));
+    ui->btnCharFont->setToolTip(                         QString(_("Simplified/Traditional output toggle\nShortcut: %1"))
+                             .arg(fmt(settings::instance().get_switchChttrans())));
+    ui->btnCharSet->setToolTip(                         QString(_("Character set toggle\nShortcut: %1"))
+                             .arg(fmt(settings::instance().get_switchCharSet())));
 }
 
 void ToolbarWin::show_mouse_hover_tips(QWidget *widget)
 {
-    QString tips = m_tipsTextMap.value(widget);
-    if (!tips.isEmpty())
+    QString tips = widget->toolTip();
+    if (tips.isEmpty())
     {
-        m_tooltipsLabel->setText(tips);
-        m_tooltipsLabel->adjustSize();
-        m_tooltipsWin.adjustSize();
-
-        QPoint position = QCursor::pos();
-        QSize desktopSize = QApplication::desktop()->size();
-        if (position.x() + m_tooltipsWin.width() > desktopSize.width())
-        {
-            position.setX(desktopSize.width() - m_tooltipsWin.width());
-        }
-        else
-        {
-            position.setX(position.x() + 10);
-        }
-
-        if (position.y() + m_tooltipsWin.height() > desktopSize.height() && m_tooltipsWin.height() < position.y())
-        {
-            position.setY(position.y() - m_tooltipsWin.height() - 10);
-        }
-        else
-        {
-            position.setY(position.y() + 10);
-        }
-
-        m_tooltipsWin.move(position);
-        m_tooltipsWin.show();
-        m_tooltipsWinShowFlg = true;
+        return;
     }
+
+    if (m_tooltipsWinShowFlg)
+    {
+        return;
+    }
+
+    m_tooltipsLabel->setText(tips);
+    m_tooltipsLabel->adjustSize();
+    m_tooltipsWin.adjustSize();
+
+    QPoint position = QCursor::pos();
+    QSize desktopSize = QApplication::desktop()->size();
+    if (position.x() + m_tooltipsWin.width() > desktopSize.width())
+    {
+        position.setX(desktopSize.width() - m_tooltipsWin.width());
+    }
+    else
+    {
+        position.setX(position.x() + 10);
+    }
+
+    if (position.y() + m_tooltipsWin.height() > desktopSize.height() && m_tooltipsWin.height() < position.y())
+    {
+        position.setY(position.y() - m_tooltipsWin.height() - 10);
+    }
+    else
+    {
+        position.setY(position.y() + 10);
+    }
+
+    m_tooltipsWin.move(position);
+    m_tooltipsWin.show();
+    m_tooltipsWinShowFlg = true;
 }
 
 void ToolbarWin::show_keyboard_menu()
@@ -618,17 +629,20 @@ bool ToolbarWin::eventFilter(QObject *obj, QEvent *event)
             update_extend_menu(false);
         }
 
-        if (m_tipsTextMap.contains(qobject_cast<QWidget *>(obj)) && m_tooltipsWinShowFlg)
+        QWidget *widget = qobject_cast<QWidget *>(obj);
+        if (widget && !widget->toolTip().isEmpty() && m_tooltipsWinShowFlg)
         {
             m_tooltipsWin.hide();
             m_tooltipsWinShowFlg = false;
         }
     }
-    else if (event->type() == QEvent::ToolTip && m_tipsTextMap.contains(qobject_cast<QWidget *>(obj)))
+    else if (event->type() == QEvent::ToolTip)
     {
-        if (settings::instance().get_showRealtimeHelp())
+        QWidget *widget = qobject_cast<QWidget *>(obj);
+        if (widget && !widget->toolTip().isEmpty() && settings::instance().get_showRealtimeHelp())
         {
-            show_mouse_hover_tips(qobject_cast<QWidget *>(obj));
+            show_mouse_hover_tips(widget);
+            isProcessed = true;
         }
     }
     else if (event->type() == QEvent::ContextMenu)

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>键盘字符设置</string>
+   <string>Keyboard character settings</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -49,7 +49,7 @@
      <string notr="true">color: rgb(56, 56, 56);</string>
     </property>
     <property name="text">
-     <string>确认</string>
+     <string>OK</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnCancle">
@@ -70,7 +70,7 @@
      <string notr="true">color: rgb(56, 56, 56);</string>
     </property>
     <property name="text">
-     <string>取消</string>
+     <string>Cancel</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -91,7 +91,7 @@
      <string notr="true">color: rgb(56, 56, 56);</string>
     </property>
     <property name="text">
-     <string>上档字符</string>
+     <string>Shift character</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
@@ -112,7 +112,7 @@
      <string notr="true">color: rgb(56, 56, 56);</string>
     </property>
     <property name="text">
-     <string>正常字符</string>
+     <string>Normal character</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="ledtShift">
@@ -165,7 +165,7 @@
      </font>
     </property>
     <property name="text">
-     <string>要设置的键盘字符：</string>
+     <string>Keyboard character to configure:</string>
     </property>
    </widget>
    <widget class="QLabel" name="labelKeyName">

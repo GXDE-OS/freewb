@@ -74,6 +74,7 @@ void LexiconWorker::slot_start_work()
 LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::LexiconToolWin)
 {
     ui->setupUi(this);
+    setUiTexts();
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
 
     setWindowIcon(QIcon(":/image/setting/logo.png"));
@@ -118,6 +119,25 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
     ui->btnMarkRareWord->hide();
     ui->btnMarkThinkWord->hide();
     ui->btnOptimize->hide();
+}
+
+void LexiconToolWin::setUiTexts()
+{
+    ui->labelLexiconTool->setText(_("Freewb lexicon toolbox"));
+    ui->btnDumpSysLexicon->setText(_("Export"));
+    ui->label->setText(_("System lexicon"));
+    ui->label_2->setText(_("Pinyin lexicon"));
+    ui->label_3->setText(_("User lexicon"));
+    ui->btnMarkRareWord->setText(_("Mark rare characters"));
+    ui->btnMakeSysLexicon->setText(_("Generate lexicon"));
+    ui->btnHelp->setText(_("Help"));
+    ui->btnOptimize->setText(_("Optimize"));
+    ui->btnMarkThinkWord->setText(_("Mark associative words"));
+    ui->btnDumpPinyinLexicon->setText(_("Export"));
+    ui->btnMakePinyinLexicon->setText(_("Generate lexicon"));
+    ui->btnDumpUserLexicon->setText(_("Export"));
+    ui->btnBatchDel->setText(_("Batch delete words"));
+    ui->btnBatchAdd->setText(_("Batch add words"));
 }
 
 LexiconToolWin::~LexiconToolWin()

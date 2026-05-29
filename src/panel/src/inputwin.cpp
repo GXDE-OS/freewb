@@ -707,11 +707,11 @@ void InputWin::show_user_word_operation_prompt(int addOrDel, const QString &word
     ui->labelPreEdit->setText(str + "  <font color=blue>〔 " + wordCode + " 〕</font>");
     if (addOrDel)
     {
-        ui->labelPrompt->setText("←和→修改词长，Enter确认，Esc放弃，Ctrl+Enter编码");
+        ui->labelPrompt->setText(_("Use ← and → to change word length, Enter to confirm, Esc to cancel, Ctrl+Enter for code"));
     }
     else
     {
-        ui->labelPrompt->setText("按Enter确认删除词组，Esc放弃");
+        ui->labelPrompt->setText(_("Press Enter to confirm deletion, Esc to cancel"));
     }
 
     // 调整窗口大小
@@ -923,63 +923,63 @@ void InputWin::set_candiwin_op_help_info()
 
     if (oti == OTI_LOGO)
     {
-        tips = "【极点五笔银河麒麟版】";
+        tips = _("【Freewb Kylin Edition】");
     }
     else if (oti == OTI_MOUSE_MENU)
     {
-        tips = "【设置：鼠标右键点击窗口】";
+        tips = _("【Settings: right-click the window】");
     }
     else if (oti == OTI_DELETE_WORD)
     {
-        tips = "【Del+序号 词组删除】";
+        tips = _("【Del+number: delete phrase】");
     }
     else if (oti == OTI_ADJUST_WORD)
     {
-        tips = "【Ctrl+序号 词组调序】";
+        tips = _("【Ctrl+number: reorder phrase】");
     }
     else if (oti == OTI_SK_SWITCH_CHAR_WIDTH)
     {
-        tips = "【Shift+Space 切换全/半角】";
+        tips = _("【Shift+Space: toggle full/half width】");
     }
     else if (oti == OTI_SK_SWITCH_MARK)
     {
-        tips = "【Ctrl+. 切换中/英文标点】";
+        tips = _("【Ctrl+.: toggle Chinese/English punctuation】");
     }
     else if (oti == OTI_SK_BACK_FIND_CODE)
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_backFindCode());
         if (!keyText.isEmpty())
-            tips = QString("【%1 反查编码】").arg(keyText);
+            tips = QString(_("【%1 Reverse code lookup】")).arg(keyText);
     }
     else if (oti == OTI_SK_ONLINE_ADD_WORD)
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_onlineAddWord());
         if (!keyText.isEmpty())
-            tips = QString("【%1 在线加词】").arg(keyText);
+            tips = QString(_("【%1 Add word online】")).arg(keyText);
     }
     else if (oti == OTI_SK_ONLINE_DEL_WORD)
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_onlineDelWord());
         if (!keyText.isEmpty())
-            tips = QString("【%1 在线删词】").arg(keyText);
+            tips = QString(_("【%1 Delete word online】")).arg(keyText);
     }
     else if (oti == OTI_SK_SWITCH_KEYBOARD)
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_switchVKb());
         if (!keyText.isEmpty())
-            tips = QString("【%1 切换软键盘】").arg(keyText);
+            tips = QString(_("【%1 Toggle virtual keyboard】")).arg(keyText);
     }
     else if (oti == OTI_SK_SWITCH_CHAR_SET)
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_switchCharSet());
         if (!keyText.isEmpty())
-            tips = QString("【%1 切换字符集】").arg(keyText);
+            tips = QString(_("【%1 Switch character set】")).arg(keyText);
     }
     else if (oti == OTI_SK_SWITCH_INPUT_MODE)
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_switchInputMode());
         if (!keyText.isEmpty())
-            tips = QString("【%1 切换输入模式】").arg(keyText);
+            tips = QString(_("【%1 Switch input mode】")).arg(keyText);
     }
     //    else if ( oti == OTI_SK_SWITCH_WORD_STATE )
     //    {
@@ -993,25 +993,25 @@ void InputWin::set_candiwin_op_help_info()
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_switchChttrans());
         if (!keyText.isEmpty())
-            tips = QString("【%1 切换简入繁出】").arg(keyText);
+            tips = QString(_("【%1 Toggle simplified/traditional output】")).arg(keyText);
     }
     else if (oti == OTI_SK_SHOW_HIDE_STATUS_BAR)
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_showHideToolbar());
         if (!keyText.isEmpty())
-            tips = QString("【%1 显/隐状态栏】").arg(keyText);
+            tips = QString(_("【%1 Show/hide status bar】")).arg(keyText);
     }
     else if (oti == OTI_SK_SHOW_HIDE_CANDIDATE_WIN)
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_showHideCandiWin());
         if (!keyText.isEmpty())
-            tips = QString("【%1 显/隐候选窗】").arg(keyText);
+            tips = QString(_("【%1 Show/hide candidate window】")).arg(keyText);
     }
     else if (oti == OTI_SK_SWITCH_WORD_LEXICON)
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_switchLexicon());
         if (!keyText.isEmpty())
-            tips = QString("【%1 切换词库】").arg(keyText);
+            tips = QString(_("【%1 Switch lexicon】")).arg(keyText);
     }
     //    else if ( oti == OTI_SK_ADD_CHAR_AFTER_OUTPUT )
     //    {
@@ -1025,74 +1025,74 @@ void InputWin::set_candiwin_op_help_info()
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_switchSkin());
         if (!keyText.isEmpty())
-            tips = QString("【%1 切换皮肤】").arg(keyText);
+            tips = QString(_("【%1 Switch skin】")).arg(keyText);
     }
     else if (oti == OTI_SK_QUICK_DEL_SCREEN_CHAR)
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_quickDelScreenItem());
         if (!keyText.isEmpty())
-            tips = QString("【%1 快删上屏项】").arg(keyText);
+            tips = QString(_("【%1 Quick delete committed item】")).arg(keyText);
     }
     else if (oti == OTI_SK_MARK_AUTO_PAIR)
     {
         const QString keyText = customShortcutDisplayText(settings::instance().get_markAutoPair());
         if (!keyText.isEmpty())
-            tips = QString("【%1 标点自动配对】").arg(keyText);
+            tips = QString(_("【%1 Auto-pair punctuation】")).arg(keyText);
     }
     else if (oti == OTI_SK_TEMP_ENGLISH)
     {
         const QString keyText = keyTokenName(settings::instance().get_tempEnglish());
         if (!keyText.isEmpty())
-            tips = QString("【%1 临时英文输入】").arg(keyText);
+            tips = QString(_("【%1 Temporary English input】")).arg(keyText);
     }
     else if (oti == OTI_SK_QUICK_INPUT)
     {
         const QString keyText = keyTokenName(settings::instance().get_shortcutInput());
         if (!keyText.isEmpty())
-            tips = QString("【%1 快捷短语输入】").arg(keyText);
+            tips = QString(_("【%1 Shortcut phrase input】")).arg(keyText);
     }
     else if (oti == OTI_SK_TEMP_PINYIN)
     {
         const QString keyText = keyTokenName(settings::instance().get_tempPinyin());
         if (!keyText.isEmpty())
-            tips = QString("【%1 临时拼音/生癖字输入】").arg(keyText);
+            tips = QString(_("【%1 Temporary Pinyin / rare character】")).arg(keyText);
     }
     else if (oti == OTI_SK_SWITCH_CN_EN)
     {
         const QString keyText = cnEnSwitchDisplayText(settings::instance().get_cnEnSwitch());
         if (!keyText.isEmpty())
-            tips = QString("【%1 切换中/英文】").arg(keyText);
+            tips = QString(_("【%1 Switch Chinese/English】")).arg(keyText);
     }
     else if (oti == OTI_SK_RECODE_SELECT)
     {
         const QString keyText =
             pairKeyDisplayText(settings::instance().get_secondRecodeKey(), settings::instance().get_thirdRecodeKey());
         if (!keyText.isEmpty())
-            tips = QString("【%1 选择二三重码】").arg(keyText);
+            tips = QString(_("【%1 Select 2nd/3rd duplicate】")).arg(keyText);
     }
     else if (oti == OTI_SK_CANDI_PAGE)
     {
         const QString keyText =
             pairKeyDisplayText(settings::instance().get_prevPageKey(), settings::instance().get_nextPageKey());
         if (!keyText.isEmpty())
-            tips = QString("【%1 候选词上下翻页】").arg(keyText);
+            tips = QString(_("【%1 Candidate paging】")).arg(keyText);
     }
 
     else if (oti == OTI_TEMP_ENGLISH)
     {
-        tips = "[ 临时英文 ]";
+        tips = _("[ Temporary English ]");
     }
     else if (oti == OTI_TEMP_ENGLISH_EMPTY)
     {
-        tips = "[ 按回车输出英文，Esc放弃。 ]";
+        tips = _("[ Press Enter to commit English, Esc to cancel. ]");
     }
     else if (oti == OTI_QUICK_INPUT)
     {
-        tips = "[ 快捷输入 ]";
+        tips = _("[ Shortcut input ]");
     }
     else if (oti == OTI_TEMP_PINYIN)
     {
-        tips = "[ 临时拼音/生癖字 ]";
+        tips = _("[ Temporary Pinyin / rare character ]");
     }
     else if (oti == OTI_TEMP_ENGLISH_SELECT)
     {
@@ -1100,13 +1100,13 @@ void InputWin::set_candiwin_op_help_info()
         const QString name3 = keyTokenName(settings::instance().get_thirdRecodeKey());
         if (!name2.isEmpty() && !name3.isEmpty())
         {
-            tips = QString("[ Space选1, %1选2, %2选3 ]").arg(name2, name3);
+            tips = QString(_("[ Space: 1, %1: 2, %2: 3 ]")).arg(name2, name3);
         }
     }
 
     if (tips.isEmpty())
     {
-        tips = "【极点五笔银河麒麟版】";
+        tips = _("【Freewb Kylin Edition】");
     }
     ui->labelPrompt->setText(tips);
 }
