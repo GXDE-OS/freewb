@@ -82,7 +82,7 @@ QString DictQuery::dict_query_word_paraphrase(const QString &word)
     {
         QString str = word;
         str = rstrip(str);
-        QString sql = QString(_("select content from Library where code=\"%1\";")).arg(str);
+        QString sql = QStringLiteral("select content from Library where code=\"%1\";").arg(str);
         sqlite3_prepare(db, sql.toUtf8().data(), -1, &stmt, nullptr);
         while ((ret = sqlite3_step(stmt)) == SQLITE_ROW)
         {
@@ -131,7 +131,7 @@ QStringList DictQuery::dict_query_word_list(const QString &word)
     sqlite3 *db = open_dict();
     if (db)
     {
-        QString sql = QString(_("select code from Library where code like \"%1%%\";")).arg(word);
+        QString sql = QStringLiteral("select code from Library where code like \"%1%%\";").arg(word);
 
         sqlite3_prepare(db, sql.toUtf8().data(), -1, &stmt, nullptr);
         while ((ret = sqlite3_step(stmt)) == SQLITE_ROW)
@@ -154,9 +154,9 @@ int DictQuery::dict_add_custom_word(const QString &word, const QString &explain)
 {
     int ret = -1;
     sqlite3_stmt *stmt = nullptr;
-    QString sqlFind = QString(_("select content from Library where code=\"%1\";")).arg(word);
-    QString sqlInsert = QString(_("insert into Library(code,content) values(?, ?);"));
-    QString sqlUpdate = QString(_("update Library set content=? where code=\"%1\";")).arg(word);
+    QString sqlFind = QStringLiteral("select content from Library where code=\"%1\";").arg(word);
+    QString sqlInsert = QStringLiteral("insert into Library(code,content) values(?, ?);");
+    QString sqlUpdate = QStringLiteral("update Library set content=? where code=\"%1\";").arg(word);
 
     sqlite3 *db = open_dict();
     if (db)
@@ -214,7 +214,7 @@ int DictQuery::dict_del_custom_word(const QString &word)
     sqlite3 *db = open_dict();
     if (db)
     {
-        QString sql = QString(_("delete from Library where code=\"%1\";")).arg(word);
+        QString sql = QStringLiteral("delete from Library where code=\"%1\";").arg(word);
         sqlite3_prepare(db, sql.toUtf8().data(), -1, &stmt, nullptr);
         ret = sqlite3_step(stmt);
         sqlite3_finalize(stmt);
