@@ -41,7 +41,7 @@ namespace freewb
 #define QUICK_COMMAND_CALL_DBUS_METHOD(X)                                                                                  \
     X("dos.", callOpenConfDirMethod)                                                                                       \
     X("tt.", callSwitchRecodeProofMethod)                                                                                  \
-    X("hh.", callPanelHideToolbar)                                                                                         \
+    X("hh.", callSwitchToolbarHideFlgMethod)                                                                               \
     X("cc.", callPanelHideToolbar) /* TODO: 显/隐候选窗 */                                                                 \
     X("mm.", callPanelSwitchCharSetMethod)                                                                                 \
     X("oo.", callOpenUiSettingMethod)                                                                                      \

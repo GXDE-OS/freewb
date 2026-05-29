@@ -303,6 +303,15 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
             return true;
         }
     }
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_showHideToolbar().c_str());
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
+        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        {
+            dbusProxy_->callSwitchToolbarHideFlgMethod();
+            return true;
+        }
+    }
 
     return false;
 }
