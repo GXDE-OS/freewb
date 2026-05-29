@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freewb v4.0 2026.04.22\n"
 "Report-Msgid-Bugs-To: freewb\n"
-"POT-Creation-Date: 2026-04-22 16:51+0800\n"
+"POT-Creation-Date: 2026-05-29 10:04+0800\n"
 "PO-Revision-Date: 2026-04-22 15:30+0800\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,152 +16,193 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/panel/src/backupdialog.cpp:597
-msgid "Dictionary and settings backup completed"
-msgstr ""
-
-#: src/panel/src/backupdialog.cpp:603
-msgid "Dictionary and settings recovery completed！"
-msgstr ""
-
-#: src/panel/src/backupdialog.cpp:614
-msgid "Dictionary and settings %1 failed！"
-msgstr ""
-
-#: src/panel/src/backupdialog.cpp:614
-msgid "backup"
-msgstr ""
-
-#: src/panel/src/backupdialog.cpp:614
-msgid "recovery"
-msgstr ""
-
-#: src/panel/src/backupdialog.cpp:631
-msgid "Generate backup file"
-msgstr ""
-
-#: src/panel/src/backupdialog.cpp:638
+#: src/panel/src/backupdialog.cpp:509 src/panel/src/backupdialog.cpp:658
 msgid "Backup in progress, please wait..."
-msgstr ""
+msgstr "正在备份，请稍后..."
 
-#: src/panel/src/backupdialog.cpp:652
+#: src/panel/src/backupdialog.cpp:510
+msgid "Backup completed. Open the backup file?"
+msgstr "词库与设置备份完毕，是否查看备份文件？"
+
+#: src/panel/src/backupdialog.cpp:511
+msgid "Yes"
+msgstr "是"
+
+#: src/panel/src/backupdialog.cpp:512
+msgid "No"
+msgstr "否"
+
+#: src/panel/src/backupdialog.cpp:513 src/panel/src/customkeydialog.cpp:24
+#: src/panel/src/settingwin.cpp:542 src/panel/src/usrgenworddialog.cpp:33
+msgid "OK"
+msgstr "确定"
+
+#: src/panel/src/backupdialog.cpp:514
+msgid "Dictionary and settings recovery completed!"
+msgstr "词库与设置恢复完成！"
+
+#: src/panel/src/backupdialog.cpp:617
+msgid "Dictionary and settings backup completed"
+msgstr "词库与设置备份完成！"
+
+#: src/panel/src/backupdialog.cpp:623
+msgid "Dictionary and settings recovery completed！"
+msgstr "词库与设置恢复完成！"
+
+#: src/panel/src/backupdialog.cpp:634
+msgid "Dictionary and settings %1 failed！"
+msgstr "词库与设置%1失败！"
+
+#: src/panel/src/backupdialog.cpp:634
+msgid "backup"
+msgstr "备份"
+
+#: src/panel/src/backupdialog.cpp:634
+msgid "recovery"
+msgstr "恢复"
+
+#: src/panel/src/backupdialog.cpp:651
+msgid "Generate backup file"
+msgstr "生成备份文件"
+
+#: src/panel/src/backupdialog.cpp:672
 msgid "Select backup file"
-msgstr ""
+msgstr "选择备份文件"
 
-#: src/panel/src/backupdialog.cpp:659
+#: src/panel/src/backupdialog.cpp:679
 msgid "Recovery in progress, please wait..."
-msgstr ""
+msgstr "正在恢复，请稍后..."
 
 #: src/panel/src/contextmenu.cpp:10
 msgid "Input method settings"
-msgstr ""
+msgstr "输入法设置"
 
 #: src/panel/src/contextmenu.cpp:11
 msgid "Management tools"
-msgstr ""
+msgstr "管理工具"
 
 #: src/panel/src/contextmenu.cpp:12
 msgid "Manual word creation"
-msgstr ""
+msgstr "手工造词"
 
 #: src/panel/src/contextmenu.cpp:13
 msgid "Usage instructions"
-msgstr ""
+msgstr "使用说明"
 
 #: src/panel/src/contextmenu.cpp:16
 msgid "Graphical settings mode"
-msgstr ""
+msgstr "图形设置模式"
 
 #: src/panel/src/contextmenu.cpp:17
 msgid "Expert settings mode"
-msgstr ""
+msgstr "专家设置模式"
 
 #: src/panel/src/contextmenu.cpp:18
 msgid "Class Wangma settings"
-msgstr ""
+msgstr "类王码设置"
 
 #: src/panel/src/contextmenu.cpp:19
 msgid "Freewb input mode"
-msgstr ""
+msgstr "极点输入模式"
 
 #: src/panel/src/contextmenu.cpp:20
 msgid "Restore default settings"
-msgstr ""
+msgstr "恢复默认设置"
 
 #: src/panel/src/contextmenu.cpp:22
 msgid "Edit user word group"
-msgstr ""
+msgstr "编辑用户词组"
 
 #: src/panel/src/contextmenu.cpp:23
 msgid "Edit shortcut code table"
-msgstr ""
+msgstr "编辑快捷码表"
 
 #: src/panel/src/contextmenu.cpp:24
 msgid "Lexicon tool"
-msgstr ""
+msgstr "词库工具"
 
-#: src/panel/src/contextmenu.cpp:25
+#: src/panel/src/contextmenu.cpp:25 src/panel/src/settingwin.cpp:564
 msgid "Switch lexicon"
-msgstr ""
+msgstr "切换词库"
 
 #: src/panel/src/contextmenu.cpp:27
 msgid "Quick start"
-msgstr ""
+msgstr "快速入门"
 
 #: src/panel/src/contextmenu.cpp:28
 msgid "Shortcut command"
-msgstr ""
+msgstr "快捷命令"
 
-#: src/panel/src/contextmenu.cpp:29 src/panel/src/settingwin.cpp:691
-#: src/panel/src/settingwin.cpp:718
+#: src/panel/src/contextmenu.cpp:29 src/panel/src/settingwin.cpp:539
+#: src/panel/src/settingwin.cpp:893 src/panel/src/settingwin.cpp:921
 msgid "Version information"
-msgstr ""
+msgstr "版本信息"
 
 #: src/panel/src/contextmenu.cpp:30
 msgid "Software registration"
-msgstr ""
+msgstr "软件注册"
 
 #: src/panel/src/contextmenu.cpp:33
 msgid "Lexicon generation and maintenance"
-msgstr ""
+msgstr "词库生成与维护"
 
 #: src/panel/src/contextmenu.cpp:34
 msgid "Backup lexicon and settings"
-msgstr ""
+msgstr "备份词库与设置"
 
 #: src/panel/src/contextmenu.cpp:35
 msgid "Restore lexicon and settings"
-msgstr ""
+msgstr "恢复词库与设置"
 
 #: src/panel/src/contextmenu.cpp:36
 msgid "Current lexicon information"
-msgstr ""
+msgstr "现用词库信息"
 
-#: src/panel/src/contextmenu.cpp:220
+#: src/panel/src/contextmenu.cpp:223
 msgid "Are you sure you want to restore Freewb to the default state?"
-msgstr ""
+msgstr "确定将极点恢复到默认状态吗？"
 
-#: src/panel/src/contextmenu.cpp:223 src/panel/src/dictquerywin.cpp:266
-#: src/panel/src/dictquerywin.cpp:309 src/panel/src/lexicontoolwin.cpp:238
-#: src/panel/src/lexicontoolwin.cpp:513 src/panel/src/settingwin.cpp:1343
-#: src/panel/src/settingwin.cpp:1394 src/panel/src/settingwin.cpp:1766
-#: src/panel/src/settingwin.cpp:1802
+#: src/panel/src/contextmenu.cpp:226 src/panel/src/dictquerywin.cpp:277
+#: src/panel/src/dictquerywin.cpp:321 src/panel/src/lexicontoolwin.cpp:258
+#: src/panel/src/lexicontoolwin.cpp:533 src/panel/src/settingwin.cpp:1560
+#: src/panel/src/settingwin.cpp:1611 src/panel/src/settingwin.cpp:1987
+#: src/panel/src/settingwin.cpp:2025
 msgid "Yes(&Y)"
-msgstr ""
+msgstr "是(&Y)"
 
-#: src/panel/src/contextmenu.cpp:225 src/panel/src/dictquerywin.cpp:268
-#: src/panel/src/dictquerywin.cpp:311 src/panel/src/lexicontoolwin.cpp:239
-#: src/panel/src/lexicontoolwin.cpp:515 src/panel/src/settingwin.cpp:1345
-#: src/panel/src/settingwin.cpp:1396 src/panel/src/settingwin.cpp:1768
-#: src/panel/src/settingwin.cpp:1804
+#: src/panel/src/contextmenu.cpp:228 src/panel/src/dictquerywin.cpp:279
+#: src/panel/src/dictquerywin.cpp:323 src/panel/src/lexicontoolwin.cpp:259
+#: src/panel/src/lexicontoolwin.cpp:535 src/panel/src/settingwin.cpp:1562
+#: src/panel/src/settingwin.cpp:1613 src/panel/src/settingwin.cpp:1989
+#: src/panel/src/settingwin.cpp:2027
 msgid "No(&N)"
-msgstr ""
+msgstr "否(&N)"
 
-#: src/panel/src/contextmenu.cpp:295 src/panel/src/dictquerywin.cpp:282
-#: src/panel/src/dictquerywin.cpp:325 src/panel/src/lexicontoolwin.cpp:313
-#: src/panel/src/lexicontoolwin.cpp:671
+#: src/panel/src/contextmenu.cpp:298 src/panel/src/dictquerywin.cpp:294
+#: src/panel/src/dictquerywin.cpp:337 src/panel/src/lexicontoolwin.cpp:333
+#: src/panel/src/lexicontoolwin.cpp:691
 msgid "Confirm(&OK)"
-msgstr ""
+msgstr "确认(&OK)"
+
+#: src/panel/src/customkeydialog.cpp:23
+msgid "Keyboard character settings"
+msgstr "键盘字符设置"
+
+#: src/panel/src/customkeydialog.cpp:25 src/panel/src/settingwin.cpp:543
+msgid "Cancel"
+msgstr "取消"
+
+#: src/panel/src/customkeydialog.cpp:26
+msgid "Shift character"
+msgstr "上档字符"
+
+#: src/panel/src/customkeydialog.cpp:27
+msgid "Normal character"
+msgstr "正常字符"
+
+#: src/panel/src/customkeydialog.cpp:28
+msgid "Keyboard character to configure:"
+msgstr "要设置的键盘字符："
 
 #: src/panel/src/dictquery.cpp:85 src/panel/src/dictquery.cpp:157
 msgid "select content from Library where code=\"%1\";"
@@ -179,309 +220,1389 @@ msgstr ""
 msgid "update Library set content=? where code=\"%1\";"
 msgstr ""
 
-#: src/panel/src/dictquery.cpp:219
+#: src/panel/src/dictquery.cpp:217
 msgid "delete from Library where code=\"%1\";"
 msgstr ""
 
-#: src/panel/src/dictquerywin.cpp:9
+#: src/panel/src/dictquerywin.cpp:10
 msgid "Freewb query"
-msgstr ""
-
-#: src/panel/src/dictquerywin.cpp:17
-msgid "Cut"
-msgstr ""
+msgstr "极点查询"
 
 #: src/panel/src/dictquerywin.cpp:18
-msgid "Copy"
-msgstr ""
+msgid "Cut"
+msgstr "剪切"
 
 #: src/panel/src/dictquerywin.cpp:19
-msgid "Paste"
-msgstr ""
+msgid "Copy"
+msgstr "复制"
 
 #: src/panel/src/dictquerywin.cpp:20
-msgid "Select all and copy"
-msgstr ""
+msgid "Paste"
+msgstr "粘贴"
 
 #: src/panel/src/dictquerywin.cpp:21
-msgid "Save current word information"
-msgstr ""
+msgid "Select all and copy"
+msgstr "选择所有并复制"
 
 #: src/panel/src/dictquerywin.cpp:22
+msgid "Save current word information"
+msgstr "保存当前词条信息"
+
+#: src/panel/src/dictquerywin.cpp:23
 msgid "Delete current word information"
-msgstr ""
+msgstr "删除当前词条信息"
 
-#: src/panel/src/dictquerywin.cpp:24
+#: src/panel/src/dictquerywin.cpp:25
 msgid "Edit"
-msgstr ""
+msgstr "编辑"
 
-#: src/panel/src/dictquerywin.cpp:110
+#: src/panel/src/dictquerywin.cpp:48
+msgid "Query"
+msgstr "查询"
+
+#: src/panel/src/dictquerywin.cpp:49
+msgid "Switch dictionary"
+msgstr "切换字典"
+
+#: src/panel/src/dictquerywin.cpp:50 src/panel/src/usrgenworddialog.cpp:34
+msgid "Exit"
+msgstr "退出"
+
+#: src/panel/src/dictquerywin.cpp:118
 msgid ""
 "The current word has no explanation, you can enter the explanation here and "
 "save it."
-msgstr ""
+msgstr "  当前词条无解释，你可以在此输入解释后存盘．"
 
-#: src/panel/src/dictquerywin.cpp:130
+#: src/panel/src/dictquerywin.cpp:138
 msgid ""
 "【 %1 】\n"
 "  Code: %2\n"
 msgstr ""
+"【 %1 】\n"
+"  编码：%2\n"
 
-#: src/panel/src/dictquerywin.cpp:137
+#: src/panel/src/dictquerywin.cpp:145
 msgid ""
 "【 %1 】\n"
 "  Code: %2\n"
 "  Pinyin: %3\n"
 msgstr ""
+"【 %1 】\n"
+"  编码：%2\n"
+"  拼音：%3\n"
 
-#: src/panel/src/dictquerywin.cpp:263
+#: src/panel/src/dictquerywin.cpp:274
 msgid "Are you sure you want to save the modification of the word [ %1 ]?"
-msgstr ""
+msgstr "确定保存对词条【 %1 】的修改？"
 
-#: src/panel/src/dictquerywin.cpp:287
+#: src/panel/src/dictquerywin.cpp:299
 msgid "Save successfully!"
-msgstr ""
+msgstr "保存成功！"
 
-#: src/panel/src/dictquerywin.cpp:291
+#: src/panel/src/dictquerywin.cpp:303
 msgid "Save failed!"
-msgstr ""
+msgstr "保存失败！"
 
-#: src/panel/src/dictquerywin.cpp:306
+#: src/panel/src/dictquerywin.cpp:318
 msgid "Are you sure you want to delete the word [ %1 ]?"
-msgstr ""
+msgstr "确定删除词条【 %1 】？"
 
-#: src/panel/src/dictquerywin.cpp:330
+#: src/panel/src/dictquerywin.cpp:342
 msgid "Word deleted successfully!"
-msgstr ""
+msgstr "词条删除成功！"
 
-#: src/panel/src/dictquerywin.cpp:335
+#: src/panel/src/dictquerywin.cpp:347
 msgid "Word deletion failed!"
-msgstr ""
+msgstr "词条删除失败！"
 
-#: src/panel/src/lexicontoolwin.cpp:80
-msgid "Freewb lexicon tool"
-msgstr ""
-
-#: src/panel/src/lexicontoolwin.cpp:224
-msgid "Number: "
-msgstr ""
-
-#: src/panel/src/lexicontoolwin.cpp:231
-msgid "Lexicon export completed! Number: %1"
-msgstr ""
-
-#: src/panel/src/lexicontoolwin.cpp:240
+#: src/panel/src/inputwin.cpp:710
 msgid ""
-"Lexicon generated successfully, whether to replace the current used lexicon?"
-msgstr ""
+"Use ← and → to change word length, Enter to confirm, Esc to cancel, "
+"Ctrl+Enter for code"
+msgstr "←和→修改词长，Enter确认，Esc放弃，Ctrl+Enter编码"
+
+#: src/panel/src/inputwin.cpp:714
+msgid "Press Enter to confirm deletion, Esc to cancel"
+msgstr "按Enter确认删除词组，Esc放弃"
+
+#: src/panel/src/inputwin.cpp:926 src/panel/src/inputwin.cpp:1109
+msgid "【Freewb Kylin Edition】"
+msgstr "【极点五笔银河麒麟版】"
+
+#: src/panel/src/inputwin.cpp:930
+msgid "【Settings: right-click the window】"
+msgstr "【设置：鼠标右键点击窗口】"
+
+#: src/panel/src/inputwin.cpp:934
+msgid "【Del+number: delete phrase】"
+msgstr "【Del+序号 词组删除】"
+
+#: src/panel/src/inputwin.cpp:938
+msgid "【Ctrl+number: reorder phrase】"
+msgstr "【Ctrl+序号 词组调序】"
+
+#: src/panel/src/inputwin.cpp:942
+msgid "【Shift+Space: toggle full/half width】"
+msgstr "【Shift+Space 切换全/半角】"
+
+#: src/panel/src/inputwin.cpp:946
+msgid "【Ctrl+.: toggle Chinese/English punctuation】"
+msgstr "【Ctrl+. 切换中/英文标点】"
+
+#: src/panel/src/inputwin.cpp:952
+msgid "【%1 Reverse code lookup】"
+msgstr "【%1 反查编码】"
+
+#: src/panel/src/inputwin.cpp:958
+msgid "【%1 Add word online】"
+msgstr "【%1 在线加词】"
+
+#: src/panel/src/inputwin.cpp:964
+msgid "【%1 Delete word online】"
+msgstr "【%1 在线删词】"
+
+#: src/panel/src/inputwin.cpp:970
+msgid "【%1 Toggle virtual keyboard】"
+msgstr "【%1 切换软键盘】"
+
+#: src/panel/src/inputwin.cpp:976
+msgid "【%1 Switch character set】"
+msgstr "【%1 切换字符集】"
+
+#: src/panel/src/inputwin.cpp:982
+msgid "【%1 Switch input mode】"
+msgstr "【%1 切换输入模式】"
+
+#: src/panel/src/inputwin.cpp:996
+msgid "【%1 Toggle simplified/traditional output】"
+msgstr "【%1 切换简入繁出】"
+
+#: src/panel/src/inputwin.cpp:1002
+msgid "【%1 Show/hide status bar】"
+msgstr "【%1 显/隐状态栏】"
+
+#: src/panel/src/inputwin.cpp:1008
+msgid "【%1 Show/hide candidate window】"
+msgstr "【%1 显/隐候选窗】"
+
+#: src/panel/src/inputwin.cpp:1014
+msgid "【%1 Switch lexicon】"
+msgstr "【%1 切换词库】"
+
+#: src/panel/src/inputwin.cpp:1028
+msgid "【%1 Switch skin】"
+msgstr "【%1 切换皮肤】"
+
+#: src/panel/src/inputwin.cpp:1034
+msgid "【%1 Quick delete committed item】"
+msgstr "【%1 快删上屏项】"
+
+#: src/panel/src/inputwin.cpp:1040
+msgid "【%1 Auto-pair punctuation】"
+msgstr "【%1 标点自动配对】"
+
+#: src/panel/src/inputwin.cpp:1046
+msgid "【%1 Temporary English input】"
+msgstr "【%1 临时英文输入】"
+
+#: src/panel/src/inputwin.cpp:1052
+msgid "【%1 Shortcut phrase input】"
+msgstr "【%1 快捷短语输入】"
+
+#: src/panel/src/inputwin.cpp:1058
+msgid "【%1 Temporary Pinyin / rare character】"
+msgstr "【%1 临时拼音/生癖字输入】"
+
+#: src/panel/src/inputwin.cpp:1064
+msgid "【%1 Switch Chinese/English】"
+msgstr "【%1 切换中/英文】"
+
+#: src/panel/src/inputwin.cpp:1071
+msgid "【%1 Select 2nd/3rd duplicate】"
+msgstr "【%1 选择二三重码】"
+
+#: src/panel/src/inputwin.cpp:1078
+msgid "【%1 Candidate paging】"
+msgstr "【%1 候选词上下翻页】"
+
+#: src/panel/src/inputwin.cpp:1083
+msgid "[ Temporary English ]"
+msgstr "[ 临时英文 ]"
+
+#: src/panel/src/inputwin.cpp:1087
+msgid "[ Press Enter to commit English, Esc to cancel. ]"
+msgstr "[ 按回车输出英文，Esc放弃。 ]"
+
+#: src/panel/src/inputwin.cpp:1091
+msgid "[ Shortcut input ]"
+msgstr "[ 快捷输入 ]"
+
+#: src/panel/src/inputwin.cpp:1095
+msgid "[ Temporary Pinyin / rare character ]"
+msgstr "[ 临时拼音/生癖字 ]"
+
+#: src/panel/src/inputwin.cpp:1103
+msgid "[ Space: 1, %1: 2, %2: 3 ]"
+msgstr "[ Space选1, %1选2, %2选3 ]"
+
+#: src/panel/src/lexicontoolwin.cpp:81
+msgid "Freewb lexicon tool"
+msgstr "极点词库工具箱"
+
+#: src/panel/src/lexicontoolwin.cpp:126
+msgid "Freewb lexicon toolbox"
+msgstr "极点词库工具箱"
+
+#: src/panel/src/lexicontoolwin.cpp:127 src/panel/src/lexicontoolwin.cpp:136
+#: src/panel/src/lexicontoolwin.cpp:138
+msgid "Export"
+msgstr "导出"
+
+#: src/panel/src/lexicontoolwin.cpp:128
+msgid "System lexicon"
+msgstr "系统词库"
+
+#: src/panel/src/lexicontoolwin.cpp:129
+msgid "Pinyin lexicon"
+msgstr "拼音词库"
+
+#: src/panel/src/lexicontoolwin.cpp:130
+msgid "User lexicon"
+msgstr "用户词库"
+
+#: src/panel/src/lexicontoolwin.cpp:131
+msgid "Mark rare characters"
+msgstr "标记生僻字"
+
+#: src/panel/src/lexicontoolwin.cpp:132 src/panel/src/lexicontoolwin.cpp:137
+msgid "Generate lexicon"
+msgstr "生成词库"
+
+#: src/panel/src/lexicontoolwin.cpp:133
+msgid "Help"
+msgstr "帮助"
+
+#: src/panel/src/lexicontoolwin.cpp:134
+msgid "Optimize"
+msgstr "优化"
+
+#: src/panel/src/lexicontoolwin.cpp:135
+msgid "Mark associative words"
+msgstr "标记联想词"
+
+#: src/panel/src/lexicontoolwin.cpp:139
+msgid "Batch delete words"
+msgstr "批量删词"
+
+#: src/panel/src/lexicontoolwin.cpp:140
+msgid "Batch add words"
+msgstr "批量加词"
 
 #: src/panel/src/lexicontoolwin.cpp:244
+msgid "Number: "
+msgstr "数目："
+
+#: src/panel/src/lexicontoolwin.cpp:251
+msgid "Lexicon export completed! Number: %1"
+msgstr "词库导出完成！数目：%1"
+
+#: src/panel/src/lexicontoolwin.cpp:260
+msgid ""
+"Lexicon generated successfully, whether to replace the current used lexicon?"
+msgstr "词库生成成功，是否替换当前使用词库？"
+
+#: src/panel/src/lexicontoolwin.cpp:264
 msgid "Lexicon marked completed! Number: %1"
-msgstr ""
+msgstr "词库标记完成！数目：%1"
 
-#: src/panel/src/lexicontoolwin.cpp:250
+#: src/panel/src/lexicontoolwin.cpp:270
 msgid "Lexicon optimized completed!"
-msgstr ""
+msgstr "词库优化完成！"
 
-#: src/panel/src/lexicontoolwin.cpp:258
+#: src/panel/src/lexicontoolwin.cpp:278
 msgid "File open failed or format error!"
-msgstr ""
+msgstr "文件打开失败或格式错误！"
 
-#: src/panel/src/lexicontoolwin.cpp:321 src/panel/src/lexicontoolwin.cpp:448
+#: src/panel/src/lexicontoolwin.cpp:341 src/panel/src/lexicontoolwin.cpp:468
 msgid "Generate TXT file"
-msgstr ""
+msgstr "生成TXT文件"
 
-#: src/panel/src/lexicontoolwin.cpp:327 src/panel/src/lexicontoolwin.cpp:454
+#: src/panel/src/lexicontoolwin.cpp:347 src/panel/src/lexicontoolwin.cpp:474
 msgid "Exporting lexicon..."
-msgstr ""
+msgstr "正在导出词库......"
 
-#: src/panel/src/lexicontoolwin.cpp:331 src/panel/src/lexicontoolwin.cpp:351
-#: src/panel/src/lexicontoolwin.cpp:386 src/panel/src/lexicontoolwin.cpp:413
-#: src/panel/src/lexicontoolwin.cpp:437 src/panel/src/lexicontoolwin.cpp:458
-#: src/panel/src/lexicontoolwin.cpp:478
+#: src/panel/src/lexicontoolwin.cpp:351 src/panel/src/lexicontoolwin.cpp:371
+#: src/panel/src/lexicontoolwin.cpp:406 src/panel/src/lexicontoolwin.cpp:433
+#: src/panel/src/lexicontoolwin.cpp:457 src/panel/src/lexicontoolwin.cpp:478
+#: src/panel/src/lexicontoolwin.cpp:498
 msgid "Cancel(&C)"
-msgstr ""
+msgstr "取消(&C)"
 
-#: src/panel/src/lexicontoolwin.cpp:332 src/panel/src/lexicontoolwin.cpp:387
-#: src/panel/src/lexicontoolwin.cpp:414 src/panel/src/lexicontoolwin.cpp:438
-#: src/panel/src/lexicontoolwin.cpp:459
+#: src/panel/src/lexicontoolwin.cpp:352 src/panel/src/lexicontoolwin.cpp:407
+#: src/panel/src/lexicontoolwin.cpp:434 src/panel/src/lexicontoolwin.cpp:458
+#: src/panel/src/lexicontoolwin.cpp:479
 msgid "Confirm(&O)"
-msgstr ""
+msgstr "确定(&O)"
 
-#: src/panel/src/lexicontoolwin.cpp:343 src/panel/src/lexicontoolwin.cpp:376
-#: src/panel/src/lexicontoolwin.cpp:403 src/panel/src/lexicontoolwin.cpp:470
+#: src/panel/src/lexicontoolwin.cpp:363 src/panel/src/lexicontoolwin.cpp:396
+#: src/panel/src/lexicontoolwin.cpp:423 src/panel/src/lexicontoolwin.cpp:490
 msgid "Select TXT file"
-msgstr ""
+msgstr "选择TXT文件"
 
-#: src/panel/src/lexicontoolwin.cpp:349 src/panel/src/lexicontoolwin.cpp:476
+#: src/panel/src/lexicontoolwin.cpp:369 src/panel/src/lexicontoolwin.cpp:496
 msgid "Generating lexicon..."
-msgstr ""
+msgstr "正在生成词库......"
 
-#: src/panel/src/lexicontoolwin.cpp:382 src/panel/src/lexicontoolwin.cpp:409
+#: src/panel/src/lexicontoolwin.cpp:402 src/panel/src/lexicontoolwin.cpp:429
 msgid "Marking..."
-msgstr ""
+msgstr "正在标记......"
 
-#: src/panel/src/lexicontoolwin.cpp:433
+#: src/panel/src/lexicontoolwin.cpp:453
 msgid "Optimizing..."
-msgstr ""
+msgstr "正在优化......"
 
-#: src/panel/src/lexicontoolwin.cpp:510
+#: src/panel/src/lexicontoolwin.cpp:530
 msgid "User lexicon exported to: %1/user_word.txt, whether to view?"
-msgstr ""
+msgstr "用户词库已导出至：%1/user_word.txt，是否查看？"
 
-#: src/panel/src/lexicontoolwin.cpp:530 src/panel/src/lexicontoolwin.cpp:536
+#: src/panel/src/lexicontoolwin.cpp:550 src/panel/src/lexicontoolwin.cpp:556
 msgid "Select file"
-msgstr ""
+msgstr "选择文件"
 
-#: src/panel/src/lexicontoolwin.cpp:668
+#: src/panel/src/lexicontoolwin.cpp:688
 msgid "Success %1 user word count: %2"
-msgstr ""
+msgstr "成功%1用户词组数目：%2"
 
-#: src/panel/src/lexicontoolwin.cpp:668
+#: src/panel/src/lexicontoolwin.cpp:688
 msgid "add"
-msgstr ""
+msgstr "增加"
 
-#: src/panel/src/lexicontoolwin.cpp:668
+#: src/panel/src/lexicontoolwin.cpp:688
 msgid "delete"
-msgstr ""
+msgstr "删除"
 
-#: src/panel/src/mainprogram.cpp:214 src/panel/src/toolbarwin.cpp:737
-#: src/panel/src/toolbarwin.cpp:759
-msgid " Wubi font"
-msgstr ""
-
-#: src/panel/src/mainprogram.cpp:218 src/panel/src/toolbarwin.cpp:741
-#: src/panel/src/toolbarwin.cpp:763
-msgid " Wubi pinyin"
-msgstr ""
-
-#: src/panel/src/mainprogram.cpp:222
-msgid " Pinyin input"
-msgstr ""
-
-#: src/panel/src/settingwin.cpp:359
+#: src/panel/src/settingwin.cpp:412
 msgid "settings"
-msgstr ""
+msgstr "属性设置"
 
-#: src/panel/src/settingwin.cpp:363
-msgid "freewb"
-msgstr ""
-
-#: src/panel/src/settingwin.cpp:704
+#: src/panel/src/settingwin.cpp:458 src/panel/src/settingwin.cpp:906
 msgid "Common options"
-msgstr ""
+msgstr "常用选项"
 
-#: src/panel/src/settingwin.cpp:705
+#: src/panel/src/settingwin.cpp:459
+msgid "Enable incremental code hints"
+msgstr "启用编码逐渐提示"
+
+#: src/panel/src/settingwin.cpp:460
+msgid "Enable phrase association"
+msgstr "启用词组联想功能"
+
+#: src/panel/src/settingwin.cpp:461
+msgid "Remind when phrase exists in lexicon"
+msgstr "提示系统已有词组"
+
+#: src/panel/src/settingwin.cpp:462
+msgid "Enable automatic frequency adjustment"
+msgstr "启动自动调频功能"
+
+#: src/panel/src/settingwin.cpp:463
+msgid "Full-width space when characters are half-width"
+msgstr "字符半角时空格全角"
+
+#: src/panel/src/settingwin.cpp:464
+msgid "Enable smart punctuation"
+msgstr "启用智能标点功能"
+
+#: src/panel/src/settingwin.cpp:465
+msgid "Sound alert on duplicate or empty code"
+msgstr "重码或空码时发声提示"
+
+#: src/panel/src/settingwin.cpp:466
+msgid "Use sound files"
+msgstr "使用声音文件"
+
+#: src/panel/src/settingwin.cpp:467 src/panel/src/settingwin.cpp:907
 msgid "Advanced options"
-msgstr ""
+msgstr "高级选项"
 
-#: src/panel/src/settingwin.cpp:706
+#: src/panel/src/settingwin.cpp:468
+msgid "Duplicate commit proofreading mode"
+msgstr "重码上屏校对模式"
+
+#: src/panel/src/settingwin.cpp:469
+msgid "Enable typing sound effects"
+msgstr "启用打字音效功能"
+
+#: src/panel/src/settingwin.cpp:470
+msgid "Shift+letter commits directly"
+msgstr "Shift+字母直接上屏"
+
+#: src/panel/src/settingwin.cpp:471
+msgid "Enable input statistics"
+msgstr "启用输入统计功能"
+
+#: src/panel/src/settingwin.cpp:472
+msgid "Auto phrase options"
+msgstr "自动词组选项"
+
+#: src/panel/src/settingwin.cpp:473 src/panel/src/settingwin.cpp:908
 msgid "Other settings"
-msgstr ""
+msgstr "其它设置"
 
-#: src/panel/src/settingwin.cpp:710
+#: src/panel/src/settingwin.cpp:474
+msgid "Auto-switch to English strings"
+msgstr "自动转英文字符串"
+
+#: src/panel/src/settingwin.cpp:476
+msgid ""
+"Freewb switches to English when you type these strings; Enter returns to "
+"Chinese.\n"
+"Up to four characters, separated by spaces. Useful for browsing."
+msgstr ""
+"输入以上字符串时极点自动转换为英文，回车后转回中文\n"
+"注：字符个数不能超过四个,字符串之间以半角空格分隔，本功能上网冲浪时非常方便。"
+
+#: src/panel/src/settingwin.cpp:479
+msgid ""
+"In Chinese mode, commas and periods after digits become half-width (useful "
+"for finance)."
+msgstr "选择此项后在中文输入模式下跟随数字后输入的逗号，句号等标点将会自动转为英文半角，此功能对财务人员来说非常方便。"
+
+#: src/panel/src/settingwin.cpp:480
+msgid "Half-width punctuation after digits"
+msgstr "数字后自动转半角标点"
+
+#: src/panel/src/settingwin.cpp:481 src/panel/src/settingwin.cpp:912
 msgid "Interface settings"
-msgstr ""
+msgstr "界面设置"
 
-#: src/panel/src/settingwin.cpp:711
+#: src/panel/src/settingwin.cpp:482 src/panel/src/settingwin.cpp:492
+msgid "Options"
+msgstr "选项"
+
+#: src/panel/src/settingwin.cpp:483
+msgid "Auto-position toolbar"
+msgstr "状态栏自动定位"
+
+#: src/panel/src/settingwin.cpp:484
+msgid "When auto-position fails"
+msgstr "无法自动定位时"
+
+#: src/panel/src/settingwin.cpp:485
+msgid "Auto expand/collapse toolbar"
+msgstr "状态栏自动缩展"
+
+#: src/panel/src/settingwin.cpp:486
+msgid "Enable UI sound effects"
+msgstr "启用界面音效"
+
+#: src/panel/src/settingwin.cpp:487
+msgid "Show realtime help"
+msgstr "显示实时帮助"
+
+#: src/panel/src/settingwin.cpp:488 src/panel/src/settingwin.cpp:547
+msgid "Hide toolbar"
+msgstr "隐藏状态栏"
+
+#: src/panel/src/settingwin.cpp:489
+msgid "Toolbar transparency"
+msgstr "状态栏透明度"
+
+#: src/panel/src/settingwin.cpp:490 src/panel/src/settingwin.cpp:913
 msgid "Candidate window interface"
-msgstr ""
+msgstr "候选窗界面"
 
-#: src/panel/src/settingwin.cpp:712
-msgid "Candidate window options"
-msgstr ""
+#: src/panel/src/settingwin.cpp:491
+msgid "Candidate window style"
+msgstr "候选窗样式"
 
-#: src/panel/src/settingwin.cpp:715
-msgid "Setting shortcut keys"
-msgstr ""
+#: src/panel/src/settingwin.cpp:493
+msgid "Index/candidate separator"
+msgstr "候选与序号间隔符"
 
-#: src/panel/src/settingwin.cpp:716
-msgid "Define soft keyboard"
-msgstr ""
+#: src/panel/src/settingwin.cpp:494
+msgid "Use gradient background"
+msgstr "使用渐变背景色"
 
-#: src/panel/src/settingwin.cpp:717
-msgid "Custom punctuation"
-msgstr ""
+#: src/panel/src/settingwin.cpp:495
+msgid "Tile"
+msgstr "平铺"
 
-#: src/panel/src/settingwin.cpp:954 src/panel/src/settingwin.cpp:975
+#: src/panel/src/settingwin.cpp:496
+msgid "Use background image"
+msgstr "使用背景图"
+
+#: src/panel/src/settingwin.cpp:497
+msgid "Corner radius"
+msgstr "圆角弧度"
+
+#: src/panel/src/settingwin.cpp:498
+msgid "Transparency"
+msgstr "透  明  度"
+
+#: src/panel/src/settingwin.cpp:499
+msgid "Number of candidates"
+msgstr "候选项数"
+
+#: src/panel/src/settingwin.cpp:500
+msgid "Characters per candidate"
+msgstr "候选字数"
+
+#: src/panel/src/settingwin.cpp:501
+msgid "Candidate window (click labels to change font and colors)"
+msgstr "候选窗设置 ( 点击下面的文字更换字体、字号、颜色 ）"
+
+#: src/panel/src/settingwin.cpp:502
+msgid "Change font"
+msgstr "更改字体"
+
+#: src/panel/src/settingwin.cpp:503
+msgid "Gradient start"
+msgstr "背景起色"
+
+#: src/panel/src/settingwin.cpp:504
+msgid "Gradient end"
+msgstr "背景终色"
+
+#: src/panel/src/settingwin.cpp:505
+msgid "Border color"
+msgstr "边框色"
+
+#: src/panel/src/settingwin.cpp:506
+msgid "Auto phrase"
+msgstr "自动词"
+
+#: src/panel/src/settingwin.cpp:507
+msgid "Prompt text"
+msgstr "提示信息"
+
+#: src/panel/src/settingwin.cpp:508 src/panel/src/settingwin.cpp:1160
+#: src/panel/src/settingwin.cpp:1181
 msgid "Background color"
-msgstr ""
+msgstr "背景色"
 
-#: src/panel/src/settingwin.cpp:967
+#: src/panel/src/settingwin.cpp:509 src/panel/src/settingwin.cpp:915
+msgid "Candidate window options"
+msgstr "候选窗选项"
+
+#: src/panel/src/settingwin.cpp:510
+msgid "2nd/3rd duplicate keys"
+msgstr "二三重码选择键"
+
+#: src/panel/src/settingwin.cpp:511
+msgid "2nd duplicate key"
+msgstr "第2重码选择"
+
+#: src/panel/src/settingwin.cpp:512
+msgid "3rd duplicate key"
+msgstr "第3重码选择"
+
+#: src/panel/src/settingwin.cpp:513
+msgid "Page up/down keys"
+msgstr "上下翻页键"
+
+#: src/panel/src/settingwin.cpp:514 src/panel/src/settingwin.cpp:515
+msgid "Previous page"
+msgstr "上一页"
+
+#: src/panel/src/settingwin.cpp:516
+msgid "Settings"
+msgstr "设置"
+
+#: src/panel/src/settingwin.cpp:517
+msgid "Candidate window follows caret"
+msgstr "候选窗光标跟随"
+
+#: src/panel/src/settingwin.cpp:518
+msgid "Hide Chinese candidate box"
+msgstr "隐藏汉字候选框"
+
+#: src/panel/src/settingwin.cpp:519
+msgid "Show operation hints"
+msgstr "显示操作提示信息"
+
+#: src/panel/src/settingwin.cpp:520
+msgid "Use Shift to select duplicates"
+msgstr "用Shift键选重码"
+
+#: src/panel/src/settingwin.cpp:521
+msgid "Live dictionary on candidates"
+msgstr "候选项实时字典"
+
+#: src/panel/src/settingwin.cpp:522
+msgid "Shortcut settings"
+msgstr "设置快捷键"
+
+#: src/panel/src/settingwin.cpp:523
+msgid "Custom shortcuts"
+msgstr "自定义快捷键"
+
+#: src/panel/src/settingwin.cpp:524
+msgid "Function"
+msgstr "功能"
+
+#: src/panel/src/settingwin.cpp:525
+msgid "Shortcut"
+msgstr "快捷键"
+
+#: src/panel/src/settingwin.cpp:526
+msgid "Disable all shortcuts"
+msgstr "禁用所有快捷键"
+
+#: src/panel/src/settingwin.cpp:527
+msgid "Disable full/half width shortcut"
+msgstr "禁用全半角切换键"
+
+#: src/panel/src/settingwin.cpp:528
+msgid "Shortcut input"
+msgstr "快捷输入"
+
+#: src/panel/src/settingwin.cpp:529
+msgid "Convenience shortcuts"
+msgstr "便捷功能快捷键"
+
+#: src/panel/src/settingwin.cpp:530
+msgid "Temporary English"
+msgstr "临时英文"
+
+#: src/panel/src/settingwin.cpp:531
+msgid ""
+"Temporary Pinyin\n"
+"rare characters"
+msgstr ""
+"临时拼音\n"
+"生僻字"
+
+#: src/panel/src/settingwin.cpp:532
+msgid "Chinese/English switch"
+msgstr "中英文切换"
+
+#: src/panel/src/settingwin.cpp:533
+msgid "Double-tap convenience key for symbol"
+msgstr "便捷键连按两次输出对应符号"
+
+#: src/panel/src/settingwin.cpp:534
+msgid "Restore default shortcuts"
+msgstr "恢复默认快捷键"
+
+#: src/panel/src/settingwin.cpp:535
+msgid "Custom soft keyboard"
+msgstr "自定义软键盘"
+
+#: src/panel/src/settingwin.cpp:536
+msgid "Click the soft keyboard character to edit"
+msgstr "请点击要修改的软键盘字符"
+
+#: src/panel/src/settingwin.cpp:537 src/panel/src/settingwin.cpp:920
+msgid "Custom punctuation"
+msgstr "自定义标点"
+
+#: src/panel/src/settingwin.cpp:538
+msgid "Click the punctuation mark to edit"
+msgstr "请点击要修改的标点符号"
+
+#: src/panel/src/settingwin.cpp:540
+msgid "Freewb Kylin Edition"
+msgstr "极点五笔银河麒麟版"
+
+#: src/panel/src/settingwin.cpp:541
+msgid "Show [all] options"
+msgstr "显示【所有】选项"
+
+#: src/panel/src/settingwin.cpp:544
+msgid "Disable auto phrase creation"
+msgstr "禁止自动造词"
+
+#: src/panel/src/settingwin.cpp:545
+msgid "Discard on exit"
+msgstr "关闭极点时消失"
+
+#: src/panel/src/settingwin.cpp:546
+msgid "Save to lexicon immediately"
+msgstr "随时保存在词库"
+
+#: src/panel/src/settingwin.cpp:548
+msgid "Top-left of desktop"
+msgstr "桌面左上角"
+
+#: src/panel/src/settingwin.cpp:549
+msgid "Top-right of desktop"
+msgstr "左面右上角"
+
+#: src/panel/src/settingwin.cpp:550
+msgid "Bottom-left of desktop"
+msgstr "桌面左下角"
+
+#: src/panel/src/settingwin.cpp:551
+msgid "Bottom-right of desktop"
+msgstr "桌面右下角"
+
+#: src/panel/src/settingwin.cpp:552
+msgid "Single row"
+msgstr "单行"
+
+#: src/panel/src/settingwin.cpp:553
+msgid "Multi row"
+msgstr "多行"
+
+#: src/panel/src/settingwin.cpp:554
+msgid "Reverse code lookup"
+msgstr "反查编码"
+
+#: src/panel/src/settingwin.cpp:555
+msgid "Add word online"
+msgstr "在线加词"
+
+#: src/panel/src/settingwin.cpp:556
+msgid "Delete word online"
+msgstr "在线删词"
+
+#: src/panel/src/settingwin.cpp:557
+msgid "Toggle virtual keyboard"
+msgstr "切换软键盘"
+
+#: src/panel/src/settingwin.cpp:558
+msgid "Switch character set"
+msgstr "切换字符集"
+
+#: src/panel/src/settingwin.cpp:559
+msgid "Switch input mode"
+msgstr "切换输入模式"
+
+#: src/panel/src/settingwin.cpp:560
+msgid "Toggle simplified/traditional output"
+msgstr "切换简入繁出"
+
+#: src/panel/src/settingwin.cpp:561
+msgid "Open system settings"
+msgstr "打开系统设置"
+
+#: src/panel/src/settingwin.cpp:562
+msgid "Show/hide status bar"
+msgstr "显/隐状态栏"
+
+#: src/panel/src/settingwin.cpp:563
+msgid "Show/hide candidate window"
+msgstr "显/隐候选窗"
+
+#: src/panel/src/settingwin.cpp:565
+msgid "Switch skin"
+msgstr "切换皮肤"
+
+#: src/panel/src/settingwin.cpp:566
+msgid "Quick delete committed item"
+msgstr "快删上屏项"
+
+#: src/panel/src/settingwin.cpp:567
+msgid "Auto-pair punctuation"
+msgstr "标点自动配对"
+
+#: src/panel/src/settingwin.cpp:568
+msgid "Ctrl+Space"
+msgstr "ctrl+空格"
+
+#: src/panel/src/settingwin.cpp:569
+msgid "Left Shift"
+msgstr "左Shift"
+
+#: src/panel/src/settingwin.cpp:570
+msgid "Right Shift"
+msgstr "右Shift"
+
+#: src/panel/src/settingwin.cpp:571
+msgid "Left Ctrl"
+msgstr "左Ctrl"
+
+#: src/panel/src/settingwin.cpp:572
+msgid "Right Ctrl"
+msgstr "右Ctrl"
+
+#: src/panel/src/settingwin.cpp:583
+msgid ""
+"When you enter code 'a', besides the character for 'a', candidates starting "
+"with 'a' are also shown, e.g. entries like '式a 节b'."
+msgstr ""
+"当你录入编码a时，除显示a对应的“工”字外，\n"
+"极点还会提示所有编码以a开头的字和词组，\n"
+"如：“式a 节b”等。"
+
+#: src/panel/src/settingwin.cpp:586
+msgid ""
+"When editing Word documents, paragraph indents of two Chinese characters can "
+"be entered conveniently with this option."
+msgstr ""
+"在编辑WORD文档时，段首通常要缩进2\n"
+"个汉字位置，选用此项可以方便的实现此\n"
+"功能。"
+
+#: src/panel/src/settingwin.cpp:589
+msgid ""
+"When enabled, after typing '中', related phrases such as '中国' and '中国共产"
+"党' are listed for selection."
+msgstr ""
+"启用此项，当你输入“中”后极点会列出\n"
+"“中国”、“中国共产党”等相关词供选择。"
+
+#: src/panel/src/settingwin.cpp:592
+msgid ""
+"When enabled, paired punctuation can be entered with the opening mark; e.g. "
+"'(' outputs '()' and places the cursor inside. Press Enter to finish."
+msgstr ""
+"启用此功能后，成对标点按前面一个即可输入\n"
+"一对。如按（极点输出（）并将光标置于其中，\n"
+"回车结束输入。"
+
+#: src/panel/src/settingwin.cpp:595
+msgid ""
+"When enabled, if a phrase exists in the lexicon but you type it character by "
+"character, you are prompted. If ignored repeatedly, the phrase may be hidden "
+"depending on Advanced settings."
+msgstr ""
+"选中此项，如词库中有“中国”一词，但你以\n"
+"单字方式来录入，系统会提示你。如果提示多\n"
+"次你仍不用此词组，则此词组会自动隐藏，是\n"
+"否隐藏由“高级设置”中的“智能隐藏词组”选项\n"
+"决定。"
+
+#: src/panel/src/settingwin.cpp:599
+msgid ""
+"When enabled, an alert sounds when the code is empty or has duplicate "
+"candidates."
+msgstr ""
+"选中此项，当你录入空码或有重码时，\n"
+"极点会发声提示你。"
+
+#: src/panel/src/settingwin.cpp:600
+msgid "When enabled, alerts use sound files in the Freewb sound directory."
+msgstr ""
+"选中此项，报警时将使用极点sound目录\n"
+"中的声音文件。"
+
+#: src/panel/src/settingwin.cpp:602
+msgid ""
+"The selected duplicate candidate is moved to the first position.\n"
+"Note: single characters are not adjusted this way; use Ctrl+number instead."
+msgstr ""
+"有重码时被选择的候选项自动调位至首位。\n"
+"【注】单字不参与这种调频，而只能以Ctrl+\n"
+"序号的方式调整。"
+
+#: src/panel/src/settingwin.cpp:606
+msgid ""
+"When enabled, Shift+letter outputs the letter directly; otherwise temporary "
+"English mode is used and Enter commits the text."
+msgstr ""
+"选中此项，Shift＋字母直接输出字母，\n"
+"否则转到临时英文状态，按回车后输出\n"
+"所输入的英文并返回中文输入状态。"
+
+#: src/panel/src/settingwin.cpp:608
+msgid "When enabled, typing speed is tracked in real time."
+msgstr "启用此项，极点会实时统计你的打字速度信息。"
+
+#: src/panel/src/settingwin.cpp:610
+msgid "Your computer behaves like a typewriter (useful for Wubi beginners)."
+msgstr ""
+"你的计算机就像一台打字机（五笔新手学习时\n"
+"可以使用此功能）。"
+
+#: src/panel/src/settingwin.cpp:612
+msgid ""
+"When enabled, duplicate or empty codes output the first two candidates or "
+"codes for batch proofreading."
+msgstr ""
+"选中此项，当重码或空码时极点会同时输入前2\n"
+"个候选项或编码，供批量校对时参考。"
+
+#: src/panel/src/settingwin.cpp:615
+msgid ""
+"① Disable auto word grouping.\n"
+"② Discard on exit: type by character, then use as phrase until exit; not "
+"saved to user lexicon.\n"
+"③ Save to lexicon: same as ② but selected auto phrases are saved.\n"
+"\n"
+"Note: use Ctrl+number to select and save auto phrases in candidates."
+msgstr ""
+"①禁用自动造词 ：禁用此功能。\n"
+"②关闭极点时消失：以单字方式录入汉字，其后\n"
+"即可按词组的方式输入，关闭程序后这些词组不\n"
+"存入用户词库。\n"
+"③随时保存到词库：同选项②，只是被选择的\n"
+"自动词组会保存到用户词库中。\n"
+"\n"
+"注：当候选中有自动词组时，可以用\n"
+"Ctrl+序号的方式来选择并保存它。"
+
+#: src/panel/src/settingwin.cpp:620
+msgid ""
+"When typing URLs such as 'www.freewb.org', entering 'www.' switches to "
+"English so browser autocomplete can be used."
+msgstr ""
+"如我们上网时常常输入“www.freewb.org”\n"
+"这样的网址，当你在极点中输入“www.”\n"
+"时，极点会自动转到英文状态，这样可以充分\n"
+"利用浏览器的自动完成功能，快速输入要浏览\n"
+"的网址，非常方便。"
+
+#: src/panel/src/settingwin.cpp:623
+msgid ""
+"For numbers like '12,345.9', enter half-width ',.' here to input grouped "
+"numbers without wrong full-width punctuation."
+msgstr ""
+"财务人员常要输入“12,345.9”这样带\n"
+"分节符的数字，把半角的“,.”填到此框中\n"
+"就可以方便输入这类数字了，而不用担心出现\n"
+"“12，345，678。9”这样的结果。"
+
+#: src/panel/src/settingwin.cpp:626
+msgid "Shows installed skins; select one to change the appearance."
+msgstr ""
+"点击此按钮将显示已安装的皮肤名称，可以在\n"
+"此处选择更换皮肤。"
+
+#: src/panel/src/settingwin.cpp:628
+msgid ""
+"When enabled, the toolbar is placed at the top-right of the active window. "
+"Drag it elsewhere if you prefer another corner."
+msgstr ""
+"选中此项，极点会将状态栏自动定位于当前窗\n"
+"口的右上角，方便用户操作。注：如果你习惯\n"
+"状态栏定位于左下角，取消此选项并将状态栏\n"
+"拖到你希望的位置即可。"
+
+#: src/panel/src/settingwin.cpp:630
+msgid "Opens a drop-down menu."
+msgstr "点击此钮显示下拉菜单。"
+
+#: src/panel/src/settingwin.cpp:632
+msgid ""
+"When enabled, hidden toolbar buttons expand on mouse hover and collapse when "
+"the pointer leaves."
+msgstr ""
+"选中此项，鼠标移至状态栏时，状态栏会自动\n"
+"展开隐藏部分，方便选择上面的功能按钮。鼠\n"
+"标移开后，展开部分自动隐藏。"
+
+#: src/panel/src/settingwin.cpp:635
+msgid "When enabled, toolbar and candidate window actions play sound effects."
+msgstr ""
+"选中此项后，对极点状态栏或候选窗进行操作\n"
+"时，会有声音提示。"
+
+#: src/panel/src/settingwin.cpp:637
+msgid "When enabled, brief help is shown when hovering toolbar buttons."
+msgstr "选中此项，鼠标移到状态栏按钮上时会显示简要帮助。"
+
+#: src/panel/src/settingwin.cpp:638
+msgid "Hide the toolbar in games or fullscreen apps to reduce distraction."
+msgstr "游戏或全屏软件，为减少状态栏干扰可以启用此项。"
+
+#: src/panel/src/settingwin.cpp:639
+msgid "Adjust toolbar transparency."
+msgstr "此处用于调整状态栏的透明度。"
+
+#: src/panel/src/settingwin.cpp:642
+msgid "Choose single-row, double-row, or multi-row candidate window layout."
+msgstr ""
+"点击此按钮在显示的下拉菜单中可以选择单行\n"
+"候选窗、双行候选窗和方形多行候选窗。"
+
+#: src/panel/src/settingwin.cpp:643
+msgid "Change the separator between index and candidate text."
+msgstr "此处可以更换候选项与序号间隔符。"
+
+#: src/panel/src/settingwin.cpp:644
+msgid "Use a gradient background for the candidate window."
+msgstr "选择此项后，使用渐变背景色为候选窗背景。"
+
+#: src/panel/src/settingwin.cpp:645
+msgid "Use an image as the candidate window background."
+msgstr "选择此项后，使用图片为候选窗背景。"
+
+#: src/panel/src/settingwin.cpp:647
+msgid "Tile the background image; otherwise stretch it to fill the window."
+msgstr "选择此项后，平铺图片为候选窗背景，否则拉伸图片为候选窗背景。"
+
+#: src/panel/src/settingwin.cpp:648
+msgid "Set the corner radius of the candidate window."
+msgstr "此处用于设置候选窗的圆弧角度。"
+
+#: src/panel/src/settingwin.cpp:649
+msgid "Set candidate window transparency."
+msgstr "此处用于设置候选窗的透明度。"
+
+#: src/panel/src/settingwin.cpp:651
+msgid ""
+"Number of candidates shown; larger values mean fewer page turns (balance "
+"with appearance)."
+msgstr ""
+"候选窗中可供选择的候选项的个数，数值越大，\n"
+"可供候选的项数越多，翻页的可能性越小\n"
+"〖以美观为宜〗。"
+
+#: src/panel/src/settingwin.cpp:653
+msgid ""
+"Maximum characters per candidate; very small values show '...' for hidden "
+"text."
+msgstr ""
+"每个候选项中最多能显示在候选窗上的字数，\n"
+"如果数值设置的过小，则候选窗中会以...的形式\n"
+"显示隐藏的部分。"
+
+#: src/panel/src/settingwin.cpp:655
+msgid "Open font settings for candidate text."
+msgstr "单击打开字体设置界面进行字体、字号设置。"
+
+#: src/panel/src/settingwin.cpp:656
+msgid "Set candidate window background color or image."
+msgstr "单击设置候选窗背景色(背景图)。"
+
+#: src/panel/src/settingwin.cpp:657
+msgid "Set the gradient start color."
+msgstr "单击设置候选窗背景渐变起始色。"
+
+#: src/panel/src/settingwin.cpp:658
+msgid "Set the gradient end color."
+msgstr "单击设置候选窗背景渐变截止色。"
+
+#: src/panel/src/settingwin.cpp:659
+msgid "Set the candidate window border color."
+msgstr "单击设置候选窗边框色。"
+
+#: src/panel/src/settingwin.cpp:660
+msgid "Set the color for auto-generated brief codes."
+msgstr "单击设置候选窗自动词颜色，突出显示简码字。"
+
+#: src/panel/src/settingwin.cpp:661
+msgid "Set the candidate window prompt text color."
+msgstr "单击设置极点候选窗提示信息颜色。"
+
+#: src/panel/src/settingwin.cpp:664
+msgid "Key to select the 2nd candidate, e.g. ',' for users who prefer comma."
+msgstr ""
+"设定选择第2候选项的键，如有些用户习惯用\n"
+"“,”来选择第二候选项，那么，在相应框中填\n"
+"入英文的“,”即可。"
+
+#: src/panel/src/settingwin.cpp:666
+msgid "Key to select the 3rd candidate, e.g. '.' for users who prefer period."
+msgstr ""
+"设定选择第3候选项的键，如有些用户习惯用\n"
+"“.”来选择第三候选项，那么，在相应框中填入\n"
+"英文的“.”即可。"
+
+#: src/panel/src/settingwin.cpp:668
+msgid ""
+"When enabled, the candidate window follows the caret; otherwise it stays at "
+"the bottom (or drag it anywhere)."
+msgstr ""
+"选择此项，候选窗会定位于光标附近，否则候\n"
+"选窗定位于屏幕底部(也可用鼠标将其拖到任\n"
+"意位置)。"
+
+#: src/panel/src/settingwin.cpp:670
+msgid "Hide the candidate window when needed."
+msgstr ""
+"选择此项后，候选窗将被隐藏。有特殊需要时，\n"
+"可以选择此功能。"
+
+#: src/panel/src/settingwin.cpp:672
+msgid ""
+"Show operation hints at the bottom of the multi-row candidate window, e.g. "
+"'Ctrl+= add word online'."
+msgstr ""
+"选择此项后，会在方形候选窗底部出现极点的\n"
+"提示信息。如提示：【Ctrl+=实时加词】"
+
+#: src/panel/src/settingwin.cpp:675
+msgid ""
+"When enabled, Left Shift selects the 2nd candidate and Right Shift the 3rd. "
+"Swap in Expert settings if needed."
+msgstr ""
+"选中此项，可用左Shift键选第2候选项，\n"
+"右Shift键选取第3候选项。如果要用\n"
+"右Shift选第2英，左Shift选第3项，\n"
+"请到专家设置模式中改。"
+
+#: src/panel/src/settingwin.cpp:678
+msgid "Previous page key, e.g. ',' if you prefer comma and period for paging."
+msgstr ""
+"设定候选项翻页的键，如有些用户习惯用“,”\n"
+"和“.”来前翻和后翻页，那么，在相应框中填入\n"
+"英文的“,”和“.”即可。"
+
+#: src/panel/src/settingwin.cpp:680
+msgid "Next page key, e.g. '.' if you prefer comma and period for paging."
+msgstr ""
+"设定候选项翻页的键，如有些用户习惯用“,”\n"
+"和“.”来前翻和后翻页，那么，在相应框中填入\n"
+"英文的“,”和“.”即可。"
+
+#: src/panel/src/settingwin.cpp:681
+msgid "Keys for selecting 2nd and 3rd duplicate candidates."
+msgstr "设定选择第2，３重码的按键。"
+
+#: src/panel/src/settingwin.cpp:682
+msgid "Keys for candidate paging."
+msgstr "设定候选词翻页的按键。"
+
+#: src/panel/src/settingwin.cpp:683
+msgid "Show dictionary lookup when hovering candidates."
+msgstr "选中此项，鼠标悬停候选词时可显示字典释义。"
+
+#: src/panel/src/settingwin.cpp:686
+msgid ""
+"Select a Freewb function such as reverse lookup or online word creation."
+msgstr ""
+"此下拉框用于选择极点功能，如：反查编码、\n"
+"在线造词等。"
+
+#: src/panel/src/settingwin.cpp:687
+msgid "Shortcut for the function selected above."
+msgstr "用于设定上面功能的快捷键。"
+
+#: src/panel/src/settingwin.cpp:689
+msgid ""
+"Disable all Freewb shortcuts to avoid conflicts with other applications."
+msgstr ""
+"为解决极点与应用软件快捷键冲突，可以用\n"
+"此项禁用所有极点的快捷键。"
+
+#: src/panel/src/settingwin.cpp:691
+msgid ""
+"Shift+Space is the default full/half width shortcut in Fcitx; enable this to "
+"disable it."
+msgstr ""
+"〖SHIFT+空格〗这组快捷键是由FCITX\n"
+"控制的大多数输入法默认的全半角切换快捷键，\n"
+"如果要禁用此功能，请选中此项。"
+
+#: src/panel/src/settingwin.cpp:693
+msgid ""
+"For short English input (e.g. email), press this key then type English and "
+"press Enter to return to Chinese. Also used as a lead key for advanced "
+"features."
+msgstr ""
+"当你需要录入小段英文时（如邮箱或邮址）按\n"
+"此键，之后录入英文按回车输出并返回中文；\n"
+"同时临时英文键也是极点许多高级功能的引导键，\n"
+"详细内容参见极点使用说明中的变量说明部分。"
+
+#: src/panel/src/settingwin.cpp:696
+msgid ""
+"Press this key, then a letter to output a predefined phrase.\n"
+"Custom rules: %1\n"
+"(Right-click toolbar → Management tools → Edit shortcut table)."
+msgstr ""
+"单击此键后再输入一个字母，可输出事先自定义的一个短语。\n"
+"自定义的规则详见%1文件\n"
+"（右击状态栏→管理工具→编辑快捷码表可快速打开此文件）。"
+
+#: src/panel/src/settingwin.cpp:700
+msgid ""
+"When in Wubi mode, press this key for temporary Pinyin input of unknown "
+"characters, then return to Wubi. With code already typed, toggles rare-"
+"character mode."
+msgstr ""
+"如果你的极点状态栏上显示的汉字是“五笔字型”，\n"
+"则遇到不会拆分的单字或词组时可以按此键，极点会\n"
+"转到拼音状态，输完后自动转回五笔状态。 已经输\n"
+"入了编码时也可以按这个键，这时极点会在临时生僻\n"
+"字与正常输入状态之间切换。"
+
+#: src/panel/src/settingwin.cpp:703
+msgid ""
+"Choose a key to switch Chinese/English without closing or switching the "
+"input method."
+msgstr ""
+"从下拉列表中选择一个按键，可通过单击不用\n"
+"关闭或切换输入法而实现中英文状态的快速\n"
+"切换。"
+
+#: src/panel/src/settingwin.cpp:918
+msgid "Setting shortcut keys"
+msgstr "设置快捷键"
+
+#: src/panel/src/settingwin.cpp:919
+msgid "Define soft keyboard"
+msgstr "定义软键盘"
+
+#: src/panel/src/settingwin.cpp:1173
 msgid "Background image"
-msgstr ""
+msgstr "背景图"
 
-#: src/panel/src/settingwin.cpp:1148
+#: src/panel/src/settingwin.cpp:1364
 msgid "Display [Common] options"
-msgstr ""
+msgstr "显示【常用】选项"
 
-#: src/panel/src/settingwin.cpp:1152
+#: src/panel/src/settingwin.cpp:1368
 msgid "Display [All] options"
-msgstr ""
+msgstr "显示【所有】选项"
 
-#: src/panel/src/settingwin.cpp:1340 src/panel/src/settingwin.cpp:1799
+#: src/panel/src/settingwin.cpp:1557 src/panel/src/settingwin.cpp:2022
 msgid ""
 "The shortcut key you set will conflict with the second and third recode "
 "selection key, confirm setting?"
-msgstr ""
+msgstr "您设置的快捷键将与二三重码选择键冲突，确认设置？"
 
-#: src/panel/src/settingwin.cpp:1391
+#: src/panel/src/settingwin.cpp:1608
 msgid "Confirm to restore all shortcut keys to the default key value?"
-msgstr ""
+msgstr "确定将快捷键都恢复成默认键值吗？"
 
-#: src/panel/src/settingwin.cpp:1415
+#: src/panel/src/settingwin.cpp:1632
 msgid "Set keyboard characters"
-msgstr ""
+msgstr "设置键盘字符"
 
-#: src/panel/src/settingwin.cpp:1427
+#: src/panel/src/settingwin.cpp:1644
 msgid "Set keyboard punctuation"
-msgstr ""
+msgstr "设置键盘标点"
 
-#: src/panel/src/settingwin.cpp:1594
+#: src/panel/src/settingwin.cpp:1814
 msgid "Select background image"
-msgstr ""
+msgstr "选择背景图片"
 
-#: src/panel/src/settingwin.cpp:1752
+#: src/panel/src/settingwin.cpp:1973
 msgid ""
 "The shortcut key you set will conflict with the up and down page key, "
 "confirm setting?"
-msgstr ""
+msgstr "您设置的快捷键将与上下翻页键冲突，确认设置？"
 
-#: src/panel/src/settingwin.cpp:1756
+#: src/panel/src/settingwin.cpp:1977
 msgid ""
 "The shortcut key you set will conflict with the Chinese/English switch key, "
 "confirm setting?"
-msgstr ""
+msgstr "您设置的快捷键将与中英文切换键冲突，确认设置？"
 
 #: src/panel/src/texteditwin.cpp:21
 msgid "Find(&F)"
-msgstr ""
+msgstr "查找(&F)"
 
 #: src/panel/src/texteditwin.cpp:23
 msgid "Save(&S)"
-msgstr ""
+msgstr "保存(&S)"
 
 #: src/panel/src/texteditwin.cpp:25
 msgid "Exit(&E)"
-msgstr ""
+msgstr "退出(&E)"
 
 #: src/panel/src/texteditwin.cpp:113 src/panel/src/texteditwin.cpp:140
 #: src/panel/src/texteditwin.cpp:179
 msgid "File open failed!"
-msgstr ""
+msgstr "文件打开失败!"
 
 #: src/panel/src/texteditwin.cpp:163 src/panel/src/texteditwin.cpp:203
 msgid "Opening..."
-msgstr ""
+msgstr "正在打开......"
 
-#: src/panel/src/textfinddialog.cpp:10
+#: src/panel/src/textfinddialog.cpp:11
 msgid "Find"
-msgstr ""
+msgstr "查找"
 
-#: src/panel/src/toolbarwin.cpp:733 src/panel/src/toolbarwin.cpp:755
-msgid "Capital letters"
-msgstr ""
+#: src/panel/src/textfinddialog.cpp:16
+msgid "Find what"
+msgstr "查找内容"
 
-#: src/panel/src/toolbarwin.cpp:745 src/panel/src/toolbarwin.cpp:767
-msgid "Pinyin input"
+#: src/panel/src/textfinddialog.cpp:17
+msgid "Next (&N)"
+msgstr "下一个(&N)"
+
+#: src/panel/src/textfinddialog.cpp:18
+msgid "Previous (&P)"
+msgstr "上一个(&P)"
+
+#: src/panel/src/textfinddialog.cpp:19
+msgid "Match case (&C)"
+msgstr "区分大小写(&C)"
+
+#: src/panel/src/textfinddialog.cpp:20
+msgid "Whole words (&W)"
+msgstr "全词匹配(&W)"
+
+#: src/panel/src/toolbarwin.cpp:487
+msgid "None"
+msgstr "无"
+
+#: src/panel/src/toolbarwin.cpp:489
+msgid "Toggle extended menu bar"
+msgstr "扩展菜单栏切换按钮"
+
+#: src/panel/src/toolbarwin.cpp:491
+msgid ""
+"Input mode button\n"
+"Shortcut: %1"
 msgstr ""
+"输入模式切换按钮\n"
+"快捷键：%1"
+
+#: src/panel/src/toolbarwin.cpp:493
+msgid ""
+"Online word creation button\n"
+"Shortcut: %1"
+msgstr ""
+"在线造词功能按钮\n"
+"快捷键：%1"
+
+#: src/panel/src/toolbarwin.cpp:496
+msgid ""
+"Code and definition lookup button\n"
+"Shortcut: %1"
+msgstr ""
+"查询编码与释义按钮\n"
+"快捷键：%1"
+
+#: src/panel/src/toolbarwin.cpp:498
+msgid ""
+"Character width toggle\n"
+"Shortcut: Shift+Space"
+msgstr ""
+"字符全半角切换按钮\n"
+"快捷键：Shift+Space"
+
+#: src/panel/src/toolbarwin.cpp:499
+msgid ""
+"Chinese/English punctuation toggle\n"
+"Shortcut: Ctrl+."
+msgstr ""
+"中英文标点切换按钮\n"
+"快捷键：Ctrl+."
+
+#: src/panel/src/toolbarwin.cpp:501
+msgid ""
+"Toggle or switch virtual keyboard\n"
+"Shortcut: %1"
+msgstr ""
+"开关或切换软键盘按钮\n"
+"快捷键：%1"
+
+#: src/panel/src/toolbarwin.cpp:503
+msgid "Open settings"
+msgstr "打开设置界面按钮"
+
+#: src/panel/src/toolbarwin.cpp:505
+msgid ""
+"Simplified/Traditional output toggle\n"
+"Shortcut: %1"
+msgstr ""
+"简繁体输出切换按钮\n"
+"快捷键：%1"
+
+#: src/panel/src/toolbarwin.cpp:508
+msgid ""
+"Character set toggle\n"
+"Shortcut: %1"
+msgstr ""
+"字符集切换按钮\n"
+"快捷键：%1"
+
+#: src/panel/src/usrgenworddialog.cpp:30
+msgid "Freewb word creation"
+msgstr "极点造词"
+
+#: src/panel/src/usrgenworddialog.cpp:31
+msgid "Phrase:"
+msgstr "词组:"
+
+#: src/panel/src/usrgenworddialog.cpp:32
+msgid "Code:"
+msgstr "编码:"

@@ -82,13 +82,14 @@ add_custom_target(po-update
 #编译.po到.mo,并安装到系统locale目录
 set(_mo_outputs)
 foreach(_lang IN LISTS FREEWB_LINGUAS)
+    set(_po_file "${CMAKE_CURRENT_SOURCE_DIR}/${_lang}.po")
     set(_mo "${CMAKE_CURRENT_BINARY_DIR}/${_lang}.mo")
 
     add_custom_command(
         OUTPUT  "${_mo}"
         COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check --statistics
-                --output-file=${_mo} ${_po}
-        DEPENDS "${_po}"
+                --output-file=${_mo} ${_po_file}
+        DEPENDS "${_po_file}"
         COMMENT "Compiling ${_lang}.po -> ${_lang}.mo"
         VERBATIM
     )
