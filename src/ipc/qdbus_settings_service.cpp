@@ -1,15 +1,15 @@
 #include "qdbus_settings_service.h"
 
 #include <QClipboard>
-#include <QGuiApplication>
 #include <QDBusConnection>
+#include <QGuiApplication>
 
 #include "log.h"
 
 namespace freewb::ipc
 {
 
-QDBusSettingsService::QDBusSettingsService(QObject *parent) : QObject(parent) 
+QDBusSettingsService::QDBusSettingsService(QObject *parent) : QObject(parent)
 {
     registerQDBusService();
 }
@@ -192,6 +192,5 @@ void QDBusSettingsService::slot_dbus_set_recode_calib_flg(int flg)
 {
     emit signal_set_recode_calib_flg(flg);
 }
-
 
 } // namespace freewb::ipc

@@ -2,12 +2,13 @@
 
 #include <fcitx-utils/event.h>
 
-#include "types.h"
 #include "sdbus_proxy.h"
+#include "types.h"
 
 FreewbIMModule::FreewbIMModule(fcitx::Instance *instance) : instance_(instance)
 {
-    freewb_ = std::make_unique<freewb::Freewb>(dynamic_cast<freewb::ipc::IDBus *>(new freewb::ipc::SDBusProxy(instance->eventLoop().nativeHandle())),
+    freewb_ = std::make_unique<freewb::Freewb>(dynamic_cast<freewb::ipc::IDBus *>(
+                                                   new freewb::ipc::SDBusProxy(instance->eventLoop().nativeHandle())),
                                                [this](const std::string &text) { commitString(text); });
 }
 

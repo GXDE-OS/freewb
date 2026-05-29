@@ -62,8 +62,8 @@ void EngineManager::initAllEngines()
     auto *pyForHint = dynamic_cast<PyEngine *>(findEngineByName("engine:py"));
     if (wbzxForHint != nullptr && pyForHint != nullptr)
     {
-        pyForHint->setWubiPrimaryCodeLookupCallback(
-            [wbzxForHint](const std::string &hz) { return wbzxForHint->primaryWubiCodeForSingleHanziUtf8(hz); });
+        pyForHint->setWubiPrimaryCodeLookupCallback([wbzxForHint](const std::string &hz)
+                                                    { return wbzxForHint->primaryWubiCodeForSingleHanziUtf8(hz); });
     }
 
     FREEWB_DEBUG("engines size: {}", engines_.size());

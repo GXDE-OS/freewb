@@ -53,7 +53,7 @@ public Q_SLOTS:
     Q_SCRIPTABLE void SwitchSimpOrTrad();
     Q_SCRIPTABLE void SetCharWidthAndMarkMode(int charWidth, int markMode);
 
-    Q_SIGNALS:
+Q_SIGNALS:
     // UI内部信号
     void signal_ShowPreedit(bool);
     void signal_ShowAux(bool);

@@ -7,9 +7,9 @@
 #include <vector>
 
 #include "freewb.h"
+#include "idbus.h"
 #include "ifreewb.h"
 #include "keysym.h"
-#include "idbus.h"
 
 namespace freewb
 {
@@ -63,11 +63,11 @@ private:
     bool available_ = true;
     StateManager *manager_ = nullptr;
     Freewb *freewb_ = nullptr;
-    std::string originalText_; // 造词源串
-    std::string wordText_; // 词组文本
-    std::string wordCode_; // 词组编码
-    int phraseLen_ = 2; // 词组长度
-    int sourceCharCount_ = 0; // 源串 UTF-8 字数
+    std::string originalText_;   // 造词源串
+    std::string wordText_;       // 词组文本
+    std::string wordCode_;       // 词组编码
+    int phraseLen_ = 2;          // 词组长度
+    int sourceCharCount_ = 0;    // 源串 UTF-8 字数
     bool fromClipboard_ = false; // 是否从剪贴板获取文本
     static constexpr int kPhraseMaxLength = 128;
     static constexpr int kDefaultPhraseLen = 2;
@@ -142,14 +142,22 @@ class StateManager
 public:
     explicit StateManager(Freewb *freewb);
 
-    bool isUserPhraseState() const { return current_ == &add_ || current_ == &del_; }
+    bool isUserPhraseState() const
+    {
+        return current_ == &add_ || current_ == &del_;
+    }
 
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
 
     bool enterAddPhraseState(bool useClipboardText = false);
     bool enterDeletePhraseState(const std::string &wordText);
     bool enterTempEnglishState(const std::string &commandPrefix);
-    void enterIdleState() { current_ = &idle_; }
+
+    void enterIdleState()
+    {
+        current_ = &idle_;
+    }
+
     void reset();
 
 private:
@@ -157,7 +165,10 @@ private:
     friend class AddUserPhraseState;
     friend class DeleteUserPhraseState;
 
-    bool isTempEnglish() const { return current_ == &tempEnglish_; }
+    bool isTempEnglish() const
+    {
+        return current_ == &tempEnglish_;
+    }
 
 private:
     Freewb *freewb_ = nullptr;

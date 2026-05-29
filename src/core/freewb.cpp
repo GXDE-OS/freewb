@@ -422,20 +422,21 @@ void Freewb::updateCandidateAndPreeditToUI()
 {
     // 用户造词/删词状态，不更新候选窗UI
     // 由状态机更新造词/删词的相关信息到UI
-    if (stateManager_->isUserPhraseState()) {
+    if (stateManager_->isUserPhraseState())
+    {
         return;
     }
     dbusProxy_->callPanelUpdatePreeditText({.text = candidateList_->preeditText(),
-                                             .caret = candidateList_->cursor(),
-                                             .show = !candidateList_->preeditText().empty()});
+                                            .caret = candidateList_->cursor(),
+                                            .show = !candidateList_->preeditText().empty()});
     dbusProxy_->callPanelUpdatePreeditCaret(candidateList_->cursor());
     dbusProxy_->callPanelUpdateCandidate({.fullCodes = {},
-                                      .texts = candidateList_->candidateTexts(),
-                                      .prompts = candidateList_->candidatePrompts(),
-                                      .hasPrev = candidateList_->hasPrev(),
-                                      .hasNext = candidateList_->hasNext(),
-                                      .cursor = -1,
-                                      .layout = Horizontal});
+                                          .texts = candidateList_->candidateTexts(),
+                                          .prompts = candidateList_->candidatePrompts(),
+                                          .hasPrev = candidateList_->hasPrev(),
+                                          .hasNext = candidateList_->hasNext(),
+                                          .cursor = -1,
+                                          .layout = Horizontal});
 }
 
 } // namespace freewb

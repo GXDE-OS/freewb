@@ -30,7 +30,8 @@ void testWbzxEngine()
 
     engine.putKey("g");
     const auto &results1 = engine.getResult();
-    auto lineAt = [](const freewb::CandidatePayload &p, std::size_t i) -> std::string {
+    auto lineAt = [](const freewb::CandidatePayload &p, std::size_t i) -> std::string
+    {
         if (i >= p.texts.size())
         {
             return {};

@@ -184,9 +184,8 @@ void SDBusProxy::callPanelUpdateCandidate(const CandidatePayload &payload)
         FREEWB_ERROR("emitUpdateCandidate skipped: bus={} available_={}", static_cast<const void *>(bus_), available_);
         return;
     }
-    FREEWB_DEBUG("emitUpdateCandidate: texts={} prompts={} hasPrev={} hasNext={} cursor={} layout={}",
-                 payload.texts.size(), payload.prompts.size(), payload.hasPrev, payload.hasNext,
-                 payload.cursor, static_cast<int>(payload.layout));
+    FREEWB_DEBUG("emitUpdateCandidate: texts={} prompts={} hasPrev={} hasNext={} cursor={} layout={}", payload.texts.size(),
+                 payload.prompts.size(), payload.hasPrev, payload.hasNext, payload.cursor, static_cast<int>(payload.layout));
 
     sd_bus_message *m = nullptr;
     const int newCallR = sd_bus_message_new_method_call(bus_, &m, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH,

@@ -486,20 +486,20 @@ void ToolbarWin::update_mouse_hover_tips()
         return s.empty() ? QString(_("None")) : toQStringUtf8(s);
     };
     ui->btnMenuExtend->setToolTip(_("Toggle extended menu bar"));
-    ui->btnMode->setToolTip(                         QString(_("Input mode button\nShortcut: %1")).arg(fmt(settings::instance().get_switchInputMode())));
-    ui->btnGenerate->setToolTip(                         QString(_("Online word creation button\nShortcut: %1"))
-                             .arg(fmt(settings::instance().get_onlineAddWord())));
-    ui->btnSearch->setToolTip(                         QString(_("Code and definition lookup button\nShortcut: %1"))
-                             .arg(fmt(settings::instance().get_backFindCode())));
+    ui->btnMode->setToolTip(QString(_("Input mode button\nShortcut: %1")).arg(fmt(settings::instance().get_switchInputMode())));
+    ui->btnGenerate->setToolTip(
+        QString(_("Online word creation button\nShortcut: %1")).arg(fmt(settings::instance().get_onlineAddWord())));
+    ui->btnSearch->setToolTip(
+        QString(_("Code and definition lookup button\nShortcut: %1")).arg(fmt(settings::instance().get_backFindCode())));
     ui->btnCharWidth->setToolTip(_("Character width toggle\nShortcut: Shift+Space"));
     ui->btnMark->setToolTip(_("Chinese/English punctuation toggle\nShortcut: Ctrl+."));
-    ui->btnKeyboard->setToolTip(                         QString(_("Toggle or switch virtual keyboard\nShortcut: %1"))
-                             .arg(fmt(settings::instance().get_switchVKb())));
+    ui->btnKeyboard->setToolTip(
+        QString(_("Toggle or switch virtual keyboard\nShortcut: %1")).arg(fmt(settings::instance().get_switchVKb())));
     ui->btnSetting->setToolTip(_("Open settings"));
-    ui->btnCharFont->setToolTip(                         QString(_("Simplified/Traditional output toggle\nShortcut: %1"))
-                             .arg(fmt(settings::instance().get_switchChttrans())));
-    ui->btnCharSet->setToolTip(                         QString(_("Character set toggle\nShortcut: %1"))
-                             .arg(fmt(settings::instance().get_switchCharSet())));
+    ui->btnCharFont->setToolTip(
+        QString(_("Simplified/Traditional output toggle\nShortcut: %1")).arg(fmt(settings::instance().get_switchChttrans())));
+    ui->btnCharSet->setToolTip(
+        QString(_("Character set toggle\nShortcut: %1")).arg(fmt(settings::instance().get_switchCharSet())));
 }
 
 void ToolbarWin::show_mouse_hover_tips(QWidget *widget)

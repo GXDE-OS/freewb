@@ -17,7 +17,6 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QMouseEvent>
-#include <QMouseEvent>
 #include <QPushButton>
 #include <QRandomGenerator>
 #include <QTimer>
@@ -60,9 +59,9 @@ typedef enum
     OTI_SK_SWITCH_CHAR_SET,   // 切换字符集
     OTI_SK_SWITCH_INPUT_MODE, // 切换输入模式
     //    OTI_SK_SWITCH_WORD_STATE,//切换字词状态
-    OTI_SK_SWITCH_S_IN_T_OUT,       // 切换简入繁出
-    OTI_SK_SHOW_HIDE_STATUS_BAR,    // 显示/隐藏状态栏
-    OTI_SK_SWITCH_WORD_LEXICON,     // 切换词库
+    OTI_SK_SWITCH_S_IN_T_OUT,    // 切换简入繁出
+    OTI_SK_SHOW_HIDE_STATUS_BAR, // 显示/隐藏状态栏
+    OTI_SK_SWITCH_WORD_LEXICON,  // 切换词库
     //    OTI_SK_ADD_CHAR_AFTER_OUTPUT,//输出项后加字符
     OTI_SK_SWITCH_SKIN,           // 切换皮肤
     OTI_SK_QUICK_DEL_SCREEN_CHAR, // 快删上屏项

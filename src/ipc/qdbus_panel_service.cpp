@@ -3,7 +3,7 @@
 namespace freewb::ipc
 {
 
-QDBusPanelService::QDBusPanelService(QObject *parent) : QObject(parent) 
+QDBusPanelService::QDBusPanelService(QObject *parent) : QObject(parent)
 {
     registerQDBusService();
 }
@@ -48,8 +48,8 @@ void QDBusPanelService::ShowLookupTable(bool show)
     emit signal_ShowLookupTable(show);
 }
 
-void QDBusPanelService::UpdateLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev,
-                                          bool hasNext)
+void QDBusPanelService::UpdateLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr,
+                                          bool hasPrev, bool hasNext)
 {
     emit signal_UpdateLookupTable(label, text, attr, hasPrev, hasNext);
 }

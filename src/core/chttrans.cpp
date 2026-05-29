@@ -1,8 +1,8 @@
 #include "chttrans.h"
 
+#include "config.h"
 #include "log.h"
 #include "settings.h"
-#include "config.h"
 
 namespace freewb
 {

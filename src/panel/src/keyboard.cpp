@@ -253,653 +253,1264 @@ void Keyboard::init_fixed_key_value()
 
     /********************************* PC键盘　*********************************/
     m_pcKeyValue.resize(KEY_SYMBOL_NUM);
-    m_pcKeyValue[KEY_0] << "0" << ")";
-    m_pcKeyValue[KEY_1] << "1" << "!";
-    m_pcKeyValue[KEY_2] << "2" << "@";
-    m_pcKeyValue[KEY_3] << "3" << "#";
-    m_pcKeyValue[KEY_4] << "4" << "$";
-    m_pcKeyValue[KEY_5] << "5" << "%";
-    m_pcKeyValue[KEY_6] << "6" << "^";
-    m_pcKeyValue[KEY_7] << "7" << "&";
-    m_pcKeyValue[KEY_8] << "8" << "*";
-    m_pcKeyValue[KEY_9] << "9" << "(";
-    m_pcKeyValue[KEY_A] << "a" << "A";
-    m_pcKeyValue[KEY_B] << "b" << "B";
-    m_pcKeyValue[KEY_C] << "c" << "C";
-    m_pcKeyValue[KEY_D] << "d" << "D";
-    m_pcKeyValue[KEY_E] << "e" << "E";
-    m_pcKeyValue[KEY_F] << "f" << "F";
-    m_pcKeyValue[KEY_G] << "g" << "G";
-    m_pcKeyValue[KEY_H] << "h" << "H";
-    m_pcKeyValue[KEY_I] << "i" << "I";
-    m_pcKeyValue[KEY_J] << "j" << "J";
-    m_pcKeyValue[KEY_K] << "k" << "K";
-    m_pcKeyValue[KEY_L] << "l" << "L";
-    m_pcKeyValue[KEY_M] << "m" << "M";
-    m_pcKeyValue[KEY_N] << "n" << "N";
-    m_pcKeyValue[KEY_O] << "o" << "O";
-    m_pcKeyValue[KEY_P] << "p" << "P";
-    m_pcKeyValue[KEY_Q] << "q" << "Q";
-    m_pcKeyValue[KEY_R] << "r" << "R";
-    m_pcKeyValue[KEY_S] << "s" << "S";
-    m_pcKeyValue[KEY_T] << "t" << "T";
-    m_pcKeyValue[KEY_U] << "u" << "U";
-    m_pcKeyValue[KEY_V] << "v" << "V";
-    m_pcKeyValue[KEY_W] << "w" << "W";
-    m_pcKeyValue[KEY_X] << "x" << "X";
-    m_pcKeyValue[KEY_Y] << "y" << "Y";
-    m_pcKeyValue[KEY_Z] << "z" << "Z";
-    m_pcKeyValue[KEY_BACKQUOTE] << "`" << "~";     // 反引号
-    m_pcKeyValue[KEY_SUB] << "-" << "_";           // 减号
-    m_pcKeyValue[KEY_EQUAL] << "=" << "+";         // 等号
-    m_pcKeyValue[KEY_LEFT_BRACKET] << "[" << "{";  // 左中括号
-    m_pcKeyValue[KEY_RIGHT_BRACKET] << "]" << "}"; // 右中括号
-    m_pcKeyValue[KEY_BACKSLASH] << "\\" << "|";    // 反斜杠
-    m_pcKeyValue[KEY_SEMICOLON] << ";" << ":";     // 分号
-    m_pcKeyValue[KEY_QUOTE] << "'" << "\"";        // 引号
-    m_pcKeyValue[KEY_COMMA] << "," << "<";         // 逗号
-    m_pcKeyValue[KEY_PERIOD] << "." << ">";        // 句号
-    m_pcKeyValue[KEY_SLASH] << "/" << "?";         // 斜杠
+    m_pcKeyValue[KEY_0] << "0"
+                        << ")";
+    m_pcKeyValue[KEY_1] << "1"
+                        << "!";
+    m_pcKeyValue[KEY_2] << "2"
+                        << "@";
+    m_pcKeyValue[KEY_3] << "3"
+                        << "#";
+    m_pcKeyValue[KEY_4] << "4"
+                        << "$";
+    m_pcKeyValue[KEY_5] << "5"
+                        << "%";
+    m_pcKeyValue[KEY_6] << "6"
+                        << "^";
+    m_pcKeyValue[KEY_7] << "7"
+                        << "&";
+    m_pcKeyValue[KEY_8] << "8"
+                        << "*";
+    m_pcKeyValue[KEY_9] << "9"
+                        << "(";
+    m_pcKeyValue[KEY_A] << "a"
+                        << "A";
+    m_pcKeyValue[KEY_B] << "b"
+                        << "B";
+    m_pcKeyValue[KEY_C] << "c"
+                        << "C";
+    m_pcKeyValue[KEY_D] << "d"
+                        << "D";
+    m_pcKeyValue[KEY_E] << "e"
+                        << "E";
+    m_pcKeyValue[KEY_F] << "f"
+                        << "F";
+    m_pcKeyValue[KEY_G] << "g"
+                        << "G";
+    m_pcKeyValue[KEY_H] << "h"
+                        << "H";
+    m_pcKeyValue[KEY_I] << "i"
+                        << "I";
+    m_pcKeyValue[KEY_J] << "j"
+                        << "J";
+    m_pcKeyValue[KEY_K] << "k"
+                        << "K";
+    m_pcKeyValue[KEY_L] << "l"
+                        << "L";
+    m_pcKeyValue[KEY_M] << "m"
+                        << "M";
+    m_pcKeyValue[KEY_N] << "n"
+                        << "N";
+    m_pcKeyValue[KEY_O] << "o"
+                        << "O";
+    m_pcKeyValue[KEY_P] << "p"
+                        << "P";
+    m_pcKeyValue[KEY_Q] << "q"
+                        << "Q";
+    m_pcKeyValue[KEY_R] << "r"
+                        << "R";
+    m_pcKeyValue[KEY_S] << "s"
+                        << "S";
+    m_pcKeyValue[KEY_T] << "t"
+                        << "T";
+    m_pcKeyValue[KEY_U] << "u"
+                        << "U";
+    m_pcKeyValue[KEY_V] << "v"
+                        << "V";
+    m_pcKeyValue[KEY_W] << "w"
+                        << "W";
+    m_pcKeyValue[KEY_X] << "x"
+                        << "X";
+    m_pcKeyValue[KEY_Y] << "y"
+                        << "Y";
+    m_pcKeyValue[KEY_Z] << "z"
+                        << "Z";
+    m_pcKeyValue[KEY_BACKQUOTE] << "`"
+                                << "~"; // 反引号
+    m_pcKeyValue[KEY_SUB] << "-"
+                          << "_"; // 减号
+    m_pcKeyValue[KEY_EQUAL] << "="
+                            << "+"; // 等号
+    m_pcKeyValue[KEY_LEFT_BRACKET] << "["
+                                   << "{"; // 左中括号
+    m_pcKeyValue[KEY_RIGHT_BRACKET] << "]"
+                                    << "}"; // 右中括号
+    m_pcKeyValue[KEY_BACKSLASH] << "\\"
+                                << "|"; // 反斜杠
+    m_pcKeyValue[KEY_SEMICOLON] << ";"
+                                << ":"; // 分号
+    m_pcKeyValue[KEY_QUOTE] << "'"
+                            << "\""; // 引号
+    m_pcKeyValue[KEY_COMMA] << ","
+                            << "<"; // 逗号
+    m_pcKeyValue[KEY_PERIOD] << "."
+                             << ">"; // 句号
+    m_pcKeyValue[KEY_SLASH] << "/"
+                            << "?"; // 斜杠
 
     /********************************* 希腊字母　*********************************/
     m_greekKeyValue.resize(KEY_SYMBOL_NUM);
-    m_greekKeyValue[KEY_0] << "" << "";
-    m_greekKeyValue[KEY_1] << "" << "";
-    m_greekKeyValue[KEY_2] << "" << "";
-    m_greekKeyValue[KEY_3] << "" << "";
-    m_greekKeyValue[KEY_4] << "" << "";
-    m_greekKeyValue[KEY_5] << "" << "";
-    m_greekKeyValue[KEY_6] << "" << "";
-    m_greekKeyValue[KEY_7] << "" << "";
-    m_greekKeyValue[KEY_8] << "" << "";
-    m_greekKeyValue[KEY_9] << "" << "";
-    m_greekKeyValue[KEY_A] << "κ" << "Κ";
-    m_greekKeyValue[KEY_B] << "χ" << "Χ";
-    m_greekKeyValue[KEY_C] << "υ" << "Υ";
-    m_greekKeyValue[KEY_D] << "μ" << "Μ";
-    m_greekKeyValue[KEY_E] << "γ" << "Γ";
-    m_greekKeyValue[KEY_F] << "ν" << "Ν";
-    m_greekKeyValue[KEY_G] << "ξ" << "Ξ";
-    m_greekKeyValue[KEY_H] << "ο" << "Ο";
-    m_greekKeyValue[KEY_I] << "θ" << "Θ";
-    m_greekKeyValue[KEY_J] << "π" << "Π";
-    m_greekKeyValue[KEY_K] << "ρ" << "Ρ";
-    m_greekKeyValue[KEY_L] << "" << "";
-    m_greekKeyValue[KEY_M] << "ω" << "Ω";
-    m_greekKeyValue[KEY_N] << "ψ" << "Ψ";
-    m_greekKeyValue[KEY_O] << "ι" << "Ι";
-    m_greekKeyValue[KEY_P] << "" << "";
-    m_greekKeyValue[KEY_Q] << "α" << "Α";
-    m_greekKeyValue[KEY_R] << "δ" << "Δ";
-    m_greekKeyValue[KEY_S] << "λ" << "Λ";
-    m_greekKeyValue[KEY_T] << "ε" << "Ε";
-    m_greekKeyValue[KEY_U] << "η" << "Η";
-    m_greekKeyValue[KEY_V] << "φ" << "Φ";
-    m_greekKeyValue[KEY_W] << "β" << "Β";
-    m_greekKeyValue[KEY_X] << "τ" << "Τ";
-    m_greekKeyValue[KEY_Y] << "ζ" << "Ζ";
-    m_greekKeyValue[KEY_Z] << "σ" << "Σ";
-    m_greekKeyValue[KEY_BACKQUOTE] << "" << "";     // 反引号
-    m_greekKeyValue[KEY_SUB] << "" << "";           // 减号
-    m_greekKeyValue[KEY_EQUAL] << "" << "";         // 等号
-    m_greekKeyValue[KEY_LEFT_BRACKET] << "" << "";  // 左中括号
-    m_greekKeyValue[KEY_RIGHT_BRACKET] << "" << ""; // 右中括号
-    m_greekKeyValue[KEY_BACKSLASH] << "" << "";     // 反斜杠
-    m_greekKeyValue[KEY_SEMICOLON] << "" << "";     // 分号
-    m_greekKeyValue[KEY_QUOTE] << "" << "";         // 引号
-    m_greekKeyValue[KEY_COMMA] << "" << "";         // 逗号
-    m_greekKeyValue[KEY_PERIOD] << "" << "";        // 句号
-    m_greekKeyValue[KEY_SLASH] << "" << "";         // 斜杠
+    m_greekKeyValue[KEY_0] << ""
+                           << "";
+    m_greekKeyValue[KEY_1] << ""
+                           << "";
+    m_greekKeyValue[KEY_2] << ""
+                           << "";
+    m_greekKeyValue[KEY_3] << ""
+                           << "";
+    m_greekKeyValue[KEY_4] << ""
+                           << "";
+    m_greekKeyValue[KEY_5] << ""
+                           << "";
+    m_greekKeyValue[KEY_6] << ""
+                           << "";
+    m_greekKeyValue[KEY_7] << ""
+                           << "";
+    m_greekKeyValue[KEY_8] << ""
+                           << "";
+    m_greekKeyValue[KEY_9] << ""
+                           << "";
+    m_greekKeyValue[KEY_A] << "κ"
+                           << "Κ";
+    m_greekKeyValue[KEY_B] << "χ"
+                           << "Χ";
+    m_greekKeyValue[KEY_C] << "υ"
+                           << "Υ";
+    m_greekKeyValue[KEY_D] << "μ"
+                           << "Μ";
+    m_greekKeyValue[KEY_E] << "γ"
+                           << "Γ";
+    m_greekKeyValue[KEY_F] << "ν"
+                           << "Ν";
+    m_greekKeyValue[KEY_G] << "ξ"
+                           << "Ξ";
+    m_greekKeyValue[KEY_H] << "ο"
+                           << "Ο";
+    m_greekKeyValue[KEY_I] << "θ"
+                           << "Θ";
+    m_greekKeyValue[KEY_J] << "π"
+                           << "Π";
+    m_greekKeyValue[KEY_K] << "ρ"
+                           << "Ρ";
+    m_greekKeyValue[KEY_L] << ""
+                           << "";
+    m_greekKeyValue[KEY_M] << "ω"
+                           << "Ω";
+    m_greekKeyValue[KEY_N] << "ψ"
+                           << "Ψ";
+    m_greekKeyValue[KEY_O] << "ι"
+                           << "Ι";
+    m_greekKeyValue[KEY_P] << ""
+                           << "";
+    m_greekKeyValue[KEY_Q] << "α"
+                           << "Α";
+    m_greekKeyValue[KEY_R] << "δ"
+                           << "Δ";
+    m_greekKeyValue[KEY_S] << "λ"
+                           << "Λ";
+    m_greekKeyValue[KEY_T] << "ε"
+                           << "Ε";
+    m_greekKeyValue[KEY_U] << "η"
+                           << "Η";
+    m_greekKeyValue[KEY_V] << "φ"
+                           << "Φ";
+    m_greekKeyValue[KEY_W] << "β"
+                           << "Β";
+    m_greekKeyValue[KEY_X] << "τ"
+                           << "Τ";
+    m_greekKeyValue[KEY_Y] << "ζ"
+                           << "Ζ";
+    m_greekKeyValue[KEY_Z] << "σ"
+                           << "Σ";
+    m_greekKeyValue[KEY_BACKQUOTE] << ""
+                                   << ""; // 反引号
+    m_greekKeyValue[KEY_SUB] << ""
+                             << ""; // 减号
+    m_greekKeyValue[KEY_EQUAL] << ""
+                               << ""; // 等号
+    m_greekKeyValue[KEY_LEFT_BRACKET] << ""
+                                      << ""; // 左中括号
+    m_greekKeyValue[KEY_RIGHT_BRACKET] << ""
+                                       << ""; // 右中括号
+    m_greekKeyValue[KEY_BACKSLASH] << ""
+                                   << ""; // 反斜杠
+    m_greekKeyValue[KEY_SEMICOLON] << ""
+                                   << ""; // 分号
+    m_greekKeyValue[KEY_QUOTE] << ""
+                               << ""; // 引号
+    m_greekKeyValue[KEY_COMMA] << ""
+                               << ""; // 逗号
+    m_greekKeyValue[KEY_PERIOD] << ""
+                                << ""; // 句号
+    m_greekKeyValue[KEY_SLASH] << ""
+                               << ""; // 斜杠
 
     /********************************* 俄文字母　*********************************/
     m_russianKeyValue.resize(KEY_SYMBOL_NUM);
-    m_russianKeyValue[KEY_0] << "" << "";
-    m_russianKeyValue[KEY_1] << "" << "";
-    m_russianKeyValue[KEY_2] << "" << "";
-    m_russianKeyValue[KEY_3] << "" << "";
-    m_russianKeyValue[KEY_4] << "" << "";
-    m_russianKeyValue[KEY_5] << "" << "";
-    m_russianKeyValue[KEY_6] << "" << "";
-    m_russianKeyValue[KEY_7] << "" << "";
-    m_russianKeyValue[KEY_8] << "" << "";
-    m_russianKeyValue[KEY_9] << "" << "";
-    m_russianKeyValue[KEY_A] << "л" << "Л";
-    m_russianKeyValue[KEY_B] << "ъ" << "Ъ";
-    m_russianKeyValue[KEY_C] << "ш" << "Ш";
-    m_russianKeyValue[KEY_D] << "н" << "Н";
-    m_russianKeyValue[KEY_E] << "в" << "В";
-    m_russianKeyValue[KEY_F] << "о" << "О";
-    m_russianKeyValue[KEY_G] << "п" << "П";
-    m_russianKeyValue[KEY_H] << "р" << "Р";
-    m_russianKeyValue[KEY_I] << "ж" << "Ж";
-    m_russianKeyValue[KEY_J] << "с" << "С";
-    m_russianKeyValue[KEY_K] << "т" << "Т";
-    m_russianKeyValue[KEY_L] << "у" << "У";
-    m_russianKeyValue[KEY_M] << "ь" << "Ь";
-    m_russianKeyValue[KEY_N] << "ы" << "Ы";
-    m_russianKeyValue[KEY_O] << "з" << "З";
-    m_russianKeyValue[KEY_P] << "и" << "И";
-    m_russianKeyValue[KEY_Q] << "а" << "А";
-    m_russianKeyValue[KEY_R] << "г" << "Г";
-    m_russianKeyValue[KEY_S] << "м" << "М";
-    m_russianKeyValue[KEY_T] << "д" << "Д";
-    m_russianKeyValue[KEY_U] << "ё" << "Ё";
-    m_russianKeyValue[KEY_V] << "щ" << "Щ";
-    m_russianKeyValue[KEY_W] << "б" << "Б";
-    m_russianKeyValue[KEY_X] << "ч" << "Ч";
-    m_russianKeyValue[KEY_Y] << "е" << "Е";
-    m_russianKeyValue[KEY_Z] << "ц" << "Ц";
-    m_russianKeyValue[KEY_BACKQUOTE] << "" << "";       // 反引号
-    m_russianKeyValue[KEY_SUB] << "" << "";             // 减号
-    m_russianKeyValue[KEY_EQUAL] << "" << "";           // 等号
-    m_russianKeyValue[KEY_LEFT_BRACKET] << "й" << "Й";  // 左中括号
-    m_russianKeyValue[KEY_RIGHT_BRACKET] << "к" << "К"; // 右中括号
-    m_russianKeyValue[KEY_BACKSLASH] << "" << "";       // 反斜杠
-    m_russianKeyValue[KEY_SEMICOLON] << "ф" << "Ф";     // 分号
-    m_russianKeyValue[KEY_QUOTE] << "х" << "Х";         // 引号
-    m_russianKeyValue[KEY_COMMA] << "э" << "Э";         // 逗号
-    m_russianKeyValue[KEY_PERIOD] << "ю" << "Ю";        // 句号
-    m_russianKeyValue[KEY_SLASH] << "я" << "Я";         // 斜杠
+    m_russianKeyValue[KEY_0] << ""
+                             << "";
+    m_russianKeyValue[KEY_1] << ""
+                             << "";
+    m_russianKeyValue[KEY_2] << ""
+                             << "";
+    m_russianKeyValue[KEY_3] << ""
+                             << "";
+    m_russianKeyValue[KEY_4] << ""
+                             << "";
+    m_russianKeyValue[KEY_5] << ""
+                             << "";
+    m_russianKeyValue[KEY_6] << ""
+                             << "";
+    m_russianKeyValue[KEY_7] << ""
+                             << "";
+    m_russianKeyValue[KEY_8] << ""
+                             << "";
+    m_russianKeyValue[KEY_9] << ""
+                             << "";
+    m_russianKeyValue[KEY_A] << "л"
+                             << "Л";
+    m_russianKeyValue[KEY_B] << "ъ"
+                             << "Ъ";
+    m_russianKeyValue[KEY_C] << "ш"
+                             << "Ш";
+    m_russianKeyValue[KEY_D] << "н"
+                             << "Н";
+    m_russianKeyValue[KEY_E] << "в"
+                             << "В";
+    m_russianKeyValue[KEY_F] << "о"
+                             << "О";
+    m_russianKeyValue[KEY_G] << "п"
+                             << "П";
+    m_russianKeyValue[KEY_H] << "р"
+                             << "Р";
+    m_russianKeyValue[KEY_I] << "ж"
+                             << "Ж";
+    m_russianKeyValue[KEY_J] << "с"
+                             << "С";
+    m_russianKeyValue[KEY_K] << "т"
+                             << "Т";
+    m_russianKeyValue[KEY_L] << "у"
+                             << "У";
+    m_russianKeyValue[KEY_M] << "ь"
+                             << "Ь";
+    m_russianKeyValue[KEY_N] << "ы"
+                             << "Ы";
+    m_russianKeyValue[KEY_O] << "з"
+                             << "З";
+    m_russianKeyValue[KEY_P] << "и"
+                             << "И";
+    m_russianKeyValue[KEY_Q] << "а"
+                             << "А";
+    m_russianKeyValue[KEY_R] << "г"
+                             << "Г";
+    m_russianKeyValue[KEY_S] << "м"
+                             << "М";
+    m_russianKeyValue[KEY_T] << "д"
+                             << "Д";
+    m_russianKeyValue[KEY_U] << "ё"
+                             << "Ё";
+    m_russianKeyValue[KEY_V] << "щ"
+                             << "Щ";
+    m_russianKeyValue[KEY_W] << "б"
+                             << "Б";
+    m_russianKeyValue[KEY_X] << "ч"
+                             << "Ч";
+    m_russianKeyValue[KEY_Y] << "е"
+                             << "Е";
+    m_russianKeyValue[KEY_Z] << "ц"
+                             << "Ц";
+    m_russianKeyValue[KEY_BACKQUOTE] << ""
+                                     << ""; // 反引号
+    m_russianKeyValue[KEY_SUB] << ""
+                               << ""; // 减号
+    m_russianKeyValue[KEY_EQUAL] << ""
+                                 << ""; // 等号
+    m_russianKeyValue[KEY_LEFT_BRACKET] << "й"
+                                        << "Й"; // 左中括号
+    m_russianKeyValue[KEY_RIGHT_BRACKET] << "к"
+                                         << "К"; // 右中括号
+    m_russianKeyValue[KEY_BACKSLASH] << ""
+                                     << ""; // 反斜杠
+    m_russianKeyValue[KEY_SEMICOLON] << "ф"
+                                     << "Ф"; // 分号
+    m_russianKeyValue[KEY_QUOTE] << "х"
+                                 << "Х"; // 引号
+    m_russianKeyValue[KEY_COMMA] << "э"
+                                 << "Э"; // 逗号
+    m_russianKeyValue[KEY_PERIOD] << "ю"
+                                  << "Ю"; // 句号
+    m_russianKeyValue[KEY_SLASH] << "я"
+                                 << "Я"; // 斜杠
 
     /********************************* 注音符号　*********************************/
     m_phoneticKeyValue.resize(KEY_SYMBOL_NUM);
-    m_phoneticKeyValue[KEY_0] << "ㄦ" << "";
-    m_phoneticKeyValue[KEY_1] << "ㄉ" << "";
-    m_phoneticKeyValue[KEY_2] << "" << "";
-    m_phoneticKeyValue[KEY_3] << "" << "";
-    m_phoneticKeyValue[KEY_4] << "ㄓ" << "";
-    m_phoneticKeyValue[KEY_5] << "" << "";
-    m_phoneticKeyValue[KEY_6] << "" << "";
-    m_phoneticKeyValue[KEY_7] << "ㄚ" << "";
-    m_phoneticKeyValue[KEY_8] << "ㄞ" << "";
-    m_phoneticKeyValue[KEY_9] << "ㄢ" << "";
-    m_phoneticKeyValue[KEY_A] << "ㄇ" << "";
-    m_phoneticKeyValue[KEY_B] << "ㄖ" << "";
-    m_phoneticKeyValue[KEY_C] << "ㄏ" << "";
-    m_phoneticKeyValue[KEY_D] << "ㄎ" << "";
-    m_phoneticKeyValue[KEY_E] << "ㄍ" << "";
-    m_phoneticKeyValue[KEY_F] << "ㄑ" << "";
-    m_phoneticKeyValue[KEY_G] << "ㄕ" << "";
-    m_phoneticKeyValue[KEY_H] << "ㄘ" << "";
-    m_phoneticKeyValue[KEY_I] << "ㄛ" << "";
-    m_phoneticKeyValue[KEY_J] << "ㄨ" << "";
-    m_phoneticKeyValue[KEY_K] << "ㄜ" << "";
-    m_phoneticKeyValue[KEY_L] << "ㄠ" << "";
-    m_phoneticKeyValue[KEY_M] << "ㄩ" << "";
-    m_phoneticKeyValue[KEY_N] << "ㄙ" << "";
-    m_phoneticKeyValue[KEY_O] << "ㄟ" << "";
-    m_phoneticKeyValue[KEY_P] << "ㄣ" << "";
-    m_phoneticKeyValue[KEY_Q] << "ㄆ" << "";
-    m_phoneticKeyValue[KEY_R] << "ㄐ" << "";
-    m_phoneticKeyValue[KEY_S] << "ㄋ" << "";
-    m_phoneticKeyValue[KEY_T] << "ㄔ" << "";
-    m_phoneticKeyValue[KEY_U] << "ㄧ" << "";
-    m_phoneticKeyValue[KEY_V] << "ㄒ" << "";
-    m_phoneticKeyValue[KEY_W] << "ㄊ" << "";
-    m_phoneticKeyValue[KEY_X] << "" << "";
-    m_phoneticKeyValue[KEY_Y] << "ㄗ" << "";
-    m_phoneticKeyValue[KEY_Z] << "ㄈ" << "";
-    m_phoneticKeyValue[KEY_BACKQUOTE] << "ㄅ" << "";   // 反引号
-    m_phoneticKeyValue[KEY_SUB] << "" << "";           // 减号
-    m_phoneticKeyValue[KEY_EQUAL] << "" << "";         // 等号
-    m_phoneticKeyValue[KEY_LEFT_BRACKET] << "" << "";  // 左中括号
-    m_phoneticKeyValue[KEY_RIGHT_BRACKET] << "" << ""; // 右中括号
-    m_phoneticKeyValue[KEY_BACKSLASH] << "" << "";     // 反斜杠
-    m_phoneticKeyValue[KEY_SEMICOLON] << "ㄤ" << "";   // 分号
-    m_phoneticKeyValue[KEY_QUOTE] << "" << "";         // 引号
-    m_phoneticKeyValue[KEY_COMMA] << "ㄝ" << "";       // 逗号
-    m_phoneticKeyValue[KEY_PERIOD] << "ㄡ" << "";      // 句号
-    m_phoneticKeyValue[KEY_SLASH] << "ㄥ" << "";       // 斜杠
+    m_phoneticKeyValue[KEY_0] << "ㄦ"
+                              << "";
+    m_phoneticKeyValue[KEY_1] << "ㄉ"
+                              << "";
+    m_phoneticKeyValue[KEY_2] << ""
+                              << "";
+    m_phoneticKeyValue[KEY_3] << ""
+                              << "";
+    m_phoneticKeyValue[KEY_4] << "ㄓ"
+                              << "";
+    m_phoneticKeyValue[KEY_5] << ""
+                              << "";
+    m_phoneticKeyValue[KEY_6] << ""
+                              << "";
+    m_phoneticKeyValue[KEY_7] << "ㄚ"
+                              << "";
+    m_phoneticKeyValue[KEY_8] << "ㄞ"
+                              << "";
+    m_phoneticKeyValue[KEY_9] << "ㄢ"
+                              << "";
+    m_phoneticKeyValue[KEY_A] << "ㄇ"
+                              << "";
+    m_phoneticKeyValue[KEY_B] << "ㄖ"
+                              << "";
+    m_phoneticKeyValue[KEY_C] << "ㄏ"
+                              << "";
+    m_phoneticKeyValue[KEY_D] << "ㄎ"
+                              << "";
+    m_phoneticKeyValue[KEY_E] << "ㄍ"
+                              << "";
+    m_phoneticKeyValue[KEY_F] << "ㄑ"
+                              << "";
+    m_phoneticKeyValue[KEY_G] << "ㄕ"
+                              << "";
+    m_phoneticKeyValue[KEY_H] << "ㄘ"
+                              << "";
+    m_phoneticKeyValue[KEY_I] << "ㄛ"
+                              << "";
+    m_phoneticKeyValue[KEY_J] << "ㄨ"
+                              << "";
+    m_phoneticKeyValue[KEY_K] << "ㄜ"
+                              << "";
+    m_phoneticKeyValue[KEY_L] << "ㄠ"
+                              << "";
+    m_phoneticKeyValue[KEY_M] << "ㄩ"
+                              << "";
+    m_phoneticKeyValue[KEY_N] << "ㄙ"
+                              << "";
+    m_phoneticKeyValue[KEY_O] << "ㄟ"
+                              << "";
+    m_phoneticKeyValue[KEY_P] << "ㄣ"
+                              << "";
+    m_phoneticKeyValue[KEY_Q] << "ㄆ"
+                              << "";
+    m_phoneticKeyValue[KEY_R] << "ㄐ"
+                              << "";
+    m_phoneticKeyValue[KEY_S] << "ㄋ"
+                              << "";
+    m_phoneticKeyValue[KEY_T] << "ㄔ"
+                              << "";
+    m_phoneticKeyValue[KEY_U] << "ㄧ"
+                              << "";
+    m_phoneticKeyValue[KEY_V] << "ㄒ"
+                              << "";
+    m_phoneticKeyValue[KEY_W] << "ㄊ"
+                              << "";
+    m_phoneticKeyValue[KEY_X] << ""
+                              << "";
+    m_phoneticKeyValue[KEY_Y] << "ㄗ"
+                              << "";
+    m_phoneticKeyValue[KEY_Z] << "ㄈ"
+                              << "";
+    m_phoneticKeyValue[KEY_BACKQUOTE] << "ㄅ"
+                                      << ""; // 反引号
+    m_phoneticKeyValue[KEY_SUB] << ""
+                                << ""; // 减号
+    m_phoneticKeyValue[KEY_EQUAL] << ""
+                                  << ""; // 等号
+    m_phoneticKeyValue[KEY_LEFT_BRACKET] << ""
+                                         << ""; // 左中括号
+    m_phoneticKeyValue[KEY_RIGHT_BRACKET] << ""
+                                          << ""; // 右中括号
+    m_phoneticKeyValue[KEY_BACKSLASH] << ""
+                                      << ""; // 反斜杠
+    m_phoneticKeyValue[KEY_SEMICOLON] << "ㄤ"
+                                      << ""; // 分号
+    m_phoneticKeyValue[KEY_QUOTE] << ""
+                                  << ""; // 引号
+    m_phoneticKeyValue[KEY_COMMA] << "ㄝ"
+                                  << ""; // 逗号
+    m_phoneticKeyValue[KEY_PERIOD] << "ㄡ"
+                                   << ""; // 句号
+    m_phoneticKeyValue[KEY_SLASH] << "ㄥ"
+                                  << ""; // 斜杠
 
     /********************************* 汉语拼音　*********************************/
     m_pinyinKeyValue.resize(KEY_SYMBOL_NUM);
-    m_pinyinKeyValue[KEY_0] << "" << "";
-    m_pinyinKeyValue[KEY_1] << "" << "";
-    m_pinyinKeyValue[KEY_2] << "" << "";
-    m_pinyinKeyValue[KEY_3] << "" << "";
-    m_pinyinKeyValue[KEY_4] << "" << "";
-    m_pinyinKeyValue[KEY_5] << "" << "";
-    m_pinyinKeyValue[KEY_6] << "" << "";
-    m_pinyinKeyValue[KEY_7] << "" << "";
-    m_pinyinKeyValue[KEY_8] << "" << "";
-    m_pinyinKeyValue[KEY_9] << "" << "";
-    m_pinyinKeyValue[KEY_A] << "ē" << "";
-    m_pinyinKeyValue[KEY_B] << "" << "";
-    m_pinyinKeyValue[KEY_C] << "ǔ" << "";
-    m_pinyinKeyValue[KEY_D] << "ě" << "";
-    m_pinyinKeyValue[KEY_E] << "ǎ" << "";
-    m_pinyinKeyValue[KEY_F] << "è" << "";
-    m_pinyinKeyValue[KEY_G] << "" << "";
-    m_pinyinKeyValue[KEY_H] << "ī" << "";
-    m_pinyinKeyValue[KEY_I] << "ǒ" << "";
-    m_pinyinKeyValue[KEY_J] << "í" << "";
-    m_pinyinKeyValue[KEY_K] << "ǐ" << "";
-    m_pinyinKeyValue[KEY_L] << "ì" << "";
-    m_pinyinKeyValue[KEY_M] << "ǘ" << "";
-    m_pinyinKeyValue[KEY_N] << "ǖ" << "";
-    m_pinyinKeyValue[KEY_O] << "ò" << "";
-    m_pinyinKeyValue[KEY_P] << "" << "";
-    m_pinyinKeyValue[KEY_Q] << "ā" << "";
-    m_pinyinKeyValue[KEY_R] << "à" << "";
-    m_pinyinKeyValue[KEY_S] << "é" << "";
-    m_pinyinKeyValue[KEY_T] << "" << "";
-    m_pinyinKeyValue[KEY_U] << "ó" << "";
-    m_pinyinKeyValue[KEY_V] << "ù" << "";
-    m_pinyinKeyValue[KEY_W] << "á" << "";
-    m_pinyinKeyValue[KEY_X] << "ú" << "";
-    m_pinyinKeyValue[KEY_Y] << "ō" << "";
-    m_pinyinKeyValue[KEY_Z] << "ū" << "";
-    m_pinyinKeyValue[KEY_BACKQUOTE] << "" << "";     // 反引号
-    m_pinyinKeyValue[KEY_SUB] << "" << "";           // 减号
-    m_pinyinKeyValue[KEY_EQUAL] << "" << "";         // 等号
-    m_pinyinKeyValue[KEY_LEFT_BRACKET] << "ê" << ""; // 左中括号
-    m_pinyinKeyValue[KEY_RIGHT_BRACKET] << "" << ""; // 右中括号
-    m_pinyinKeyValue[KEY_BACKSLASH] << "" << "";     // 反斜杠
-    m_pinyinKeyValue[KEY_SEMICOLON] << "" << "";     // 分号
-    m_pinyinKeyValue[KEY_QUOTE] << "" << "";         // 引号
-    m_pinyinKeyValue[KEY_COMMA] << "ǚ" << "";        // 逗号
-    m_pinyinKeyValue[KEY_PERIOD] << "ǜ" << "";       // 句号
-    m_pinyinKeyValue[KEY_SLASH] << "ü" << "";        // 斜杠
+    m_pinyinKeyValue[KEY_0] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_1] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_2] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_3] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_4] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_5] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_6] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_7] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_8] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_9] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_A] << "ē"
+                            << "";
+    m_pinyinKeyValue[KEY_B] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_C] << "ǔ"
+                            << "";
+    m_pinyinKeyValue[KEY_D] << "ě"
+                            << "";
+    m_pinyinKeyValue[KEY_E] << "ǎ"
+                            << "";
+    m_pinyinKeyValue[KEY_F] << "è"
+                            << "";
+    m_pinyinKeyValue[KEY_G] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_H] << "ī"
+                            << "";
+    m_pinyinKeyValue[KEY_I] << "ǒ"
+                            << "";
+    m_pinyinKeyValue[KEY_J] << "í"
+                            << "";
+    m_pinyinKeyValue[KEY_K] << "ǐ"
+                            << "";
+    m_pinyinKeyValue[KEY_L] << "ì"
+                            << "";
+    m_pinyinKeyValue[KEY_M] << "ǘ"
+                            << "";
+    m_pinyinKeyValue[KEY_N] << "ǖ"
+                            << "";
+    m_pinyinKeyValue[KEY_O] << "ò"
+                            << "";
+    m_pinyinKeyValue[KEY_P] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_Q] << "ā"
+                            << "";
+    m_pinyinKeyValue[KEY_R] << "à"
+                            << "";
+    m_pinyinKeyValue[KEY_S] << "é"
+                            << "";
+    m_pinyinKeyValue[KEY_T] << ""
+                            << "";
+    m_pinyinKeyValue[KEY_U] << "ó"
+                            << "";
+    m_pinyinKeyValue[KEY_V] << "ù"
+                            << "";
+    m_pinyinKeyValue[KEY_W] << "á"
+                            << "";
+    m_pinyinKeyValue[KEY_X] << "ú"
+                            << "";
+    m_pinyinKeyValue[KEY_Y] << "ō"
+                            << "";
+    m_pinyinKeyValue[KEY_Z] << "ū"
+                            << "";
+    m_pinyinKeyValue[KEY_BACKQUOTE] << ""
+                                    << ""; // 反引号
+    m_pinyinKeyValue[KEY_SUB] << ""
+                              << ""; // 减号
+    m_pinyinKeyValue[KEY_EQUAL] << ""
+                                << ""; // 等号
+    m_pinyinKeyValue[KEY_LEFT_BRACKET] << "ê"
+                                       << ""; // 左中括号
+    m_pinyinKeyValue[KEY_RIGHT_BRACKET] << ""
+                                        << ""; // 右中括号
+    m_pinyinKeyValue[KEY_BACKSLASH] << ""
+                                    << ""; // 反斜杠
+    m_pinyinKeyValue[KEY_SEMICOLON] << ""
+                                    << ""; // 分号
+    m_pinyinKeyValue[KEY_QUOTE] << ""
+                                << ""; // 引号
+    m_pinyinKeyValue[KEY_COMMA] << "ǚ"
+                                << ""; // 逗号
+    m_pinyinKeyValue[KEY_PERIOD] << "ǜ"
+                                 << ""; // 句号
+    m_pinyinKeyValue[KEY_SLASH] << "ü"
+                                << ""; // 斜杠
 
     /********************************* 日文平假　*********************************/
     m_japanFlatKeyValue.resize(KEY_SYMBOL_NUM);
-    m_japanFlatKeyValue[KEY_0] << "" << "";
-    m_japanFlatKeyValue[KEY_1] << "ぃ" << "い";
-    m_japanFlatKeyValue[KEY_2] << "ぅ" << "う";
-    m_japanFlatKeyValue[KEY_3] << "ぇ" << "え";
-    m_japanFlatKeyValue[KEY_4] << "ぉ" << "お";
-    m_japanFlatKeyValue[KEY_5] << "か" << "が";
-    m_japanFlatKeyValue[KEY_6] << "き" << "ぎ";
-    m_japanFlatKeyValue[KEY_7] << "く" << "ぐ";
-    m_japanFlatKeyValue[KEY_8] << "け" << "げ";
-    m_japanFlatKeyValue[KEY_9] << "こ" << "ご";
-    m_japanFlatKeyValue[KEY_A] << "な" << "ぱ";
-    m_japanFlatKeyValue[KEY_B] << "も" << "ろ";
-    m_japanFlatKeyValue[KEY_C] << "む" << "る";
-    m_japanFlatKeyValue[KEY_D] << "ぬ" << "ぷ";
-    m_japanFlatKeyValue[KEY_E] << "す" << "ず";
-    m_japanFlatKeyValue[KEY_F] << "ね" << "ぺ";
-    m_japanFlatKeyValue[KEY_G] << "の" << "ぽ";
-    m_japanFlatKeyValue[KEY_H] << "は" << "ぼ";
-    m_japanFlatKeyValue[KEY_I] << "つ" << "づ";
-    m_japanFlatKeyValue[KEY_J] << "ひ" << "び";
-    m_japanFlatKeyValue[KEY_K] << "ふ" << "ぶ";
-    m_japanFlatKeyValue[KEY_L] << "へ" << "べ";
-    m_japanFlatKeyValue[KEY_M] << "ゅ" << "ゆ";
-    m_japanFlatKeyValue[KEY_N] << "ゃ" << "や";
-    m_japanFlatKeyValue[KEY_O] << "っ" << "";
-    m_japanFlatKeyValue[KEY_P] << "て" << "で";
-    m_japanFlatKeyValue[KEY_Q] << "さ" << "ざ";
-    m_japanFlatKeyValue[KEY_R] << "せ" << "ぜ";
-    m_japanFlatKeyValue[KEY_S] << "に" << "ぴ";
-    m_japanFlatKeyValue[KEY_T] << "そ" << "ぞ";
-    m_japanFlatKeyValue[KEY_U] << "ち" << "ぢ";
-    m_japanFlatKeyValue[KEY_V] << "め" << "れ";
-    m_japanFlatKeyValue[KEY_W] << "し" << "じ";
-    m_japanFlatKeyValue[KEY_X] << "み" << "り";
-    m_japanFlatKeyValue[KEY_Y] << "た" << "だ";
-    m_japanFlatKeyValue[KEY_Z] << "ま" << "ら";
-    m_japanFlatKeyValue[KEY_BACKQUOTE] << "ぁ" << "あ";    // 反引号
-    m_japanFlatKeyValue[KEY_SUB] << "ん" << "";            // 减号
-    m_japanFlatKeyValue[KEY_EQUAL] << "" << "";            // 等号
-    m_japanFlatKeyValue[KEY_LEFT_BRACKET] << "と" << "ど"; // 左中括号
-    m_japanFlatKeyValue[KEY_RIGHT_BRACKET] << "ゐ" << "";  // 右中括号
-    m_japanFlatKeyValue[KEY_BACKSLASH] << "" << "";        // 反斜杠
-    m_japanFlatKeyValue[KEY_SEMICOLON] << "ほ" << "ぼ";    // 分号
-    m_japanFlatKeyValue[KEY_QUOTE] << "ゑ" << "";          // 引号
-    m_japanFlatKeyValue[KEY_COMMA] << "ょ" << "よ";        // 逗号
-    m_japanFlatKeyValue[KEY_PERIOD] << "ゎ" << "わ";       // 句号
-    m_japanFlatKeyValue[KEY_SLASH] << "を" << "";          // 斜杠
+    m_japanFlatKeyValue[KEY_0] << ""
+                               << "";
+    m_japanFlatKeyValue[KEY_1] << "ぃ"
+                               << "い";
+    m_japanFlatKeyValue[KEY_2] << "ぅ"
+                               << "う";
+    m_japanFlatKeyValue[KEY_3] << "ぇ"
+                               << "え";
+    m_japanFlatKeyValue[KEY_4] << "ぉ"
+                               << "お";
+    m_japanFlatKeyValue[KEY_5] << "か"
+                               << "が";
+    m_japanFlatKeyValue[KEY_6] << "き"
+                               << "ぎ";
+    m_japanFlatKeyValue[KEY_7] << "く"
+                               << "ぐ";
+    m_japanFlatKeyValue[KEY_8] << "け"
+                               << "げ";
+    m_japanFlatKeyValue[KEY_9] << "こ"
+                               << "ご";
+    m_japanFlatKeyValue[KEY_A] << "な"
+                               << "ぱ";
+    m_japanFlatKeyValue[KEY_B] << "も"
+                               << "ろ";
+    m_japanFlatKeyValue[KEY_C] << "む"
+                               << "る";
+    m_japanFlatKeyValue[KEY_D] << "ぬ"
+                               << "ぷ";
+    m_japanFlatKeyValue[KEY_E] << "す"
+                               << "ず";
+    m_japanFlatKeyValue[KEY_F] << "ね"
+                               << "ぺ";
+    m_japanFlatKeyValue[KEY_G] << "の"
+                               << "ぽ";
+    m_japanFlatKeyValue[KEY_H] << "は"
+                               << "ぼ";
+    m_japanFlatKeyValue[KEY_I] << "つ"
+                               << "づ";
+    m_japanFlatKeyValue[KEY_J] << "ひ"
+                               << "び";
+    m_japanFlatKeyValue[KEY_K] << "ふ"
+                               << "ぶ";
+    m_japanFlatKeyValue[KEY_L] << "へ"
+                               << "べ";
+    m_japanFlatKeyValue[KEY_M] << "ゅ"
+                               << "ゆ";
+    m_japanFlatKeyValue[KEY_N] << "ゃ"
+                               << "や";
+    m_japanFlatKeyValue[KEY_O] << "っ"
+                               << "";
+    m_japanFlatKeyValue[KEY_P] << "て"
+                               << "で";
+    m_japanFlatKeyValue[KEY_Q] << "さ"
+                               << "ざ";
+    m_japanFlatKeyValue[KEY_R] << "せ"
+                               << "ぜ";
+    m_japanFlatKeyValue[KEY_S] << "に"
+                               << "ぴ";
+    m_japanFlatKeyValue[KEY_T] << "そ"
+                               << "ぞ";
+    m_japanFlatKeyValue[KEY_U] << "ち"
+                               << "ぢ";
+    m_japanFlatKeyValue[KEY_V] << "め"
+                               << "れ";
+    m_japanFlatKeyValue[KEY_W] << "し"
+                               << "じ";
+    m_japanFlatKeyValue[KEY_X] << "み"
+                               << "り";
+    m_japanFlatKeyValue[KEY_Y] << "た"
+                               << "だ";
+    m_japanFlatKeyValue[KEY_Z] << "ま"
+                               << "ら";
+    m_japanFlatKeyValue[KEY_BACKQUOTE] << "ぁ"
+                                       << "あ"; // 反引号
+    m_japanFlatKeyValue[KEY_SUB] << "ん"
+                                 << ""; // 减号
+    m_japanFlatKeyValue[KEY_EQUAL] << ""
+                                   << ""; // 等号
+    m_japanFlatKeyValue[KEY_LEFT_BRACKET] << "と"
+                                          << "ど"; // 左中括号
+    m_japanFlatKeyValue[KEY_RIGHT_BRACKET] << "ゐ"
+                                           << ""; // 右中括号
+    m_japanFlatKeyValue[KEY_BACKSLASH] << ""
+                                       << ""; // 反斜杠
+    m_japanFlatKeyValue[KEY_SEMICOLON] << "ほ"
+                                       << "ぼ"; // 分号
+    m_japanFlatKeyValue[KEY_QUOTE] << "ゑ"
+                                   << ""; // 引号
+    m_japanFlatKeyValue[KEY_COMMA] << "ょ"
+                                   << "よ"; // 逗号
+    m_japanFlatKeyValue[KEY_PERIOD] << "ゎ"
+                                    << "わ"; // 句号
+    m_japanFlatKeyValue[KEY_SLASH] << "を"
+                                   << ""; // 斜杠
 
     /********************************* 日文片假　*********************************/
     m_japanPieceKeyValue.resize(KEY_SYMBOL_NUM);
-    m_japanPieceKeyValue[KEY_0] << "ケ" << "ゲ";
-    m_japanPieceKeyValue[KEY_1] << "ィ" << "イ";
-    m_japanPieceKeyValue[KEY_2] << "ゥ" << "ウ";
-    m_japanPieceKeyValue[KEY_3] << "ヴ" << "";
-    m_japanPieceKeyValue[KEY_4] << "ェ" << "エ";
-    m_japanPieceKeyValue[KEY_5] << "ォ" << "オ";
-    m_japanPieceKeyValue[KEY_6] << "カ" << "ガ";
-    m_japanPieceKeyValue[KEY_7] << "ヵ" << "";
-    m_japanPieceKeyValue[KEY_8] << "キ" << "ギ";
-    m_japanPieceKeyValue[KEY_9] << "ク" << "グ";
-    m_japanPieceKeyValue[KEY_A] << "ナ" << "パ";
-    m_japanPieceKeyValue[KEY_B] << "モ" << "ロ";
-    m_japanPieceKeyValue[KEY_C] << "ム" << "ル";
-    m_japanPieceKeyValue[KEY_D] << "ヌ" << "プ";
-    m_japanPieceKeyValue[KEY_E] << "ス" << "ズ";
-    m_japanPieceKeyValue[KEY_F] << "ネ" << "ペ";
-    m_japanPieceKeyValue[KEY_G] << "ノ" << "ポ";
-    m_japanPieceKeyValue[KEY_H] << "ハ" << "バ";
-    m_japanPieceKeyValue[KEY_I] << "ツ" << "ヅ";
-    m_japanPieceKeyValue[KEY_J] << "ヒ" << "ビ";
-    m_japanPieceKeyValue[KEY_K] << "フ" << "ブ";
-    m_japanPieceKeyValue[KEY_L] << "ヘ" << "ベ";
-    m_japanPieceKeyValue[KEY_M] << "ュ" << "ユ";
-    m_japanPieceKeyValue[KEY_N] << "ャ" << "ヤ";
-    m_japanPieceKeyValue[KEY_O] << "ッ" << "";
-    m_japanPieceKeyValue[KEY_P] << "テ" << "デ";
-    m_japanPieceKeyValue[KEY_Q] << "サ" << "ザ";
-    m_japanPieceKeyValue[KEY_R] << "セ" << "ゼ";
-    m_japanPieceKeyValue[KEY_S] << "ニ" << "ピ";
-    m_japanPieceKeyValue[KEY_T] << "ソ" << "ゾ";
-    m_japanPieceKeyValue[KEY_U] << "チ" << "ヂ";
-    m_japanPieceKeyValue[KEY_V] << "メ" << "レ";
-    m_japanPieceKeyValue[KEY_W] << "シ" << "ジ";
-    m_japanPieceKeyValue[KEY_X] << "ミ" << "リ";
-    m_japanPieceKeyValue[KEY_Y] << "タ" << "ダ";
-    m_japanPieceKeyValue[KEY_Z] << "マ" << "ラ";
-    m_japanPieceKeyValue[KEY_BACKQUOTE] << "ァ" << "ア";    // 反引号
-    m_japanPieceKeyValue[KEY_SUB] << "ヶ" << "";            // 减号
-    m_japanPieceKeyValue[KEY_EQUAL] << "コ" << "ゴ";        // 等号
-    m_japanPieceKeyValue[KEY_LEFT_BRACKET] << "ト" << "ド"; // 左中括号
-    m_japanPieceKeyValue[KEY_RIGHT_BRACKET] << "ヰ" << "";  // 右中括号
-    m_japanPieceKeyValue[KEY_BACKSLASH] << "ン" << "";      // 反斜杠
-    m_japanPieceKeyValue[KEY_SEMICOLON] << "ホ" << "ボ";    // 分号
-    m_japanPieceKeyValue[KEY_QUOTE] << "ヱ" << "";          // 引号
-    m_japanPieceKeyValue[KEY_COMMA] << "ョ" << "ヨ";        // 逗号
-    m_japanPieceKeyValue[KEY_PERIOD] << "ヮ" << "ワ";       // 句号
-    m_japanPieceKeyValue[KEY_SLASH] << "ヲ" << "";          // 斜杠
+    m_japanPieceKeyValue[KEY_0] << "ケ"
+                                << "ゲ";
+    m_japanPieceKeyValue[KEY_1] << "ィ"
+                                << "イ";
+    m_japanPieceKeyValue[KEY_2] << "ゥ"
+                                << "ウ";
+    m_japanPieceKeyValue[KEY_3] << "ヴ"
+                                << "";
+    m_japanPieceKeyValue[KEY_4] << "ェ"
+                                << "エ";
+    m_japanPieceKeyValue[KEY_5] << "ォ"
+                                << "オ";
+    m_japanPieceKeyValue[KEY_6] << "カ"
+                                << "ガ";
+    m_japanPieceKeyValue[KEY_7] << "ヵ"
+                                << "";
+    m_japanPieceKeyValue[KEY_8] << "キ"
+                                << "ギ";
+    m_japanPieceKeyValue[KEY_9] << "ク"
+                                << "グ";
+    m_japanPieceKeyValue[KEY_A] << "ナ"
+                                << "パ";
+    m_japanPieceKeyValue[KEY_B] << "モ"
+                                << "ロ";
+    m_japanPieceKeyValue[KEY_C] << "ム"
+                                << "ル";
+    m_japanPieceKeyValue[KEY_D] << "ヌ"
+                                << "プ";
+    m_japanPieceKeyValue[KEY_E] << "ス"
+                                << "ズ";
+    m_japanPieceKeyValue[KEY_F] << "ネ"
+                                << "ペ";
+    m_japanPieceKeyValue[KEY_G] << "ノ"
+                                << "ポ";
+    m_japanPieceKeyValue[KEY_H] << "ハ"
+                                << "バ";
+    m_japanPieceKeyValue[KEY_I] << "ツ"
+                                << "ヅ";
+    m_japanPieceKeyValue[KEY_J] << "ヒ"
+                                << "ビ";
+    m_japanPieceKeyValue[KEY_K] << "フ"
+                                << "ブ";
+    m_japanPieceKeyValue[KEY_L] << "ヘ"
+                                << "ベ";
+    m_japanPieceKeyValue[KEY_M] << "ュ"
+                                << "ユ";
+    m_japanPieceKeyValue[KEY_N] << "ャ"
+                                << "ヤ";
+    m_japanPieceKeyValue[KEY_O] << "ッ"
+                                << "";
+    m_japanPieceKeyValue[KEY_P] << "テ"
+                                << "デ";
+    m_japanPieceKeyValue[KEY_Q] << "サ"
+                                << "ザ";
+    m_japanPieceKeyValue[KEY_R] << "セ"
+                                << "ゼ";
+    m_japanPieceKeyValue[KEY_S] << "ニ"
+                                << "ピ";
+    m_japanPieceKeyValue[KEY_T] << "ソ"
+                                << "ゾ";
+    m_japanPieceKeyValue[KEY_U] << "チ"
+                                << "ヂ";
+    m_japanPieceKeyValue[KEY_V] << "メ"
+                                << "レ";
+    m_japanPieceKeyValue[KEY_W] << "シ"
+                                << "ジ";
+    m_japanPieceKeyValue[KEY_X] << "ミ"
+                                << "リ";
+    m_japanPieceKeyValue[KEY_Y] << "タ"
+                                << "ダ";
+    m_japanPieceKeyValue[KEY_Z] << "マ"
+                                << "ラ";
+    m_japanPieceKeyValue[KEY_BACKQUOTE] << "ァ"
+                                        << "ア"; // 反引号
+    m_japanPieceKeyValue[KEY_SUB] << "ヶ"
+                                  << ""; // 减号
+    m_japanPieceKeyValue[KEY_EQUAL] << "コ"
+                                    << "ゴ"; // 等号
+    m_japanPieceKeyValue[KEY_LEFT_BRACKET] << "ト"
+                                           << "ド"; // 左中括号
+    m_japanPieceKeyValue[KEY_RIGHT_BRACKET] << "ヰ"
+                                            << ""; // 右中括号
+    m_japanPieceKeyValue[KEY_BACKSLASH] << "ン"
+                                        << ""; // 反斜杠
+    m_japanPieceKeyValue[KEY_SEMICOLON] << "ホ"
+                                        << "ボ"; // 分号
+    m_japanPieceKeyValue[KEY_QUOTE] << "ヱ"
+                                    << ""; // 引号
+    m_japanPieceKeyValue[KEY_COMMA] << "ョ"
+                                    << "ヨ"; // 逗号
+    m_japanPieceKeyValue[KEY_PERIOD] << "ヮ"
+                                     << "ワ"; // 句号
+    m_japanPieceKeyValue[KEY_SLASH] << "ヲ"
+                                    << ""; // 斜杠
 
     /********************************* 标点符号　*********************************/
     m_punctuationKeyValue.resize(KEY_SYMBOL_NUM);
-    m_punctuationKeyValue[KEY_0] << "ˉ" << "";
-    m_punctuationKeyValue[KEY_1] << "，" << "";
-    m_punctuationKeyValue[KEY_2] << "、" << "";
-    m_punctuationKeyValue[KEY_3] << ";" << "";
-    m_punctuationKeyValue[KEY_4] << "：" << "";
-    m_punctuationKeyValue[KEY_5] << "？" << "";
-    m_punctuationKeyValue[KEY_6] << "！" << "";
-    m_punctuationKeyValue[KEY_7] << "…" << "";
-    m_punctuationKeyValue[KEY_8] << "—" << "";
-    m_punctuationKeyValue[KEY_9] << "·" << "";
-    m_punctuationKeyValue[KEY_A] << "〔" << "";
-    m_punctuationKeyValue[KEY_B] << "（" << "";
-    m_punctuationKeyValue[KEY_C] << "【" << "";
-    m_punctuationKeyValue[KEY_D] << "〈" << "";
-    m_punctuationKeyValue[KEY_E] << "“" << "";
-    m_punctuationKeyValue[KEY_F] << "〉" << "";
-    m_punctuationKeyValue[KEY_G] << "《" << "";
-    m_punctuationKeyValue[KEY_H] << "》" << "";
-    m_punctuationKeyValue[KEY_I] << "∶" << "";
-    m_punctuationKeyValue[KEY_J] << "「" << "";
-    m_punctuationKeyValue[KEY_K] << "」" << "";
-    m_punctuationKeyValue[KEY_L] << "『" << "";
-    m_punctuationKeyValue[KEY_M] << "［" << "";
-    m_punctuationKeyValue[KEY_N] << "）" << "";
-    m_punctuationKeyValue[KEY_O] << "＂" << "";
-    m_punctuationKeyValue[KEY_P] << "＇" << "";
-    m_punctuationKeyValue[KEY_Q] << "‘" << "";
-    m_punctuationKeyValue[KEY_R] << "”" << "";
-    m_punctuationKeyValue[KEY_S] << "〕" << "";
-    m_punctuationKeyValue[KEY_T] << "々" << "";
-    m_punctuationKeyValue[KEY_U] << "‖" << "";
-    m_punctuationKeyValue[KEY_V] << "】" << "";
-    m_punctuationKeyValue[KEY_W] << "’" << "";
-    m_punctuationKeyValue[KEY_X] << "〗" << "";
-    m_punctuationKeyValue[KEY_Y] << "～" << "";
-    m_punctuationKeyValue[KEY_Z] << "〖" << "";
-    m_punctuationKeyValue[KEY_BACKQUOTE] << "。" << "";     // 反引号
-    m_punctuationKeyValue[KEY_SUB] << "ˇ" << "";            // 减号
-    m_punctuationKeyValue[KEY_EQUAL] << "¨" << "";          // 等号
-    m_punctuationKeyValue[KEY_LEFT_BRACKET] << "｀" << "";  // 左中括号
-    m_punctuationKeyValue[KEY_RIGHT_BRACKET] << "｜" << ""; // 右中括号
-    m_punctuationKeyValue[KEY_BACKSLASH] << "〃" << "";     // 反斜杠
-    m_punctuationKeyValue[KEY_SEMICOLON] << "』" << "";     // 分号
-    m_punctuationKeyValue[KEY_QUOTE] << "．" << "";         // 引号
-    m_punctuationKeyValue[KEY_COMMA] << "］" << "";         // 逗号
-    m_punctuationKeyValue[KEY_PERIOD] << "｛" << "";        // 句号
-    m_punctuationKeyValue[KEY_SLASH] << "｝" << "";         // 斜杠
+    m_punctuationKeyValue[KEY_0] << "ˉ"
+                                 << "";
+    m_punctuationKeyValue[KEY_1] << "，"
+                                 << "";
+    m_punctuationKeyValue[KEY_2] << "、"
+                                 << "";
+    m_punctuationKeyValue[KEY_3] << ";"
+                                 << "";
+    m_punctuationKeyValue[KEY_4] << "："
+                                 << "";
+    m_punctuationKeyValue[KEY_5] << "？"
+                                 << "";
+    m_punctuationKeyValue[KEY_6] << "！"
+                                 << "";
+    m_punctuationKeyValue[KEY_7] << "…"
+                                 << "";
+    m_punctuationKeyValue[KEY_8] << "—"
+                                 << "";
+    m_punctuationKeyValue[KEY_9] << "·"
+                                 << "";
+    m_punctuationKeyValue[KEY_A] << "〔"
+                                 << "";
+    m_punctuationKeyValue[KEY_B] << "（"
+                                 << "";
+    m_punctuationKeyValue[KEY_C] << "【"
+                                 << "";
+    m_punctuationKeyValue[KEY_D] << "〈"
+                                 << "";
+    m_punctuationKeyValue[KEY_E] << "“"
+                                 << "";
+    m_punctuationKeyValue[KEY_F] << "〉"
+                                 << "";
+    m_punctuationKeyValue[KEY_G] << "《"
+                                 << "";
+    m_punctuationKeyValue[KEY_H] << "》"
+                                 << "";
+    m_punctuationKeyValue[KEY_I] << "∶"
+                                 << "";
+    m_punctuationKeyValue[KEY_J] << "「"
+                                 << "";
+    m_punctuationKeyValue[KEY_K] << "」"
+                                 << "";
+    m_punctuationKeyValue[KEY_L] << "『"
+                                 << "";
+    m_punctuationKeyValue[KEY_M] << "［"
+                                 << "";
+    m_punctuationKeyValue[KEY_N] << "）"
+                                 << "";
+    m_punctuationKeyValue[KEY_O] << "＂"
+                                 << "";
+    m_punctuationKeyValue[KEY_P] << "＇"
+                                 << "";
+    m_punctuationKeyValue[KEY_Q] << "‘"
+                                 << "";
+    m_punctuationKeyValue[KEY_R] << "”"
+                                 << "";
+    m_punctuationKeyValue[KEY_S] << "〕"
+                                 << "";
+    m_punctuationKeyValue[KEY_T] << "々"
+                                 << "";
+    m_punctuationKeyValue[KEY_U] << "‖"
+                                 << "";
+    m_punctuationKeyValue[KEY_V] << "】"
+                                 << "";
+    m_punctuationKeyValue[KEY_W] << "’"
+                                 << "";
+    m_punctuationKeyValue[KEY_X] << "〗"
+                                 << "";
+    m_punctuationKeyValue[KEY_Y] << "～"
+                                 << "";
+    m_punctuationKeyValue[KEY_Z] << "〖"
+                                 << "";
+    m_punctuationKeyValue[KEY_BACKQUOTE] << "。"
+                                         << ""; // 反引号
+    m_punctuationKeyValue[KEY_SUB] << "ˇ"
+                                   << ""; // 减号
+    m_punctuationKeyValue[KEY_EQUAL] << "¨"
+                                     << ""; // 等号
+    m_punctuationKeyValue[KEY_LEFT_BRACKET] << "｀"
+                                            << ""; // 左中括号
+    m_punctuationKeyValue[KEY_RIGHT_BRACKET] << "｜"
+                                             << ""; // 右中括号
+    m_punctuationKeyValue[KEY_BACKSLASH] << "〃"
+                                         << ""; // 反斜杠
+    m_punctuationKeyValue[KEY_SEMICOLON] << "』"
+                                         << ""; // 分号
+    m_punctuationKeyValue[KEY_QUOTE] << "．"
+                                     << ""; // 引号
+    m_punctuationKeyValue[KEY_COMMA] << "］"
+                                     << ""; // 逗号
+    m_punctuationKeyValue[KEY_PERIOD] << "｛"
+                                      << ""; // 句号
+    m_punctuationKeyValue[KEY_SLASH] << "｝"
+                                     << ""; // 斜杠
 
     /********************************* 数字序号　*********************************/
     m_digitalOrderKeyValue.resize(KEY_SYMBOL_NUM);
-    m_digitalOrderKeyValue[KEY_0] << "Ⅺ" << "";
-    m_digitalOrderKeyValue[KEY_1] << "Ⅱ" << "";
-    m_digitalOrderKeyValue[KEY_2] << "Ⅲ" << "";
-    m_digitalOrderKeyValue[KEY_3] << "Ⅳ" << "";
-    m_digitalOrderKeyValue[KEY_4] << "Ⅴ" << "";
-    m_digitalOrderKeyValue[KEY_5] << "Ⅵ" << "";
-    m_digitalOrderKeyValue[KEY_6] << "Ⅶ" << "";
-    m_digitalOrderKeyValue[KEY_7] << "Ⅷ" << "";
-    m_digitalOrderKeyValue[KEY_8] << "Ⅸ" << "";
-    m_digitalOrderKeyValue[KEY_9] << "Ⅹ" << "";
-    m_digitalOrderKeyValue[KEY_A] << "㈠" << "①";
-    m_digitalOrderKeyValue[KEY_B] << "⑸" << "⒂";
-    m_digitalOrderKeyValue[KEY_C] << "⑶" << "⒀";
-    m_digitalOrderKeyValue[KEY_D] << "㈢" << "③";
-    m_digitalOrderKeyValue[KEY_E] << "⒊" << "⒔";
-    m_digitalOrderKeyValue[KEY_F] << "㈣" << "④";
-    m_digitalOrderKeyValue[KEY_G] << "㈤" << "⑤";
-    m_digitalOrderKeyValue[KEY_H] << "㈥" << "⑥";
-    m_digitalOrderKeyValue[KEY_I] << "⒏" << "⒙";
-    m_digitalOrderKeyValue[KEY_J] << "㈦" << "⑦";
-    m_digitalOrderKeyValue[KEY_K] << "㈧" << "⑧";
-    m_digitalOrderKeyValue[KEY_L] << "㈨" << "⑨";
-    m_digitalOrderKeyValue[KEY_M] << "⑺" << "⒄";
-    m_digitalOrderKeyValue[KEY_N] << "⑹" << "⒃";
-    m_digitalOrderKeyValue[KEY_O] << "⒐" << "⒚";
-    m_digitalOrderKeyValue[KEY_P] << "⒑" << "⒛";
-    m_digitalOrderKeyValue[KEY_Q] << "⒈" << "⒒";
-    m_digitalOrderKeyValue[KEY_R] << "⒋" << "⒕";
-    m_digitalOrderKeyValue[KEY_S] << "㈡" << "②";
-    m_digitalOrderKeyValue[KEY_T] << "⒌" << "⒖";
-    m_digitalOrderKeyValue[KEY_U] << "⒎" << "⒘";
-    m_digitalOrderKeyValue[KEY_V] << "⑷" << "⒁";
-    m_digitalOrderKeyValue[KEY_W] << "⒉" << "⒓";
-    m_digitalOrderKeyValue[KEY_X] << "⑵" << "⑿";
-    m_digitalOrderKeyValue[KEY_Y] << "⒍" << "⒗";
-    m_digitalOrderKeyValue[KEY_Z] << "⑴" << "⑾";
-    m_digitalOrderKeyValue[KEY_BACKQUOTE] << "Ⅰ" << "";    // 反引号
-    m_digitalOrderKeyValue[KEY_SUB] << "Ⅻ" << "";          // 减号
-    m_digitalOrderKeyValue[KEY_EQUAL] << "" << "";         // 等号
-    m_digitalOrderKeyValue[KEY_LEFT_BRACKET] << "" << "";  // 左中括号
-    m_digitalOrderKeyValue[KEY_RIGHT_BRACKET] << "" << ""; // 右中括号
-    m_digitalOrderKeyValue[KEY_BACKSLASH] << "" << "";     // 反斜杠
-    m_digitalOrderKeyValue[KEY_SEMICOLON] << "㈩" << "⑩";  // 分号
-    m_digitalOrderKeyValue[KEY_QUOTE] << "" << "";         // 引号
-    m_digitalOrderKeyValue[KEY_COMMA] << "⑻" << "⒅";       // 逗号
-    m_digitalOrderKeyValue[KEY_PERIOD] << "⑼" << "⒆";      // 句号
-    m_digitalOrderKeyValue[KEY_SLASH] << "⑽" << "⒇";       // 斜杠
+    m_digitalOrderKeyValue[KEY_0] << "Ⅺ"
+                                  << "";
+    m_digitalOrderKeyValue[KEY_1] << "Ⅱ"
+                                  << "";
+    m_digitalOrderKeyValue[KEY_2] << "Ⅲ"
+                                  << "";
+    m_digitalOrderKeyValue[KEY_3] << "Ⅳ"
+                                  << "";
+    m_digitalOrderKeyValue[KEY_4] << "Ⅴ"
+                                  << "";
+    m_digitalOrderKeyValue[KEY_5] << "Ⅵ"
+                                  << "";
+    m_digitalOrderKeyValue[KEY_6] << "Ⅶ"
+                                  << "";
+    m_digitalOrderKeyValue[KEY_7] << "Ⅷ"
+                                  << "";
+    m_digitalOrderKeyValue[KEY_8] << "Ⅸ"
+                                  << "";
+    m_digitalOrderKeyValue[KEY_9] << "Ⅹ"
+                                  << "";
+    m_digitalOrderKeyValue[KEY_A] << "㈠"
+                                  << "①";
+    m_digitalOrderKeyValue[KEY_B] << "⑸"
+                                  << "⒂";
+    m_digitalOrderKeyValue[KEY_C] << "⑶"
+                                  << "⒀";
+    m_digitalOrderKeyValue[KEY_D] << "㈢"
+                                  << "③";
+    m_digitalOrderKeyValue[KEY_E] << "⒊"
+                                  << "⒔";
+    m_digitalOrderKeyValue[KEY_F] << "㈣"
+                                  << "④";
+    m_digitalOrderKeyValue[KEY_G] << "㈤"
+                                  << "⑤";
+    m_digitalOrderKeyValue[KEY_H] << "㈥"
+                                  << "⑥";
+    m_digitalOrderKeyValue[KEY_I] << "⒏"
+                                  << "⒙";
+    m_digitalOrderKeyValue[KEY_J] << "㈦"
+                                  << "⑦";
+    m_digitalOrderKeyValue[KEY_K] << "㈧"
+                                  << "⑧";
+    m_digitalOrderKeyValue[KEY_L] << "㈨"
+                                  << "⑨";
+    m_digitalOrderKeyValue[KEY_M] << "⑺"
+                                  << "⒄";
+    m_digitalOrderKeyValue[KEY_N] << "⑹"
+                                  << "⒃";
+    m_digitalOrderKeyValue[KEY_O] << "⒐"
+                                  << "⒚";
+    m_digitalOrderKeyValue[KEY_P] << "⒑"
+                                  << "⒛";
+    m_digitalOrderKeyValue[KEY_Q] << "⒈"
+                                  << "⒒";
+    m_digitalOrderKeyValue[KEY_R] << "⒋"
+                                  << "⒕";
+    m_digitalOrderKeyValue[KEY_S] << "㈡"
+                                  << "②";
+    m_digitalOrderKeyValue[KEY_T] << "⒌"
+                                  << "⒖";
+    m_digitalOrderKeyValue[KEY_U] << "⒎"
+                                  << "⒘";
+    m_digitalOrderKeyValue[KEY_V] << "⑷"
+                                  << "⒁";
+    m_digitalOrderKeyValue[KEY_W] << "⒉"
+                                  << "⒓";
+    m_digitalOrderKeyValue[KEY_X] << "⑵"
+                                  << "⑿";
+    m_digitalOrderKeyValue[KEY_Y] << "⒍"
+                                  << "⒗";
+    m_digitalOrderKeyValue[KEY_Z] << "⑴"
+                                  << "⑾";
+    m_digitalOrderKeyValue[KEY_BACKQUOTE] << "Ⅰ"
+                                          << ""; // 反引号
+    m_digitalOrderKeyValue[KEY_SUB] << "Ⅻ"
+                                    << ""; // 减号
+    m_digitalOrderKeyValue[KEY_EQUAL] << ""
+                                      << ""; // 等号
+    m_digitalOrderKeyValue[KEY_LEFT_BRACKET] << ""
+                                             << ""; // 左中括号
+    m_digitalOrderKeyValue[KEY_RIGHT_BRACKET] << ""
+                                              << ""; // 右中括号
+    m_digitalOrderKeyValue[KEY_BACKSLASH] << ""
+                                          << ""; // 反斜杠
+    m_digitalOrderKeyValue[KEY_SEMICOLON] << "㈩"
+                                          << "⑩"; // 分号
+    m_digitalOrderKeyValue[KEY_QUOTE] << ""
+                                      << ""; // 引号
+    m_digitalOrderKeyValue[KEY_COMMA] << "⑻"
+                                      << "⒅"; // 逗号
+    m_digitalOrderKeyValue[KEY_PERIOD] << "⑼"
+                                       << "⒆"; // 句号
+    m_digitalOrderKeyValue[KEY_SLASH] << "⑽"
+                                      << "⒇"; // 斜杠
 
     /********************************* 数学符号　*********************************/
     m_mathKeyValue.resize(KEY_SYMBOL_NUM);
-    m_mathKeyValue[KEY_0] << "" << "";
-    m_mathKeyValue[KEY_1] << "≡" << "";
-    m_mathKeyValue[KEY_2] << "≠" << "";
-    m_mathKeyValue[KEY_3] << "＝" << "";
-    m_mathKeyValue[KEY_4] << "≤" << "";
-    m_mathKeyValue[KEY_5] << "≥" << "";
-    m_mathKeyValue[KEY_6] << "＜" << "";
-    m_mathKeyValue[KEY_7] << "＞" << "";
-    m_mathKeyValue[KEY_8] << "≮" << "";
-    m_mathKeyValue[KEY_9] << "≯" << "";
-    m_mathKeyValue[KEY_A] << "∧" << "";
-    m_mathKeyValue[KEY_B] << "⊙" << "";
-    m_mathKeyValue[KEY_C] << "∠" << "";
-    m_mathKeyValue[KEY_D] << "∑" << "";
-    m_mathKeyValue[KEY_E] << "－" << "";
-    m_mathKeyValue[KEY_F] << "∏" << "";
-    m_mathKeyValue[KEY_G] << "∪" << "";
-    m_mathKeyValue[KEY_H] << "∩" << "";
-    m_mathKeyValue[KEY_I] << "∫" << "";
-    m_mathKeyValue[KEY_J] << "∈" << "";
-    m_mathKeyValue[KEY_K] << "" << "";
-    m_mathKeyValue[KEY_L] << "∵" << "";
-    m_mathKeyValue[KEY_M] << "∽" << "";
-    m_mathKeyValue[KEY_N] << "≌" << "";
-    m_mathKeyValue[KEY_O] << "∮" << "";
-    m_mathKeyValue[KEY_P] << "∝" << "";
-    m_mathKeyValue[KEY_Q] << "±" << "";
-    m_mathKeyValue[KEY_R] << "×" << "";
-    m_mathKeyValue[KEY_S] << "∨" << "";
-    m_mathKeyValue[KEY_T] << "÷" << "";
-    m_mathKeyValue[KEY_U] << "" << "";
-    m_mathKeyValue[KEY_V] << "⌒" << "";
-    m_mathKeyValue[KEY_W] << "＋" << "";
-    m_mathKeyValue[KEY_X] << "∥" << "";
-    m_mathKeyValue[KEY_Y] << "／" << "";
-    m_mathKeyValue[KEY_Z] << "⊥" << "";
-    m_mathKeyValue[KEY_BACKQUOTE] << "≈" << "";    // 反引号
-    m_mathKeyValue[KEY_SUB] << "∷" << "";          // 减号
-    m_mathKeyValue[KEY_EQUAL] << "" << "";         // 等号
-    m_mathKeyValue[KEY_LEFT_BRACKET] << "∞" << ""; // 左中括号
-    m_mathKeyValue[KEY_RIGHT_BRACKET] << "" << ""; // 右中括号
-    m_mathKeyValue[KEY_BACKSLASH] << "" << "";     // 反斜杠
-    m_mathKeyValue[KEY_SEMICOLON] << "∴" << "";    // 分号
-    m_mathKeyValue[KEY_QUOTE] << "" << "";         // 引号
-    m_mathKeyValue[KEY_COMMA] << "" << "";         // 逗号
-    m_mathKeyValue[KEY_PERIOD] << "√" << "";       // 句号
-    m_mathKeyValue[KEY_SLASH] << "" << "";         // 斜杠
+    m_mathKeyValue[KEY_0] << ""
+                          << "";
+    m_mathKeyValue[KEY_1] << "≡"
+                          << "";
+    m_mathKeyValue[KEY_2] << "≠"
+                          << "";
+    m_mathKeyValue[KEY_3] << "＝"
+                          << "";
+    m_mathKeyValue[KEY_4] << "≤"
+                          << "";
+    m_mathKeyValue[KEY_5] << "≥"
+                          << "";
+    m_mathKeyValue[KEY_6] << "＜"
+                          << "";
+    m_mathKeyValue[KEY_7] << "＞"
+                          << "";
+    m_mathKeyValue[KEY_8] << "≮"
+                          << "";
+    m_mathKeyValue[KEY_9] << "≯"
+                          << "";
+    m_mathKeyValue[KEY_A] << "∧"
+                          << "";
+    m_mathKeyValue[KEY_B] << "⊙"
+                          << "";
+    m_mathKeyValue[KEY_C] << "∠"
+                          << "";
+    m_mathKeyValue[KEY_D] << "∑"
+                          << "";
+    m_mathKeyValue[KEY_E] << "－"
+                          << "";
+    m_mathKeyValue[KEY_F] << "∏"
+                          << "";
+    m_mathKeyValue[KEY_G] << "∪"
+                          << "";
+    m_mathKeyValue[KEY_H] << "∩"
+                          << "";
+    m_mathKeyValue[KEY_I] << "∫"
+                          << "";
+    m_mathKeyValue[KEY_J] << "∈"
+                          << "";
+    m_mathKeyValue[KEY_K] << ""
+                          << "";
+    m_mathKeyValue[KEY_L] << "∵"
+                          << "";
+    m_mathKeyValue[KEY_M] << "∽"
+                          << "";
+    m_mathKeyValue[KEY_N] << "≌"
+                          << "";
+    m_mathKeyValue[KEY_O] << "∮"
+                          << "";
+    m_mathKeyValue[KEY_P] << "∝"
+                          << "";
+    m_mathKeyValue[KEY_Q] << "±"
+                          << "";
+    m_mathKeyValue[KEY_R] << "×"
+                          << "";
+    m_mathKeyValue[KEY_S] << "∨"
+                          << "";
+    m_mathKeyValue[KEY_T] << "÷"
+                          << "";
+    m_mathKeyValue[KEY_U] << ""
+                          << "";
+    m_mathKeyValue[KEY_V] << "⌒"
+                          << "";
+    m_mathKeyValue[KEY_W] << "＋"
+                          << "";
+    m_mathKeyValue[KEY_X] << "∥"
+                          << "";
+    m_mathKeyValue[KEY_Y] << "／"
+                          << "";
+    m_mathKeyValue[KEY_Z] << "⊥"
+                          << "";
+    m_mathKeyValue[KEY_BACKQUOTE] << "≈"
+                                  << ""; // 反引号
+    m_mathKeyValue[KEY_SUB] << "∷"
+                            << ""; // 减号
+    m_mathKeyValue[KEY_EQUAL] << ""
+                              << ""; // 等号
+    m_mathKeyValue[KEY_LEFT_BRACKET] << "∞"
+                                     << ""; // 左中括号
+    m_mathKeyValue[KEY_RIGHT_BRACKET] << ""
+                                      << ""; // 右中括号
+    m_mathKeyValue[KEY_BACKSLASH] << ""
+                                  << ""; // 反斜杠
+    m_mathKeyValue[KEY_SEMICOLON] << "∴"
+                                  << ""; // 分号
+    m_mathKeyValue[KEY_QUOTE] << ""
+                              << ""; // 引号
+    m_mathKeyValue[KEY_COMMA] << ""
+                              << ""; // 逗号
+    m_mathKeyValue[KEY_PERIOD] << "√"
+                               << ""; // 句号
+    m_mathKeyValue[KEY_SLASH] << ""
+                              << ""; // 斜杠
 
     /********************************* 单位符号　*********************************/
     m_unitKeyValue.resize(KEY_SYMBOL_NUM);
-    m_unitKeyValue[KEY_0] << "¤" << "";
-    m_unitKeyValue[KEY_1] << "°" << "";
-    m_unitKeyValue[KEY_2] << "′" << "";
-    m_unitKeyValue[KEY_3] << "″" << "";
-    m_unitKeyValue[KEY_4] << "＄" << "";
-    m_unitKeyValue[KEY_5] << "￡" << "";
-    m_unitKeyValue[KEY_6] << "￥" << "";
-    m_unitKeyValue[KEY_7] << "‰" << "";
-    m_unitKeyValue[KEY_8] << "％" << "";
-    m_unitKeyValue[KEY_9] << "℃" << "";
-    m_unitKeyValue[KEY_A] << "百" << "佰";
-    m_unitKeyValue[KEY_B] << "" << "";
-    m_unitKeyValue[KEY_C] << "毫" << "";
-    m_unitKeyValue[KEY_D] << "万" << "";
-    m_unitKeyValue[KEY_E] << "二" << "贰";
-    m_unitKeyValue[KEY_F] << "亿" << "";
-    m_unitKeyValue[KEY_G] << "兆" << "";
-    m_unitKeyValue[KEY_H] << "吉" << "";
-    m_unitKeyValue[KEY_I] << "七" << "柒";
-    m_unitKeyValue[KEY_J] << "太" << "";
-    m_unitKeyValue[KEY_K] << "拍" << "";
-    m_unitKeyValue[KEY_L] << "艾" << "";
-    m_unitKeyValue[KEY_M] << "" << "";
-    m_unitKeyValue[KEY_N] << "" << "";
-    m_unitKeyValue[KEY_O] << "八" << "捌";
-    m_unitKeyValue[KEY_P] << "九" << "玖";
-    m_unitKeyValue[KEY_Q] << "○" << "零";
-    m_unitKeyValue[KEY_R] << "三" << "叁";
-    m_unitKeyValue[KEY_S] << "千" << "仟";
-    m_unitKeyValue[KEY_T] << "四" << "肆";
-    m_unitKeyValue[KEY_U] << "六" << "陆";
-    m_unitKeyValue[KEY_V] << "微" << "";
-    m_unitKeyValue[KEY_W] << "一" << "壹";
-    m_unitKeyValue[KEY_X] << "厘" << "";
-    m_unitKeyValue[KEY_Y] << "五" << "伍";
-    m_unitKeyValue[KEY_Z] << "分" << "";
-    m_unitKeyValue[KEY_BACKQUOTE] << "" << "";        // 反引号
-    m_unitKeyValue[KEY_SUB] << "￠" << "";            // 减号
-    m_unitKeyValue[KEY_EQUAL] << "" << "";            // 等号
-    m_unitKeyValue[KEY_LEFT_BRACKET] << "十" << "拾"; // 左中括号
-    m_unitKeyValue[KEY_RIGHT_BRACKET] << "" << "";    // 右中括号
-    m_unitKeyValue[KEY_BACKSLASH] << "" << "";        // 反斜杠
-    m_unitKeyValue[KEY_SEMICOLON] << "" << "";        // 分号
-    m_unitKeyValue[KEY_QUOTE] << "" << "";            // 引号
-    m_unitKeyValue[KEY_COMMA] << "" << "";            // 逗号
-    m_unitKeyValue[KEY_PERIOD] << "" << "";           // 句号
-    m_unitKeyValue[KEY_SLASH] << "" << "";            // 斜杠
+    m_unitKeyValue[KEY_0] << "¤"
+                          << "";
+    m_unitKeyValue[KEY_1] << "°"
+                          << "";
+    m_unitKeyValue[KEY_2] << "′"
+                          << "";
+    m_unitKeyValue[KEY_3] << "″"
+                          << "";
+    m_unitKeyValue[KEY_4] << "＄"
+                          << "";
+    m_unitKeyValue[KEY_5] << "￡"
+                          << "";
+    m_unitKeyValue[KEY_6] << "￥"
+                          << "";
+    m_unitKeyValue[KEY_7] << "‰"
+                          << "";
+    m_unitKeyValue[KEY_8] << "％"
+                          << "";
+    m_unitKeyValue[KEY_9] << "℃"
+                          << "";
+    m_unitKeyValue[KEY_A] << "百"
+                          << "佰";
+    m_unitKeyValue[KEY_B] << ""
+                          << "";
+    m_unitKeyValue[KEY_C] << "毫"
+                          << "";
+    m_unitKeyValue[KEY_D] << "万"
+                          << "";
+    m_unitKeyValue[KEY_E] << "二"
+                          << "贰";
+    m_unitKeyValue[KEY_F] << "亿"
+                          << "";
+    m_unitKeyValue[KEY_G] << "兆"
+                          << "";
+    m_unitKeyValue[KEY_H] << "吉"
+                          << "";
+    m_unitKeyValue[KEY_I] << "七"
+                          << "柒";
+    m_unitKeyValue[KEY_J] << "太"
+                          << "";
+    m_unitKeyValue[KEY_K] << "拍"
+                          << "";
+    m_unitKeyValue[KEY_L] << "艾"
+                          << "";
+    m_unitKeyValue[KEY_M] << ""
+                          << "";
+    m_unitKeyValue[KEY_N] << ""
+                          << "";
+    m_unitKeyValue[KEY_O] << "八"
+                          << "捌";
+    m_unitKeyValue[KEY_P] << "九"
+                          << "玖";
+    m_unitKeyValue[KEY_Q] << "○"
+                          << "零";
+    m_unitKeyValue[KEY_R] << "三"
+                          << "叁";
+    m_unitKeyValue[KEY_S] << "千"
+                          << "仟";
+    m_unitKeyValue[KEY_T] << "四"
+                          << "肆";
+    m_unitKeyValue[KEY_U] << "六"
+                          << "陆";
+    m_unitKeyValue[KEY_V] << "微"
+                          << "";
+    m_unitKeyValue[KEY_W] << "一"
+                          << "壹";
+    m_unitKeyValue[KEY_X] << "厘"
+                          << "";
+    m_unitKeyValue[KEY_Y] << "五"
+                          << "伍";
+    m_unitKeyValue[KEY_Z] << "分"
+                          << "";
+    m_unitKeyValue[KEY_BACKQUOTE] << ""
+                                  << ""; // 反引号
+    m_unitKeyValue[KEY_SUB] << "￠"
+                            << ""; // 减号
+    m_unitKeyValue[KEY_EQUAL] << ""
+                              << ""; // 等号
+    m_unitKeyValue[KEY_LEFT_BRACKET] << "十"
+                                     << "拾"; // 左中括号
+    m_unitKeyValue[KEY_RIGHT_BRACKET] << ""
+                                      << ""; // 右中括号
+    m_unitKeyValue[KEY_BACKSLASH] << ""
+                                  << ""; // 反斜杠
+    m_unitKeyValue[KEY_SEMICOLON] << ""
+                                  << ""; // 分号
+    m_unitKeyValue[KEY_QUOTE] << ""
+                              << ""; // 引号
+    m_unitKeyValue[KEY_COMMA] << ""
+                              << ""; // 逗号
+    m_unitKeyValue[KEY_PERIOD] << ""
+                               << ""; // 句号
+    m_unitKeyValue[KEY_SLASH] << ""
+                              << ""; // 斜杠
 
     /********************************* 制表符号　*********************************/
     m_tabsKeyValue.resize(KEY_SYMBOL_NUM);
-    m_tabsKeyValue[KEY_0] << "┄" << "┅";
-    m_tabsKeyValue[KEY_1] << "┍" << "┕";
-    m_tabsKeyValue[KEY_2] << "┎" << "┖";
-    m_tabsKeyValue[KEY_3] << "┏" << "┗";
-    m_tabsKeyValue[KEY_4] << "┐" << "┘";
-    m_tabsKeyValue[KEY_5] << "┑" << "┙";
-    m_tabsKeyValue[KEY_6] << "┒" << "┚";
-    m_tabsKeyValue[KEY_7] << "┓" << "┛";
-    m_tabsKeyValue[KEY_8] << "" << "";
-    m_tabsKeyValue[KEY_9] << "─" << "━";
-    m_tabsKeyValue[KEY_A] << "┬" << "┴";
-    m_tabsKeyValue[KEY_B] << "╀" << "╈";
-    m_tabsKeyValue[KEY_C] << "┾" << "╆";
-    m_tabsKeyValue[KEY_D] << "┮" << "┶";
-    m_tabsKeyValue[KEY_E] << "┞" << "┦";
-    m_tabsKeyValue[KEY_F] << "┯" << "┷";
-    m_tabsKeyValue[KEY_G] << "┰" << "┸";
-    m_tabsKeyValue[KEY_H] << "┱" << "┹";
-    m_tabsKeyValue[KEY_I] << "┣" << "┫";
-    m_tabsKeyValue[KEY_J] << "┲" << "┺";
-    m_tabsKeyValue[KEY_K] << "┳" << "┻";
-    m_tabsKeyValue[KEY_L] << "" << "";
-    m_tabsKeyValue[KEY_M] << "╂" << "╊";
-    m_tabsKeyValue[KEY_N] << "╁" << "╉";
-    m_tabsKeyValue[KEY_O] << "" << "";
-    m_tabsKeyValue[KEY_P] << "│" << "┃";
-    m_tabsKeyValue[KEY_Q] << "├" << "┤";
-    m_tabsKeyValue[KEY_R] << "┟" << "┧";
-    m_tabsKeyValue[KEY_S] << "┭" << "┵";
-    m_tabsKeyValue[KEY_T] << "┠" << "┨";
-    m_tabsKeyValue[KEY_U] << "┢" << "┪";
-    m_tabsKeyValue[KEY_V] << "┿" << "╇";
-    m_tabsKeyValue[KEY_W] << "┝" << "┥";
-    m_tabsKeyValue[KEY_X] << "┽" << "╅";
-    m_tabsKeyValue[KEY_Y] << "┡" << "┩";
-    m_tabsKeyValue[KEY_Z] << "┼" << "╄";
-    m_tabsKeyValue[KEY_BACKQUOTE] << "┌" << "└";     // 反引号
-    m_tabsKeyValue[KEY_SUB] << "┈" << "┉";           // 减号
-    m_tabsKeyValue[KEY_EQUAL] << "" << "";           // 等号
-    m_tabsKeyValue[KEY_LEFT_BRACKET] << "┆" << "┇";  // 左中括号
-    m_tabsKeyValue[KEY_RIGHT_BRACKET] << "┊" << "┋"; // 右中括号
-    m_tabsKeyValue[KEY_BACKSLASH] << "" << "";       // 反斜杠
-    m_tabsKeyValue[KEY_SEMICOLON] << "" << "";       // 分号
-    m_tabsKeyValue[KEY_QUOTE] << "╃" << "╋";         // 引号
-    m_tabsKeyValue[KEY_COMMA] << "" << "";           // 逗号
-    m_tabsKeyValue[KEY_PERIOD] << "" << "";          // 句号
-    m_tabsKeyValue[KEY_SLASH] << "" << "";           // 斜杠
+    m_tabsKeyValue[KEY_0] << "┄"
+                          << "┅";
+    m_tabsKeyValue[KEY_1] << "┍"
+                          << "┕";
+    m_tabsKeyValue[KEY_2] << "┎"
+                          << "┖";
+    m_tabsKeyValue[KEY_3] << "┏"
+                          << "┗";
+    m_tabsKeyValue[KEY_4] << "┐"
+                          << "┘";
+    m_tabsKeyValue[KEY_5] << "┑"
+                          << "┙";
+    m_tabsKeyValue[KEY_6] << "┒"
+                          << "┚";
+    m_tabsKeyValue[KEY_7] << "┓"
+                          << "┛";
+    m_tabsKeyValue[KEY_8] << ""
+                          << "";
+    m_tabsKeyValue[KEY_9] << "─"
+                          << "━";
+    m_tabsKeyValue[KEY_A] << "┬"
+                          << "┴";
+    m_tabsKeyValue[KEY_B] << "╀"
+                          << "╈";
+    m_tabsKeyValue[KEY_C] << "┾"
+                          << "╆";
+    m_tabsKeyValue[KEY_D] << "┮"
+                          << "┶";
+    m_tabsKeyValue[KEY_E] << "┞"
+                          << "┦";
+    m_tabsKeyValue[KEY_F] << "┯"
+                          << "┷";
+    m_tabsKeyValue[KEY_G] << "┰"
+                          << "┸";
+    m_tabsKeyValue[KEY_H] << "┱"
+                          << "┹";
+    m_tabsKeyValue[KEY_I] << "┣"
+                          << "┫";
+    m_tabsKeyValue[KEY_J] << "┲"
+                          << "┺";
+    m_tabsKeyValue[KEY_K] << "┳"
+                          << "┻";
+    m_tabsKeyValue[KEY_L] << ""
+                          << "";
+    m_tabsKeyValue[KEY_M] << "╂"
+                          << "╊";
+    m_tabsKeyValue[KEY_N] << "╁"
+                          << "╉";
+    m_tabsKeyValue[KEY_O] << ""
+                          << "";
+    m_tabsKeyValue[KEY_P] << "│"
+                          << "┃";
+    m_tabsKeyValue[KEY_Q] << "├"
+                          << "┤";
+    m_tabsKeyValue[KEY_R] << "┟"
+                          << "┧";
+    m_tabsKeyValue[KEY_S] << "┭"
+                          << "┵";
+    m_tabsKeyValue[KEY_T] << "┠"
+                          << "┨";
+    m_tabsKeyValue[KEY_U] << "┢"
+                          << "┪";
+    m_tabsKeyValue[KEY_V] << "┿"
+                          << "╇";
+    m_tabsKeyValue[KEY_W] << "┝"
+                          << "┥";
+    m_tabsKeyValue[KEY_X] << "┽"
+                          << "╅";
+    m_tabsKeyValue[KEY_Y] << "┡"
+                          << "┩";
+    m_tabsKeyValue[KEY_Z] << "┼"
+                          << "╄";
+    m_tabsKeyValue[KEY_BACKQUOTE] << "┌"
+                                  << "└"; // 反引号
+    m_tabsKeyValue[KEY_SUB] << "┈"
+                            << "┉"; // 减号
+    m_tabsKeyValue[KEY_EQUAL] << ""
+                              << ""; // 等号
+    m_tabsKeyValue[KEY_LEFT_BRACKET] << "┆"
+                                     << "┇"; // 左中括号
+    m_tabsKeyValue[KEY_RIGHT_BRACKET] << "┊"
+                                      << "┋"; // 右中括号
+    m_tabsKeyValue[KEY_BACKSLASH] << ""
+                                  << ""; // 反斜杠
+    m_tabsKeyValue[KEY_SEMICOLON] << ""
+                                  << ""; // 分号
+    m_tabsKeyValue[KEY_QUOTE] << "╃"
+                              << "╋"; // 引号
+    m_tabsKeyValue[KEY_COMMA] << ""
+                              << ""; // 逗号
+    m_tabsKeyValue[KEY_PERIOD] << ""
+                               << ""; // 句号
+    m_tabsKeyValue[KEY_SLASH] << ""
+                              << ""; // 斜杠
 
     /********************************* 特殊符号　*********************************/
     m_specialKeyValue.resize(KEY_SYMBOL_NUM);
-    m_specialKeyValue[KEY_0] << "" << "";
-    m_specialKeyValue[KEY_1] << "" << "";
-    m_specialKeyValue[KEY_2] << "" << "";
-    m_specialKeyValue[KEY_3] << "" << "";
-    m_specialKeyValue[KEY_4] << "" << "";
-    m_specialKeyValue[KEY_5] << "" << "";
-    m_specialKeyValue[KEY_6] << "" << "";
-    m_specialKeyValue[KEY_7] << "" << "";
-    m_specialKeyValue[KEY_8] << "" << "";
-    m_specialKeyValue[KEY_9] << "" << "";
-    m_specialKeyValue[KEY_A] << "■" << "";
-    m_specialKeyValue[KEY_B] << "＾" << "";
-    m_specialKeyValue[KEY_C] << "＠" << "";
-    m_specialKeyValue[KEY_D] << "▲" << "";
-    m_specialKeyValue[KEY_E] << "☆" << "";
-    m_specialKeyValue[KEY_F] << "※" << "";
-    m_specialKeyValue[KEY_G] << "→" << "";
-    m_specialKeyValue[KEY_H] << "←" << "";
-    m_specialKeyValue[KEY_I] << "◇" << "";
-    m_specialKeyValue[KEY_J] << "↑" << "";
-    m_specialKeyValue[KEY_K] << "↓" << "";
-    m_specialKeyValue[KEY_L] << "〓" << "";
-    m_specialKeyValue[KEY_M] << "￣" << "";
-    m_specialKeyValue[KEY_N] << "＿" << "";
-    m_specialKeyValue[KEY_O] << "◆" << "";
-    m_specialKeyValue[KEY_P] << "□" << "";
-    m_specialKeyValue[KEY_Q] << "§" << "";
-    m_specialKeyValue[KEY_R] << "★" << "";
-    m_specialKeyValue[KEY_S] << "△" << "";
-    m_specialKeyValue[KEY_T] << "○" << "";
-    m_specialKeyValue[KEY_U] << "◎" << "";
-    m_specialKeyValue[KEY_V] << "＼" << "";
-    m_specialKeyValue[KEY_W] << "№" << "";
-    m_specialKeyValue[KEY_X] << "＆" << "";
-    m_specialKeyValue[KEY_Y] << "●" << "";
-    m_specialKeyValue[KEY_Z] << "＃" << "";
-    m_specialKeyValue[KEY_BACKQUOTE] << "" << "";     // 反引号
-    m_specialKeyValue[KEY_SUB] << "" << "";           // 减号
-    m_specialKeyValue[KEY_EQUAL] << "" << "";         // 等号
-    m_specialKeyValue[KEY_LEFT_BRACKET] << "" << "";  // 左中括号
-    m_specialKeyValue[KEY_RIGHT_BRACKET] << "" << ""; // 右中括号
-    m_specialKeyValue[KEY_BACKSLASH] << "" << "";     // 反斜杠
-    m_specialKeyValue[KEY_SEMICOLON] << "" << "";     // 分号
-    m_specialKeyValue[KEY_QUOTE] << "" << "";         // 引号
-    m_specialKeyValue[KEY_COMMA] << "" << "";         // 逗号
-    m_specialKeyValue[KEY_PERIOD] << "" << "";        // 句号
-    m_specialKeyValue[KEY_SLASH] << "" << "";         // 斜杠
+    m_specialKeyValue[KEY_0] << ""
+                             << "";
+    m_specialKeyValue[KEY_1] << ""
+                             << "";
+    m_specialKeyValue[KEY_2] << ""
+                             << "";
+    m_specialKeyValue[KEY_3] << ""
+                             << "";
+    m_specialKeyValue[KEY_4] << ""
+                             << "";
+    m_specialKeyValue[KEY_5] << ""
+                             << "";
+    m_specialKeyValue[KEY_6] << ""
+                             << "";
+    m_specialKeyValue[KEY_7] << ""
+                             << "";
+    m_specialKeyValue[KEY_8] << ""
+                             << "";
+    m_specialKeyValue[KEY_9] << ""
+                             << "";
+    m_specialKeyValue[KEY_A] << "■"
+                             << "";
+    m_specialKeyValue[KEY_B] << "＾"
+                             << "";
+    m_specialKeyValue[KEY_C] << "＠"
+                             << "";
+    m_specialKeyValue[KEY_D] << "▲"
+                             << "";
+    m_specialKeyValue[KEY_E] << "☆"
+                             << "";
+    m_specialKeyValue[KEY_F] << "※"
+                             << "";
+    m_specialKeyValue[KEY_G] << "→"
+                             << "";
+    m_specialKeyValue[KEY_H] << "←"
+                             << "";
+    m_specialKeyValue[KEY_I] << "◇"
+                             << "";
+    m_specialKeyValue[KEY_J] << "↑"
+                             << "";
+    m_specialKeyValue[KEY_K] << "↓"
+                             << "";
+    m_specialKeyValue[KEY_L] << "〓"
+                             << "";
+    m_specialKeyValue[KEY_M] << "￣"
+                             << "";
+    m_specialKeyValue[KEY_N] << "＿"
+                             << "";
+    m_specialKeyValue[KEY_O] << "◆"
+                             << "";
+    m_specialKeyValue[KEY_P] << "□"
+                             << "";
+    m_specialKeyValue[KEY_Q] << "§"
+                             << "";
+    m_specialKeyValue[KEY_R] << "★"
+                             << "";
+    m_specialKeyValue[KEY_S] << "△"
+                             << "";
+    m_specialKeyValue[KEY_T] << "○"
+                             << "";
+    m_specialKeyValue[KEY_U] << "◎"
+                             << "";
+    m_specialKeyValue[KEY_V] << "＼"
+                             << "";
+    m_specialKeyValue[KEY_W] << "№"
+                             << "";
+    m_specialKeyValue[KEY_X] << "＆"
+                             << "";
+    m_specialKeyValue[KEY_Y] << "●"
+                             << "";
+    m_specialKeyValue[KEY_Z] << "＃"
+                             << "";
+    m_specialKeyValue[KEY_BACKQUOTE] << ""
+                                     << ""; // 反引号
+    m_specialKeyValue[KEY_SUB] << ""
+                               << ""; // 减号
+    m_specialKeyValue[KEY_EQUAL] << ""
+                                 << ""; // 等号
+    m_specialKeyValue[KEY_LEFT_BRACKET] << ""
+                                        << ""; // 左中括号
+    m_specialKeyValue[KEY_RIGHT_BRACKET] << ""
+                                         << ""; // 右中括号
+    m_specialKeyValue[KEY_BACKSLASH] << ""
+                                     << ""; // 反斜杠
+    m_specialKeyValue[KEY_SEMICOLON] << ""
+                                     << ""; // 分号
+    m_specialKeyValue[KEY_QUOTE] << ""
+                                 << ""; // 引号
+    m_specialKeyValue[KEY_COMMA] << ""
+                                 << ""; // 逗号
+    m_specialKeyValue[KEY_PERIOD] << ""
+                                  << ""; // 句号
+    m_specialKeyValue[KEY_SLASH] << ""
+                                 << ""; // 斜杠
 }
 
 // 设置键盘的工作模式

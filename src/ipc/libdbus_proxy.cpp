@@ -113,7 +113,7 @@ std::string LibDbusProxy::toolbarPayloadToPropertyLine(const ::freewb::ToolbarPr
     return "/Fcitx/im:" + p.uniqueName + ":" + p.name;
 }
 
-LibDbusProxy::LibDbusProxy(void *dbus_connection) : conn_(static_cast<DBusConnection *>(dbus_connection)) 
+LibDbusProxy::LibDbusProxy(void *dbus_connection) : conn_(static_cast<DBusConnection *>(dbus_connection))
 {
     FREEWB_DEBUG("LibDbusProxy: dbus_connection={}", static_cast<const void *>(conn_));
 }
@@ -188,17 +188,14 @@ void LibDbusProxy::callPanelUpdateCandidate(const ::freewb::CandidatePayload &pa
 {
     if (!conn_ || !available_)
     {
-        FREEWB_ERROR("callPanelUpdateCandidate skipped: conn={} available_={}", static_cast<const void *>(conn_),
-                     available_);
+        FREEWB_ERROR("callPanelUpdateCandidate skipped: conn={} available_={}", static_cast<const void *>(conn_), available_);
         return;
     }
-    FREEWB_DEBUG("callPanelUpdateCandidate: texts={} prompts={} hasPrev={} hasNext={} cursor={} layout={}",
-                 payload.texts.size(), payload.prompts.size(), payload.hasPrev, payload.hasNext, payload.cursor,
-                 static_cast<int>(payload.layout));
+    FREEWB_DEBUG("callPanelUpdateCandidate: texts={} prompts={} hasPrev={} hasNext={} cursor={} layout={}", payload.texts.size(),
+                 payload.prompts.size(), payload.hasPrev, payload.hasNext, payload.cursor, static_cast<int>(payload.layout));
 
-    DBusMessage *msg =
-        dbus_message_new_method_call(FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE,
-                                     "SetLookupTable");
+    DBusMessage *msg = dbus_message_new_method_call(FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH,
+                                                    FREEWUBI_PANEL_INTERFACE, "SetLookupTable");
     if (!msg)
     {
         FREEWB_ERROR("callPanelUpdateCandidate: new_method_call(SetLookupTable) failed");
@@ -488,8 +485,8 @@ void LibDbusProxy::callSettingsMethod(const char *member, const char *types, ...
 {
     if (!conn_ || !available_ || !member)
     {
-        FREEWB_WARN("callSettingsMethod skipped: conn={} available_={} member={}", static_cast<const void *>(conn_),
-                    available_, member ? member : "(null)");
+        FREEWB_WARN("callSettingsMethod skipped: conn={} available_={} member={}", static_cast<const void *>(conn_), available_,
+                    member ? member : "(null)");
         return;
     }
 
@@ -577,8 +574,7 @@ bool LibDbusProxy::registerPanelMatches()
     }
     DBusError err;
     dbus_error_init(&err);
-    dbus_bus_add_match(conn_,
-                       "type='signal',interface='" FREEWUBI_PANEL_INTERFACE "',path='" FREEWUBI_PANEL_OBJECTPATH "'",
+    dbus_bus_add_match(conn_, "type='signal',interface='" FREEWUBI_PANEL_INTERFACE "',path='" FREEWUBI_PANEL_OBJECTPATH "'",
                        &err);
     if (dbus_error_is_set(&err))
     {
@@ -600,8 +596,7 @@ void LibDbusProxy::clearMatches()
     dbus_connection_remove_filter(conn_, handlePanelSignal, this);
     DBusError err;
     dbus_error_init(&err);
-    dbus_bus_remove_match(conn_,
-                          "type='signal',interface='" FREEWUBI_PANEL_INTERFACE "',path='" FREEWUBI_PANEL_OBJECTPATH "'",
+    dbus_bus_remove_match(conn_, "type='signal',interface='" FREEWUBI_PANEL_INTERFACE "',path='" FREEWUBI_PANEL_OBJECTPATH "'",
                           &err);
     dbus_error_free(&err);
     filterAdded_ = false;

@@ -63,8 +63,8 @@ bool containsNoDollarPlaceholder(const std::string &s)
         if (j < s.size())
         {
             const char c = s[j];
-            if (c == 'Y' || c == 'y' || c == 'M' || c == 'm' || c == 'D' || c == 'd' || c == 'H' || c == 'h' ||
-                c == 'S' || c == 's' || c == 'W' || c == 'w')
+            if (c == 'Y' || c == 'y' || c == 'M' || c == 'm' || c == 'D' || c == 'd' || c == 'H' || c == 'h' || c == 'S' ||
+                c == 's' || c == 'W' || c == 'w')
             {
                 return false;
             }

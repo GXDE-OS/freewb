@@ -10,54 +10,54 @@
 #include "enginemanager.h"
 #include "freewb.h"
 #include "idbus.h"
-#include "special.h"
 #include "key.h"
 #include "log.h"
 #include "settings.h"
+#include "special.h"
 
 namespace freewb
 {
 
 /** 当前引擎是否在 state 的不感兴趣列表中。 */
-#define CHECK_ENGINE(manager, state)                                                                                       \
-    do                                                                                                                     \
-    {                                                                                                                      \
-        const Freewb *const _freewb = (manager).freewb_;                                                                   \
-        if (_freewb != nullptr && _freewb->engineManager() != nullptr)                                                     \
-        {                                                                                                                  \
-            const char *const _engine = _freewb->engineManager()->currentEngineName();                                     \
-            if (_engine != nullptr)                                                                                        \
-            {                                                                                                              \
-                const std::vector<std::string> _uninterested = (state).uninterestedEngines();                              \
-                if (std::find(_uninterested.begin(), _uninterested.end(), _engine) != _uninterested.end())                 \
-                {                                                                                                          \
-                    return false;                                                                                          \
-                }                                                                                                          \
-            }                                                                                                              \
-        }                                                                                                                  \
+#define CHECK_ENGINE(manager, state)                                                                                             \
+    do                                                                                                                           \
+    {                                                                                                                            \
+        const Freewb *const _freewb = (manager).freewb_;                                                                         \
+        if (_freewb != nullptr && _freewb->engineManager() != nullptr)                                                           \
+        {                                                                                                                        \
+            const char *const _engine = _freewb->engineManager()->currentEngineName();                                           \
+            if (_engine != nullptr)                                                                                              \
+            {                                                                                                                    \
+                const std::vector<std::string> _uninterested = (state).uninterestedEngines();                                    \
+                if (std::find(_uninterested.begin(), _uninterested.end(), _engine) != _uninterested.end())                       \
+                {                                                                                                                \
+                    return false;                                                                                                \
+                }                                                                                                                \
+            }                                                                                                                    \
+        }                                                                                                                        \
     } while (0)
 
 /** 无参 IDBus：X("dos.", callOpenConfDirMethod) */
-#define QUICK_COMMAND_CALL_DBUS_METHOD(X)                                                                                  \
-    X("dos.", callOpenConfDirMethod)                                                                                       \
-    X("tt.", callSwitchRecodeProofMethod)                                                                                  \
-    X("hh.", callSwitchToolbarHideFlgMethod)                                                                               \
-    X("mm.", callPanelSwitchCharSetMethod)                                                                                 \
-    X("oo.", callOpenUiSettingMethod)                                                                                      \
-    X("pp.", callOpenProfessionalSettingMethod)                                                                            \
-    X("vv.", callShowVersionInfoMethod)                                                                                    \
-    X("qq.", callModQuickTableMethod)                                                                                      \
-    X("uu.", callModUserTableMethod)                                                                                       \
-    X("uw.", callModWubiTableMethod)                                                                                       \
+#define QUICK_COMMAND_CALL_DBUS_METHOD(X)                                                                                        \
+    X("dos.", callOpenConfDirMethod)                                                                                             \
+    X("tt.", callSwitchRecodeProofMethod)                                                                                        \
+    X("hh.", callSwitchToolbarHideFlgMethod)                                                                                     \
+    X("mm.", callPanelSwitchCharSetMethod)                                                                                       \
+    X("oo.", callOpenUiSettingMethod)                                                                                            \
+    X("pp.", callOpenProfessionalSettingMethod)                                                                                  \
+    X("vv.", callShowVersionInfoMethod)                                                                                          \
+    X("qq.", callModQuickTableMethod)                                                                                            \
+    X("uu.", callModUserTableMethod)                                                                                             \
+    X("uw.", callModWubiTableMethod)                                                                                             \
     X("up.", callModPinyinTableMethod)
 
 /** 需传参 IDBus 方法的快捷命令：X("aa.", handleAddPhrase) */
-#define QUICK_COMMAND_HANDLE_CUSTOM(X)                                                                                   \
-    X("aa.", handleAddPhrase)                                                                                              \
-    X("dd.", handleDeletePhrase)                                                                                           \
-    X("ff.", handleDictQuery)                                                                                              \
-    X("jj.", handleToggleChttrans)                                                                                         \
-    X("ss.", handleSwitchUncommon)                                                                                         \
+#define QUICK_COMMAND_HANDLE_CUSTOM(X)                                                                                           \
+    X("aa.", handleAddPhrase)                                                                                                    \
+    X("dd.", handleDeletePhrase)                                                                                                 \
+    X("ff.", handleDictQuery)                                                                                                    \
+    X("jj.", handleToggleChttrans)                                                                                               \
+    X("ss.", handleSwitchUncommon)                                                                                               \
     X("kk.", handleSwitchVirtualKeyboard)
 
 namespace
@@ -83,9 +83,8 @@ std::string filterNonHanziContent(const std::string &text)
         {
             continue;
         }
-        const std::uint32_t cp =
-            (static_cast<std::uint32_t>(c0 & 0x0FU) << 12U) | (static_cast<std::uint32_t>(c1 & 0x3FU) << 6U) |
-            static_cast<std::uint32_t>(c2 & 0x3FU);
+        const std::uint32_t cp = (static_cast<std::uint32_t>(c0 & 0x0FU) << 12U) |
+                                 (static_cast<std::uint32_t>(c1 & 0x3FU) << 6U) | static_cast<std::uint32_t>(c2 & 0x3FU);
         if ((cp >= 0x4E00U && cp <= 0x9FFFU) || (cp >= 0x3400U && cp <= 0x4DBFU))
         {
             out.append(ch);
@@ -101,7 +100,9 @@ bool IdleState::processKey(FreewbKeySym /*keysym*/, FreewbKeyState /*state*/)
     return false;
 }
 
-void IdleState::cancel() {}
+void IdleState::cancel()
+{
+}
 
 const char *IdleState::name() const
 {
@@ -123,8 +124,7 @@ std::vector<std::string> IdleState::uninterestedEngines() const
     return {};
 }
 
-AddUserPhraseState::AddUserPhraseState(StateManager *manager, Freewb *freewb)
-    : manager_(manager), freewb_(freewb)
+AddUserPhraseState::AddUserPhraseState(StateManager *manager, Freewb *freewb) : manager_(manager), freewb_(freewb)
 {
 }
 
@@ -214,7 +214,7 @@ void AddUserPhraseState::refreshPhrase()
     wordCode_ = freewb_->engineManager()->calculateWubiPhraseCode(wordText_);
 }
 
-bool AddUserPhraseState::beginFromClipboard()   
+bool AddUserPhraseState::beginFromClipboard()
 {
     FREEWB_DEBUG("[{}] beginFromClipboard", name());
     fromClipboard_ = true;
@@ -326,8 +326,7 @@ std::vector<std::string> AddUserPhraseState::uninterestedEngines() const
     return {"engine:py", "engine:en"};
 }
 
-DeleteUserPhraseState::DeleteUserPhraseState(StateManager *manager, Freewb *freewb)
-    : manager_(manager), freewb_(freewb)
+DeleteUserPhraseState::DeleteUserPhraseState(StateManager *manager, Freewb *freewb) : manager_(manager), freewb_(freewb)
 {
 }
 
@@ -512,20 +511,19 @@ bool TempEnglishState::handleSwitchVirtualKeyboard()
 
 void TempEnglishState::registerQuickCommands()
 {
-#define QUICK_COMMAND_REGISTER_DBUS_METHOD(PATTERN, METHOD)                                                                 \
-    quickCommands_[PATTERN] = [freewb = freewb_, method = &ipc::IDBus::METHOD]()                                          \
-    {                                                                                                                     \
-        if (freewb != nullptr && freewb->dbusProxy() != nullptr)                                                          \
-        {                                                                                                                 \
-            (freewb->dbusProxy()->*method)();                                                                             \
-        }                                                                                                                 \
-        return true;                                                                                                      \
+#define QUICK_COMMAND_REGISTER_DBUS_METHOD(PATTERN, METHOD)                                                                      \
+    quickCommands_[PATTERN] = [freewb = freewb_, method = &ipc::IDBus::METHOD]()                                                 \
+    {                                                                                                                            \
+        if (freewb != nullptr && freewb->dbusProxy() != nullptr)                                                                 \
+        {                                                                                                                        \
+            (freewb->dbusProxy()->*method)();                                                                                    \
+        }                                                                                                                        \
+        return true;                                                                                                             \
     };
     QUICK_COMMAND_CALL_DBUS_METHOD(QUICK_COMMAND_REGISTER_DBUS_METHOD)
 #undef QUICK_COMMAND_REGISTER_DBUS_METHOD
 
-#define QUICK_COMMAND_REGISTER_CUSTOM(PATTERN, HANDLER)                                                                   \
-    quickCommands_[PATTERN] = [this]() { return HANDLER(); };
+#define QUICK_COMMAND_REGISTER_CUSTOM(PATTERN, HANDLER) quickCommands_[PATTERN] = [this]() { return HANDLER(); };
     QUICK_COMMAND_HANDLE_CUSTOM(QUICK_COMMAND_REGISTER_CUSTOM)
 #undef QUICK_COMMAND_REGISTER_CUSTOM
 }

@@ -4,11 +4,12 @@
 #include "candidatelist.h"
 #include "committer.h"
 #include "enginemanager.h"
+#include "idbus.h"
 #include "keysym.h"
 #include "log.h"
 #include "punc.h"
-#include "idbus.h"
 #include "types.h"
+
 namespace freewb
 {
 class Committer;

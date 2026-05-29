@@ -4,9 +4,8 @@
 #include <memory>
 #include <string>
 
-#include "opencc.h"
-
 #include "ifreewb.h"
+#include "opencc.h"
 
 namespace freewb
 {

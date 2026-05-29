@@ -472,9 +472,8 @@ void SettingWin::setUiTexts()
     ui->label_3->setText(_("Auto phrase options"));
     ui->labelOthers->setText(_("Other settings"));
     ui->label_4->setText(_("Auto-switch to English strings"));
-    ui->labelAutoEnPrompt->setText(
-        _("Freewb switches to English when you type these strings; Enter returns to Chinese.\n"
-          "Up to four characters, separated by spaces. Useful for browsing."));
+    ui->labelAutoEnPrompt->setText(_("Freewb switches to English when you type these strings; Enter returns to Chinese.\n"
+                                     "Up to four characters, separated by spaces. Useful for browsing."));
     ui->labelAutoMarkPrompt->setText(
         _("In Chinese mode, commas and periods after digits become half-width (useful for finance)."));
     ui->ckbAutoHalfMarkAfterNum->setText(_("Half-width punctuation after digits"));
@@ -572,63 +571,69 @@ void SettingWin::setUiTexts()
 
 void SettingWin::init_mouse_hover_tips()
 {
-    m_tooltipsWin.setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint |
-                                 Qt::X11BypassWindowManagerHint | Qt::WindowDoesNotAcceptFocus);
+    m_tooltipsWin.setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint |
+                                 Qt::WindowDoesNotAcceptFocus);
     m_tooltipsWin.setAttribute(Qt::WA_TranslucentBackground);
     m_tooltipsLabel = new QLabel(&m_tooltipsWin);
     m_tooltipsLabel->setStyleSheet(QSS_TOOL_TIPS);
 
-    ui->ckbCodeRemind->setToolTip(                         _("When you enter code 'a', besides the character for 'a', candidates starting with 'a' "
-                           "are also shown, e.g. entries like '式a 节b'."));
-    ui->ckbSpaceFullWhenCharHalf->setToolTip(                         _("When editing Word documents, paragraph indents of two Chinese characters can be entered "
-                           "conveniently with this option."));
-    ui->ckbWordThink->setToolTip(                         _("When enabled, after typing '中', related phrases such as '中国' and '中国共产党' are "
-                           "listed for selection."));
-    ui->ckbSmartMark->setToolTip(                         _("When enabled, paired punctuation can be entered with the opening mark; e.g. '(' outputs "
-                           "'()' and places the cursor inside. Press Enter to finish."));
-    ui->ckbRemindExistWord->setToolTip(                         _("When enabled, if a phrase exists in the lexicon but you type it character by character, "
-                           "you are prompted. If ignored repeatedly, the phrase may be hidden depending on Advanced "
-                           "settings."));
-    ui->ckbAlertWhenEmptyCode->setToolTip(                         _("When enabled, an alert sounds when the code is empty or has duplicate candidates."));
+    ui->ckbCodeRemind->setToolTip(_("When you enter code 'a', besides the character for 'a', candidates starting with 'a' "
+                                    "are also shown, e.g. entries like '式a 节b'."));
+    ui->ckbSpaceFullWhenCharHalf->setToolTip(
+        _("When editing Word documents, paragraph indents of two Chinese characters can be entered "
+          "conveniently with this option."));
+    ui->ckbWordThink->setToolTip(_("When enabled, after typing '中', related phrases such as '中国' and '中国共产党' are "
+                                   "listed for selection."));
+    ui->ckbSmartMark->setToolTip(_("When enabled, paired punctuation can be entered with the opening mark; e.g. '(' outputs "
+                                   "'()' and places the cursor inside. Press Enter to finish."));
+    ui->ckbRemindExistWord->setToolTip(
+        _("When enabled, if a phrase exists in the lexicon but you type it character by character, "
+          "you are prompted. If ignored repeatedly, the phrase may be hidden depending on Advanced "
+          "settings."));
+    ui->ckbAlertWhenEmptyCode->setToolTip(_("When enabled, an alert sounds when the code is empty or has duplicate candidates."));
     ui->ckbUseAudioFile->setToolTip(_("When enabled, alerts use sound files in the Freewb sound directory."));
-    ui->ckbAutoAdjustFreq->setToolTip(                         _("The selected duplicate candidate is moved to the first position.\nNote: single characters "
-                           "are not adjusted this way; use Ctrl+number instead."));
+    ui->ckbAutoAdjustFreq->setToolTip(
+        _("The selected duplicate candidate is moved to the first position.\nNote: single characters "
+          "are not adjusted this way; use Ctrl+number instead."));
 
-    ui->ckbShiftCommitChar->setToolTip(                         _("When enabled, Shift+letter outputs the letter directly; otherwise temporary English mode "
-                           "is used and Enter commits the text."));
+    ui->ckbShiftCommitChar->setToolTip(
+        _("When enabled, Shift+letter outputs the letter directly; otherwise temporary English mode "
+          "is used and Enter commits the text."));
     ui->ckbInputStatistic->setToolTip(_("When enabled, typing speed is tracked in real time."));
-    ui->ckbTypeEffect->setToolTip(                         _("Your computer behaves like a typewriter (useful for Wubi beginners)."));
-    ui->ckbRepeatCalib->setToolTip(                         _("When enabled, duplicate or empty codes output the first two candidates or codes for batch "
-                           "proofreading."));
-    ui->ckbAutoWordGroup->setToolTip(                         _("① Disable auto word grouping.\n② Discard on exit: type by character, then use as phrase until "
-                           "exit; not saved to user lexicon.\n③ Save to lexicon: same as ② but selected auto phrases "
-                           "are saved.\n\nNote: use Ctrl+number to select and save auto phrases in candidates."));
+    ui->ckbTypeEffect->setToolTip(_("Your computer behaves like a typewriter (useful for Wubi beginners)."));
+    ui->ckbRepeatCalib->setToolTip(_("When enabled, duplicate or empty codes output the first two candidates or codes for batch "
+                                     "proofreading."));
+    ui->ckbAutoWordGroup->setToolTip(
+        _("① Disable auto word grouping.\n② Discard on exit: type by character, then use as phrase until "
+          "exit; not saved to user lexicon.\n③ Save to lexicon: same as ② but selected auto phrases "
+          "are saved.\n\nNote: use Ctrl+number to select and save auto phrases in candidates."));
 
-    ui->ledtAutoToEnStr->setToolTip(                         _("When typing URLs such as 'www.freewb.org', entering 'www.' switches to English so browser "
-                           "autocomplete can be used."));
-    ui->ledtAutoToHalf->setToolTip(                         _("For numbers like '12,345.9', enter half-width ',.' here to input grouped numbers without "
-                           "wrong full-width punctuation."));
+    ui->ledtAutoToEnStr->setToolTip(_("When typing URLs such as 'www.freewb.org', entering 'www.' switches to English so browser "
+                                      "autocomplete can be used."));
+    ui->ledtAutoToHalf->setToolTip(_("For numbers like '12,345.9', enter half-width ',.' here to input grouped numbers without "
+                                     "wrong full-width punctuation."));
 
     ui->cmbSkinSelect->setToolTip(_("Shows installed skins; select one to change the appearance."));
-    ui->ckbAutoLocate->setToolTip(                         _("When enabled, the toolbar is placed at the top-right of the active window. Drag it "
-                           "elsewhere if you prefer another corner."));
+    ui->ckbAutoLocate->setToolTip(_("When enabled, the toolbar is placed at the top-right of the active window. Drag it "
+                                    "elsewhere if you prefer another corner."));
     ui->cmbWhenLossLocation->setToolTip(_("Opens a drop-down menu."));
-    ui->ckbAutoExtend->setToolTip(                         _("When enabled, hidden toolbar buttons expand on mouse hover and collapse when the pointer "
-                           "leaves."));
-    ui->ckbEnableUiAudioEffect->setToolTip(                         _("When enabled, toolbar and candidate window actions play sound effects."));
-    ui->ckbDispRealHelp->setToolTip(                         _("When enabled, brief help is shown when hovering toolbar buttons."));
+    ui->ckbAutoExtend->setToolTip(_("When enabled, hidden toolbar buttons expand on mouse hover and collapse when the pointer "
+                                    "leaves."));
+    ui->ckbEnableUiAudioEffect->setToolTip(_("When enabled, toolbar and candidate window actions play sound effects."));
+    ui->ckbDispRealHelp->setToolTip(_("When enabled, brief help is shown when hovering toolbar buttons."));
     ui->ckbHideToolbar->setToolTip(_("Hide the toolbar in games or fullscreen apps to reduce distraction."));
     ui->spbToolbarTransparency->setToolTip(_("Adjust toolbar transparency."));
 
-    ui->cmbCandiWinMode->setToolTip(                         _("Choose single-row, double-row, or multi-row candidate window layout."));
+    ui->cmbCandiWinMode->setToolTip(_("Choose single-row, double-row, or multi-row candidate window layout."));
     ui->ledtSeparateChar->setToolTip(_("Change the separator between index and candidate text."));
     ui->ckbUseGradientBgColor->setToolTip(_("Use a gradient background for the candidate window."));
     ui->ckbUseBgImage->setToolTip(_("Use an image as the candidate window background."));
-    ui->ckbUseTile->setToolTip(                         _("Tile the background image; otherwise stretch it to fill the window."));
+    ui->ckbUseTile->setToolTip(_("Tile the background image; otherwise stretch it to fill the window."));
     ui->spbCornerRadian->setToolTip(_("Set the corner radius of the candidate window."));
     ui->spbCandiTransparency->setToolTip(_("Set candidate window transparency."));
-    ui->spbCandiItemNum->setToolTip(                         _("Number of candidates shown; larger values mean fewer page turns (balance with appearance)."));
-    ui->spbCandiCharNum->setToolTip(                         _("Maximum characters per candidate; very small values show '...' for hidden text."));
+    ui->spbCandiItemNum->setToolTip(
+        _("Number of candidates shown; larger values mean fewer page turns (balance with appearance)."));
+    ui->spbCandiCharNum->setToolTip(_("Maximum characters per candidate; very small values show '...' for hidden text."));
 
     ui->btnCandiFont->setToolTip(_("Open font settings for candidate text."));
     ui->btnCandiBg->setToolTip(_("Set candidate window background color or image."));
@@ -638,32 +643,34 @@ void SettingWin::init_mouse_hover_tips()
     ui->btnCandiAutoWord->setToolTip(_("Set the color for auto-generated brief codes."));
     ui->btnCandiPrompt->setToolTip(_("Set the candidate window prompt text color."));
 
-    ui->ledt2ndRecode->setToolTip(                         _("Key to select the 2nd candidate, e.g. ',' for users who prefer comma."));
-    ui->ledt3rdRecode->setToolTip(                         _("Key to select the 3rd candidate, e.g. '.' for users who prefer period."));
-    ui->ckbCursorFollow->setToolTip(                         _("When enabled, the candidate window follows the caret; otherwise it stays at the bottom "
-                           "(or drag it anywhere)."));
-    ui->ckbDispOpPrompt->setToolTip(                         _("Show operation hints at the bottom of the multi-row candidate window, e.g. "
-                           "'Ctrl+= add word online'."));
-    ui->ckbShiftSelectRecode->setToolTip(                         _("When enabled, Left Shift selects the 2nd candidate and Right Shift the 3rd. Swap in Expert "
-                           "settings if needed."));
-    ui->ledtPrecPage->setToolTip(                         _("Previous page key, e.g. ',' if you prefer comma and period for paging."));
-    ui->ledtNextPage->setToolTip(                         _("Next page key, e.g. '.' if you prefer comma and period for paging."));
+    ui->ledt2ndRecode->setToolTip(_("Key to select the 2nd candidate, e.g. ',' for users who prefer comma."));
+    ui->ledt3rdRecode->setToolTip(_("Key to select the 3rd candidate, e.g. '.' for users who prefer period."));
+    ui->ckbCursorFollow->setToolTip(_("When enabled, the candidate window follows the caret; otherwise it stays at the bottom "
+                                      "(or drag it anywhere)."));
+    ui->ckbDispOpPrompt->setToolTip(_("Show operation hints at the bottom of the multi-row candidate window, e.g. "
+                                      "'Ctrl+= add word online'."));
+    ui->ckbShiftSelectRecode->setToolTip(
+        _("When enabled, Left Shift selects the 2nd candidate and Right Shift the 3rd. Swap in Expert "
+          "settings if needed."));
+    ui->ledtPrecPage->setToolTip(_("Previous page key, e.g. ',' if you prefer comma and period for paging."));
+    ui->ledtNextPage->setToolTip(_("Next page key, e.g. '.' if you prefer comma and period for paging."));
     ui->cmb23RecodeSelect->setToolTip(_("Keys for selecting 2nd and 3rd duplicate candidates."));
     ui->cmbPrevNextPage->setToolTip(_("Keys for candidate paging."));
     ui->ckbDispOpDict->setToolTip(_("Show dictionary lookup when hovering candidates."));
 
-    ui->cmbFunction->setToolTip(                         _("Select a Freewb function such as reverse lookup or online word creation."));
+    ui->cmbFunction->setToolTip(_("Select a Freewb function such as reverse lookup or online word creation."));
     ui->cmbShortcutKey->setToolTip(_("Shortcut for the function selected above."));
-    ui->ckbDisableAllShortcutKey->setToolTip(                         _("Disable all Freewb shortcuts to avoid conflicts with other applications."));
-    ui->ckbDisableFullHalfKey->setToolTip(                         _("Shift+Space is the default full/half width shortcut in Fcitx; enable this to disable it."));
-    ui->cmbTmpEnglish->setToolTip(                         _("For short English input (e.g. email), press this key then type English and press Enter to "
-                           "return to Chinese. Also used as a lead key for advanced features."));
-    ui->cmbShortcutInput->setToolTip(                         QString(_("Press this key, then a letter to output a predefined phrase.\nCustom rules: %1\n"
-                                   "(Right-click toolbar → Management tools → Edit shortcut table)."))
-                             .arg(INSTALL_DIR + "/data/quick_table.txt"));
-    ui->cmbTmpPinyin->setToolTip(                         _("When in Wubi mode, press this key for temporary Pinyin input of unknown characters, then "
-                           "return to Wubi. With code already typed, toggles rare-character mode."));
-    ui->cmbSwitchCnEn->setToolTip(                         _("Choose a key to switch Chinese/English without closing or switching the input method."));
+    ui->ckbDisableAllShortcutKey->setToolTip(_("Disable all Freewb shortcuts to avoid conflicts with other applications."));
+    ui->ckbDisableFullHalfKey->setToolTip(
+        _("Shift+Space is the default full/half width shortcut in Fcitx; enable this to disable it."));
+    ui->cmbTmpEnglish->setToolTip(_("For short English input (e.g. email), press this key then type English and press Enter to "
+                                    "return to Chinese. Also used as a lead key for advanced features."));
+    ui->cmbShortcutInput->setToolTip(QString(_("Press this key, then a letter to output a predefined phrase.\nCustom rules: %1\n"
+                                               "(Right-click toolbar → Management tools → Edit shortcut table)."))
+                                         .arg(INSTALL_DIR + "/data/quick_table.txt"));
+    ui->cmbTmpPinyin->setToolTip(_("When in Wubi mode, press this key for temporary Pinyin input of unknown characters, then "
+                                   "return to Wubi. With code already typed, toggles rare-character mode."));
+    ui->cmbSwitchCnEn->setToolTip(_("Choose a key to switch Chinese/English without closing or switching the input method."));
 }
 
 void SettingWin::show_mouse_hover_tips(QWidget *widget)

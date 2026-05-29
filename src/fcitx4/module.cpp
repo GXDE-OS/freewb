@@ -5,19 +5,19 @@
 #include <string>
 
 #include <dbus/dbus.h>
+#include <fcitx/context.h>
+#include <fcitx/hook.h>
 #include <fcitx/ime.h>
 #include <fcitx/instance.h>
-#include <fcitx/context.h>
-#include <fcitx/module.h>
-#include <fcitx/hook.h>
 #include <fcitx/keys.h>
+#include <fcitx/module.h>
 #include <fcitx/module/dbus/fcitx-dbus.h>
 
+#include "config.h"
 #include "freewb.h"
 #include "idbus.h"
 #include "libdbus_proxy.h"
 #include "types.h"
-#include "config.h"
 
 typedef struct
 {
@@ -39,10 +39,7 @@ static void updateCursorPosition(freewb_fcitx4_imclass *imclass);
 extern "C"
 {
 #endif
-    FCITX_DEFINE_PLUGIN(fcitx_freewb, ime, FcitxIMClass) = {
-        FreewbIMCreate,
-        FreewbIMDestroy
-    };
+    FCITX_DEFINE_PLUGIN(fcitx_freewb, ime, FcitxIMClass) = {FreewbIMCreate, FreewbIMDestroy};
 #ifdef __cplusplus
 }
 #endif
@@ -97,13 +94,13 @@ static void FreewbIMOnChanged(void *arg)
     {
         return;
     }
-    
+
     FcitxIM *im = FcitxInstanceGetCurrentIM(imclass->fcitxInstance_);
     if (im == nullptr)
     {
         return;
     }
-    
+
     const char *im_name = im->uniqueName;
     if (im_name == nullptr)
     {
@@ -112,7 +109,7 @@ static void FreewbIMOnChanged(void *arg)
 
     if (strncmp(im_name, "freewb", sizeof("freewb")) == 0)
     {
-        FcitxLog(INFO, "will activate freewb and show ui.");  
+        FcitxLog(INFO, "will activate freewb and show ui.");
         FREEWB_DEBUG("will activate freewb and show ui.");
         FcitxUISetStatusVisable(imclass->fcitxInstance_, _("settings"), true);
         imclass->freewb_->activate();
@@ -129,22 +126,23 @@ static void FreewbIMOnChanged(void *arg)
 void *FreewbIMCreate(FcitxInstance *instance)
 {
     DBusConnection *dbusConnection = FcitxDBusGetConnection(instance);
-    freewb_fcitx4_imclass *imclass =
-        static_cast<freewb_fcitx4_imclass *>(fcitx_utils_malloc0(sizeof(freewb_fcitx4_imclass)));
+    freewb_fcitx4_imclass *imclass = static_cast<freewb_fcitx4_imclass *>(fcitx_utils_malloc0(sizeof(freewb_fcitx4_imclass)));
     imclass->freewb_ = nullptr;
     imclass->fcitxInstance_ = instance;
 
     auto *idbus = new ::freewb::ipc::LibDbusProxy(dbusConnection);
-    imclass->freewb_ = new freewb::Freewb(idbus, [imclass](const std::string &text) {
-        FcitxInputContext *ic = FcitxInstanceGetCurrentIC(imclass->fcitxInstance_);
-        if (ic != nullptr)
-        {
-            FcitxInstanceCommitString(imclass->fcitxInstance_, ic, text.c_str());
-        }
-    });
+    imclass->freewb_ = new freewb::Freewb(idbus,
+                                          [imclass](const std::string &text)
+                                          {
+                                              FcitxInputContext *ic = FcitxInstanceGetCurrentIC(imclass->fcitxInstance_);
+                                              if (ic != nullptr)
+                                              {
+                                                  FcitxInstanceCommitString(imclass->fcitxInstance_, ic, text.c_str());
+                                              }
+                                          });
 
     FcitxIMEventHook imhook = {FreewbIMOnChanged, imclass};
-	FcitxInstanceRegisterIMChangedHook(instance, imhook);
+    FcitxInstanceRegisterIMChangedHook(instance, imhook);
 
     FcitxIMIFace iface;
     memset(&iface, 0, sizeof(FcitxIMIFace));
@@ -186,7 +184,7 @@ static void updateCursorPosition(freewb_fcitx4_imclass *imclass)
     FcitxInputContext *ic = FcitxInstanceGetCurrentIC(imclass->fcitxInstance_);
     if (ic == nullptr)
     {
-       return;
+        return;
     }
 
     FcitxInstanceGetWindowRect(imclass->fcitxInstance_, ic, &spotRect.x, &spotRect.y, &spotRect.w, &spotRect.h);

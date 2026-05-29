@@ -31,14 +31,22 @@ public:
     bool hasExactCode(const std::string &code) const;
     /** 是否与 appendCandidatesForPrefix 至少产出一条一致（非空 hz）；供引擎续码判断 */
     bool hasCandidateForPrefix(const std::string &prefix) const;
+
     /** 单字码表（code → 若干 hz）；供五笔引擎构建单字→首选码索引等。 */
     const std::unordered_map<std::string, std::vector<std::string>> &singleCharLexicon() const
     {
         return singleChardict_;
     }
 
-    const std::vector<EngineRuleBlock> &phraseEncodeRules() const { return rules_; }
-    uint32_t codeLength() const { return static_cast<uint32_t>(iCodeLength_); }
+    const std::vector<EngineRuleBlock> &phraseEncodeRules() const
+    {
+        return rules_;
+    }
+
+    uint32_t codeLength() const
+    {
+        return static_cast<uint32_t>(iCodeLength_);
+    }
 
 private:
     static void collectCandidateItemsForPrefix(const std::string &prefix,

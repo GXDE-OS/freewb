@@ -9,6 +9,7 @@
 #include "candidatelist.h"
 #include "log.h"
 #include "settings.h"
+
 namespace
 {
 
@@ -18,8 +19,7 @@ void setFromCommits(freewb::CandidateList &cl, std::vector<std::string> texts)
     cl.setCandidates(std::move(texts), std::move(attrs));
 }
 
-void pushRow(std::vector<std::string> &texts, std::vector<std::string> &attrs, std::string text,
-             std::string attr)
+void pushRow(std::vector<std::string> &texts, std::vector<std::string> &attrs, std::string text, std::string attr)
 {
     texts.push_back(std::move(text));
     attrs.push_back(std::move(attr));
