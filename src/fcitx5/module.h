@@ -11,6 +11,9 @@
 #include <fcitx/instance.h>
 
 #include "freewb.h"
+#if defined(__HAS_WAYLAND__)
+#include "ukuiwaylandhelper.h"
+#endif
 
 class FreewbIMModule final : public fcitx::InputMethodEngineV3
 {
@@ -33,6 +36,9 @@ private:
 private:
     fcitx::Instance *instance_;
     std::unique_ptr<freewb::Freewb> freewb_;
+#if defined(__HAS_WAYLAND__)
+    std::unique_ptr<freewb::UkuiWaylandHelper> ukuiWaylandHelper_ = nullptr;
+#endif
 };
 
 class FreewbIMModuleFactory : public fcitx::AddonFactory

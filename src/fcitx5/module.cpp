@@ -10,6 +10,9 @@ FreewbIMModule::FreewbIMModule(fcitx::Instance *instance) : instance_(instance)
     freewb_ = std::make_unique<freewb::Freewb>(dynamic_cast<freewb::ipc::IDBus *>(
                                                    new freewb::ipc::SDBusProxy(instance->eventLoop().nativeHandle())),
                                                [this](const std::string &text) { commitString(text); });
+#if defined(__HAS_WAYLAND__)
+    ukuiWaylandHelper_ = std::make_unique<freewb::UkuiWaylandHelper>();
+#endif
 }
 
 FreewbIMModule::~FreewbIMModule()
@@ -73,6 +76,11 @@ void FreewbIMModule::save()
 void FreewbIMModule::updateCursorPosition()
 {
     ::freewb::SpotRectPayload spotRect = {0, 0, 0, 0};
+    std::array<int32_t, 2> focusWindowPositionFromWlcom = {0, 0};
+    double maxScreenScaleFactorFromWlcom = 1.0;
+    double scaleFactorFromFcitx = 1.0;
+    std::string appDisplay;
+
     fcitx::InputContext *inputContext = instance_->lastFocusedInputContext();
     if (inputContext == nullptr)
     {
@@ -80,11 +88,38 @@ void FreewbIMModule::updateCursorPosition()
         return;
     }
 
-    fcitx::Rect rect = inputContext->cursorRect();
-    spotRect.x = rect.left();
-    spotRect.y = rect.top();
-    spotRect.w = rect.width();
-    spotRect.h = rect.height();
+    // get focus window position and scale factor from wayland wlcom
+#if defined(__HAS_WAYLAND__)
+    if (ukuiWaylandHelper_ != nullptr)
+    {
+        focusWindowPositionFromWlcom = ukuiWaylandHelper_->focusWindowPosition();
+        maxScreenScaleFactorFromWlcom = ukuiWaylandHelper_->maxScreenScaleFactor();
+    }
+#endif
+
+    // get cursor position from input method framework
+    fcitx::Rect rectFromFcitx = inputContext->cursorRect();
+    scaleFactorFromFcitx = inputContext->scaleFactor();
+    const bool appIsWaylandDisplay = (strncmp(inputContext->display().c_str(), "wayland", 7) == 0);
+
+    // calculate cursor position
+    if (appIsWaylandDisplay)
+    {
+        // app is running on wayland.
+        spotRect.x = focusWindowPositionFromWlcom[0] + rectFromFcitx.left() / scaleFactorFromFcitx;
+        spotRect.y = focusWindowPositionFromWlcom[1] + rectFromFcitx.top() / scaleFactorFromFcitx;
+        spotRect.w = rectFromFcitx.width() / scaleFactorFromFcitx;
+        spotRect.h = rectFromFcitx.height() / scaleFactorFromFcitx;
+    }
+    else if (!appIsWaylandDisplay)
+    {
+        // app is running on x11.
+        spotRect.x = rectFromFcitx.left();
+        spotRect.y = rectFromFcitx.top();
+        spotRect.w = rectFromFcitx.width();
+        spotRect.h = rectFromFcitx.height();
+    }
+
     freewb_->dbusProxy()->callPanelUpdateSpotRect(spotRect);
 }
 
