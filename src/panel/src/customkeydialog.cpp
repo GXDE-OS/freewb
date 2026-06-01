@@ -2,6 +2,7 @@
 
 #include "config.h"
 #include "ui_customkeydialog.h"
+#include "waylandwinhelper.h"
 
 CustomKeyDialog::CustomKeyDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CustomKeyDialog)
 {
@@ -16,6 +17,8 @@ CustomKeyDialog::CustomKeyDialog(QWidget *parent) : QDialog(parent), ui(new Ui::
     m_defaultPopPosition = QPoint((d->width() - size().width()) / 2, (d->height() - size().height()) / 2);
 
     installEventFilter(this);
+
+    freewb::applyWaylandOverlayWindowHints(this);
 }
 
 void CustomKeyDialog::setUiTexts()

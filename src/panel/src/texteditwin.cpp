@@ -5,6 +5,7 @@
 #include "settings.h"
 #include "settingshelper.h"
 #include "ui_texteditwin.h"
+#include "waylandwinhelper.h"
 
 #define WUBI_TABLE_FILE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/freeime.mb"
 #define PINYIN_TABLE_FILE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/attach.mb"
@@ -38,6 +39,9 @@ TextEditWin::TextEditWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::Text
     connect(m_textFindDialog, &TextFindDialog::signal_find_text, this, &TextEditWin::slot_find_text);
 
     init_quick_table_file();
+
+    freewb::applyWaylandOverlayWindowHints(this);
+    freewb::applyWaylandOverlayWindowHints(m_textFindDialog);
 }
 
 TextEditWin::~TextEditWin()

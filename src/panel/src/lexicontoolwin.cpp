@@ -5,6 +5,7 @@
 #include "settings.h"
 #include "settingshelper.h"
 #include "ui_lexicontoolwin.h"
+#include "waylandwinhelper.h"
 
 // 设置窗口样式表
 #define QSS_FILE ":/qss/lexiconwin.qss"
@@ -119,6 +120,9 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
     ui->btnMarkRareWord->hide();
     ui->btnMarkThinkWord->hide();
     ui->btnOptimize->hide();
+
+    freewb::applyWaylandOverlayWindowHints(this);
+    freewb::applyWaylandOverlayWindowHints(m_msgBox);
 }
 
 void LexiconToolWin::setUiTexts()

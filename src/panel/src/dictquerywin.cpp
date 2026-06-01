@@ -2,6 +2,7 @@
 
 #include "config.h"
 #include "ui_dictquerywin.h"
+#include "waylandwinhelper.h"
 
 DictQueryWin::DictQueryWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::DictQueryWin)
 {
@@ -41,6 +42,8 @@ DictQueryWin::DictQueryWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::Di
 
     // ui->textEditBase->setReadOnly( true );
     ui->ledtFind->installEventFilter(this);
+
+    freewb::applyWaylandOverlayWindowHints(this);
 }
 
 void DictQueryWin::setUiTexts()

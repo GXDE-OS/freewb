@@ -4,6 +4,7 @@
 #include "settings.h"
 #include "settingshelper.h"
 #include "ui_backupdialog.h"
+#include "waylandwinhelper.h"
 
 #define QSS_BORDER_ACTIVE "color: rgb(255, 255, 255);background-color: rgb(10, 120, 203);"
 #define QSS_BORDER_DEACTIVE "color: rgb(0, 0, 0);background-color: rgb(200, 200, 200);"
@@ -502,6 +503,8 @@ BackupDialog::BackupDialog(QDialog *parent) : QDialog(parent), ui(new Ui::Backup
     connect(m_backupWorker, &BackupWorker::signal_process_updated, this, &BackupDialog::slot_progress_updated);
 
     ui->btnClose->installEventFilter(this);
+
+    freewb::applyWaylandOverlayWindowHints(this);
 }
 
 void BackupDialog::setUiTexts()

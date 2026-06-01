@@ -11,6 +11,7 @@
 #include "sound.h"
 #include "toolbarwin.h"
 #include "ui_inputwin.h"
+#include "waylandwinhelper.h"
 
 namespace
 {
@@ -141,6 +142,9 @@ InputWin::InputWin(QWidget *parent) : QWidget(parent), ui(new Ui::InputWin)
     move(m_defaultPosition);
 
     connect(&m_caretBlinkTimer, &QTimer::timeout, this, &InputWin::slot_caret_blink);
+
+    freewb::applyWaylandOverlayWindowHints(this);
+    freewb::applyWaylandOverlayWindowHints(&m_dictFindWin);
 }
 
 InputWin::~InputWin()
@@ -160,6 +164,7 @@ void InputWin::init_im_prompt_lable()
                                     Qt::X11BypassWindowManagerHint);
     m_labelImPrompt->setAttribute(Qt::WA_TranslucentBackground, true);
     m_labelImPrompt->hide();
+    freewb::applyWaylandOverlayWindowHints(m_labelImPrompt);
 }
 
 void InputWin::slot_load_setting_data()

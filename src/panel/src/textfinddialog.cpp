@@ -2,6 +2,7 @@
 
 #include "config.h"
 #include "ui_textfinddialog.h"
+#include "waylandwinhelper.h"
 
 TextFindDialog::TextFindDialog(QWidget *parent) : QDialog(parent), ui(new Ui::TextFindDialog)
 {
@@ -9,6 +10,8 @@ TextFindDialog::TextFindDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Te
     setUiTexts();
     setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
     setWindowTitle(_("Find"));
+
+    freewb::applyWaylandOverlayWindowHints(this);
 }
 
 void TextFindDialog::setUiTexts()

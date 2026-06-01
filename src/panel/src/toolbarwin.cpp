@@ -10,6 +10,7 @@
 #include "settingshelper.h"
 #include "sound.h"
 #include "ui_toolbarwin.h"
+#include "waylandwinhelper.h"
 
 // 桌面工具条按钮样式表
 #define QSS_BG0 QString("border-image: url(%1);").arg(m_skinData.bg0ImagePath)
@@ -197,7 +198,10 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     connect(&m_kimPropertyDebounceTimer, &QTimer::timeout, this, &ToolbarWin::slot_apply_pending_kim_property);
 
     s_capsFlg = Keyboard::get_caps_flg();
-    // printf("执行Freewb时加载slot-open-toolbar\n");
+
+    freewb::applyWaylandOverlayWindowHints(this);
+    freewb::applyWaylandOverlayWindowHints(&m_tooltipsWin);
+    freewb::applyWaylandOverlayWindowHints(&m_keyboardMenu);
 }
 
 ToolbarWin::~ToolbarWin()

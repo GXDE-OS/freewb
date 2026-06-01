@@ -8,6 +8,7 @@
 #include "settingshelper.h"
 #include "sound.h"
 #include "ui_keyboard.h"
+#include "waylandwinhelper.h"
 
 /*
  * X11 头文件会定义 Status、Data、index、min、max 等宏，若先于 Qt 包含会破坏
@@ -120,6 +121,8 @@ Keyboard::Keyboard(VirtualKeyboardMode mode, QWidget *parent) : QWidget(parent),
         this->setStyleSheet(qssFile.readAll());
         qssFile.close();
     }
+
+    freewb::applyWaylandOverlayWindowHints(this);
 }
 
 Keyboard::~Keyboard()

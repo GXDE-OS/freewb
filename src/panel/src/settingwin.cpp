@@ -12,6 +12,7 @@
 #include "settings.h"
 #include "settingshelper.h"
 #include "ui_settingwin.h"
+#include "waylandwinhelper.h"
 
 namespace
 {
@@ -413,6 +414,8 @@ void SettingWin::init_window_appearance()
         this->setStyleSheet(qssFile.readAll());
         qssFile.close();
     }
+
+    freewb::applyWaylandOverlayWindowHints(this);
 }
 
 void SettingWin::init_member_data()
@@ -439,6 +442,7 @@ void SettingWin::init_member_data()
     m_customKeyDialog = new CustomKeyDialog();
     connect(m_customKeyDialog, SIGNAL(signal_custom_ok_btn_clicked(const QString &, const QString &)), this,
             SLOT(slot_custom_btn_ok_clicked(const QString &, const QString &)));
+    freewb::applyWaylandOverlayWindowHints(m_customKeyDialog);
 }
 
 void SettingWin::setUiTexts()
@@ -563,6 +567,7 @@ void SettingWin::init_mouse_hover_tips()
     m_tooltipsWin.setAttribute(Qt::WA_TranslucentBackground);
     m_tooltipsLabel = new QLabel(&m_tooltipsWin);
     m_tooltipsLabel->setStyleSheet(QSS_TOOL_TIPS);
+    freewb::applyWaylandOverlayWindowHints(&m_tooltipsWin);
 
     ui->ckbCodeRemind->setToolTip(_("When you enter code 'a', besides the character for 'a', candidates starting with 'a' "
                                     "are also shown, e.g. entries like '式a 节b'."));

@@ -5,6 +5,7 @@
 #include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
+#include "waylandwinhelper.h"
 
 // 一级菜单
 #define STR_MENU1 _("Input method settings")
@@ -134,6 +135,13 @@ ContextMenu::ContextMenu(QWidget *parent) : QMenu(parent)
     connect(&m_menu22, SIGNAL(aboutToShow()), this, SLOT(slot_update_lexicon_list()));
     connect(m_actGrpLexicon, SIGNAL(triggered(QAction *)), this, SLOT(on_actionGrpLexicon_clicked(QAction *)));
     connect(&m_action222, SIGNAL(triggered()), this, SLOT(on_action222_clicked()));
+
+    freewb::applyWaylandOverlayWindowHints(this);
+    freewb::applyWaylandOverlayWindowHints(&m_menu1);
+    freewb::applyWaylandOverlayWindowHints(&m_menu2);
+    freewb::applyWaylandOverlayWindowHints(&m_menu4);
+    freewb::applyWaylandOverlayWindowHints(&m_menu21);
+    freewb::applyWaylandOverlayWindowHints(&m_menu22);
 }
 
 ContextMenu::~ContextMenu()
