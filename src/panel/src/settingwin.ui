@@ -5066,29 +5066,6 @@ rare characters</string>
      <number>3</number>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnSettingOption">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>430</y>
-      <width>201</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>11</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Show [all] options</string>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="btnOk">
     <property name="geometry">
      <rect>

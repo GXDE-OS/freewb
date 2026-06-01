@@ -185,7 +185,8 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_tooltipsLabel = new QLabel(&m_tooltipsWin);
     m_tooltipsLabel->setStyleSheet(QSS_TOOL_TIPS);
 
-    Qt::WindowFlags winflgs = Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint | Qt::Tool | Qt::WindowStaysOnTopHint;
+    Qt::WindowFlags winflgs = Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::Tool |
+                              Qt::WindowStaysOnTopHint;
     m_keyboardMenu.setWindowFlags(winflgs);
 
     m_hideDelayTimer.setSingleShot(true);

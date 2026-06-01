@@ -11,7 +11,7 @@
 **
 ** 窗口专属枚举（CandiWinDispMode / InputMode / CharFontMode / AutoWordGroupOpt）已拆回
 ** 各自窗口 .h；仅 settingwin 使用的 accessor 表、候选列表、预设表（RecodeSelectPreset /
-** CandiPagePreset）、会话开关（useAudioFile / showAllGroup）已下沉到 settingwin.cpp 匿名 ns。
+** CandiPagePreset）、会话开关（useAudioFile）已下沉到 settingwin.cpp 匿名 ns。
 ***************************************************************************************/
 
 #ifndef SETTINGSHELPER_H

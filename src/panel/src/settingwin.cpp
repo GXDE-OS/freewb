@@ -23,7 +23,6 @@ QColor swQColorFromSpec(const std::string &s)
 struct UiSessionState
 {
     bool useAudioFile = true;
-    bool showAllGroup = false;
 };
 
 UiSessionState g_uiSessionState;
@@ -36,17 +35,6 @@ bool useAudioFile()
 void setUseAudioFile(bool enabled)
 {
     g_uiSessionState.useAudioFile = enabled;
-}
-
-bool toggleShowAllGroup()
-{
-    g_uiSessionState.showAllGroup = !g_uiSessionState.showAllGroup;
-    return g_uiSessionState.showAllGroup;
-}
-
-bool showAllGroup()
-{
-    return g_uiSessionState.showAllGroup;
 }
 
 /* KEY_* token → 可读 name。空 / "KEY_NONE" 返回 emptyLabel（下拉展示传"禁止"/"无"等占位
@@ -536,7 +524,6 @@ void SettingWin::setUiTexts()
     ui->labelPrompt_2->setText(_("Click the punctuation mark to edit"));
     ui->labelVersionInfo->setText(_("Version information"));
     ui->labelVersion->setText(_("Freewb Kylin Edition"));
-    ui->btnSettingOption->setText(_("Show [all] options"));
     ui->btnOk->setText(_("OK"));
     ui->btnCancel->setText(_("Cancel"));
     ui->ckbAutoWordGroup->setItemText(0, _("Disable auto phrase creation"));
@@ -849,13 +836,9 @@ void SettingWin::update_listwidget_item()
     m_listItemAdvance = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Advanced options"), ui->listWidget);
     m_listItemOthers = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Other settings"), ui->listWidget);
 
-    if (showAllGroup())
-    {
-        m_listItemUi = new QListWidgetItem(_("Interface settings"), ui->listWidget);
-        m_listItemCandidateWinUi = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Candidate window interface"), ui->listWidget);
-        m_listItemCandidateWinOption =
-            new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Candidate window options"), ui->listWidget);
-    }
+    m_listItemUi = new QListWidgetItem(_("Interface settings"), ui->listWidget);
+    m_listItemCandidateWinUi = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Candidate window interface"), ui->listWidget);
+    m_listItemCandidateWinOption = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Candidate window options"), ui->listWidget);
 
     m_listItemShortcutKey = new QListWidgetItem(_("Setting shortcut keys"), ui->listWidget);
     m_listItemCustomKeyChar = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Define soft keyboard"), ui->listWidget);
@@ -1295,21 +1278,6 @@ void SettingWin::on_listWidget_currentItemChanged(QListWidgetItem *current, QLis
     {
         // QDesktopServices::openUrl( QUrl("http://www.freewb.org") );
     }
-}
-
-void SettingWin::on_btnSettingOption_clicked()
-{
-    toggleShowAllGroup();
-    if (showAllGroup())
-    {
-        ui->btnSettingOption->setText(_("Display [Common] options"));
-    }
-    else
-    {
-        ui->btnSettingOption->setText(_("Display [All] options"));
-    }
-
-    update_listwidget_item();
 }
 
 void SettingWin::on_btnOk_clicked()

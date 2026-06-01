@@ -46,7 +46,8 @@
 
 ContextMenu::ContextMenu(QWidget *parent) : QMenu(parent)
 {
-    Qt::WindowFlags winflgs = Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint | Qt::Tool | Qt::WindowStaysOnTopHint;
+    Qt::WindowFlags winflgs = Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::Tool |
+                              Qt::WindowStaysOnTopHint;
     setWindowFlags(winflgs);
     m_menu1.setWindowFlags(winflgs);
     m_menu2.setWindowFlags(winflgs);
