@@ -214,8 +214,7 @@ public slots:
     void slot_vk_mode_changed(VirtualKeyboardMode vkMode);
     void slot_kb_caps_changed(int capsFlag);
 
-    void slot_key_pressed(int key);
-    void slot_button_pressed(int button);
+    void slot_context_menu_visibility_changed(bool visible);
 
     void on_btnCharWidth_clicked();
     void on_btnMark_clicked();
@@ -226,6 +225,7 @@ public:
     void update_char_width_mode_ico(CharWidthMode charWidth);
     void update_mark_mode_ico(MarkMode markMode);
     void update_char_font_ico();
+    void set_context_menu(ContextMenu *contextMenu);
 
 public:
     // 静态成员函数
@@ -259,6 +259,7 @@ protected:
     void fcitx_charMark_updated(const QString &param);
 
     bool eventFilter(QObject *obj, QEvent *event);
+    bool is_panel_menu_visible() const;
 
 protected slots:
     void slot_hide_toolbar();
@@ -303,6 +304,8 @@ private:
     /** UpdateProperty 防抖：焦点切换时可能连发多条，合并后再决定工具条显隐。 */
     QTimer m_kimPropertyDebounceTimer;
     QString m_pendingKimProperty;
+    bool m_contextMenuVisible = false;
+    bool m_keyboardMenuVisible = false;
 
     QWidget m_tooltipsWin;
     QLabel *m_tooltipsLabel;

@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include <QWindow>
+
 #include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
@@ -47,15 +49,6 @@
 
 ContextMenu::ContextMenu(QWidget *parent) : QMenu(parent)
 {
-    Qt::WindowFlags winflgs = Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::Tool |
-                              Qt::WindowStaysOnTopHint;
-    setWindowFlags(winflgs);
-    m_menu1.setWindowFlags(winflgs);
-    m_menu2.setWindowFlags(winflgs);
-    m_menu4.setWindowFlags(winflgs);
-    m_menu21.setWindowFlags(winflgs);
-    m_menu22.setWindowFlags(winflgs);
-
     setStyleSheet(QSS_MENU);
     m_menu1.setStyleSheet(QSS_MENU);
     m_menu2.setStyleSheet(QSS_MENU);
@@ -135,13 +128,10 @@ ContextMenu::ContextMenu(QWidget *parent) : QMenu(parent)
     connect(&m_menu22, SIGNAL(aboutToShow()), this, SLOT(slot_update_lexicon_list()));
     connect(m_actGrpLexicon, SIGNAL(triggered(QAction *)), this, SLOT(on_actionGrpLexicon_clicked(QAction *)));
     connect(&m_action222, SIGNAL(triggered()), this, SLOT(on_action222_clicked()));
+    connect(this, &QMenu::aboutToShow, this, [this]() { emit signal_menu_visibility_changed(true); });
+    connect(this, &QMenu::aboutToHide, this, [this]() { emit signal_menu_visibility_changed(false); });
 
     freewb::applyWaylandOverlayWindowHints(this);
-    freewb::applyWaylandOverlayWindowHints(&m_menu1);
-    freewb::applyWaylandOverlayWindowHints(&m_menu2);
-    freewb::applyWaylandOverlayWindowHints(&m_menu4);
-    freewb::applyWaylandOverlayWindowHints(&m_menu21);
-    freewb::applyWaylandOverlayWindowHints(&m_menu22);
 }
 
 ContextMenu::~ContextMenu()
@@ -150,51 +140,20 @@ ContextMenu::~ContextMenu()
 
 void ContextMenu::slot_show_context_menu()
 {
-    // qDebug() << "show";
-    QDesktopWidget *d = QApplication::desktop();
     QPoint pos = QCursor::pos();
-    move(pos);
-    show();
 
-    if (pos.x() + size().width() > d->width())
+    if (QWidget *transientParent = qobject_cast<QWidget *>(sender()))
     {
-        pos.setX(pos.x() - size().width());
-        move(pos);
-    }
-    if (pos.y() + size().height() > d->height())
-    {
-        pos.setY(pos.y() - size().height());
-        move(pos);
-    }
-}
-
-void ContextMenu::slot_button_pressed(int button)
-{
-    Q_UNUSED(button);
-    if (isVisible())
-    {
-        QPoint p = QCursor::pos();
-        if (!geometry().adjusted(-5, -5, 5, 5).contains(p) && !(m_menu1.geometry().contains(p) && m_menu1.isVisible()) &&
-            !(m_menu2.geometry().contains(p) && m_menu2.isVisible()) &&
-            !(m_menu4.geometry().contains(p) && m_menu4.isVisible()) &&
-            !(m_menu21.geometry().contains(p) && m_menu21.isVisible()) &&
-            !(m_menu22.geometry().contains(p) && m_menu22.isVisible()))
+        transientParent->winId();
+        winId();
+        QWindow *parentWindow = transientParent->windowHandle();
+        QWindow *menuWindow = windowHandle();
+        if (parentWindow && menuWindow)
         {
-#ifdef DEBUG
-// qDebug() << "close";
-#endif
-            close();
+            menuWindow->setTransientParent(parentWindow);
         }
     }
-}
-
-void ContextMenu::slot_key_pressed(int key)
-{
-    Q_UNUSED(key);
-    if (isVisible())
-    {
-        close();
-    }
+    popup(pos);
 }
 
 void ContextMenu::on_action3_clicked()

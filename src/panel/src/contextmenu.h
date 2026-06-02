@@ -43,10 +43,9 @@ signals:
     void signal_show_version_info();                                                     // 查看版本信息
     void signal_ime_table_changed();
     void signal_app_register();
+    void signal_menu_visibility_changed(bool visible);
 
 public slots:
-    void slot_key_pressed(int key);
-    void slot_button_pressed(int button);
     void slot_show_context_menu();
 
 public:

@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QLabel>
+#include <QWindow>
 
 #include "config.h"
 #include "log.h"
@@ -114,7 +115,7 @@ CharSetMode ToolbarWin::get_char_set_mode()
 
 /*****************************************************************************************/
 
-ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin)
+ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin), m_keyboardMenu(this)
 {
     ui->setupUi(this);
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint |
@@ -186,16 +187,15 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_tooltipsLabel = new QLabel(&m_tooltipsWin);
     m_tooltipsLabel->setStyleSheet(QSS_TOOL_TIPS);
 
-    Qt::WindowFlags winflgs = Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::Tool |
-                              Qt::WindowStaysOnTopHint;
-    m_keyboardMenu.setWindowFlags(winflgs);
-
     m_hideDelayTimer.setSingleShot(true);
     connect(&m_hideDelayTimer, &QTimer::timeout, this, &ToolbarWin::slot_hide_toolbar);
 
     m_kimPropertyDebounceTimer.setSingleShot(true);
     m_kimPropertyDebounceTimer.setInterval(80);
     connect(&m_kimPropertyDebounceTimer, &QTimer::timeout, this, &ToolbarWin::slot_apply_pending_kim_property);
+
+    connect(&m_keyboardMenu, &QMenu::aboutToShow, this, [this]() { m_keyboardMenuVisible = true; });
+    connect(&m_keyboardMenu, &QMenu::aboutToHide, this, [this]() { m_keyboardMenuVisible = false; });
 
     s_capsFlg = Keyboard::get_caps_flg();
 
@@ -551,21 +551,17 @@ void ToolbarWin::show_mouse_hover_tips(QWidget *widget)
 
 void ToolbarWin::show_keyboard_menu()
 {
-    // qDebug() << "show" << m_keyboardMenu.sizeHint();
-    QPoint posite = QCursor::pos();
-    m_keyboardMenu.move(posite);
-    m_keyboardMenu.show();
+    QPoint pos = QCursor::pos();
 
-    if (posite.x() + m_keyboardMenu.sizeHint().width() > m_desktopSize.width())
+    winId();
+    m_keyboardMenu.winId();
+    QWindow *parentWindow = windowHandle();
+    QWindow *menuWindow = m_keyboardMenu.windowHandle();
+    if (parentWindow && menuWindow)
     {
-        posite.setX(posite.x() - m_keyboardMenu.size().width());
-        m_keyboardMenu.move(posite);
+        menuWindow->setTransientParent(parentWindow);
     }
-    if (posite.y() + m_keyboardMenu.sizeHint().height() > m_desktopSize.height())
-    {
-        posite.setY(posite.y() - m_keyboardMenu.sizeHint().height());
-        m_keyboardMenu.move(posite);
-    }
+    m_keyboardMenu.popup(pos);
 }
 
 void ToolbarWin::move_toolbar(QPoint targetPos)
@@ -677,18 +673,6 @@ bool ToolbarWin::eventFilter(QObject *obj, QEvent *event)
         {
             m_mouseIsPressed = false;
         }
-        //        else if ( evt->button() == Qt::RightButton )
-        //        {
-        //            isProcessed = true;
-        //            if ( obj == ui->btnKeyboard )
-        //            {
-        //                m_keyboardMenu.exec( QCursor::pos() );
-        //            }
-        //            else
-        //            {
-        //                emit signal_open_context_menu( QCursor::pos() );
-        //            }
-        //        }
 
         if (m_mouseMoveFlag)
         {
@@ -1065,6 +1049,21 @@ void ToolbarWin::slot_kim_UpdateProperty(const QString &prop)
     m_kimPropertyDebounceTimer.start();
 }
 
+void ToolbarWin::set_context_menu(ContextMenu *contextMenu)
+{
+    connect(contextMenu, &ContextMenu::signal_menu_visibility_changed, this, &ToolbarWin::slot_context_menu_visibility_changed);
+}
+
+void ToolbarWin::slot_context_menu_visibility_changed(bool visible)
+{
+    m_contextMenuVisible = visible;
+}
+
+bool ToolbarWin::is_panel_menu_visible() const
+{
+    return m_contextMenuVisible || m_keyboardMenuVisible;
+}
+
 void ToolbarWin::slot_apply_pending_kim_property()
 {
     const QString &prop = m_pendingKimProperty;
@@ -1080,6 +1079,11 @@ void ToolbarWin::slot_apply_pending_kim_property()
     }
     else if (prop.contains("/Fcitx/im:"))
     {
+        if (is_panel_menu_visible())
+        {
+            FREEWB_DEBUG("skip hide toolbar while panel menu is visible");
+            return;
+        }
         FREEWB_DEBUG("hide toolbar for non-freewb im");
         hide();
     }
@@ -1094,27 +1098,6 @@ void ToolbarWin::slot_kb_caps_changed(int capsFlag)
 {
     s_capsFlg = capsFlag;
     slot_update_input_mode_ico();
-}
-
-void ToolbarWin::slot_button_pressed(int button)
-{
-    Q_UNUSED(button);
-    if (m_keyboardMenu.isVisible())
-    {
-        if (!m_keyboardMenu.geometry().adjusted(-5, -5, 5, 5).contains(QCursor::pos()))
-        {
-            m_keyboardMenu.close();
-        }
-    }
-}
-
-void ToolbarWin::slot_key_pressed(int key)
-{
-    Q_UNUSED(key);
-    if (m_keyboardMenu.isVisible())
-    {
-        m_keyboardMenu.close();
-    }
 }
 
 void ToolbarWin::slot_hide_toolbar()

@@ -27,6 +27,8 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
     m_dictQueryWin = new DictQueryWin;
     m_backupDialog = new BackupDialog;
 
+    m_toolbar->set_context_menu(m_contextmenu);
+
     connectPanelDBus();
     connectSettingsDBus();
 }
@@ -139,10 +141,6 @@ void MainProgram::connectPanelDBus()
     connect(m_contextmenu, &ContextMenu::signal_restore_lexicon_and_settings, m_backupDialog,
             &BackupDialog::slot_restore_lexicon_and_settings);
 
-    connect(m_x11EventMonitor, &X11EventMonitor::signal_button_pressed, m_contextmenu, &ContextMenu::slot_button_pressed);
-    connect(m_x11EventMonitor, &X11EventMonitor::signal_key_pressed, m_contextmenu, &ContextMenu::slot_key_pressed);
-    connect(m_x11EventMonitor, &X11EventMonitor::signal_button_pressed, m_toolbar, &ToolbarWin::slot_button_pressed);
-    connect(m_x11EventMonitor, &X11EventMonitor::signal_key_pressed, m_toolbar, &ToolbarWin::slot_key_pressed);
     connect(m_x11EventMonitor, &X11EventMonitor::signal_key_clicked, m_virtualKeyboard, &Keyboard::slot_key_clicked);
 
     connect(m_usrGenWordDialog, &UsrGenWordDialog::signal_user_word_changed, m_panelDBusService,
