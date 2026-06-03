@@ -19,8 +19,8 @@ imeTableChanged=0
 simpTradFlg=false
 userWordFlg=0
 vkMode=-1
-wubiTable=default/freeime.mb
-pinyinTable=default/attach.mb
+wubiTable=default/wbzx.mb
+pinyinTable=default/pinyin.mb
 CoustomChar="ˉ  ，  、  ；  ：  ？  ！  …  —  •  〔  （  【  〈  “  〉  《  》  ∶  「  」  『  ［  ）  ＂  ＇  ‘  ”  〕  々  ‖  】  ’  〗  ～  〖  。  ˇ  ¨  `  |  \"  』  .  ］  中  国  "
 CoustomMark=" ）  ！  ·  #  ￥  %  …  —  *  （                                                     ` ~ － — ＝ + [ { ] } 、 ｜ ； ： ’  ，  。  、 ？ "
 

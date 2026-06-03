@@ -17,8 +17,8 @@
 #define QSS_BTN_CLOSE1 "border-image: url(:/image/setting/close1.png);"
 #define QSS_BTN_CLOSE2 "border-image: url(:/image/setting/close2.png);"
 
-#define CUR_USED_WUBI_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/freeime.mb"
-#define CUR_USED_PINYIN_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/attach.mb"
+#define CUR_USED_WUBI_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/wbzx.mb"
+#define CUR_USED_PINYIN_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/pinyin.mb"
 
 LexiconWorker::LexiconWorker(QObject *parent) : QObject(parent)
 {
@@ -102,8 +102,8 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
     m_msgBox->setWindowFlag(Qt::FramelessWindowHint);
     m_msgBox->setIcon(QMessageBox::NoIcon);
 
-    m_tmpSysTable = QString(qgetenv("HOME")) + "/freeime.mb";
-    m_tmpPinyinTable = QString(qgetenv("HOME")) + "/attach.mb";
+    m_tmpSysTable = QString(qgetenv("HOME")) + "/wbzx.mb";
+    m_tmpPinyinTable = QString(qgetenv("HOME")) + "/pinyin.mb";
 
     // 载入窗口全局UI样式表
     QFile qssFile(QSS_FILE);
@@ -342,7 +342,7 @@ void LexiconToolWin::on_btnHelp_clicked()
 
 void LexiconToolWin::on_btnDumpSysLexicon_clicked()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, _("Generate TXT file"), QString(qgetenv("HOME")) + "/freeime.txt");
+    QString fileName = QFileDialog::getSaveFileName(this, _("Generate TXT file"), QString(qgetenv("HOME")) + "/wbzx.txt");
     if (!fileName.isEmpty())
     {
         m_lexiconWorker->set_op_param(LTO_DUMP_SYS_TABLE, fileName, CUR_USED_WUBI_TABLE);
@@ -469,7 +469,7 @@ void LexiconToolWin::on_btnOptimize_clicked()
 
 void LexiconToolWin::on_btnDumpPinyinLexicon_clicked()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, _("Generate TXT file"), QString(qgetenv("HOME")) + "/attach.txt");
+    QString fileName = QFileDialog::getSaveFileName(this, _("Generate TXT file"), QString(qgetenv("HOME")) + "/pinyin.txt");
     if (!fileName.isEmpty())
     {
         m_lexiconWorker->set_op_param(LTO_DUMP_PINYIN_TABLE, fileName, CUR_USED_PINYIN_TABLE);

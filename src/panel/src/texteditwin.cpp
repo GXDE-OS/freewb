@@ -7,8 +7,8 @@
 #include "ui_texteditwin.h"
 #include "waylandwinhelper.h"
 
-#define WUBI_TABLE_FILE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/freeime.mb"
-#define PINYIN_TABLE_FILE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/attach.mb"
+#define WUBI_TABLE_FILE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/wbzx.mb"
+#define PINYIN_TABLE_FILE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/pinyin.mb"
 
 TextEditWin::TextEditWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::TextEditWin)
 {

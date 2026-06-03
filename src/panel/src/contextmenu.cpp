@@ -306,8 +306,8 @@ void ContextMenu::on_actionGrpLexicon_clicked(QAction *action)
     {
         const std::string lexicon = fromStdUtf8(action->text());
         settings::instance().set_curUsedLexicon(lexicon);
-        settings::instance().set_wubiTable(lexicon + "/freeime.mb");
-        settings::instance().set_pinyinTable(lexicon + "/attach.mb");
+        settings::instance().set_wubiTable(lexicon + "/wbzx.mb");
+        settings::instance().set_pinyinTable(lexicon + "/pinyin.mb");
         settings::instance().set_imeTableChanged(1);
         emit signal_ime_table_changed();
 
@@ -336,7 +336,7 @@ void ContextMenu::slot_update_lexicon_list()
     QStringList lexiconList;
     foreach(QString lexiconId, dirList)
     {
-        if (QFile(lexiconDir + lexiconId + "/freeime.mb").exists() && QFile(lexiconDir + lexiconId + "/attach.mb").exists())
+        if (QFile(lexiconDir + lexiconId + "/wbzx.mb").exists() && QFile(lexiconDir + lexiconId + "/pinyin.mb").exists())
         {
             lexiconList << lexiconId;
             QAction *act = new QAction(lexiconId, this);

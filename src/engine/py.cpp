@@ -122,7 +122,7 @@ void PyEngine::clearMbLoadState()
 
 void PyEngine::loadDictionary()
 {
-    const std::string path = userFreewbPath() + "/data/mb/default/attach.mb";
+    const std::string path = userFreewbPath() + "/data/mb/default/pinyin.mb";
     if (path.empty())
     {
         return;

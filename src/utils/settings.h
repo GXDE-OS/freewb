@@ -77,8 +77,8 @@ enum class ValueType
     X(curUsedLexicon, Misc, String, "default", Misc, "")                                                                         \
     X(CoustomChar, Misc, String, kDefaultCoustomChar, Misc, "")                                                                  \
     X(CoustomMark, Misc, String, kDefaultCoustomMark, Misc, "")                                                                  \
-    X(wubiTable, Misc, String, "default/freeime.mb", Misc, "")                                                                   \
-    X(pinyinTable, Misc, String, "default/attach.mb", Misc, "")                                                                  \
+    X(wubiTable, Misc, String, "default/wbzx.mb", Misc, "")                                                                      \
+    X(pinyinTable, Misc, String, "default/pinyin.mb", Misc, "")                                                                  \
     X(candiWinDispMode, CandidateWinUi, Int, "0", CandidateWinUi, "")                                                            \
     X(candiCharCount, CandidateWinUi, Int, "9", CandidateWinUi, "")                                                              \
     X(candiWordCount, CandidateWinUi, Int, "5", CandidateWinUi, "")                                                              \

@@ -13,8 +13,8 @@
 #define QSS_BTN_CLOSE1 "border-image: url(:/image/setting/close1.png);"
 #define QSS_BTN_CLOSE2 "border-image: url(:/image/setting/close2.png);"
 
-#define FILE_WUBI_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/freeime.mb"
-#define FILE_PINYIN_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/attach.mb"
+#define FILE_WUBI_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/wbzx.mb"
+#define FILE_PINYIN_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/pinyin.mb"
 #define FILE_USER_TABLE INSTALL_DIR + "/data/user_word.txt"
 #define FILE_QUICK_TABLE INSTALL_DIR + "/data/quick_table.txt"
 #define FILE_SETTINGS INSTALL_DIR + "/config/config.ini"
@@ -289,7 +289,7 @@ void BackupWorker::start_restore()
             }
 
             // 恢复五笔词库
-            wbTableFile.setFileName(lexiconDir + "/freeime.mb");
+            wbTableFile.setFileName(lexiconDir + "/wbzx.mb");
             if (!wbTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
             {
                 qWarning() << FILE_WUBI_TABLE << "open failed!";
@@ -325,7 +325,7 @@ void BackupWorker::start_restore()
             }
 
             // 恢复拼音词库
-            pyTableFile.setFileName(lexiconDir + "/attach.mb");
+            pyTableFile.setFileName(lexiconDir + "/pinyin.mb");
             if (!pyTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
             {
                 qWarning() << FILE_PINYIN_TABLE << "open failed!";

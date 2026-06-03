@@ -223,7 +223,7 @@ std::string WbzxEngine::calculateWubiPhraseCode(const std::string &phrase) const
 
 void WbzxEngine::loadDictionary()
 {
-    const std::string path = userFreewbPath() + "/data/mb/default/freeime.mb";
+    const std::string path = userFreewbPath() + "/data/mb/default/wbzx.mb";
     if (path.empty())
     {
         return;
