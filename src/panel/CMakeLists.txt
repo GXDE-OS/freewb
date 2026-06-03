@@ -32,7 +32,7 @@ include_directories(
 
 
 #链接外部动态库
-set(EXTERN_LIBS -ldl -lX11 -lXtst -lXext -lpthread freewbConversionTool)
+set(EXTERN_LIBS -ldl -lX11 -lXtst -lXext -lpthread)
 
 #编译
 add_executable(${PROJECT_NAME}-panel ${SRC_FILES} ${UI_FILES} ${QRC_FILES})
@@ -44,10 +44,11 @@ target_link_libraries(${PROJECT_NAME}-panel PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::DBus
     Qt${QT_VERSION_MAJOR}::Svg
-    ${EXTERN_LIBS}
     ${PROJECT_NAME}-utils
     ${PROJECT_NAME}-ipc
-    )
+    ${PROJECT_NAME}-tools
+    ${EXTERN_LIBS}
+)
 
 
 #安装可执行文件

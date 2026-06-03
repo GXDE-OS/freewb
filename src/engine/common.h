@@ -25,6 +25,14 @@ public:
 
     void clear();
     bool loadFromStream(std::ifstream &in, const char *linePrefix = nullptr);
+    bool saveToStream(std::ofstream &out) const;
+    bool loadFromFile(const std::string &path, const char *linePrefix = nullptr);
+    bool saveToFile(const std::string &path) const;
+    void addRecord(const std::string &code, const std::string &text);
+    void setMetadata(const std::string &tableName, const std::string &tableInfo, const std::string &tableCreateTime,
+                     const std::string &endKeys, const std::string &specialKeys, const std::string &codeType,
+                     const std::string &straightUpKeys, const std::string &inputCode, uint8_t wildChar, uint8_t hasRule,
+                     const std::vector<EngineRuleBlock> &rules);
     /** 向 @p out 追加候选：与 texts 同步写入 fullCodes（完整编码键）。 */
     void appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const;
     const std::string &strInputCode() const;
@@ -48,6 +56,56 @@ public:
         return static_cast<uint32_t>(iCodeLength_);
     }
 
+    const std::string &tableName() const
+    {
+        return tableName_;
+    }
+
+    const std::string &tableInfo() const
+    {
+        return tableInfo_;
+    }
+
+    const std::string &tableCreateTime() const
+    {
+        return tableCreateTime_;
+    }
+
+    const std::string &endKeys() const
+    {
+        return strEndKeys_;
+    }
+
+    const std::string &specialKeys() const
+    {
+        return strSpecialKeys_;
+    }
+
+    const std::string &codeType() const
+    {
+        return strCodeType_;
+    }
+
+    const std::string &straightUpKeys() const
+    {
+        return strStraightUPKeys_;
+    }
+
+    uint8_t wildChar() const
+    {
+        return cWildChar_;
+    }
+
+    uint8_t hasRule() const
+    {
+        return bRule_;
+    }
+
+    const std::vector<std::pair<std::string, std::string>> &records() const
+    {
+        return records_;
+    }
+
 private:
     static void collectCandidateItemsForPrefix(const std::string &prefix,
                                                const std::unordered_map<std::string, std::vector<std::string>> &dict,
@@ -55,6 +113,10 @@ private:
     bool readNulTerminatedField(std::ifstream &in, std::string &out);
     bool readU32(std::ifstream &in, uint32_t &out);
     bool readExact(std::ifstream &in, void *dst, std::streamsize len);
+    bool writeNulTerminatedField(std::ofstream &out, const std::string &value) const;
+    bool writeU32(std::ofstream &out, uint32_t value) const;
+    bool writeExact(std::ofstream &out, const void *src, std::streamsize len) const;
+    void rebuildLexiconFromRecord(const std::string &code, const std::string &text);
 
 private:
     std::unordered_map<std::string, std::vector<std::string>> singleChardict_;
@@ -72,6 +134,7 @@ private:
     uint8_t bRule_ = 0;
     uint32_t iCodeLength_ = 4;
     std::vector<EngineRuleBlock> rules_;
+    std::vector<std::pair<std::string, std::string>> records_;
     uint32_t recordCount_ = 0;
 
     static const std::size_t maxCandidatesPages_ = 500;

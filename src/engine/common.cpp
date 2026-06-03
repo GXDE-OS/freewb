@@ -63,6 +63,7 @@ void MbDictionaryTable::clear()
 {
     singleChardict_.clear();
     multiChardict_.clear();
+    records_.clear();
     tableName_.clear();
     tableInfo_.clear();
     tableCreateTime_.clear();
@@ -202,15 +203,8 @@ bool MbDictionaryTable::loadFromStream(std::ifstream &in, const char *linePrefix
         }
         (void)typ;
         std::string hz(hzBuf.data());
-        const size_t nChar = MbDictionaryTable::utf8CharCount(hz);
-        if (nChar == 1U)
-        {
-            singleChardict_[strCode].push_back(std::move(hz));
-        }
-        else if (nChar >= 2U)
-        {
-            multiChardict_[strCode].push_back(std::move(hz));
-        }
+        records_.emplace_back(strCode, hz);
+        rebuildLexiconFromRecord(strCode, hz);
     }
 
     FREEWB_DEBUG("{}tableName={}\ntableInfo={}\ntableCreateTime={}\nstrEndKeys={}\nstrSpecialKeys={}\nstrCodeType={}"
@@ -266,6 +260,163 @@ bool MbDictionaryTable::hasCandidateForPrefix(const std::string &prefix) const
         return false;
     };
     return scan(singleChardict_) || scan(multiChardict_);
+}
+
+bool MbDictionaryTable::saveToStream(std::ofstream &out) const
+{
+    if (!writeNulTerminatedField(out, tableName_) || !writeNulTerminatedField(out, tableInfo_) ||
+        !writeNulTerminatedField(out, tableCreateTime_) || !writeNulTerminatedField(out, strEndKeys_) ||
+        !writeNulTerminatedField(out, strSpecialKeys_) || !writeNulTerminatedField(out, strCodeType_) ||
+        !writeNulTerminatedField(out, strStraightUPKeys_))
+    {
+        return false;
+    }
+
+    const uint32_t inputCodeLen = static_cast<uint32_t>(strInputCode_.size());
+    if (!writeU32(out, inputCodeLen) || !writeExact(out, strInputCode_.data(), static_cast<std::streamsize>(inputCodeLen + 1U)) ||
+        !writeExact(out, &cWildChar_, 1) || !writeExact(out, &bRule_, 1))
+    {
+        return false;
+    }
+
+    if (bRule_)
+    {
+        for (uint32_t ri = 0; ri < iCodeLength_ - 1U; ++ri)
+        {
+            if (!writeExact(out, &rules_[ri].iFlag, 1) || !writeExact(out, &rules_[ri].iWords, 1))
+            {
+                return false;
+            }
+            for (uint32_t k = 0; k < iCodeLength_; ++k)
+            {
+                const EngineRuleCell &cell = rules_[ri].cells[k];
+                if (!writeExact(out, &cell.iFlag, 1) || !writeExact(out, &cell.iWhich, 1) || !writeExact(out, &cell.iIndex, 1))
+                {
+                    return false;
+                }
+            }
+        }
+    }
+
+    const uint32_t total = static_cast<uint32_t>(records_.size());
+    if (!writeU32(out, total))
+    {
+        return false;
+    }
+
+    for (const auto &record : records_)
+    {
+        const std::string &code = record.first;
+        const std::string &text = record.second;
+        const uint32_t codeFieldLen = static_cast<uint32_t>(code.size() + 1U);
+        const uint32_t hzFieldLen = static_cast<uint32_t>(text.size() + 1U);
+        const int8_t typ = 0;
+        if (!writeU32(out, codeFieldLen) || !writeExact(out, code.data(), static_cast<std::streamsize>(codeFieldLen)) ||
+            !writeU32(out, hzFieldLen) || !writeExact(out, text.data(), static_cast<std::streamsize>(hzFieldLen)) ||
+            !writeExact(out, &typ, 1))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool MbDictionaryTable::loadFromFile(const std::string &path, const char *linePrefix)
+{
+    std::ifstream in(path, std::ios::binary);
+    if (!in)
+    {
+        return false;
+    }
+    return loadFromStream(in, linePrefix);
+}
+
+bool MbDictionaryTable::saveToFile(const std::string &path) const
+{
+    std::ofstream out(path, std::ios::binary | std::ios::trunc);
+    if (!out)
+    {
+        return false;
+    }
+    return saveToStream(out);
+}
+
+void MbDictionaryTable::setMetadata(const std::string &tableName, const std::string &tableInfo,
+                                    const std::string &tableCreateTime, const std::string &endKeys,
+                                    const std::string &specialKeys, const std::string &codeType,
+                                    const std::string &straightUpKeys, const std::string &inputCode, uint8_t wildChar,
+                                    uint8_t hasRule, const std::vector<EngineRuleBlock> &rules)
+{
+    tableName_ = tableName;
+    tableInfo_ = tableInfo;
+    tableCreateTime_ = tableCreateTime;
+    strEndKeys_ = endKeys;
+    strSpecialKeys_ = specialKeys;
+    strCodeType_ = codeType;
+    strStraightUPKeys_ = straightUpKeys;
+    strInputCode_ = inputCode;
+    cWildChar_ = wildChar;
+    bRule_ = hasRule;
+    rules_ = rules;
+    iCodeLength_ = 4;
+}
+
+void MbDictionaryTable::addRecord(const std::string &code, const std::string &text)
+{
+    if (code.empty() || text.empty())
+    {
+        return;
+    }
+
+    for (const auto &existing : records_)
+    {
+        if (existing.first == code && existing.second == text)
+        {
+            return;
+        }
+    }
+
+    auto insertPos = records_.begin();
+    while (insertPos != records_.end() && insertPos->first <= code)
+    {
+        ++insertPos;
+    }
+    records_.insert(insertPos, {code, text});
+    rebuildLexiconFromRecord(code, text);
+    recordCount_ = static_cast<uint32_t>(records_.size());
+}
+
+void MbDictionaryTable::rebuildLexiconFromRecord(const std::string &code, const std::string &text)
+{
+    const size_t nChar = MbDictionaryTable::utf8CharCount(text);
+    if (nChar == 1U)
+    {
+        singleChardict_[code].push_back(text);
+    }
+    else if (nChar >= 2U)
+    {
+        multiChardict_[code].push_back(text);
+    }
+}
+
+bool MbDictionaryTable::writeNulTerminatedField(std::ofstream &out, const std::string &value) const
+{
+    const uint32_t n = static_cast<uint32_t>(value.size());
+    return writeU32(out, n) && writeExact(out, value.data(), static_cast<std::streamsize>(n + 1U));
+}
+
+bool MbDictionaryTable::writeU32(std::ofstream &out, uint32_t value) const
+{
+    const unsigned char b[4] = {static_cast<unsigned char>(value & 0xFFU), static_cast<unsigned char>((value >> 8U) & 0xFFU),
+                                static_cast<unsigned char>((value >> 16U) & 0xFFU),
+                                static_cast<unsigned char>((value >> 24U) & 0xFFU)};
+    return writeExact(out, b, 4);
+}
+
+bool MbDictionaryTable::writeExact(std::ofstream &out, const void *src, std::streamsize len) const
+{
+    out.write(static_cast<const char *>(src), len);
+    return static_cast<bool>(out);
 }
 
 bool MbDictionaryTable::readNulTerminatedField(std::ifstream &in, std::string &out)

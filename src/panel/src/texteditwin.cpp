@@ -1,9 +1,9 @@
 #include "texteditwin.h"
 
-#include "../../tools/freewbConversionTool.h"
 #include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
+#include "tools/ConversionTool.h"
 #include "ui_texteditwin.h"
 #include "waylandwinhelper.h"
 
@@ -168,7 +168,7 @@ void TextEditWin::open_wubi_table_file()
     msgBox.show();
 
     int count;
-    if (!mb2txt(m_textFileName.toUtf8().data(), QString(WUBI_TABLE_FILE).toUtf8().data(), &count))
+    if (!freewb::tools::mb2txt(m_textFileName.toUtf8().data(), QString(WUBI_TABLE_FILE).toUtf8().data(), &count))
     {
         qWarning() << "convert mb to txt failed!";
         return;
@@ -208,7 +208,7 @@ void TextEditWin::open_pinyin_table_file()
     msgBox.show();
 
     int count;
-    if (!mb2txt(m_textFileName.toUtf8().data(), QString(PINYIN_TABLE_FILE).toUtf8().data(), &count))
+    if (!freewb::tools::mb2txt(m_textFileName.toUtf8().data(), QString(PINYIN_TABLE_FILE).toUtf8().data(), &count))
     {
         qWarning() << "convert mb to txt failed!";
         return;
@@ -308,7 +308,7 @@ bool TextEditWin::save_text_to_file()
         textFile.close();
 
         int count;
-        if (!txt2mb(m_textFileName.toUtf8().data(), QString(WUBI_TABLE_FILE).toUtf8().data(), &count))
+        if (!freewb::tools::txt2mb(m_textFileName.toUtf8().data(), QString(WUBI_TABLE_FILE).toUtf8().data(), &count))
         {
             qWarning() << "convert txt to mb failed!";
             return false;
@@ -321,7 +321,7 @@ bool TextEditWin::save_text_to_file()
         textFile.close();
 
         int count;
-        if (!txt2mb(m_textFileName.toUtf8().data(), QString(PINYIN_TABLE_FILE).toUtf8().data(), &count))
+        if (!freewb::tools::txt2mb(m_textFileName.toUtf8().data(), QString(PINYIN_TABLE_FILE).toUtf8().data(), &count))
         {
             qWarning() << "convert txt to mb failed!";
             return false;

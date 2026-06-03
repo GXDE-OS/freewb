@@ -1,9 +1,9 @@
 #include "lexicontoolwin.h"
 
-#include "../../tools/freewbConversionTool.h"
 #include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
+#include "tools/ConversionTool.h"
 #include "ui_lexicontoolwin.h"
 #include "waylandwinhelper.h"
 
@@ -41,7 +41,7 @@ void LexiconWorker::slot_start_work()
     m_count = 0;
     if (m_opType == LTO_DUMP_SYS_TABLE || m_opType == LTO_DUMP_PINYIN_TABLE)
     {
-        if (mb2txt(m_srcFile.toUtf8().data(), m_destFile.toUtf8().data(), &m_count))
+        if (freewb::tools::mb2txt(m_srcFile.toUtf8().data(), m_destFile.toUtf8().data(), &m_count))
         {
             emit signal_process_updated(m_opType, 1, m_count);
         }
@@ -52,7 +52,7 @@ void LexiconWorker::slot_start_work()
     }
     else if (m_opType == LTO_GEN_SYS_TABLE || m_opType == LTO_GEN_PINYIN_TABLE)
     {
-        if (txt2mb(m_srcFile.toUtf8().data(), m_destFile.toUtf8().data(), &m_count))
+        if (freewb::tools::txt2mb(m_srcFile.toUtf8().data(), m_destFile.toUtf8().data(), &m_count))
         {
             emit signal_process_updated(m_opType, 1, m_count);
         }
