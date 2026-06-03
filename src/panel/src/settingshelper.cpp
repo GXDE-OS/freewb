@@ -22,16 +22,11 @@ UiRuntimeState g_uiRuntimeState;
 
 } // namespace
 
-const std::array<CnEnSwitchPreset, 7> &freewb_cn_en_switch_presets()
+const std::array<CnEnSwitchPreset, 3> &freewb_cn_en_switch_presets()
 {
-    /* 下标 0 对应 .ui 中 "ctrl+空格" 项（cnEnSwitch 落 KEY_NONE，实际由 fcitx 全局配置托管）。 */
-    static const std::array<CnEnSwitchPreset, 7> k = {{
-        {"KEY_NONE", "Ctrl+Space"},
-        {"KEY_LEFT_SHIFT", "Shift_L"},
-        {"KEY_RIGHT_SHIFT", "Shift_R"},
+    static const std::array<CnEnSwitchPreset, 3> k = {{
+        {"KEY_NONE", ""},
         {"KEY_SHIFT", "Shift"},
-        {"KEY_LEFT_CTRL", "Ctrl_L"},
-        {"KEY_RIGHT_CTRL", "Ctrl_R"},
         {"KEY_CTRL", "Ctrl"},
     }};
     return k;

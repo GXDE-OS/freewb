@@ -395,7 +395,7 @@ SettingWin::~SettingWin()
 void SettingWin::init_window_appearance()
 {
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
-
+    setFixedSize(size());
     setWindowIcon(QIcon::fromTheme("freewb"));
     setWindowTitle(_("settings"));
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
@@ -521,7 +521,7 @@ void SettingWin::setUiTexts()
     ui->labelEasy->setText(_("Convenience shortcuts"));
     ui->label_15->setText(_("Temporary English"));
     ui->label_16->setText(_("Temporary Pinyin\nrare characters"));
-    ui->labelCnEn->setText(_("Chinese/English switch"));
+    ui->labelCnEn->setText(_("Chinese/English\nswitch"));
     ui->labelTwo->setText(_("Double-tap convenience key for symbol"));
     ui->btnRestoreShortcutKey->setText(_("Restore default shortcuts"));
     ui->labelCustomKeyChar->setText(_("Custom soft keyboard"));
@@ -555,11 +555,9 @@ void SettingWin::setUiTexts()
     ui->cmbFunction->setItemText(10, _("Switch skin"));
     ui->cmbFunction->setItemText(11, _("Quick delete committed item"));
     ui->cmbFunction->setItemText(12, _("Auto-pair punctuation"));
-    ui->cmbSwitchCnEn->setItemText(0, _("Ctrl+Space"));
-    ui->cmbSwitchCnEn->setItemText(1, _("Left Shift"));
-    ui->cmbSwitchCnEn->setItemText(2, _("Right Shift"));
-    ui->cmbSwitchCnEn->setItemText(3, _("Left Ctrl"));
-    ui->cmbSwitchCnEn->setItemText(4, _("Right Ctrl"));
+    ui->cmbSwitchCnEn->setItemText(0, _("None"));
+    ui->cmbSwitchCnEn->setItemText(1, _("Shift"));
+    ui->cmbSwitchCnEn->setItemText(2, _("Ctrl"));
 }
 
 void SettingWin::init_mouse_hover_tips()
@@ -914,9 +912,9 @@ void SettingWin::init_shortcutkey_page()
 
     ui->ckbDisableFullHalfKey->setChecked(settings::instance().get_disableFullHalfSwitch());
     ui->ckbDisableAllShortcutKey->setChecked(settings::instance().get_disableAllShortcutKey());
-    // 该项依赖 fcitx 全局配置，不再由本页提供设置
-    ui->labelCnEn->hide();
-    ui->cmbSwitchCnEn->hide();
+
+    const int cnEnIdx = freewb_cn_en_switch_preset_index(settings::instance().get_cnEnSwitch());
+    ui->cmbSwitchCnEn->setCurrentIndex(cnEnIdx >= 0 ? cnEnIdx : 0);
 }
 
 // 设置界面--更新自定义功能快捷键选择框

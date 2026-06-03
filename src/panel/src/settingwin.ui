@@ -4658,9 +4658,9 @@ rare characters</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>280</y>
-        <width>121</width>
+        <x>330</x>
+        <y>254</y>
+        <width>111</width>
         <height>25</height>
        </rect>
       </property>
@@ -4673,32 +4673,12 @@ rare characters</string>
       </property>
       <item>
        <property name="text">
-        <string>Ctrl+Space</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Left Shift</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Right Shift</string>
+        <string>None</string>
        </property>
       </item>
       <item>
        <property name="text">
         <string>Shift</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Left Ctrl</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Right Ctrl</string>
        </property>
       </item>
       <item>
@@ -4713,10 +4693,10 @@ rare characters</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>16</x>
-        <y>281</y>
-        <width>81</width>
-        <height>21</height>
+        <x>265</x>
+        <y>258</y>
+        <width>71</width>
+        <height>42</height>
        </rect>
       </property>
       <property name="font">
@@ -4727,16 +4707,17 @@ rare characters</string>
        </font>
       </property>
       <property name="text">
-       <string>Chinese/English switch</string>
+       <string>Chinese/English
+switch</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelTwo">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>323</y>
-        <width>191</width>
-        <height>21</height>
+        <x>265</x>
+        <y>310</y>
+        <width>176</width>
+        <height>42</height>
        </rect>
       </property>
       <property name="font">
@@ -4749,12 +4730,15 @@ rare characters</string>
       <property name="text">
        <string>Double-tap convenience key for symbol</string>
       </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
      </widget>
      <widget class="QPushButton" name="btnRestoreShortcutKey">
       <property name="geometry">
        <rect>
-        <x>216</x>
-        <y>322</y>
+        <x>20</x>
+        <y>336</y>
         <width>151</width>
         <height>25</height>
        </rect>
