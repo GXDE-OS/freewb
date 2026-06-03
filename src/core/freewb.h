@@ -25,6 +25,7 @@ public:
     void activate();
     void deactivate();
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
+    bool processKeyRelease(FreewbKeySym keysym, FreewbKeyState state);
     void updateCandidateAndPreeditToUI();
     void reset();
     void reloadConfig();
@@ -52,6 +53,7 @@ private:
     Punc *punc_ = nullptr;
     Special *special_ = nullptr;
     StateManager *stateManager_ = nullptr;
+    bool cnEnSwitchKeyPending_ = false;
 };
 } // namespace freewb
 

@@ -97,13 +97,73 @@ IFreewbEngine *EngineManager::findEngineByName(const char *name) const
     return nullptr;
 }
 
+void EngineManager::restoreLastEngine()
+{
+    IFreewbEngine *targetEngine = lastEngine_;
+    if (targetEngine == nullptr)
+    {
+        if (engines_.empty())
+        {
+            return;
+        }
+        targetEngine = engines_[0].second.get();
+        const auto *fallbackName = dynamic_cast<const IFreewb *>(targetEngine);
+        FREEWB_WARN("restoreLastEngine: lastEngine is null, fallback to {}",
+                    fallbackName != nullptr ? fallbackName->name() : "null");
+    }
+
+    const auto *targetName = dynamic_cast<const IFreewb *>(targetEngine);
+
+    if (currentEngine_ != nullptr)
+    {
+        currentEngine_->reset();
+    }
+    if (candidateList_ != nullptr)
+    {
+        candidateList_->clear();
+    }
+
+    currentEngine_ = targetEngine;
+    lastEngine_ = nullptr;
+}
+
+void EngineManager::toggleEnglishEngine()
+{
+    if (candidateList_ == nullptr || enEngine_ == nullptr)
+    {
+        return;
+    }
+
+    if (currentEngine_ == enEngine_.get())
+    {
+        restoreLastEngine();
+        return;
+    }
+
+    const auto *fromName = dynamic_cast<const IFreewb *>(currentEngine_);
+    lastEngine_ = currentEngine_;
+    if (currentEngine_ != nullptr)
+    {
+        currentEngine_->reset();
+    }
+    candidateList_->clear();
+    currentEngine_ = enEngine_.get();
+}
+
 void EngineManager::nextEngine()
 {
+    if (currentEngine_ == enEngine_.get())
+    {
+        restoreLastEngine();
+        return;
+    }
+
     if (engines_.empty() || currentEngine_ == nullptr)
     {
         return;
     }
 
+    lastEngine_ = nullptr;
     currentEngine_->reset();
     candidateList_->clear();
 
@@ -276,6 +336,7 @@ void EngineManager::changeEngine(const std::string &engineName)
     if (engine != nullptr)
     {
         currentEngine_ = engine;
+        lastEngine_ = nullptr;
     }
 }
 

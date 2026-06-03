@@ -70,6 +70,7 @@ void Freewb::activate()
 
 void Freewb::deactivate()
 {
+    cnEnSwitchKeyPending_ = false;
     stateManager_->reset();
     engineManager_->reset();
     candidateList_->clear();
@@ -117,6 +118,7 @@ Special *Freewb::special() const
 bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
 {
     FREEWB_DEBUG("keysym: {}, state: {}", static_cast<int>(keysym), static_cast<int>(state));
+
     bool processed = false;
     processed = stateManager_->processKey(keysym, state);
     if (processed)
@@ -151,8 +153,32 @@ bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
     return false;
 }
 
+bool Freewb::processKeyRelease(FreewbKeySym keysym, FreewbKeyState state)
+{
+    (void)state;
+
+    const FreewbKeyState switchMod =
+        Key::modifierStateFromKeySym(Key::keySymFromUniqueName(settings::instance().get_cnEnSwitch().c_str()));
+    if (switchMod == FreewbKeyState_None || Key::modifierStateFromKeySym(keysym) != switchMod || !cnEnSwitchKeyPending_)
+    {
+        cnEnSwitchKeyPending_ = false;
+        return false;
+    }
+
+    cnEnSwitchKeyPending_ = false;
+
+    engineManager_->toggleEnglishEngine();
+    const char *engineName = engineManager_->currentEngineName();
+    if (engineName != nullptr)
+    {
+        dbusProxy_->callPanelSwitchInputModeMethod(engineName);
+    }
+    return true;
+}
+
 void Freewb::reset()
 {
+    cnEnSwitchKeyPending_ = false;
     stateManager_->reset();
     engineManager_->reset();
     candidateList_->clear();
@@ -178,6 +204,21 @@ void Freewb::reloadConfig()
 
 bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
 {
+    {
+        const FreewbKeyState switchMod =
+            Key::modifierStateFromKeySym(Key::keySymFromUniqueName(settings::instance().get_cnEnSwitch().c_str()));
+        if (switchMod != FreewbKeyState_None)
+        {
+            if (Key::modifierStateFromKeySym(keysym) == switchMod && state == FreewbKeyState_None)
+            {
+                cnEnSwitchKeyPending_ = true;
+            }
+            else if (!Key::isModifierKeySym(keysym) && (state & switchMod))
+            {
+                cnEnSwitchKeyPending_ = false;
+            }
+        }
+    }
     {
         const char *keyString = Key::readKeyString(settings::instance().get_backFindCode().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);

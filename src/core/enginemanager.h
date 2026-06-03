@@ -29,6 +29,9 @@ public:
     const char *currentEngineName() const;
     void changeEngine(const std::string &engineName);
 
+    // 英文引擎不在常用引擎列表中，通过此接口切换
+    void toggleEnglishEngine();
+
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
     void refreshEngineResult();
     void reset();
@@ -43,6 +46,7 @@ private:
     void initAllEngines();
     void loadDefaultEngines();
     IFreewbEngine *findEngineByName(const char *name) const;
+    void restoreLastEngine();
 
     void commitPreeditOverflow(const std::string &prefix);
     void tryExactDictionarySingleCandidateCommit();
@@ -54,6 +58,7 @@ private:
     std::unique_ptr<En> enEngine_ = nullptr;
 
     IFreewbEngine *currentEngine_ = nullptr;
+    IFreewbEngine *lastEngine_ = nullptr;
     std::vector<std::pair<const char *, std::unique_ptr<IFreewbEngine>>> engines_;
 
     CandidateList *candidateList_ = nullptr;
