@@ -9,7 +9,12 @@
 ### 1. 配置编译环境
 ```bash
 ## 安装基础依赖
-sudo apt install g++ cmake fcitx-libs-dev libgl1-mesa-dev libglu1-mesa-dev libxi-dev libxtst-dev libdbus-1-dev qtbase5-dev
+
+### fcitx4输入法插件
+sudo apt install g++ cmake fcitx-libs-dev libgl1-mesa-dev libglu1-mesa-dev libxi-dev libxtst-dev libdbus-1-dev qtbase5-dev libqt5svg5-dev extra-cmake-modules libspdlog-dev
+
+### fcitx5输入法插件
+sudo apt install g++ cmake libfcitx5core-dev libgl1-mesa-dev libglu1-mesa-dev libxi-dev libxtst-dev libdbus-1-dev libsystemd-dev qtbase5-dev libqt5svg5-dev extra-cmake-modules libspdlog-dev wayland-scanner++ libwayland-dev waylandpp-dev
 
 ####if can't install above then
 sudo apt --fix-broken install
@@ -20,7 +25,13 @@ git clone https://gitee.com/openkylin/freewb.git
 
 cd freewb
 mkdir build && cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu
+
+## 编译fcitx4输入法插件
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu -DENABLE_FCITX5=Off
+
+## 编译fcitx5输入法插件
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu -DENABLE_FCITX4=Off
+
 make
 sudo make install
 ```
