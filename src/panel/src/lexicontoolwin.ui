@@ -116,7 +116,7 @@
      </font>
     </property>
     <property name="text">
-     <string>System lexicon</string>
+     <string>Wbzx lexicon</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">

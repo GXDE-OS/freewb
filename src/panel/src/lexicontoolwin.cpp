@@ -129,7 +129,7 @@ void LexiconToolWin::setUiTexts()
 {
     ui->labelLexiconTool->setText(_("Freewb lexicon toolbox"));
     ui->btnDumpSysLexicon->setText(_("Export"));
-    ui->label->setText(_("System lexicon"));
+    ui->label->setText(_("Wbzx lexicon"));
     ui->label_2->setText(_("Pinyin lexicon"));
     ui->label_3->setText(_("User lexicon"));
     ui->btnMarkRareWord->setText(_("Mark rare characters"));
@@ -299,7 +299,7 @@ void LexiconToolWin::on_btnClose_clicked()
 void LexiconToolWin::on_btnHelp_clicked()
 {
     QString helpInfo = "\n"
-                       "一、系统词库\n"
+                       "一、五笔词库\n"
                        "①导出：将词库以纯文本格式导出，供用户编辑、修改。\n"
                        "②生成词库：根据用户提供的纯文本文件生成极点的五笔\n"
                        "    词库。这个文本文件的格式为：编码+英文空格+候选\n"
@@ -317,7 +317,7 @@ void LexiconToolWin::on_btnHelp_clicked()
                        "\n"
                        "二、拼音词库\n"
                        "①导出：将词库以纯文本格式导出，供用户编辑、修改。\n"
-                       "②生成词库：同“系统词库”中的生成词库，只是这个生成的\n"
+                       "②生成词库：同“五笔词库”中的生成词库，只是这个生成的\n"
                        "    是拼音词库。\n"
                        "\n"
                        "三、用户词组\n"

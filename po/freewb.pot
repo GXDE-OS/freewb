@@ -437,7 +437,7 @@ msgid "Export"
 msgstr ""
 
 #: src/panel/src/lexicontoolwin.cpp:128
-msgid "System lexicon"
+msgid "Wbzx lexicon"
 msgstr ""
 
 #: src/panel/src/lexicontoolwin.cpp:129

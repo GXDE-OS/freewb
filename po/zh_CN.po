@@ -441,8 +441,8 @@ msgid "Export"
 msgstr "导出"
 
 #: src/panel/src/lexicontoolwin.cpp:128
-msgid "System lexicon"
-msgstr "系统词库"
+msgid "Wbzx lexicon"
+msgstr "五笔词库"
 
 #: src/panel/src/lexicontoolwin.cpp:129
 msgid "Pinyin lexicon"
