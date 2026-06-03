@@ -95,8 +95,7 @@ add_custom_target(wayland_protocols ALL
 
 pkg_check_modules(PKG_WAYLAND_CLIENTPP wayland-client++)
 if(NOT PKG_WAYLAND_CLIENTPP_FOUND)
-    message(STATUS "wayland-client++ not found, will not build wayland protocol.")
-    return()
+    message(STATUS "wayland-client++ not found, fcitx5 module will be built without wayland protocol support.")
 endif()
 
 if(PKG_WAYLAND_CLIENTPP_FOUND)

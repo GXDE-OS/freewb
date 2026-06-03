@@ -24,6 +24,14 @@ void FreewbIMModule::keyEvent(const fcitx::InputMethodEntry &entry, fcitx::KeyEv
     FCITX_UNUSED(entry);
     if (keyEvent.isRelease())
     {
+        const auto keysym = static_cast<FreewbKeySym>(keyEvent.key().sym());
+        const auto state = static_cast<FreewbKeyState>(keyEvent.key().states().toInteger());
+        bool processed = freewb_->processKeyRelease(keysym, state);
+        if (processed)
+        {
+            keyEvent.filterAndAccept();
+            freewb_->updateCandidateAndPreeditToUI();
+        }
         return;
     }
 

@@ -81,9 +81,19 @@ static INPUT_RETURN_VALUE FreewbIMDoInput(void *arg, FcitxKeySym sym, unsigned i
 
 static INPUT_RETURN_VALUE FreewbIMDoReleaseInput(void *arg, FcitxKeySym sym, unsigned int state)
 {
-    FCITX_UNUSED(arg);
-    FCITX_UNUSED(sym);
-    FCITX_UNUSED(state);
+    freewb_fcitx4_imclass *imclass = static_cast<freewb_fcitx4_imclass *>(arg);
+    if (imclass == nullptr || imclass->freewb_ == nullptr)
+    {
+        return IRV_TO_PROCESS;
+    }
+
+    const bool processed =
+        imclass->freewb_->processKeyRelease(static_cast<FreewbKeySym>(sym), static_cast<FreewbKeyState>(state));
+    if (processed)
+    {
+        imclass->freewb_->updateCandidateAndPreeditToUI();
+        return IRV_DO_NOTHING;
+    }
     return IRV_TO_PROCESS;
 }
 
