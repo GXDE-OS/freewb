@@ -82,13 +82,14 @@ bool MbDictionaryTable::loadFromStream(std::ifstream &in, const char *linePrefix
 {
     const char *p = linePrefix != nullptr ? linePrefix : "";
 
-    readNulTerminatedField(in, tableName_);
-    readNulTerminatedField(in, tableInfo_);
-    readNulTerminatedField(in, tableCreateTime_);
-    readNulTerminatedField(in, strEndKeys_);
-    readNulTerminatedField(in, strSpecialKeys_);
-    readNulTerminatedField(in, strCodeType_);
-    readNulTerminatedField(in, strStraightUPKeys_);
+    if (!readNulTerminatedField(in, tableName_) || !readNulTerminatedField(in, tableInfo_) ||
+        !readNulTerminatedField(in, tableCreateTime_) || !readNulTerminatedField(in, strEndKeys_) ||
+        !readNulTerminatedField(in, strSpecialKeys_) || !readNulTerminatedField(in, strCodeType_) ||
+        !readNulTerminatedField(in, strStraightUPKeys_))
+    {
+        clear();
+        return false;
+    }
 
     uint32_t inputCodeLen = 0;
     if (!readU32(in, inputCodeLen))
@@ -267,20 +268,21 @@ bool MbDictionaryTable::hasCandidateForPrefix(const std::string &prefix) const
     return scan(singleChardict_) || scan(multiChardict_);
 }
 
-void MbDictionaryTable::readNulTerminatedField(std::ifstream &in, std::string &out)
+bool MbDictionaryTable::readNulTerminatedField(std::ifstream &in, std::string &out)
 {
     uint32_t n = 0;
     if (!readU32(in, n))
     {
-        return;
+        return false;
     }
     std::vector<char> buf(static_cast<size_t>(n) + 1U);
     in.read(buf.data(), static_cast<std::streamsize>(n) + 1);
     if (!in || static_cast<uint32_t>(in.gcount()) != n + 1U)
     {
-        return;
+        return false;
     }
     out.assign(buf.data());
+    return true;
 }
 
 bool MbDictionaryTable::readU32(std::ifstream &in, uint32_t &out)
