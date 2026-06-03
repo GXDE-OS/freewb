@@ -839,7 +839,7 @@ msgid ""
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:531
-msgid "Chinese/English switch"
+msgid "Chinese/English\nswitch"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:532

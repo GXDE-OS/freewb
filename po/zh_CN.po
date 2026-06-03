@@ -849,9 +849,11 @@ msgstr ""
 "临时拼音\n"
 "生僻字"
 
-#: src/panel/src/settingwin.cpp:531
-msgid "Chinese/English switch"
-msgstr "中英文切换"
+#: src/panel/src/settingwin.cpp:530
+msgid "Chinese/English\nswitch"
+msgstr ""
+"中英文\n"
+"切换"
 
 #: src/panel/src/settingwin.cpp:532
 msgid "Double-tap convenience key for symbol"
