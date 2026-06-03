@@ -396,12 +396,14 @@ void SettingWin::init_window_appearance()
 {
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
 
-    setWindowIcon(QIcon(":/image/setting/logo.png"));
+    setWindowIcon(QIcon::fromTheme("freewb"));
     setWindowTitle(_("settings"));
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
     // setFont(freewb_candi_text_qfont(settings::instance()));
 
     ui->labelVersionNum->setText(FREEWB_VERSION);
+    ui->label_2->setPixmap(QIcon::fromTheme("freewb").pixmap(60, 60));
+    ui->label_2->setScaledContents(true);
 
     // 载入窗口全局UI样式表
     QFile qssFile(QSS_FILE);

@@ -11,7 +11,7 @@ DictQueryWin::DictQueryWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::Di
     setWindowTitle(_("Freewb query"));
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
 
-    setWindowIcon(QIcon(":/image/setting/logo.png"));
+    setWindowIcon(QIcon::fromTheme("freewb"));
 
     QDesktopWidget *d = QApplication::desktop();
     m_defaultPopPosition = QPoint((d->width() - size().width()) / 2, (d->height() - size().height()) / 2);

@@ -4943,7 +4943,7 @@ rare characters</string>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">border-image: url(:/image/setting/logo.png);</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string/>

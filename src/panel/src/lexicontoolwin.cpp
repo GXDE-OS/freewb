@@ -78,7 +78,7 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
     setUiTexts();
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
 
-    setWindowIcon(QIcon(":/image/setting/logo.png"));
+    setWindowIcon(QIcon::fromTheme("freewb"));
     setWindowTitle(_("Freewb lexicon tool"));
 
     m_mouseIsPressed = false;
