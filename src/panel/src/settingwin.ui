@@ -4966,7 +4966,7 @@ rare characters</string>
        </font>
       </property>
       <property name="text">
-       <string>Freewb Kylin Edition</string>
+       <string>Freewb Input Method</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>

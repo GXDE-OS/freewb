@@ -307,7 +307,7 @@ msgid "Press Enter to confirm deletion, Esc to cancel"
 msgstr ""
 
 #: src/panel/src/inputwin.cpp:925 src/panel/src/inputwin.cpp:1102
-msgid "【Freewb Kylin Edition】"
+msgid "【Freewb Input Method】"
 msgstr ""
 
 #: src/panel/src/inputwin.cpp:929
@@ -867,7 +867,7 @@ msgid "Click the punctuation mark to edit"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:539
-msgid "Freewb Kylin Edition"
+msgid "Freewb Input Method"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:540

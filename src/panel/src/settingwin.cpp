@@ -527,7 +527,7 @@ void SettingWin::setUiTexts()
     ui->labelCustomKeyMark->setText(_("Custom punctuation"));
     ui->labelPrompt_2->setText(_("Click the punctuation mark to edit"));
     ui->labelVersionInfo->setText(_("Version information"));
-    ui->labelVersion->setText(_("Freewb Kylin Edition"));
+    ui->labelVersion->setText(_("Freewb Input Method"));
     ui->btnOk->setText(_("OK"));
     ui->btnCancel->setText(_("Cancel"));
     ui->ckbAutoWordGroup->setItemText(0, _("Disable auto phrase creation"));

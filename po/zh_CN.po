@@ -312,8 +312,8 @@ msgid "Press Enter to confirm deletion, Esc to cancel"
 msgstr "按Enter确认删除词组，Esc放弃"
 
 #: src/panel/src/inputwin.cpp:925 src/panel/src/inputwin.cpp:1102
-msgid "【Freewb Kylin Edition】"
-msgstr "【极点五笔银河麒麟版】"
+msgid "【Freewb Input Method】"
+msgstr "【极点五笔输入法】"
 
 #: src/panel/src/inputwin.cpp:929
 msgid "【Settings: right-click the window】"
@@ -878,8 +878,8 @@ msgid "Click the punctuation mark to edit"
 msgstr "请点击要修改的标点符号"
 
 #: src/panel/src/settingwin.cpp:539
-msgid "Freewb Kylin Edition"
-msgstr "极点五笔银河麒麟版"
+msgid "Freewb Input Method"
+msgstr "极点五笔输入法"
 
 #: src/panel/src/settingwin.cpp:540
 msgid "Show [all] options"

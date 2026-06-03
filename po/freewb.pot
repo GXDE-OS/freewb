@@ -868,7 +868,7 @@ msgid "Click the punctuation mark to edit"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:539
-msgid "Freewb Kylin Edition"
+msgid "Freewb Input Method"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:540

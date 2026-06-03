@@ -927,7 +927,7 @@ void InputWin::set_candiwin_op_help_info()
 
     if (oti == OTI_LOGO)
     {
-        tips = _("【Freewb Kylin Edition】");
+        tips = _("【Freewb Input Method】");
     }
     else if (oti == OTI_MOUSE_MENU)
     {
@@ -1104,7 +1104,7 @@ void InputWin::set_candiwin_op_help_info()
 
     if (tips.isEmpty())
     {
-        tips = _("【Freewb Kylin Edition】");
+        tips = _("【Freewb Input Method】");
     }
     ui->labelPrompt->setText(tips);
 }
