@@ -24,6 +24,11 @@ void Chttrans::loadPair(const std::string &s2tProfile, const std::string &t2sPro
 Chttrans::Chttrans()
 {
     loadPair(std::string(), std::string());
+    loadSettings();
+}
+
+void Chttrans::loadSettings()
+{
     available_ = settings::instance().get_simpTradFlg();
 }
 
