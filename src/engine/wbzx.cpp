@@ -36,6 +36,11 @@ void WbzxEngine::changeAvailable()
     available_ = !available_;
 }
 
+void WbzxEngine::toggleCharset()
+{
+    mbTable_.toggleCharset();
+}
+
 void WbzxEngine::fillCandidatePayloadPrompts(const std::string &preedit, CandidatePayload &payload) const
 {
     const std::size_t n = payload.texts.size();

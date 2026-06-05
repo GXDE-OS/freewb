@@ -1,13 +1,26 @@
 message(STATUS "Building engine module")
 
-add_library(${PROJECT_NAME}-engine-wbzx SHARED wbzx.cpp userdict.cpp common.cpp)
+find_library(ICONV_LIBRARIES NAMES iconv)
+if(ICONV_LIBRARIES)
+    message(STATUS "Found iconv library: ${ICONV_LIBRARIES}")
+else()
+    message(STATUS "iconv: using libc built-in (no separate link)")
+endif()
+
+add_library(${PROJECT_NAME}-engine-wbzx SHARED wbzx.cpp userdict.cpp common.cpp gb2312filter.cpp)
 target_include_directories(${PROJECT_NAME}-engine-wbzx PUBLIC ${CMAKE_SOURCE_DIR}/src/engine)
 target_link_libraries(${PROJECT_NAME}-engine-wbzx PUBLIC ${PROJECT_NAME}-utils)
+if(ICONV_LIBRARIES)
+    target_link_libraries(${PROJECT_NAME}-engine-wbzx PRIVATE ${ICONV_LIBRARIES})
+endif()
 install(TARGETS ${PROJECT_NAME}-engine-wbzx DESTINATION ${FREEWB_INSTALL_LIBDIR})
 
-add_library(${PROJECT_NAME}-engine-py SHARED py.cpp userdict.cpp common.cpp)
+add_library(${PROJECT_NAME}-engine-py SHARED py.cpp userdict.cpp common.cpp gb2312filter.cpp)
 target_include_directories(${PROJECT_NAME}-engine-py PUBLIC ${CMAKE_SOURCE_DIR}/src/engine)
 target_link_libraries(${PROJECT_NAME}-engine-py PUBLIC ${PROJECT_NAME}-utils)
+if(ICONV_LIBRARIES)
+    target_link_libraries(${PROJECT_NAME}-engine-py PRIVATE ${ICONV_LIBRARIES})
+endif()
 install(TARGETS ${PROJECT_NAME}-engine-py DESTINATION ${FREEWB_INSTALL_LIBDIR})
 
 add_library(${PROJECT_NAME}-engine-en SHARED en.cpp)

@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "engine.h"
+#include "gb2312filter.h"
 
 namespace freewb
 {
@@ -16,6 +17,8 @@ namespace freewb
 class MbDictionaryTable
 {
 public:
+    explicit MbDictionaryTable(bool enableCharsetFilter = false);
+
     /** UTF-8 字节串中的字符数（按首字节判定宽度；非法序列按单字节步进）。 */
     static std::size_t utf8CharCount(const std::string &s);
     /** 取 UTF-8 串中从 0 起第 @p index 个字符（越界返回空串）。 */
@@ -106,11 +109,15 @@ public:
         return records_;
     }
 
+    void toggleCharset();
+
 private:
+    bool filtCharset(const std::string &hz) const;
+
     static void collectCandidateItemsForPrefix(const std::string &prefix,
                                                const std::unordered_map<std::string, std::vector<std::string>> &dict,
                                                CandidatePayload &out);
-    bool readNulTerminatedField(std::ifstream &in, std::string &out);
+    void readNulTerminatedField(std::ifstream &in, std::string &out);
     bool readU32(std::ifstream &in, uint32_t &out);
     bool readExact(std::ifstream &in, void *dst, std::streamsize len);
     bool writeNulTerminatedField(std::ofstream &out, const std::string &value) const;
@@ -136,6 +143,9 @@ private:
     std::vector<EngineRuleBlock> rules_;
     std::vector<std::pair<std::string, std::string>> records_;
     uint32_t recordCount_ = 0;
+    bool charsetFilterEnabled_ = false;
+    int charset_ = 0;
+    Gb2312Filter gb2312Filter_;
 
     static const std::size_t maxCandidatesPages_ = 500;
 };

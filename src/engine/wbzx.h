@@ -35,6 +35,8 @@ public:
     /** 按码表造词规则为 UTF-8 词组计算五笔编码；失败或非五笔引擎返回空串。 */
     std::string calculateWubiPhraseCode(const std::string &phrase) const;
 
+    void toggleCharset();
+
 private:
     void clearMbLoadState();
     void loadDictionary();
@@ -43,7 +45,7 @@ private:
     void fillCandidatePayloadPrompts(const std::string &preedit, CandidatePayload &payload) const;
 
 private:
-    MbDictionaryTable mbTable_;
+    MbDictionaryTable mbTable_{true};
     UserDict userDict_;
     std::unordered_map<std::string, std::string> singleHanziPrimaryCode_;
     std::string inputCodes_;
