@@ -12,6 +12,7 @@
 #include <fcitx/keys.h>
 #include <fcitx/module.h>
 #include <fcitx/module/dbus/fcitx-dbus.h>
+#include <fcitx/ui.h>
 
 #include "config.h"
 #include "freewb.h"
@@ -34,6 +35,7 @@ static INPUT_RETURN_VALUE FreewbIMDoReleaseInput(void *arg, FcitxKeySym sym, uns
 static void FreewbIMOnChanged(void *arg);
 
 static void updateCursorPosition(freewb_fcitx4_imclass *imclass);
+static void detachFcitxGlobalCharWidthPunc(FcitxInstance *instance, boolean detach);
 
 #ifdef __cplusplus
 extern "C"
@@ -121,6 +123,7 @@ static void FreewbIMOnChanged(void *arg)
     {
         FcitxLog(INFO, "will activate freewb and show ui.");
         FREEWB_DEBUG("will activate freewb and show ui.");
+        detachFcitxGlobalCharWidthPunc(imclass->fcitxInstance_, true);
         FcitxUISetStatusVisable(imclass->fcitxInstance_, _("settings"), true);
         imclass->freewb_->activate();
     }
@@ -128,6 +131,7 @@ static void FreewbIMOnChanged(void *arg)
     {
         FcitxLog(INFO, "will deactivate freewb and hide ui.");
         FREEWB_DEBUG("will deactivate freewb and hide ui.");
+        detachFcitxGlobalCharWidthPunc(imclass->fcitxInstance_, false);
         FcitxUISetStatusVisable(imclass->fcitxInstance_, _("settings"), false);
         imclass->freewb_->deactivate();
     }
@@ -199,6 +203,25 @@ static void updateCursorPosition(freewb_fcitx4_imclass *imclass)
 
     FcitxInstanceGetWindowRect(imclass->fcitxInstance_, ic, &spotRect.x, &spotRect.y, &spotRect.w, &spotRect.h);
     imclass->freewb_->dbusProxy()->callPanelUpdateSpotRect(spotRect);
+}
+
+static void detachFcitxGlobalCharWidthPunc(FcitxInstance *instance, boolean detach)
+{
+    if (instance == nullptr)
+    {
+        return;
+    }
+
+    FcitxInstanceSetContext(instance, CONTEXT_DISABLE_FULLWIDTH, &detach);
+    FcitxInstanceSetContext(instance, CONTEXT_DISABLE_PUNC, &detach);
+    if (detach)
+    {
+        FcitxUISetStatusVisable(instance, "punc", false);
+    }
+    else
+    {
+        FcitxUISetStatusVisable(instance, "punc", true);
+    }
 }
 
 #endif
