@@ -23,7 +23,6 @@ public:
 
 private:
     bool valid() const;
-    bool convertUtf8Char(const char *utf8, std::size_t len) const;
 
 private:
     iconv_t conv_ = reinterpret_cast<iconv_t>(-1);

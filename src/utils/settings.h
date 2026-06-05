@@ -64,7 +64,6 @@ enum class ValueType
 
 #define FREEWB_AUTO_ACCESSOR_ENTRY_LIST(X)                                                                                       \
     X(charSet, Misc, Int, "0", Misc, "")                                                                                         \
-    X(currentCharset, Misc, Int, "0", Misc, "")                                                                                  \
     X(enterClear, Misc, Bool, "true", Misc, "")                                                                                  \
     X(inputMode, Misc, String, "engine:wbzx", Misc, "")                                                                          \
     X(quickTableFlg, Misc, Int, "0", Misc, "")                                                                                   \

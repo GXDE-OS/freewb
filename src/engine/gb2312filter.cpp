@@ -30,17 +30,17 @@ bool Gb2312Filter::valid() const
     return conv_ != reinterpret_cast<iconv_t>(-1);
 }
 
-bool Gb2312Filter::convertUtf8Char(const char *utf8, std::size_t len) const
+bool Gb2312Filter::isGb2312(const std::string &utf8Char) const
 {
-    if (!valid() || utf8 == nullptr || len == 0)
+    if (!valid() || utf8Char.empty())
     {
         return true;
     }
 
     iconv(conv_, nullptr, nullptr, nullptr, nullptr);
 
-    char *inbuf = const_cast<char *>(utf8);
-    std::size_t inbytes = len;
+    char *inbuf = const_cast<char *>(utf8Char.data());
+    std::size_t inbytes = utf8Char.size();
     unsigned char outbuf[8];
     char *outptr = reinterpret_cast<char *>(outbuf);
     std::size_t outbytes = sizeof(outbuf);
@@ -51,15 +51,6 @@ bool Gb2312Filter::convertUtf8Char(const char *utf8, std::size_t len) const
         return false;
     }
     return inbytes == 0;
-}
-
-bool Gb2312Filter::isGb2312(const std::string &utf8Char) const
-{
-    if (!valid() || utf8Char.empty())
-    {
-        return true;
-    }
-    return convertUtf8Char(utf8Char.data(), utf8Char.size());
 }
 
 } // namespace freewb

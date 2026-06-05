@@ -11,7 +11,6 @@ spaceFullWhenCharHalf=false
 [Misc]
 charSet=0
 curUsedLexicon=default
-currentCharset=0
 enterClear=true
 inputMode=engine:wbzx
 quickTableFlg=0
