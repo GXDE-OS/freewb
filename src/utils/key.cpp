@@ -132,10 +132,83 @@ const char *Key::readKeyString(const char *str)
     return str;
 }
 
-bool Key::isSpecialCommitCharacter(FreewbKeySym sym, FreewbKeyState state)
+FreewbKeySym Key::shiftedKeySymbol(FreewbKeySym sym)
 {
-    return (!state && (sym == FreewbKey_comma || sym == FreewbKey_period || sym == FreewbKey_slash ||
-                       sym == FreewbKey_semicolon || sym == FreewbKey_quoteright || sym == FreewbKey_bracketleft ||
-                       sym == FreewbKey_bracketright || sym == FreewbKey_backslash));
+    switch (sym)
+    {
+    case FreewbKey_0:
+        return FreewbKey_parenright;
+    case FreewbKey_1:
+        return FreewbKey_exclam;
+    case FreewbKey_2:
+        return FreewbKey_at;
+    case FreewbKey_3:
+        return FreewbKey_numbersign;
+    case FreewbKey_4:
+        return FreewbKey_dollar;
+    case FreewbKey_5:
+        return FreewbKey_percent;
+    case FreewbKey_6:
+        return FreewbKey_asciicircum;
+    case FreewbKey_7:
+        return FreewbKey_ampersand;
+    case FreewbKey_8:
+        return FreewbKey_asterisk;
+    case FreewbKey_9:
+        return FreewbKey_parenleft;
+    case FreewbKey_comma:
+        return FreewbKey_less;
+    case FreewbKey_slash:
+        return FreewbKey_question;
+    case FreewbKey_apostrophe:
+        return FreewbKey_quotedbl;
+    case FreewbKey_semicolon:
+        return FreewbKey_colon;
+    case FreewbKey_grave:
+        return FreewbKey_asciitilde;
+    case FreewbKey_minus:
+        return FreewbKey_underscore;
+    case FreewbKey_equal:
+        return FreewbKey_plus;
+    case FreewbKey_bracketleft:
+        return FreewbKey_braceleft;
+    case FreewbKey_bracketright:
+        return FreewbKey_braceright;
+    case FreewbKey_period:
+        return FreewbKey_greater;
+    case FreewbKey_backslash:
+        return FreewbKey_bar;
+    default:
+        return FreewbKey_None;
+    }
+}
+
+FreewbKeySym Key::normalizedKeySymbol(FreewbKeySym sym, FreewbKeyState state)
+{
+    if (isModifierKeySym(sym))
+    {
+        return FreewbKey_None;
+    }
+
+    const bool isLetterDigit =
+        isKey09(sym, FreewbKeyState_None) || isKeyAZ(sym, FreewbKeyState_None) || isKeyaz(sym, FreewbKeyState_None);
+    const bool isPrintableAscii = sym >= FreewbKey_space && sym <= static_cast<FreewbKeySym>(0x007e);
+
+    if (state == FreewbKeyState_None)
+    {
+        return !isLetterDigit && isPrintableAscii ? sym : FreewbKey_None;
+    }
+
+    constexpr FreewbKeyState kShiftCaps = static_cast<FreewbKeyState>(FreewbKeyState_Shift | FreewbKeyState_CapsLock);
+    if ((state & ~kShiftCaps) != FreewbKeyState_None)
+    {
+        return FreewbKey_None;
+    }
+    if (!isLetterDigit && isPrintableAscii)
+    {
+        return sym;
+    }
+
+    return shiftedKeySymbol(sym);
 }
 } // namespace freewb

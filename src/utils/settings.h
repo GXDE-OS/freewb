@@ -70,6 +70,8 @@ enum class ValueType
     X(quickTableFlg, Misc, Int, "0", Misc, "")                                                                                   \
     X(imeTableChanged, Misc, Int, "0", Misc, "")                                                                                 \
     X(simpTradFlg, Misc, Bool, "false", Misc, "")                                                                                \
+    X(fullWidthFlg, Misc, Bool, "false", Misc, "")                                                                               \
+    X(chinesePuncFlg, Misc, Bool, "true", Misc, "")                                                                              \
     X(userWordFlg, Misc, Int, "0", Misc, "")                                                                                     \
     X(vkMode, Misc, Int, "-1", Misc, "")                                                                                         \
     X(separateChar, CandidateWinUi, String, ".", CandidateWinUi, "")                                                             \

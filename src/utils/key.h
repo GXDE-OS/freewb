@@ -18,7 +18,8 @@ public:
     static bool isKeyaz(FreewbKeySym sym, FreewbKeyState state);
     static bool isKey09(FreewbKeySym sym, FreewbKeyState state);
     static const char *readKeyString(const char *str);
-    static bool isSpecialCommitCharacter(FreewbKeySym sym, FreewbKeyState state);
+    static FreewbKeySym shiftedKeySymbol(FreewbKeySym sym);
+    static FreewbKeySym normalizedKeySymbol(FreewbKeySym sym, FreewbKeyState state);
 };
 } // namespace freewb
 
