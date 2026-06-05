@@ -133,8 +133,6 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_mouseMoveFlag = false;
 
     set_input_mode(QString::fromStdString(settings::instance().get_inputMode()));
-    s_isTraditionalMode = settings::instance().get_simpTradFlg();
-    s_charSetMode = (CharSetMode)settings::instance().get_charSet();
 
     // 初始化虚拟键盘的输入模式选择菜单
     m_keyboardMenu.setStyleSheet(QSS_MENU);
@@ -239,6 +237,15 @@ void ToolbarWin::slot_load_setting_data()
     setWindowOpacity(1 - m_transparency / 100.0);
 
     update_mouse_hover_tips();
+
+    set_traditional_mode(settings::instance().get_simpTradFlg());
+    s_charSetMode = static_cast<CharSetMode>(settings::instance().get_charSet());
+    update_char_set_ico();
+
+    s_charWidthMode = settings::instance().get_fullWidthFlg() ? WIDTH_FULL : WIDTH_HALF;
+    s_markMode = settings::instance().get_chinesePuncFlg() ? MARK_CN : MARK_EN;
+    slot_update_char_width_mode_ico();
+    slot_update_mark_mode_ico();
 
     // 载入皮肤
     if (m_curSkinId != toQStringUtf8(settings::instance().get_curSkinId()))
@@ -772,6 +779,22 @@ void ToolbarWin::slot_update_char_width_mode_ico()
     {
         ui->btnCharWidth->setStyleSheet(QSS_HALF_WIDTH);
     }
+
+    emit signal_btn_charWidth_clicked();
+}
+
+void ToolbarWin::slot_update_mark_mode_ico()
+{
+    if (get_mark_mode() == MARK_CN)
+    {
+        ui->btnMark->setStyleSheet(QSS_MARK_CN);
+    }
+    else
+    {
+        ui->btnMark->setStyleSheet(QSS_MARK_EN);
+    }
+
+    emit signal_btn_mark_clicked();
 }
 
 void ToolbarWin::slot_set_traditional_mode(bool isTraditional)

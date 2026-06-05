@@ -85,18 +85,10 @@ void MainProgram::connectPanelDBus()
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_switch_char_set, m_toolbar, &ToolbarWin::switch_char_set);
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_switch_simp_or_trad, m_toolbar,
             [this]() { m_toolbar->set_traditional_mode(!ToolbarWin::is_traditional_mode()); });
-    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_set_charWidth_and_markMode, this,
-            [this](int charWidth, int markMode)
-            {
-                if (charWidth)
-                {
-                    m_toolbar->update_char_width_mode_ico(static_cast<CharWidthMode>(0));
-                }
-                if (markMode)
-                {
-                    m_toolbar->update_mark_mode_ico(static_cast<MarkMode>(0));
-                }
-            });
+    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_switch_char_width, m_toolbar,
+            [this]() { m_toolbar->update_char_width_mode_ico(ToolbarWin::get_char_width_mode()); });
+    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_switch_punctuation_mode, m_toolbar,
+            [this]() { m_toolbar->update_mark_mode_ico(ToolbarWin::get_mark_mode()); });
 
     connect(m_inputWin, &InputWin::signal_candidate_select, m_panelDBusService, &freewb::ipc::QDBusPanelService::SelectCandidate);
     connect(m_inputWin, &InputWin::signal_candidate_page_up, m_panelDBusService,
@@ -331,18 +323,10 @@ void MainProgram::connectSettingsDBus()
     connect(s, &freewb::ipc::QDBusSettingsService::signal_set_recode_calib_flg, this,
             [](int flg) { settings::instance().set_recodeCalib(flg != 0); });
 
-    connect(s, &freewb::ipc::QDBusSettingsService::signal_set_charWidth_and_markMode, this,
-            [this](int charWidth, int markMode)
-            {
-                if (charWidth)
-                {
-                    m_toolbar->update_char_width_mode_ico(static_cast<CharWidthMode>(0));
-                }
-                if (markMode)
-                {
-                    m_toolbar->update_mark_mode_ico(static_cast<MarkMode>(0));
-                }
-            });
+    connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_char_width, m_toolbar,
+            [this]() { m_toolbar->update_char_width_mode_ico(ToolbarWin::get_char_width_mode()); });
+    connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_punctuation_mode, m_toolbar,
+            [this]() { m_toolbar->update_mark_mode_ico(ToolbarWin::get_mark_mode()); });
 
     connect(s, &freewb::ipc::QDBusSettingsService::signal_open_freewb_dir, this,
             []()

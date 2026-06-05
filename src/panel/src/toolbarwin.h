@@ -206,6 +206,7 @@ public slots:
     void slot_load_skin(const QString &skinId);
     void slot_update_input_mode_ico();
     void slot_update_char_width_mode_ico();
+    void slot_update_mark_mode_ico();
     void slot_set_traditional_mode(bool isTraditional);
 
     void slot_kim_UpdateProperty(const QString &prop);
