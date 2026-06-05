@@ -349,4 +349,13 @@ void EngineManager::reloadDictionaries()
     }
 }
 
+void EngineManager::toggleCharset()
+{
+    auto *wbzx = dynamic_cast<WbzxEngine *>(findEngineByName("engine:wbzx"));
+    if (wbzx != nullptr)
+    {
+        wbzx->toggleCharset();
+    }
+}
+
 } // namespace freewb

@@ -315,6 +315,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
+            engineManager_->toggleCharset();
             dbusProxy_->callPanelSwitchCharSetMethod();
             return true;
         }
@@ -528,6 +529,10 @@ void Freewb::connectDBusCallback()
             else if (std::strcmp(member, "SwitchFullWidth") == 0)
             {
                 this->charWidth_->changeAvailable();
+            }
+            else if (std::strcmp(member, "SwitchCharSetMode") == 0)
+            {
+                this->engineManager_->toggleCharset();
             }
             else if (std::strcmp(member, "SwitchChttrans") == 0)
             {

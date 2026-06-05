@@ -42,7 +42,6 @@ namespace freewb
     X("dos.", callOpenConfDirMethod)                                                                                             \
     X("tt.", callSwitchRecodeProofMethod)                                                                                        \
     X("hh.", callSwitchToolbarHideFlgMethod)                                                                                     \
-    X("mm.", callPanelSwitchCharSetMethod)                                                                                       \
     X("oo.", callOpenUiSettingMethod)                                                                                            \
     X("pp.", callOpenProfessionalSettingMethod)                                                                                  \
     X("vv.", callShowVersionInfoMethod)                                                                                          \
@@ -57,6 +56,7 @@ namespace freewb
     X("dd.", handleDeletePhrase)                                                                                                 \
     X("ff.", handleDictQuery)                                                                                                    \
     X("jj.", handleToggleChttrans)                                                                                               \
+    X("mm.", handleToggleCharSet)                                                                                                \
     X("ss.", handleSwitchUncommon)                                                                                               \
     X("kk.", handleSwitchVirtualKeyboard)
 
@@ -487,6 +487,17 @@ bool TempEnglishState::handleToggleChttrans()
     {
         freewb_->dbusProxy()->callPanelSwitchChttransMethod();
     }
+    return true;
+}
+
+bool TempEnglishState::handleToggleCharSet()
+{
+    if (freewb_ == nullptr || freewb_->dbusProxy() == nullptr)
+    {
+        return false;
+    }
+    freewb_->engineManager()->toggleCharset();
+    freewb_->dbusProxy()->callPanelSwitchCharSetMethod();
     return true;
 }
 

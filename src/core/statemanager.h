@@ -122,6 +122,7 @@ private:
     bool handleDeletePhrase();
     bool handleDictQuery();
     bool handleToggleChttrans();
+    bool handleToggleCharSet();
     bool handleSwitchUncommon();
     bool handleSwitchVirtualKeyboard();
 
