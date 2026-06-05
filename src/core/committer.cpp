@@ -3,9 +3,12 @@
 #include <algorithm>
 #include <utility>
 
+#include "charwidth.h"
 #include "common.h"
 #include "freewb.h"
+#include "key.h"
 #include "log.h"
+#include "punc.h"
 #include "settings.h"
 
 namespace freewb
@@ -78,23 +81,18 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     // 顶字上屏,上屏效果与普通上屏不同。如："你好,"
-    if (Key::isSpecialCommitCharacter(keysym, state))
     {
-        const char *keyString = Key::keySymToName(keysym);
-        const std::pair<const char *, const char *> autoPair = freewb_->punc()->autoPair(keyString);
-        if (autoPair.first != nullptr && autoPair.second != nullptr)
+        Punc *punc = freewb_->punc();
+        if (!punc->shouldProcessKey(keysym, state))
         {
-            FREEWB_DEBUG("auto pair: {} {}", autoPair.first, autoPair.second);
-            commit(autoPair.first + candidates->firstVisibleCandidateOrPreedit() + autoPair.second);
+            return false;
         }
-        else
-        {
-            FREEWB_DEBUG("no auto pair: {}", keyString);
-            commit(candidates->firstVisibleCandidateOrPreedit() + keyString);
-        }
+
+        const std::string visible = candidates->firstVisibleCandidateOrPreedit();
+        const PuncPushResult symbolPush = punc->convert(keysym, state);
+        commit(symbolPush.before + visible + symbolPush.after);
         return true;
     }
-    return false;
 }
 
 const std::string &Committer::lastCommitString() const
@@ -138,12 +136,24 @@ std::string Committer::committedText(std::size_t charCount) const
 
 void Committer::commit(const std::string &text)
 {
-    FREEWB_DEBUG("committer will commit text : {}", text);
-    lastCommitString_ = text;
-    appendCommittedText(text);
-    commitCallback_(text);
+    std::string output = text;
+    freewb_->charWidth()->convertString(output);
+
+    FREEWB_DEBUG("committer will commit text : {}", output);
+    lastCommitString_ = output;
+    appendCommittedText(output);
+    commitCallback_(output);
+
     freewb_->candidateList()->clear();
     freewb_->engineManager()->reset();
+}
+
+void Committer::handleCommittedBackspace()
+{
+    if (!committedTexts_.empty())
+    {
+        committedTexts_.pop_back();
+    }
 }
 
 bool Committer::selectCandidate(int index)

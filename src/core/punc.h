@@ -2,35 +2,80 @@
 #define PUNC_H
 
 #include <string>
+#include <unordered_map>
 
 #include "ifreewb.h"
+#include "keysym.h"
 
 namespace freewb
 {
 
-static const struct _PuncPair
+class Freewb;
+
+struct PuncPairEntry
 {
-    const char *left;
-    const char *right;
-} PuncPairList[] = {
-    {"[", "]"}, {"{", "}"}, {"【", "】"}, {"（", "）"}, {"《", "》"}, {"<", ">"}, {"(", ")"},
+    const char *asciiLeft;
+    const char *asciiRight;
+    const char *chineseLeft;
+    const char *chineseRight;
 };
 
-class Punc : public IFreewb
+struct PuncMapEntry
+{
+    char ascii;
+    const char *variants[3];
+    int variantCount;
+};
+
+struct PuncPushResult
+{
+    std::string before;
+    std::string after;
+
+    bool empty() const
+    {
+        return before.empty() && after.empty();
+    }
+
+    std::string joined() const
+    {
+        return before + after;
+    }
+};
+
+class Punc final : public IFreewb
 {
 public:
-    Punc();
-    ~Punc() = default;
+    explicit Punc(Freewb *freewb);
+    ~Punc() override = default;
 
     const char *name() const override;
     bool available() const override;
     void changeAvailable() override;
 
-    const std::pair<const char *, const char *> autoPair(const char *key) const;
+    void loadSettings();
+    void toggleSmartMark();
+
+    PuncPushResult convert(FreewbKeySym keysym, FreewbKeyState state);
+    bool shouldProcessKey(FreewbKeySym keysym, FreewbKeyState state) const;
+    void reset();
 
 private:
-    bool available_ = true;
+    static bool isAsciiSymbolKey(FreewbKeySym sym);
+    static bool isDigitChar(const std::string &textChar);
+    static const PuncPairEntry *lookupPair(FreewbKeySym sym, char pairKey[2]);
+    static const PuncMapEntry *lookupMap(char ascii);
+
+    static const PuncPairEntry kAutoPairList[];
+    static const PuncMapEntry kPuncMap[];
+
+    Freewb *freewb_;
+    bool chinesePuncEnabled_ = true;
+    bool smartMarkEnabled_ = true;
+    bool autoHalfMarkAfterNum_ = false;
+    std::unordered_map<char, char> lastPuncStack_;
 };
+
 } // namespace freewb
 
-#endif // _PUNC_H_
+#endif /* PUNC_H */

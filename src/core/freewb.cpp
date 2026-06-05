@@ -2,7 +2,9 @@
 
 #include <cstring>
 #include <utility>
+#include <vector>
 
+#include "charwidth.h"
 #include "chttrans.h"
 #include "key.h"
 #include "settings.h"
@@ -14,7 +16,8 @@ namespace freewb
 
 Freewb::Freewb(ipc::IDBus *dbusProxy, CommitCallback commitCallback) : log_("/tmp/freewb-engine.log"), dbusProxy_(dbusProxy)
 {
-    punc_ = new Punc();
+    charWidth_ = new CharWidth();
+    punc_ = new Punc(this);
     special_ = new Special();
     chttrans_ = new Chttrans();
     candidateList_ = new CandidateList(this);
@@ -51,6 +54,11 @@ Freewb::~Freewb()
         delete punc_;
         punc_ = nullptr;
     }
+    if (charWidth_ != nullptr)
+    {
+        delete charWidth_;
+        charWidth_ = nullptr;
+    }
     if (special_ != nullptr)
     {
         delete special_;
@@ -70,10 +78,7 @@ void Freewb::activate()
 
 void Freewb::deactivate()
 {
-    cnEnSwitchKeyPending_ = false;
-    stateManager_->reset();
-    engineManager_->reset();
-    candidateList_->clear();
+    reset();
     dbusProxy_->callPanelHideToolbar();
     dbusProxy_->callPanelUpdatePreeditText({.text = "", .caret = 0, .show = false});
     dbusProxy_->callPanelUpdateCandidate(
@@ -93,6 +98,11 @@ CandidateList *Freewb::candidateList() const
 Punc *Freewb::punc() const
 {
     return punc_;
+}
+
+CharWidth *Freewb::charWidth() const
+{
+    return charWidth_;
 }
 
 ipc::IDBus *Freewb::dbusProxy() const
@@ -144,6 +154,12 @@ bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return true;
     }
 
+    processed = handleDirectSymbolKey(keysym, state);
+    if (processed)
+    {
+        return true;
+    }
+
     processed = committer_->processKey(keysym, state);
     if (processed)
     {
@@ -182,6 +198,7 @@ void Freewb::reset()
     stateManager_->reset();
     engineManager_->reset();
     candidateList_->clear();
+    punc_->reset();
 }
 
 void Freewb::reloadConfig()
@@ -192,6 +209,9 @@ void Freewb::reloadConfig()
 
     committer_->loadSettings();
     candidateList_->loadSettings();
+    charWidth_->loadSettings();
+    punc_->loadSettings();
+    chttrans_->loadSettings();
 
     if (userWordFlg)
     {
@@ -204,21 +224,25 @@ void Freewb::reloadConfig()
 
 bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
 {
+    if (settings::instance().get_disableAllShortcutKey())
     {
-        const FreewbKeyState switchMod =
-            Key::modifierStateFromKeySym(Key::keySymFromUniqueName(settings::instance().get_cnEnSwitch().c_str()));
-        if (switchMod != FreewbKeyState_None)
-        {
-            if (Key::modifierStateFromKeySym(keysym) == switchMod && state == FreewbKeyState_None)
-            {
-                cnEnSwitchKeyPending_ = true;
-            }
-            else if (!Key::isModifierKeySym(keysym) && (state & switchMod))
-            {
-                cnEnSwitchKeyPending_ = false;
-            }
-        }
+        return false;
     }
+
+    if (!settings::instance().get_disableFullHalfSwitch() && keysym == FreewbKey_space && state == FreewbKeyState_Shift)
+    {
+        charWidth_->changeAvailable();
+        dbusProxy_->callPanelSwitchCharWidthMethod();
+        return true;
+    }
+
+    if (keysym == FreewbKey_period && state == FreewbKeyState_Ctrl)
+    {
+        punc_->changeAvailable();
+        dbusProxy_->callPanelSwitchPunctuationModeMethod();
+        return true;
+    }
+
     {
         const char *keyString = Key::readKeyString(settings::instance().get_backFindCode().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
@@ -233,8 +257,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            // make mark auto pair
-            punc_->changeAvailable();
+            punc_->toggleSmartMark();
             return true;
         }
     }
@@ -359,6 +382,21 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
 
 bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
 {
+    const FreewbKeyState switchMod =
+        Key::modifierStateFromKeySym(Key::keySymFromUniqueName(settings::instance().get_cnEnSwitch().c_str()));
+    if (switchMod != FreewbKeyState_None)
+    {
+        const FreewbKeyState keyMod = Key::modifierStateFromKeySym(keysym);
+        if (!Key::isModifierKeySym(keysym))
+        {
+            cnEnSwitchKeyPending_ = false;
+        }
+        else if (keyMod == switchMod && state == FreewbKeyState_None)
+        {
+            cnEnSwitchKeyPending_ = true;
+        }
+    }
+
     if (state != FreewbKeyState_None)
     {
         return false;
@@ -366,9 +404,7 @@ bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
 
     if (keysym == FreewbKey_Escape)
     {
-        stateManager_->reset();
-        candidateList_->clear();
-        engineManager_->reset();
+        reset();
         return true;
     }
 
@@ -398,6 +434,7 @@ bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         if (candidateList_->preeditText().empty())
         {
+            committer_->handleCommittedBackspace();
             return false;
         }
 
@@ -417,6 +454,41 @@ bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     return false;
+}
+
+bool Freewb::handleDirectSymbolKey(FreewbKeySym keysym, FreewbKeyState state)
+{
+    CandidateList *candidates = candidateList_;
+    if (candidates->size() != 0 || !candidates->preeditText().empty())
+    {
+        return false;
+    }
+
+    if (Key::isKey09(keysym, state))
+    {
+        std::string text = charWidth_->convert(keysym, state);
+        if (text.empty())
+        {
+            text.assign(1, static_cast<char>(keysym));
+        }
+        committer_->commit(text);
+        return true;
+    }
+
+    const FreewbKeySym sym = Key::normalizedKeySymbol(keysym, state);
+    if (sym == FreewbKey_None)
+    {
+        return false;
+    }
+
+    const PuncPushResult result = punc_->convert(keysym, state);
+    if (result.empty())
+    {
+        return false;
+    }
+
+    committer_->commit(result.joined());
+    return true;
 }
 
 void Freewb::connectDBusCallback()
@@ -451,6 +523,10 @@ void Freewb::connectDBusCallback()
             else if (std::strcmp(member, "SwitchPunctuation") == 0)
             {
                 this->punc_->changeAvailable();
+            }
+            else if (std::strcmp(member, "SwitchFullWidth") == 0)
+            {
+                this->charWidth_->changeAvailable();
             }
             else if (std::strcmp(member, "SwitchChttrans") == 0)
             {

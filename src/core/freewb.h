@@ -2,6 +2,7 @@
 #define FREEWB_H
 
 #include "candidatelist.h"
+#include "charwidth.h"
 #include "committer.h"
 #include "enginemanager.h"
 #include "idbus.h"
@@ -36,11 +37,13 @@ public:
     Committer *committer() const;
     Chttrans *chttrans() const;
     Punc *punc() const;
+    CharWidth *charWidth() const;
     Special *special() const;
 
 private:
     bool handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state);
     bool handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state);
+    bool handleDirectSymbolKey(FreewbKeySym keysym, FreewbKeyState state);
     void connectDBusCallback();
 
 private:
@@ -51,6 +54,7 @@ private:
     CandidateList *candidateList_ = nullptr;
     Committer *committer_ = nullptr;
     Punc *punc_ = nullptr;
+    CharWidth *charWidth_ = nullptr;
     Special *special_ = nullptr;
     StateManager *stateManager_ = nullptr;
     bool cnEnSwitchKeyPending_ = false;

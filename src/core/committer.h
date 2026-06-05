@@ -27,6 +27,7 @@ public:
     void commit(const std::string &text);
     bool selectCandidate(int index);
     void loadSettings();
+    void handleCommittedBackspace();
 
 private:
     void appendCommittedText(const std::string &text);

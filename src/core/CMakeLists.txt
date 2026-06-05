@@ -6,6 +6,7 @@ add_library(${PROJECT_NAME}-core SHARED
     enginemanager.cpp
     committer.cpp
     chttrans.cpp
+    charwidth.cpp
     punc.cpp
     special.cpp
     statemanager.cpp
