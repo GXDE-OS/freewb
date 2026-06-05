@@ -156,7 +156,7 @@ void handleCommand(DemoState &s, const std::string &cmd)
                       << "  open_sys_conf | show_version | open_prof_conf\n"
                       << "  mod_quick | mod_user | mod_wubi | mod_pinyin\n"
                       << "  open_conf_dir | close_vk | switch_table\n"
-                      << "  set_char_width (calls char-width + punc mode slots)\n"
+                      << "  switch_char_width switch_punctuation\n"
                       << "  clipboard\n";
             return;
         }
@@ -214,11 +214,10 @@ void handleCommand(DemoState &s, const std::string &cmd)
             proxy.callCloseVkBoardMethod();
         else if (action == "switch_table")
             proxy.callSwitchTableMethod();
-        else if (action == "set_char_width")
-        {
-            proxy.callPanelSwitchCharWidthModeMethod();
-            proxy.callPanelSwitchPuncModeMethod();
-        }
+        else if (action == "switch_char_width")
+            proxy.callPanelSwitchCharWidthMethod();
+        else if (action == "switch_punctuation")
+            proxy.callPanelSwitchPunctuationModeMethod();
         else if (action == "clipboard")
         {
             const std::string text = proxy.callGetClipboardMethod();
@@ -355,8 +354,8 @@ void handleCommand(DemoState &s, const std::string &cmd)
         proxy.callSwitchRecodeProofMethod();
         proxy.callSwitchUncommonParseStateMethod(u8"\u6d4b\u8bd5\u8bcd", 1);
         proxy.callPanelSwitchChttransMethod();
-        proxy.callPanelSwitchCharWidthModeMethod();
-        proxy.callPanelSwitchPuncModeMethod();
+        proxy.callPanelSwitchCharWidthMethod();
+        proxy.callPanelSwitchPunctuationModeMethod();
         FREEWB_WARN("cmd=8 settings arg methods sent");
         std::cout << "settings arg methods sent\n";
     }
