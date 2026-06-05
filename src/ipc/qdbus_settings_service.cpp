@@ -129,9 +129,14 @@ void QDBusSettingsService::slot_dbus_switch_caps_state()
     emit signal_switch_caps_state();
 }
 
-void QDBusSettingsService::slot_dbus_set_charWidth_and_markMode(int charWidth, int markMode)
+void QDBusSettingsService::slot_dbus_switch_char_width()
 {
-    emit signal_set_charWidth_and_markMode(charWidth, markMode);
+    emit signal_switch_char_width();
+}
+
+void QDBusSettingsService::slot_dbus_switch_punctuation_mode()
+{
+    emit signal_switch_punctuation_mode();
 }
 
 QString QDBusSettingsService::slot_dbus_get_clipboard_text()

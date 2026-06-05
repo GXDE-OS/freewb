@@ -339,14 +339,14 @@ void SDBusProxy::callSwitchToolbarHideFlgMethod()
     callSettingsMethod("slot_dbus_switch_toolbar_hide_flg", "");
 }
 
-void SDBusProxy::callPanelSwitchCharWidthModeMethod()
+void SDBusProxy::callPanelSwitchCharWidthMethod()
 {
-    sendPanelMethod("SetCharWidthAndMarkMode", "ii", 1, 0);
+    sendPanelMethod("SwitchCharWidth", "");
 }
 
-void SDBusProxy::callPanelSwitchPuncModeMethod()
+void SDBusProxy::callPanelSwitchPunctuationModeMethod()
 {
-    sendPanelMethod("SetCharWidthAndMarkMode", "ii", 0, 1);
+    sendPanelMethod("SwitchPunctuationMode", "");
 }
 
 std::string SDBusProxy::callGetClipboardMethod()

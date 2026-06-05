@@ -344,14 +344,14 @@ void LibDbusProxy::callSwitchToolbarHideFlgMethod()
     callSettingsMethod("slot_dbus_switch_toolbar_hide_flg", "");
 }
 
-void LibDbusProxy::callPanelSwitchCharWidthModeMethod()
+void LibDbusProxy::callPanelSwitchCharWidthMethod()
 {
-    sendPanelMethod("SetCharWidthAndMarkMode", "ii", 1, 0);
+    sendPanelMethod("SwitchCharWidth", "");
 }
 
-void LibDbusProxy::callPanelSwitchPuncModeMethod()
+void LibDbusProxy::callPanelSwitchPunctuationModeMethod()
 {
-    sendPanelMethod("SetCharWidthAndMarkMode", "ii", 0, 1);
+    sendPanelMethod("SwitchPunctuationMode", "");
 }
 
 std::string LibDbusProxy::callGetClipboardMethod()

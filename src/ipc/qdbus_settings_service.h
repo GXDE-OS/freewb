@@ -36,7 +36,8 @@ Q_SIGNALS:
     void signal_set_mark_auto_pairs_flg(int flg);
     void signal_ime_table_load_ok();
     void signal_switch_caps_state();
-    void signal_set_charWidth_and_markMode(int charWidth, int markMode);
+    void signal_switch_char_width();
+    void signal_switch_punctuation_mode();
     void signal_open_freewb_dir();
     void signal_word_freq_switch_ok(const QString &wordText, int flg);
     void signal_open_ui_setting();
@@ -66,7 +67,8 @@ public Q_SLOTS:
     void slot_dbus_set_mark_auto_pairs_flg(int flg);
     void slot_dbus_ime_table_load_ok();
     void slot_dbus_switch_caps_state();
-    void slot_dbus_set_charWidth_and_markMode(int charWidth, int markMode);
+    void slot_dbus_switch_char_width();
+    void slot_dbus_switch_punctuation_mode();
     QString slot_dbus_get_clipboard_text();
     void slot_dbus_open_freewb_dir();
     void slot_dbus_word_freq_switch_ok(const QString &wordText, int flg);

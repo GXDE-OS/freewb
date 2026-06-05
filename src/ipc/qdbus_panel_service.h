@@ -51,7 +51,8 @@ public Q_SLOTS:
     Q_SCRIPTABLE void SwitchInputMode(const QString &inputMode);
     Q_SCRIPTABLE void SwitchCharSet();
     Q_SCRIPTABLE void SwitchSimpOrTrad();
-    Q_SCRIPTABLE void SetCharWidthAndMarkMode(int charWidth, int markMode);
+    Q_SCRIPTABLE void SwitchCharWidth();
+    Q_SCRIPTABLE void SwitchPunctuationMode();
 
 Q_SIGNALS:
     // UI内部信号
@@ -70,7 +71,8 @@ Q_SIGNALS:
     void signal_switch_input_mode(const QString &inputMode);
     void signal_switch_char_set();
     void signal_switch_simp_or_trad();
-    void signal_set_charWidth_and_markMode(int charWidth, int markMode);
+    void signal_switch_char_width();
+    void signal_switch_punctuation_mode();
 
 private:
     void registerQDBusService();

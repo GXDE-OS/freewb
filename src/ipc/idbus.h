@@ -28,8 +28,8 @@ public:
     virtual void callPanelSwitchInputModeMethod(const std::string &inputMode) = 0;
     virtual void callPanelSwitchCharSetMethod() = 0;
     virtual void callPanelSwitchChttransMethod() = 0;
-    virtual void callPanelSwitchCharWidthModeMethod() = 0;
-    virtual void callPanelSwitchPuncModeMethod() = 0;
+    virtual void callPanelSwitchCharWidthMethod() = 0;
+    virtual void callPanelSwitchPunctuationModeMethod() = 0;
     virtual void callPanelToggleCapsStateMethod() = 0;
 
     // Settings

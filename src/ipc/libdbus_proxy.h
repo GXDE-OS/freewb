@@ -37,8 +37,8 @@ public:
     void callPanelSwitchInputModeMethod(const std::string &inputMode) override;
     void callPanelSwitchCharSetMethod() override;
     void callPanelSwitchChttransMethod() override;
-    void callPanelSwitchCharWidthModeMethod() override;
-    void callPanelSwitchPuncModeMethod() override;
+    void callPanelSwitchCharWidthMethod() override;
+    void callPanelSwitchPunctuationModeMethod() override;
     void callPanelToggleCapsStateMethod() override;
 
     void callAddUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText) override;

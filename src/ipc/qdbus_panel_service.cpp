@@ -111,9 +111,14 @@ void QDBusPanelService::SwitchSimpOrTrad()
     emit signal_switch_simp_or_trad();
 }
 
-void QDBusPanelService::SetCharWidthAndMarkMode(int charWidth, int markMode)
+void QDBusPanelService::SwitchCharWidth()
 {
-    emit signal_set_charWidth_and_markMode(charWidth, markMode);
+    emit signal_switch_char_width();
+}
+
+void QDBusPanelService::SwitchPunctuationMode()
+{
+    emit signal_switch_punctuation_mode();
 }
 
 } // namespace freewb::ipc
