@@ -106,7 +106,8 @@ void MainProgram::connectPanelDBus()
     connect(m_toolbar, &ToolbarWin::signal_fcitx_switch_mark, m_panelDBusService,
             &freewb::ipc::QDBusPanelService::SwitchPunctuation);
     connect(m_toolbar, &ToolbarWin::signal_switch_chttrans, m_panelDBusService, &freewb::ipc::QDBusPanelService::SwitchChttrans);
-    connect(m_toolbar, &ToolbarWin::signal_switch_char_set, m_panelDBusService, &freewb::ipc::QDBusPanelService::ReloadConfig);
+    connect(m_toolbar, &ToolbarWin::signal_switch_char_set, m_panelDBusService,
+            &freewb::ipc::QDBusPanelService::SwitchCharSetMode);
     connect(m_toolbar, &ToolbarWin::signal_open_setting_win, m_settingWin, &SettingWin::slot_open_win);
     connect(m_toolbar, &ToolbarWin::signal_open_context_menu, m_contextmenu, &ContextMenu::slot_show_context_menu);
     connect(m_toolbar, &ToolbarWin::signal_toggle_vk, m_virtualKeyboard, &Keyboard::slot_toggle_win);

@@ -105,7 +105,6 @@ bool ToolbarWin::is_traditional_mode()
 void ToolbarWin::switch_char_set_mode()
 {
     s_charSetMode = (s_charSetMode == CHAR_GB) ? CHAR_GBK : CHAR_GB;
-    settings::instance().set_currentCharset(s_charSetMode);
 }
 
 CharSetMode ToolbarWin::get_char_set_mode()
@@ -133,6 +132,8 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_mouseMoveFlag = false;
 
     set_input_mode(QString::fromStdString(settings::instance().get_inputMode()));
+    s_isTraditionalMode = settings::instance().get_simpTradFlg();
+    s_charSetMode = static_cast<CharSetMode>(settings::instance().get_charSet());
 
     // 初始化虚拟键盘的输入模式选择菜单
     m_keyboardMenu.setStyleSheet(QSS_MENU);
