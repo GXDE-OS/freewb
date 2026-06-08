@@ -114,9 +114,9 @@ void QDBusSettingsService::slot_dbus_switch_skin()
     emit signal_switch_skin();
 }
 
-void QDBusSettingsService::slot_dbus_set_mark_auto_pairs_flg(int flg)
+void QDBusSettingsService::slot_dbus_switch_mark_auto_pairs_flg()
 {
-    emit signal_set_mark_auto_pairs_flg(flg);
+    emit signal_switch_mark_auto_pairs_flg();
 }
 
 void QDBusSettingsService::slot_dbus_ime_table_load_ok()

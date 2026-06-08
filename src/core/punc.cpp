@@ -70,10 +70,9 @@ void Punc::changeAvailable()
     chinesePuncEnabled_ = !chinesePuncEnabled_;
 }
 
-void Punc::toggleSmartMark()
+void Punc::toggleAutoPair()
 {
     smartMarkEnabled_ = !smartMarkEnabled_;
-    settings::instance().set_smartMark(smartMarkEnabled_);
 }
 
 bool Punc::isAsciiSymbolKey(FreewbKeySym sym)

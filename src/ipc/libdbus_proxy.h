@@ -59,6 +59,7 @@ public:
     void callCloseVkBoardMethod() override;
     void callSwitchTableMethod() override;
     void callSwitchToolbarHideFlgMethod() override;
+    void callSwitchMarkAutoPairsFlgMethod() override;
     std::string callGetClipboardMethod() override;
     void callImeTableLoadOkMethod() override;
     void callUsrWordLoadOkMethod() override;

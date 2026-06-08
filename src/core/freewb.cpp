@@ -257,7 +257,8 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
         {
-            punc_->toggleSmartMark();
+            punc_->toggleAutoPair();
+            dbusProxy_->callSwitchMarkAutoPairsFlgMethod();
             return true;
         }
     }

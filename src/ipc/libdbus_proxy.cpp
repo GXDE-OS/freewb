@@ -344,6 +344,11 @@ void LibDbusProxy::callSwitchToolbarHideFlgMethod()
     callSettingsMethod("slot_dbus_switch_toolbar_hide_flg", "");
 }
 
+void LibDbusProxy::callSwitchMarkAutoPairsFlgMethod()
+{
+    callSettingsMethod("slot_dbus_switch_mark_auto_pairs_flg", "");
+}
+
 void LibDbusProxy::callPanelSwitchCharWidthMethod()
 {
     sendPanelMethod("SwitchCharWidth", "");

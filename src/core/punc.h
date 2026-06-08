@@ -54,7 +54,7 @@ public:
     void changeAvailable() override;
 
     void loadSettings();
-    void toggleSmartMark();
+    void toggleAutoPair();
 
     PuncPushResult convert(FreewbKeySym keysym, FreewbKeyState state);
     bool shouldProcessKey(FreewbKeySym keysym, FreewbKeyState state) const;

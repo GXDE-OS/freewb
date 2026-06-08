@@ -318,8 +318,14 @@ void MainProgram::connectSettingsDBus()
                 }
             });
 
-    connect(s, &freewb::ipc::QDBusSettingsService::signal_set_mark_auto_pairs_flg, this,
-            [](int flg) { settings::instance().set_smartMark(flg != 0); });
+    connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_mark_auto_pairs_flg, this,
+            []()
+            {
+                const bool enabled = !settings::instance().get_smartMark();
+                settings::instance().set_smartMark(enabled);
+                settings::instance().save();
+                g_settingsNotifier.notifySettingDataChangedToLocal();
+            });
     connect(s, &freewb::ipc::QDBusSettingsService::signal_set_recode_calib_flg, this,
             [](int flg) { settings::instance().set_recodeCalib(flg != 0); });
 
