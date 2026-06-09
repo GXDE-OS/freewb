@@ -114,10 +114,10 @@ public:
 private:
     bool filtCharset(const std::string &hz) const;
 
-    static void collectCandidateItemsForPrefix(const std::string &prefix,
-                                               const std::unordered_map<std::string, std::vector<std::string>> &dict,
-                                               CandidatePayload &out);
-    void readNulTerminatedField(std::ifstream &in, std::string &out);
+    void collectCandidateItemsForPrefix(const std::string &prefix,
+                                        const std::unordered_map<std::string, std::vector<std::string>> &dict,
+                                        CandidatePayload &out) const;
+    bool readNulTerminatedField(std::ifstream &in, std::string &out);
     bool readU32(std::ifstream &in, uint32_t &out);
     bool readExact(std::ifstream &in, void *dst, std::streamsize len);
     bool writeNulTerminatedField(std::ofstream &out, const std::string &value) const;
