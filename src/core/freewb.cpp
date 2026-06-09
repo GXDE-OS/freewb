@@ -468,12 +468,7 @@ bool Freewb::handleDirectSymbolKey(FreewbKeySym keysym, FreewbKeyState state)
 
     if (Key::isKey09(keysym, state))
     {
-        std::string text = charWidth_->convert(keysym, state);
-        if (text.empty())
-        {
-            text.assign(1, static_cast<char>(keysym));
-        }
-        committer_->commit(text);
+        committer_->commit(std::string(1, static_cast<char>(keysym)));
         return true;
     }
 

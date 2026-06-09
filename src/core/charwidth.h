@@ -21,16 +21,12 @@ public:
 
     void loadSettings();
 
-    std::string convert(FreewbKeySym keysym, FreewbKeyState state) const;
-    bool overridesChinesePunc(FreewbKeySym sym) const;
-    bool isTopCommitKey(FreewbKeySym keysym, FreewbKeyState state) const;
+    bool spaceFullWhenCharHalf() const;
     void convertString(std::string &text) const;
 
 private:
-    static bool isPrintableAscii(FreewbKeySym sym);
     static const char *fullWidthForAscii(unsigned char ch);
     const char *fullWidthIfEnabled(unsigned char ch) const;
-    bool shouldConvert(FreewbKeySym sym) const;
 
 private:
     bool available_ = false;

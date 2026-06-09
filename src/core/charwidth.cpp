@@ -1,6 +1,5 @@
 #include "charwidth.h"
 
-#include "key.h"
 #include "settings.h"
 
 namespace freewb
@@ -42,9 +41,9 @@ void CharWidth::changeAvailable()
     available_ = !available_;
 }
 
-bool CharWidth::isPrintableAscii(FreewbKeySym sym)
+bool CharWidth::spaceFullWhenCharHalf() const
 {
-    return sym >= FreewbKey_space && sym <= static_cast<FreewbKeySym>(0x007e);
+    return spaceFullWhenCharHalf_;
 }
 
 const char *CharWidth::fullWidthForAscii(unsigned char ch)
@@ -72,45 +71,6 @@ const char *CharWidth::fullWidthIfEnabled(unsigned char ch) const
         return fullWidthForAscii(ch);
     }
     return nullptr;
-}
-
-bool CharWidth::shouldConvert(FreewbKeySym sym) const
-{
-    if (!isPrintableAscii(sym))
-    {
-        return false;
-    }
-    return fullWidthIfEnabled(static_cast<unsigned char>(sym)) != nullptr;
-}
-
-std::string CharWidth::convert(FreewbKeySym keysym, FreewbKeyState state) const
-{
-    if (state != FreewbKeyState_None || !shouldConvert(keysym))
-    {
-        return {};
-    }
-
-    if (const char *converted = fullWidthIfEnabled(static_cast<unsigned char>(keysym)); converted != nullptr)
-    {
-        return converted;
-    }
-    return {};
-}
-
-bool CharWidth::overridesChinesePunc(FreewbKeySym sym) const
-{
-    return available_ && sym == FreewbKey_backslash;
-}
-
-bool CharWidth::isTopCommitKey(FreewbKeySym keysym, FreewbKeyState state) const
-{
-    const FreewbKeySym sym = Key::normalizedKeySymbol(keysym, state);
-    if (sym == FreewbKey_None)
-    {
-        return false;
-    }
-    return shouldConvert(sym) && !Key::isKeyAZ(sym, FreewbKeyState_None) && !Key::isKeyaz(sym, FreewbKeyState_None) &&
-           !Key::isKey09(sym, FreewbKeyState_None);
 }
 
 void CharWidth::convertString(std::string &text) const

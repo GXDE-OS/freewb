@@ -12,7 +12,7 @@ namespace freewb
 {
 
 const PuncPairEntry Punc::kAutoPairList[] = {
-    {"(", ")", "（", "）"}, {"[", "]", "【", "】"}, {"{", "}", "｛", "｝"},
+    {"(", ")", "（", "）"}, {"[", "]", "【", "】"}, {"{", "}", "{", "}"},
     {"<", ">", "《", "》"}, {"\"", "\"", "“", "”"}, {"'", "'", "‘", "’"},
 };
 
@@ -22,7 +22,6 @@ const PuncMapEntry Punc::kPuncMap[] = {
     {'?', {"？"}, 1},
     {':', {"："}, 1},
     {';', {"；"}, 1},
-    {'!', {"！"}, 1},
     {'\\', {"、"}, 1},
     {'<', {"《"}, 1},
     {'>', {"》"}, 1},
@@ -30,17 +29,11 @@ const PuncMapEntry Punc::kPuncMap[] = {
     {')', {"）"}, 1},
     {'[', {"【", "「", "『"}, 3},
     {']', {"】", "」", "』"}, 3},
-    {'{', {"｛"}, 1},
-    {'}', {"｝"}, 1},
-    {'~', {"～"}, 1},
     {'`', {"·"}, 1},
     {'^', {"……"}, 1},
     {'_', {"——"}, 1},
     {'"', {"“"}, 1},
     {'\'', {"‘"}, 1},
-    {'#', {"＃"}, 1},
-    {'$', {"￥"}, 1},
-    {'%', {"％"}, 1},
 };
 
 Punc::Punc(Freewb *freewb) : freewb_(freewb)
@@ -141,13 +134,9 @@ PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     CharWidth *const charWidth = freewb_->charWidth();
-    if (charWidth != nullptr && charWidth->overridesChinesePunc(sym))
+    if (sym == FreewbKey_backslash && charWidth != nullptr && charWidth->available())
     {
-        const std::string text = charWidth->convert(keysym, state);
-        if (!text.empty())
-        {
-            return {{}, text};
-        }
+        return {{}, "\\"};
     }
 
     char pairKey[2] = {};
@@ -196,18 +185,13 @@ PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
         return {{}, std::string(1, ascii)};
     }
 
-    if (!isAsciiSymbolKey(sym))
+    if (sym == FreewbKey_space)
     {
-        if (charWidth == nullptr)
+        if (charWidth != nullptr && (charWidth->available() || charWidth->spaceFullWhenCharHalf()))
         {
-            return {};
+            return {{}, " "};
         }
-        const std::string fallback = charWidth->convert(keysym, state);
-        if (fallback.empty())
-        {
-            return {};
-        }
-        return {{}, fallback};
+        return {};
     }
 
     if (chinesePuncEnabled_)
@@ -231,7 +215,11 @@ bool Punc::shouldProcessKey(FreewbKeySym keysym, FreewbKeyState state) const
     }
 
     CharWidth *const charWidth = freewb_->charWidth();
-    if (charWidth != nullptr && (charWidth->overridesChinesePunc(sym) || charWidth->isTopCommitKey(keysym, state)))
+    if (sym == FreewbKey_backslash && charWidth != nullptr && charWidth->available())
+    {
+        return true;
+    }
+    if (sym == FreewbKey_space && charWidth != nullptr && (charWidth->available() || charWidth->spaceFullWhenCharHalf()))
     {
         return true;
     }
