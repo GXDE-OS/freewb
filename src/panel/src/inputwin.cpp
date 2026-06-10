@@ -1436,56 +1436,37 @@ void InputWin::slot_kim_UpdateSpotLocation(int x, int y)
 {
     m_imPromptPosition = QPoint(x, y);
 
-    if (!m_cursorFollow)
+    if (x + width() > m_desktopSize.width())
     {
-        // move( m_defaultPosition );
+        x = m_desktopSize.width() - width();
     }
-    else
+
+    if (y + height() > m_desktopSize.height())
     {
-        if (x + width() > m_desktopSize.width())
-        {
-            x = m_desktopSize.width() - width();
-        }
-
-        if (y + height() > m_desktopSize.height())
-        {
-            y = y - height() - 30;
-        }
-        else
-        {
-            y += 10;
-        }
-
-        move(x, y);
+        y = y - height();
     }
+
+    move(x, y);
 }
 
 void InputWin::slot_kim_SetSpotLocation(int x, int y, int w, int h)
 {
-    Q_UNUSED(w)
-    // printf("8888setspot\n");
+    x += w;
     m_imPromptPosition = QPoint(x, y + h);
 
-    if (!m_cursorFollow)
+    if (x + width() > m_desktopSize.width())
     {
-        // move( m_defaultPosition );
+        x = m_desktopSize.width() - width();
+    }
+
+    if (y + height() > m_desktopSize.height())
+    {
+        y = y - height();
     }
     else
     {
-        if (x + width() > m_desktopSize.width())
-        {
-            x = m_desktopSize.width() - width();
-        }
-
-        if (y + height() > m_desktopSize.height())
-        {
-            y = y - height() - 10;
-        }
-        else
-        {
-            y += (h + 10);
-        }
-
-        move(x, y);
+        y += h;
     }
+
+    move(x, y);
 }
