@@ -1,0 +1,6 @@
+usr/bin/
+etc/xdg/autostart/org.freewb.desktop
+usr/lib/*/freewb/
+usr/share/freewb/
+usr/share/locale/*/LC_MESSAGES/freewb.mo
+usr/share/icons/hicolor/scalable/apps/freewb.svg

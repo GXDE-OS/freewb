@@ -1,0 +1,56 @@
+Source: freewb
+Section: utils
+Priority: optional
+Maintainer: hanteng <hanteng@kylinos.cn>
+Uploaders: niushijia <niushijia@kylinos.cn>
+Build-Depends:
+ cmake (>= 3.6),
+ debhelper (>= 11~),
+ extra-cmake-modules,
+ fcitx-libs-dev,
+ gettext,
+ pkg-config,
+ libdbus-1-dev,
+ libfcitx5config-dev,
+ libfcitx5core-dev,
+ libfcitx5utils-dev,
+ libspdlog-dev,
+ libsystemd-dev,
+ libqt5svg5-dev,
+ libwayland-dev,
+ libx11-dev,
+ libxext-dev,
+ libxtst-dev,
+ qtbase5-dev,
+ wayland-scanner++,
+ waylandpp-dev,
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+Homepage: https://gitee.com/openkylin/freewb
+
+Package: freewb
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+Replaces: freewb (<< 4.0.0)
+Breaks: freewb (<< 4.0.0)
+Description: Freewb input method base files.
+
+Package: freewb-fcitx4
+Architecture: any
+Depends:
+ freewb (= ${source:Version}),
+ fcitx (>= 4.2.7),
+ ${misc:Depends},
+ ${shlibs:Depends},
+Description: Freewb input method for fcitx4.
+
+Package: freewb-fcitx5
+Architecture: any
+Depends:
+ freewb (= ${source:Version}),
+ fcitx5,
+ ${misc:Depends},
+ ${shlibs:Depends},
+Description: Freewb input method for fcitx5.

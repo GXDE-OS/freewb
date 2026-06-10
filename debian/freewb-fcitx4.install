@@ -1,0 +1,4 @@
+usr/lib/*/fcitx/libfreewb-fcitx4.so
+usr/share/fcitx/addon/fcitx-freewb.conf
+usr/share/fcitx/inputmethod/freewb.conf
+usr/share/fcitx/imicon/freewb.svg

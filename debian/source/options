@@ -1,0 +1,8 @@
+# 显式 tar-ignore 会替换 dpkg-source 默认列表（含 -I*.so），
+# 避免源码树中 libopencc.so 等符号链接被排除；不要添加 *.so。
+tar-ignore = *.a
+tar-ignore = *.la
+tar-ignore = *.o
+tar-ignore = .git
+tar-ignore = .gitignore
+tar-ignore = build
