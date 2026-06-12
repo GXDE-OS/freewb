@@ -342,10 +342,27 @@ void EngineManager::changeEngine(const std::string &engineName)
 
 void EngineManager::reloadDictionaries()
 {
-    IFreewbEngine *engine = findEngineByName("engine:wbzx");
-    if (engine != nullptr)
+    const bool wubiTableChanged = settings::instance().get_wubiTableChanged() != 0;
+    const bool pinyinTableChanged = settings::instance().get_pinyinTableChanged() != 0;
+    const bool userWordFlg = settings::instance().get_userWordFlg() != 0;
+
+    FREEWB_DEBUG("wubiTableChanged: {}, pinyinTableChanged: {}, userWordFlg: {}", wubiTableChanged, pinyinTableChanged,
+                 userWordFlg);
+
+    auto *wbzx = dynamic_cast<WbzxEngine *>(findEngineByName("engine:wbzx"));
+    auto *py = dynamic_cast<PyEngine *>(findEngineByName("engine:py"));
+
+    if (pinyinTableChanged && py != nullptr)
     {
-        engine->reset();
+        py->reloadMainDictionary();
+    }
+    if (wubiTableChanged && wbzx != nullptr)
+    {
+        wbzx->reloadMainDictionary();
+    }
+    if (userWordFlg && wbzx != nullptr)
+    {
+        wbzx->reloadUserDictionary();
     }
 }
 

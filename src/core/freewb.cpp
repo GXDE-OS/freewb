@@ -206,6 +206,8 @@ void Freewb::reloadConfig()
     settings::instance().reload();
 
     const bool userWordFlg = settings::instance().get_userWordFlg();
+    const bool wubiTableChanged = settings::instance().get_wubiTableChanged() != 0;
+    const bool pinyinTableChanged = settings::instance().get_pinyinTableChanged() != 0;
 
     committer_->loadSettings();
     candidateList_->loadSettings();
@@ -213,10 +215,21 @@ void Freewb::reloadConfig()
     punc_->loadSettings();
     chttrans_->loadSettings();
 
+    engineManager_->reloadDictionaries();
+
     if (userWordFlg)
     {
-        engineManager_->reloadDictionaries();
         dbusProxy_->callUsrWordLoadOkMethod();
+    }
+
+    if (wubiTableChanged)
+    {
+        dbusProxy_->callWubiTableLoadOkMethod();
+    }
+
+    if (pinyinTableChanged)
+    {
+        dbusProxy_->callPinyinTableLoadOkMethod();
     }
 
     updateCandidateAndPreeditToUI();
