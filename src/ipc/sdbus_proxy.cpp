@@ -364,9 +364,14 @@ void SDBusProxy::callPanelToggleCapsStateMethod()
     callSettingsMethod("slot_dbus_switch_caps_state", "");
 }
 
-void SDBusProxy::callImeTableLoadOkMethod()
+void SDBusProxy::callWubiTableLoadOkMethod()
 {
-    callSettingsMethod("slot_dbus_ime_table_load_ok", "");
+    callSettingsMethod("slot_dbus_wubi_table_load_ok", "");
+}
+
+void SDBusProxy::callPinyinTableLoadOkMethod()
+{
+    callSettingsMethod("slot_dbus_pinyin_table_load_ok", "");
 }
 
 void SDBusProxy::callUsrWordLoadOkMethod()

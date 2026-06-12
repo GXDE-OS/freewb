@@ -34,7 +34,8 @@ Q_SIGNALS:
     void signal_switch_lexicon();
     void signal_switch_skin();
     void signal_switch_mark_auto_pairs_flg();
-    void signal_ime_table_load_ok();
+    void signal_wubi_table_load_ok();
+    void signal_pinyin_table_load_ok();
     void signal_switch_caps_state();
     void signal_switch_char_width();
     void signal_switch_punctuation_mode();
@@ -65,7 +66,8 @@ public Q_SLOTS:
     void slot_dbus_switch_lexicon();
     void slot_dbus_switch_skin();
     void slot_dbus_switch_mark_auto_pairs_flg();
-    void slot_dbus_ime_table_load_ok();
+    void slot_dbus_wubi_table_load_ok();
+    void slot_dbus_pinyin_table_load_ok();
     void slot_dbus_switch_caps_state();
     void slot_dbus_switch_char_width();
     void slot_dbus_switch_punctuation_mode();

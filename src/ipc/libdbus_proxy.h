@@ -61,7 +61,8 @@ public:
     void callSwitchToolbarHideFlgMethod() override;
     void callSwitchMarkAutoPairsFlgMethod() override;
     std::string callGetClipboardMethod() override;
-    void callImeTableLoadOkMethod() override;
+    void callWubiTableLoadOkMethod() override;
+    void callPinyinTableLoadOkMethod() override;
     void callUsrWordLoadOkMethod() override;
     void callQuickTableLoadOkMethod() override;
 

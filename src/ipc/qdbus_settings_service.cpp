@@ -119,9 +119,14 @@ void QDBusSettingsService::slot_dbus_switch_mark_auto_pairs_flg()
     emit signal_switch_mark_auto_pairs_flg();
 }
 
-void QDBusSettingsService::slot_dbus_ime_table_load_ok()
+void QDBusSettingsService::slot_dbus_wubi_table_load_ok()
 {
-    emit signal_ime_table_load_ok();
+    emit signal_wubi_table_load_ok();
+}
+
+void QDBusSettingsService::slot_dbus_pinyin_table_load_ok()
+{
+    emit signal_pinyin_table_load_ok();
 }
 
 void QDBusSettingsService::slot_dbus_switch_caps_state()

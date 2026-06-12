@@ -369,9 +369,14 @@ void LibDbusProxy::callPanelToggleCapsStateMethod()
     callSettingsMethod("slot_dbus_switch_caps_state", "");
 }
 
-void LibDbusProxy::callImeTableLoadOkMethod()
+void LibDbusProxy::callWubiTableLoadOkMethod()
 {
-    callSettingsMethod("slot_dbus_ime_table_load_ok", "");
+    callSettingsMethod("slot_dbus_wubi_table_load_ok", "");
+}
+
+void LibDbusProxy::callPinyinTableLoadOkMethod()
+{
+    callSettingsMethod("slot_dbus_pinyin_table_load_ok", "");
 }
 
 void LibDbusProxy::callUsrWordLoadOkMethod()
