@@ -1,5 +1,7 @@
 #include "lexicontoolwin.h"
 
+#include <QEventLoop>
+
 #include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
@@ -39,9 +41,12 @@ void LexiconWorker::set_op_param(LexiconToolOp opType, const QString &srcFile, c
 void LexiconWorker::slot_start_work()
 {
     m_count = 0;
+    QByteArray srcUtf8 = m_srcFile.toUtf8();
+    QByteArray destUtf8 = m_destFile.toUtf8();
+
     if (m_opType == LTO_DUMP_SYS_TABLE || m_opType == LTO_DUMP_PINYIN_TABLE)
     {
-        if (freewb::tools::mb2txt(m_srcFile.toUtf8().data(), m_destFile.toUtf8().data(), &m_count))
+        if (freewb::tools::mb2txt(srcUtf8.data(), destUtf8.data(), &m_count))
         {
             emit signal_process_updated(m_opType, 1, m_count);
         }
@@ -52,7 +57,7 @@ void LexiconWorker::slot_start_work()
     }
     else if (m_opType == LTO_GEN_SYS_TABLE || m_opType == LTO_GEN_PINYIN_TABLE)
     {
-        if (freewb::tools::txt2mb(m_srcFile.toUtf8().data(), m_destFile.toUtf8().data(), &m_count))
+        if (freewb::tools::txt2mb(srcUtf8.data(), destUtf8.data(), &m_count))
         {
             emit signal_process_updated(m_opType, 1, m_count);
         }
@@ -96,7 +101,8 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
     m_lexiconWorker->moveToThread(m_lexiconThread);
     connect(m_lexiconThread, &QThread::started, m_lexiconWorker, &LexiconWorker::slot_start_work);
     connect(m_lexiconThread, &QThread::finished, this, &LexiconToolWin::slot_worker_thread_finished);
-    connect(m_lexiconWorker, &LexiconWorker::signal_process_updated, this, &LexiconToolWin::slot_process_updated);
+    connect(m_lexiconWorker, &LexiconWorker::signal_process_updated, this, &LexiconToolWin::slot_process_updated,
+            Qt::QueuedConnection);
 
     m_msgBox = new QMessageBox(this);
     m_msgBox->setWindowFlag(Qt::FramelessWindowHint);
@@ -240,30 +246,150 @@ void LexiconToolWin::lexicon_thread_quit()
     }
 }
 
+void LexiconToolWin::showLexiconProgressMsgBox(QMessageBox *box, const char *textMsgid)
+{
+    box->setWindowFlag(Qt::FramelessWindowHint);
+    freewb::applyWaylandOverlayWindowHints(box);
+    box->setIcon(QMessageBox::NoIcon);
+    box->setText(_(textMsgid));
+    box->setStandardButtons(QMessageBox::NoButton);
+    box->show();
+    QApplication::processEvents();
+}
+
+void LexiconToolWin::hideLexiconProgressMsgBox(QMessageBox *box)
+{
+    box->hide();
+    QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+}
+
+void LexiconToolWin::startDumpLexicon(LexiconToolOp opType, const QString &txtPath, const QString &mbPath)
+{
+    m_workerOpStatus = 0;
+    m_workerOpCount = 0;
+    m_lexiconWorker->set_op_param(opType, txtPath, mbPath);
+    if (m_lexiconThread->isRunning())
+    {
+        lexicon_thread_quit();
+    }
+
+    QMessageBox *progressBox = new QMessageBox(this);
+    showLexiconProgressMsgBox(progressBox, "Exporting lexicon...");
+
+    m_lexiconThread->start();
+
+    QEventLoop loop;
+    m_opWaitLoop = &loop;
+    loop.exec();
+    m_opWaitLoop = nullptr;
+
+    hideLexiconProgressMsgBox(progressBox);
+    delete progressBox;
+
+    QMessageBox *msgBox = new QMessageBox(this);
+    msgBox->setWindowFlag(Qt::FramelessWindowHint);
+    freewb::applyWaylandOverlayWindowHints(msgBox);
+    if (m_workerOpStatus == 1)
+    {
+        msgBox->setIcon(QMessageBox::Information);
+        msgBox->setText(QString(_("Lexicon export completed! Number: %1")).arg(m_workerOpCount));
+    }
+    else
+    {
+        msgBox->setIcon(QMessageBox::Critical);
+        msgBox->setText(_("File open failed or format error!"));
+    }
+    msgBox->setStandardButtons(QMessageBox::Ok);
+    msgBox->button(QMessageBox::Ok)->setIcon(QIcon());
+    msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&OK)"));
+    msgBox->setDefaultButton(QMessageBox::Ok);
+    msgBox->exec();
+    delete msgBox;
+}
+
+int LexiconToolWin::startGenLexicon(LexiconToolOp opType, const QString &txtPath, const QString &mbPath)
+{
+    m_workerOpStatus = 0;
+    m_workerOpCount = 0;
+    m_lexiconWorker->set_op_param(opType, txtPath, mbPath);
+    if (m_lexiconThread->isRunning())
+    {
+        lexicon_thread_quit();
+    }
+
+    QMessageBox *progressBox = new QMessageBox(this);
+    showLexiconProgressMsgBox(progressBox, "Generating lexicon...");
+
+    m_lexiconThread->start();
+
+    QEventLoop loop;
+    m_opWaitLoop = &loop;
+    loop.exec();
+    m_opWaitLoop = nullptr;
+
+    hideLexiconProgressMsgBox(progressBox);
+    delete progressBox;
+
+    if (m_workerOpStatus != 1)
+    {
+        QMessageBox *msgBox = new QMessageBox(this);
+        msgBox->setWindowFlag(Qt::FramelessWindowHint);
+        freewb::applyWaylandOverlayWindowHints(msgBox);
+        msgBox->setIcon(QMessageBox::Critical);
+        msgBox->setText(_("File open failed or format error!"));
+        msgBox->setStandardButtons(QMessageBox::Ok);
+        msgBox->button(QMessageBox::Ok)->setIcon(QIcon());
+        msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&OK)"));
+        msgBox->setDefaultButton(QMessageBox::Ok);
+        msgBox->exec();
+        delete msgBox;
+        return QMessageBox::No;
+    }
+
+    QMessageBox *msgBox = new QMessageBox(this);
+    msgBox->setWindowFlag(Qt::FramelessWindowHint);
+    freewb::applyWaylandOverlayWindowHints(msgBox);
+    msgBox->setIcon(QMessageBox::Question);
+    msgBox->setText(_("Lexicon generated successfully, whether to replace the current used lexicon?"));
+    msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox->button(QMessageBox::Yes)->setIcon(QIcon());
+    msgBox->button(QMessageBox::Yes)->setText(_("Yes(&Y)"));
+    msgBox->button(QMessageBox::No)->setIcon(QIcon());
+    msgBox->button(QMessageBox::No)->setText(_("No(&N)"));
+    msgBox->setDefaultButton(QMessageBox::Yes);
+    const int ret = msgBox->exec();
+    delete msgBox;
+    return ret;
+}
+
 void LexiconToolWin::slot_process_updated(LexiconToolOp opType, int opStatus, int count)
 {
-    // qDebug() << opType << opStatus << count;
-    if (opStatus == 0) //
+    if (opType == LTO_DUMP_SYS_TABLE || opType == LTO_DUMP_PINYIN_TABLE || opType == LTO_GEN_SYS_TABLE ||
+        opType == LTO_GEN_PINYIN_TABLE)
+    {
+        if (opStatus == 0)
+        {
+            return;
+        }
+
+        m_workerOpStatus = opStatus;
+        m_workerOpCount = count;
+        lexicon_thread_quit();
+        if (m_opWaitLoop != nullptr)
+        {
+            m_opWaitLoop->quit();
+        }
+        return;
+    }
+
+    if (opStatus == 0)
     {
         m_msgBox->setText(QString(_("Number: ")) + QString::number(count));
     }
     else if (opStatus == 1)
     {
         lexicon_thread_quit();
-        if (opType == LTO_DUMP_SYS_TABLE || opType == LTO_DUMP_PINYIN_TABLE)
-        {
-            m_msgBox->setText(QString(_("Lexicon export completed! Number: %1")).arg(count));
-            m_msgBox->button(QMessageBox::Cancel)->setEnabled(false);
-            m_msgBox->button(QMessageBox::Ok)->setEnabled(true);
-        }
-        else if (opType == LTO_GEN_SYS_TABLE || opType == LTO_GEN_PINYIN_TABLE)
-        {
-            m_msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-            m_msgBox->button(QMessageBox::Yes)->setText(_("Yes(&Y)"));
-            m_msgBox->button(QMessageBox::No)->setText(_("No(&N)"));
-            m_msgBox->setText(_("Lexicon generated successfully, whether to replace the current used lexicon?"));
-        }
-        else if (opType == LTO_MARK_RARE_CHAR || opType == LTO_MARK_THINK_WORD)
+        if (opType == LTO_MARK_RARE_CHAR || opType == LTO_MARK_THINK_WORD)
         {
             m_msgBox->setText(QString(_("Lexicon marked completed! Number: %1")).arg(count));
             m_msgBox->button(QMessageBox::Cancel)->setEnabled(false);
@@ -345,20 +471,7 @@ void LexiconToolWin::on_btnDumpSysLexicon_clicked()
     QString fileName = QFileDialog::getSaveFileName(this, _("Generate TXT file"), QString(qgetenv("HOME")) + "/wbzx.txt");
     if (!fileName.isEmpty())
     {
-        m_lexiconWorker->set_op_param(LTO_DUMP_SYS_TABLE, fileName, CUR_USED_WUBI_TABLE);
-        m_lexiconThread->start();
-
-        m_msgBox->setText(_("Exporting lexicon..."));
-        m_msgBox->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-        m_msgBox->button(QMessageBox::Cancel)->setEnabled(true);
-        m_msgBox->button(QMessageBox::Ok)->setEnabled(false);
-        m_msgBox->button(QMessageBox::Cancel)->setText(_("Cancel(&C)"));
-        m_msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&O)"));
-        int ret = m_msgBox->exec();
-        if (ret == QMessageBox::Cancel)
-        {
-            lexicon_thread_quit();
-        }
+        startDumpLexicon(LTO_DUMP_SYS_TABLE, fileName, CUR_USED_WUBI_TABLE);
     }
 }
 
@@ -367,23 +480,13 @@ void LexiconToolWin::on_btnMakeSysLexicon_clicked()
     QString fileName = QFileDialog::getOpenFileName(this, _("Select TXT file"), QString(qgetenv("HOME")));
     if (!fileName.isEmpty())
     {
-        m_lexiconWorker->set_op_param(LTO_GEN_SYS_TABLE, fileName, m_tmpSysTable);
-        m_lexiconThread->start();
-
-        m_msgBox->setText(_("Generating lexicon..."));
-        m_msgBox->setStandardButtons(QMessageBox::Cancel);
-        m_msgBox->button(QMessageBox::Cancel)->setText(_("Cancel(&C)"));
-        int ret = m_msgBox->exec();
-        if (ret == QMessageBox::Cancel)
-        {
-            lexicon_thread_quit();
-        }
-        else if (ret == QMessageBox::Yes)
+        const int ret = startGenLexicon(LTO_GEN_SYS_TABLE, fileName, m_tmpSysTable);
+        if (ret == QMessageBox::Yes)
         {
             QString cmd = QString("cp %1 %2").arg(m_tmpSysTable).arg(CUR_USED_WUBI_TABLE);
             system(cmd.toUtf8().data());
 
-            settings::instance().set_imeTableChanged(1);
+            settings::instance().set_wubiTableChanged(1);
             emit signal_ime_table_changed();
         }
         else if (ret == QMessageBox::No)
@@ -472,20 +575,7 @@ void LexiconToolWin::on_btnDumpPinyinLexicon_clicked()
     QString fileName = QFileDialog::getSaveFileName(this, _("Generate TXT file"), QString(qgetenv("HOME")) + "/pinyin.txt");
     if (!fileName.isEmpty())
     {
-        m_lexiconWorker->set_op_param(LTO_DUMP_PINYIN_TABLE, fileName, CUR_USED_PINYIN_TABLE);
-        m_lexiconThread->start();
-
-        m_msgBox->setText(_("Exporting lexicon..."));
-        m_msgBox->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-        m_msgBox->button(QMessageBox::Cancel)->setEnabled(true);
-        m_msgBox->button(QMessageBox::Ok)->setEnabled(false);
-        m_msgBox->button(QMessageBox::Cancel)->setText(_("Cancel(&C)"));
-        m_msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&O)"));
-        int ret = m_msgBox->exec();
-        if (ret == QMessageBox::Cancel)
-        {
-            lexicon_thread_quit();
-        }
+        startDumpLexicon(LTO_DUMP_PINYIN_TABLE, fileName, CUR_USED_PINYIN_TABLE);
     }
 }
 
@@ -494,23 +584,13 @@ void LexiconToolWin::on_btnMakePinyinLexicon_clicked()
     QString fileName = QFileDialog::getOpenFileName(this, _("Select TXT file"), QString(qgetenv("HOME")));
     if (!fileName.isEmpty())
     {
-        m_lexiconWorker->set_op_param(LTO_GEN_PINYIN_TABLE, fileName, m_tmpPinyinTable);
-        m_lexiconThread->start();
-
-        m_msgBox->setText(_("Generating lexicon..."));
-        m_msgBox->setStandardButtons(QMessageBox::Cancel);
-        m_msgBox->button(QMessageBox::Cancel)->setText(_("Cancel(&C)"));
-        int ret = m_msgBox->exec();
-        if (ret == QMessageBox::Cancel)
-        {
-            lexicon_thread_quit();
-        }
-        else if (ret == QMessageBox::Yes)
+        const int ret = startGenLexicon(LTO_GEN_PINYIN_TABLE, fileName, m_tmpPinyinTable);
+        if (ret == QMessageBox::Yes)
         {
             QString cmd = QString("cp %1 %2").arg(m_tmpPinyinTable).arg(CUR_USED_PINYIN_TABLE);
             system(cmd.toUtf8().data());
 
-            settings::instance().set_imeTableChanged(1);
+            settings::instance().set_pinyinTableChanged(1);
             emit signal_ime_table_changed();
         }
         else if (ret == QMessageBox::No)

@@ -153,6 +153,8 @@ void MainProgram::connectPanelDBus()
 
     connect(m_lexicontoolWin, &LexiconToolWin::signal_user_word_file_changed, m_panelDBusService,
             &freewb::ipc::QDBusPanelService::ReloadConfig);
+    connect(m_lexicontoolWin, &LexiconToolWin::signal_ime_table_changed, m_panelDBusService,
+            &freewb::ipc::QDBusPanelService::ReloadConfig);
     connect(m_backupDialog, &BackupDialog::signal_restore_lexicon_and_settings_ok, m_panelDBusService,
             &freewb::ipc::QDBusPanelService::ReloadConfig);
 
@@ -233,8 +235,10 @@ void MainProgram::connectSettingsDBus()
             []() { settings::instance().set_userWordFlg(0); });
     connect(s, &freewb::ipc::QDBusSettingsService::signal_quick_table_load_ok, this,
             []() { settings::instance().set_quickTableFlg(0); });
-    connect(s, &freewb::ipc::QDBusSettingsService::signal_ime_table_load_ok, this,
-            []() { settings::instance().set_imeTableChanged(0); });
+    connect(s, &freewb::ipc::QDBusSettingsService::signal_wubi_table_load_ok, this,
+            []() { settings::instance().set_wubiTableChanged(0); });
+    connect(s, &freewb::ipc::QDBusSettingsService::signal_pinyin_table_load_ok, this,
+            []() { settings::instance().set_pinyinTableChanged(0); });
 
     connect(s, &freewb::ipc::QDBusSettingsService::signal_panel_exit, this,
             [this]()
@@ -286,7 +290,8 @@ void MainProgram::connectSettingsDBus()
                         settings::instance().set_curUsedLexicon(lexicon);
                         settings::instance().set_wubiTable(lexicon + "/wbzx.mb");
                         settings::instance().set_pinyinTable(lexicon + "/pinyin.mb");
-                        settings::instance().set_imeTableChanged(1);
+                        settings::instance().set_wubiTableChanged(1);
+                        settings::instance().set_pinyinTableChanged(1);
                         m_contextmenu->update_lexicon_checked_ico();
                         m_panelDBusService->ReloadConfig();
                         break;

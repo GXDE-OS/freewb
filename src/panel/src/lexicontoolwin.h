@@ -11,8 +11,10 @@
 #define LEXICONTOOLWIN_H
 
 #include <QAbstractButton>
+#include <QApplication>
 #include <QDebug>
 #include <QDesktopWidget>
+#include <QEventLoop>
 #include <QFile>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -108,6 +110,10 @@ private slots:
 
 private:
     void setUiTexts();
+    void startDumpLexicon(LexiconToolOp opType, const QString &txtPath, const QString &mbPath);
+    int startGenLexicon(LexiconToolOp opType, const QString &txtPath, const QString &mbPath);
+    void showLexiconProgressMsgBox(QMessageBox *box, const char *textMsgid);
+    void hideLexiconProgressMsgBox(QMessageBox *box);
 
 private:
     Ui::LexiconToolWin *ui;
@@ -124,6 +130,11 @@ private:
 
     QString m_tmpSysTable;
     QString m_tmpPinyinTable;
+
+    QEventLoop *m_opWaitLoop = nullptr;
+
+    int m_workerOpStatus = 0;
+    int m_workerOpCount = 0;
 };
 
 #endif

@@ -351,9 +351,14 @@ bool TextEditWin::save_text_to_file()
         settings::instance().set_quickTableFlg(1);
         emit signal_quickTable_file_saved();
     }
-    else if (m_textEditMode == TEM_WUBI_TABLE || m_textEditMode == TEM_PINYIN_TABLE)
+    else if (m_textEditMode == TEM_WUBI_TABLE)
     {
-        settings::instance().set_imeTableChanged(1);
+        settings::instance().set_wubiTableChanged(1);
+        emit signal_imTable_file_changed();
+    }
+    else if (m_textEditMode == TEM_PINYIN_TABLE)
+    {
+        settings::instance().set_pinyinTableChanged(1);
         emit signal_imTable_file_changed();
     }
 
