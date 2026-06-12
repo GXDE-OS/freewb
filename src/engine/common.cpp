@@ -415,29 +415,30 @@ void MbDictionaryTable::setMetadata(const std::string &tableName, const std::str
     iCodeLength_ = 4;
 }
 
-void MbDictionaryTable::addRecord(const std::string &code, const std::string &text)
+bool MbDictionaryTable::appendSortedRecord(const std::string &code, const std::string &text)
 {
     if (code.empty() || text.empty())
     {
-        return;
+        return true;
     }
 
-    for (const auto &existing : records_)
+    if (!records_.empty())
     {
-        if (existing.first == code && existing.second == text)
+        const auto &last = records_.back();
+        if (last.first == code && last.second == text)
         {
-            return;
+            return true;
+        }
+        if (code < last.first)
+        {
+            return false;
         }
     }
 
-    auto insertPos = records_.begin();
-    while (insertPos != records_.end() && insertPos->first <= code)
-    {
-        ++insertPos;
-    }
-    records_.insert(insertPos, {code, text});
+    records_.emplace_back(code, text);
     rebuildLexiconFromRecord(code, text);
     recordCount_ = static_cast<uint32_t>(records_.size());
+    return true;
 }
 
 void MbDictionaryTable::rebuildLexiconFromRecord(const std::string &code, const std::string &text)

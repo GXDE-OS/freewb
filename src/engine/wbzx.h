@@ -37,6 +37,9 @@ public:
 
     void toggleCharset();
 
+    void reloadMainDictionary();
+    void reloadUserDictionary();
+
 private:
     void clearMbLoadState();
     void loadDictionary();

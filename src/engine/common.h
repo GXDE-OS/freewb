@@ -31,7 +31,8 @@ public:
     bool saveToStream(std::ofstream &out) const;
     bool loadFromFile(const std::string &path, const char *linePrefix = nullptr);
     bool saveToFile(const std::string &path) const;
-    void addRecord(const std::string &code, const std::string &text);
+    /** 按编码递增顺序追加一条记录（txt 词库导入）；乱序或重复则失败/跳过。 */
+    bool appendSortedRecord(const std::string &code, const std::string &text);
     void setMetadata(const std::string &tableName, const std::string &tableInfo, const std::string &tableCreateTime,
                      const std::string &endKeys, const std::string &specialKeys, const std::string &codeType,
                      const std::string &straightUpKeys, const std::string &inputCode, uint8_t wildChar, uint8_t hasRule,

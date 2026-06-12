@@ -36,6 +36,8 @@ public:
     /** 单字五笔首选码查询 */
     void setWubiPrimaryCodeLookupCallback(WubiPrimaryCodeLookupCallback callback);
 
+    void reloadMainDictionary();
+
 private:
     void clearMbLoadState();
     void loadDictionary();

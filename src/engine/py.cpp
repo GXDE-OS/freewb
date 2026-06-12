@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "log.h"
+#include "settings.h"
 #include "utils.h"
 
 namespace freewb
@@ -104,6 +105,12 @@ void PyEngine::reset()
     result_.clearRows();
 }
 
+void PyEngine::reloadMainDictionary()
+{
+    clearMbLoadState();
+    loadDictionary();
+}
+
 bool PyEngine::shouldProcessKey(const char *key) const
 {
     return mbTable_.strInputCode().find(key) != std::string::npos;
@@ -122,7 +129,14 @@ void PyEngine::clearMbLoadState()
 
 void PyEngine::loadDictionary()
 {
-    const std::string path = userFreewbPath() + "/data/mb/default/pinyin.mb";
+    const std::string &relPath = settings::instance().get_pinyinTable();
+    if (relPath.empty())
+    {
+        FREEWB_ERROR("Pinyin table is not set");
+        return;
+    }
+
+    const std::string path = userFreewbPath() + "/data/mb/" + relPath;
     if (path.empty())
     {
         return;
@@ -131,6 +145,7 @@ void PyEngine::loadDictionary()
     std::ifstream in(path, std::ios::binary);
     if (!in)
     {
+        FREEWB_ERROR("Cannot open pinyin dictionary: {}", path);
         return;
     }
 

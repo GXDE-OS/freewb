@@ -228,15 +228,24 @@ std::string WbzxEngine::calculateWubiPhraseCode(const std::string &phrase) const
 
 void WbzxEngine::loadDictionary()
 {
-    const std::string path = userFreewbPath() + "/data/mb/default/wbzx.mb";
+    const std::string &relPath = settings::instance().get_wubiTable();
+    if (relPath.empty())
+    {
+        FREEWB_WARN("wubi table path is empty");
+        return;
+    }
+
+    const std::string path = userFreewbPath() + "/data/mb/" + relPath;
     if (path.empty())
     {
+        FREEWB_WARN("wubi table path is invalid: {}", path);
         return;
     }
 
     std::ifstream in(path, std::ios::binary);
     if (!in)
     {
+        FREEWB_WARN("Cannot open wubi dictionary: {}", path);
         return;
     }
 
@@ -253,11 +262,18 @@ void WbzxEngine::reset()
 {
     inputCodes_.clear();
     result_.clearRows();
-    const bool userWordFlg = settings::instance().get_userWordFlg();
-    if (userWordFlg)
-    {
-        userDict_.reload();
-    }
+}
+
+void WbzxEngine::reloadMainDictionary()
+{
+    clearMbLoadState();
+    loadDictionary();
+    initSingleHanziPrimaryCodeFromMbTable();
+}
+
+void WbzxEngine::reloadUserDictionary()
+{
+    userDict_.reload();
 }
 
 bool WbzxEngine::shouldProcessKey(const char *key) const
