@@ -132,8 +132,6 @@ void UsrGenWordDialog::init_user_word_file()
         }
         textStream.flush();
         textFile.close();
-
-        settings::instance().set_userWordFlg(1);
     }
 }
 
@@ -219,7 +217,6 @@ void UsrGenWordDialog::slot_show_dialog(const QString &wordText, const QString &
 
 void UsrGenWordDialog::slot_userWord_file_saved()
 {
-    settings::instance().set_userWordFlg(1);
     emit signal_user_word_changed();
 }
 
@@ -228,7 +225,6 @@ void UsrGenWordDialog::on_btnOk_clicked()
     add_user_word(ui->ledtWordText->text(), ui->ledtWordCode->text());
     accept();
 
-    settings::instance().set_userWordFlg(1);
     emit signal_user_word_changed();
 }
 

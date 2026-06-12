@@ -41,7 +41,7 @@ signals:
     void signal_backup_lexicon_and_settings();                                           // 备份词库与设置
     void signal_restore_lexicon_and_settings();                                          // 恢复词库与设置
     void signal_show_version_info();                                                     // 查看版本信息
-    void signal_ime_table_changed();
+    void signal_reload_dictionaries(int mask);
     void signal_app_register();
     void signal_menu_visibility_changed(bool visible);
 

@@ -205,32 +205,11 @@ void Freewb::reloadConfig()
 {
     settings::instance().reload();
 
-    const bool userWordFlg = settings::instance().get_userWordFlg();
-    const bool wubiTableChanged = settings::instance().get_wubiTableChanged() != 0;
-    const bool pinyinTableChanged = settings::instance().get_pinyinTableChanged() != 0;
-
     committer_->loadSettings();
     candidateList_->loadSettings();
     charWidth_->loadSettings();
     punc_->loadSettings();
     chttrans_->loadSettings();
-
-    engineManager_->reloadDictionaries();
-
-    if (userWordFlg)
-    {
-        dbusProxy_->callUsrWordLoadOkMethod();
-    }
-
-    if (wubiTableChanged)
-    {
-        dbusProxy_->callWubiTableLoadOkMethod();
-    }
-
-    if (pinyinTableChanged)
-    {
-        dbusProxy_->callPinyinTableLoadOkMethod();
-    }
 
     updateCandidateAndPreeditToUI();
 }
@@ -523,6 +502,10 @@ void Freewb::connectDBusCallback()
             else if (std::strcmp(member, "ReloadConfig") == 0)
             {
                 this->reloadConfig();
+            }
+            else if (std::strcmp(member, "ReloadDictionaries") == 0)
+            {
+                this->engineManager_->reloadDictionaries(index);
             }
             else if (std::strcmp(member, "RequestNextInputMode") == 0)
             {

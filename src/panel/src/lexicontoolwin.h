@@ -74,8 +74,7 @@ public:
     ~LexiconToolWin();
 
 signals:
-    void signal_user_word_file_changed();
-    void signal_ime_table_changed();
+    void signal_reload_dictionaries(int mask);
 
 public slots:
     void open_win();

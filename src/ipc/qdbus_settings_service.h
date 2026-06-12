@@ -23,8 +23,6 @@ Q_SIGNALS:
     void signal_dict_query(const QString &text);
     void signal_generate_usr_word(int flg, const QString &wordText, const QString &wordCode);
     void signal_delete_usr_word(int flg, const QString &wordText, const QString &wordCode);
-    void signal_usr_word_load_ok();
-    void signal_quick_table_load_ok();
     void signal_panel_exit();
     void signal_switch_vk(int flg);
     void signal_close_vk();
@@ -34,8 +32,6 @@ Q_SIGNALS:
     void signal_switch_lexicon();
     void signal_switch_skin();
     void signal_switch_mark_auto_pairs_flg();
-    void signal_wubi_table_load_ok();
-    void signal_pinyin_table_load_ok();
     void signal_switch_caps_state();
     void signal_switch_char_width();
     void signal_switch_punctuation_mode();
@@ -55,8 +51,6 @@ public Q_SLOTS:
     void slot_dbus_dict_query(const QString &text);
     void slot_dbus_generate_usr_word(int flg, const QString &wordText, const QString &wordCode);
     void slot_dbus_delete_usr_word(int flg, const QString &wordText, const QString &wordCode);
-    void slot_dbus_usr_word_load_ok();
-    void slot_dbus_quick_table_load_ok();
     void slot_dbus_panel_exit();
     void slot_dbus_switch_vk(int flg);
     void slot_dbus_close_vk();
@@ -66,8 +60,6 @@ public Q_SLOTS:
     void slot_dbus_switch_lexicon();
     void slot_dbus_switch_skin();
     void slot_dbus_switch_mark_auto_pairs_flg();
-    void slot_dbus_wubi_table_load_ok();
-    void slot_dbus_pinyin_table_load_ok();
     void slot_dbus_switch_caps_state();
     void slot_dbus_switch_char_width();
     void slot_dbus_switch_punctuation_mode();

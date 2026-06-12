@@ -45,7 +45,7 @@ signals:
     void signal_setting_file_changed();
     void signal_userWord_file_saved();
     void signal_quickTable_file_saved();
-    void signal_imTable_file_changed();
+    void signal_reload_dictionaries(int mask);
 
 public slots:
     void slot_open_textEdit_win(TextEditMode mode);

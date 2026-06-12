@@ -64,16 +64,6 @@ void QDBusSettingsService::slot_dbus_delete_usr_word(int flg, const QString &wor
     emit signal_delete_usr_word(flg, wordText, wordCode);
 }
 
-void QDBusSettingsService::slot_dbus_usr_word_load_ok()
-{
-    emit signal_usr_word_load_ok();
-}
-
-void QDBusSettingsService::slot_dbus_quick_table_load_ok()
-{
-    emit signal_quick_table_load_ok();
-}
-
 void QDBusSettingsService::slot_dbus_panel_exit()
 {
     emit signal_panel_exit();
@@ -117,16 +107,6 @@ void QDBusSettingsService::slot_dbus_switch_skin()
 void QDBusSettingsService::slot_dbus_switch_mark_auto_pairs_flg()
 {
     emit signal_switch_mark_auto_pairs_flg();
-}
-
-void QDBusSettingsService::slot_dbus_wubi_table_load_ok()
-{
-    emit signal_wubi_table_load_ok();
-}
-
-void QDBusSettingsService::slot_dbus_pinyin_table_load_ok()
-{
-    emit signal_pinyin_table_load_ok();
 }
 
 void QDBusSettingsService::slot_dbus_switch_caps_state()

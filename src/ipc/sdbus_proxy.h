@@ -61,10 +61,6 @@ public:
     void callSwitchToolbarHideFlgMethod() override;
     void callSwitchMarkAutoPairsFlgMethod() override;
     std::string callGetClipboardMethod() override;
-    void callWubiTableLoadOkMethod() override;
-    void callPinyinTableLoadOkMethod() override;
-    void callUsrWordLoadOkMethod() override;
-    void callQuickTableLoadOkMethod() override;
 
 private:
     static std::string toolbarPayloadToPropertyLine(const ToolbarPropertiesPayload &p);

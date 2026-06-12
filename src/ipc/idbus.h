@@ -53,10 +53,6 @@ public:
     virtual void callSwitchToolbarHideFlgMethod() = 0;
     virtual void callSwitchMarkAutoPairsFlgMethod() = 0;
     virtual std::string callGetClipboardMethod() = 0;
-    virtual void callWubiTableLoadOkMethod() = 0;
-    virtual void callPinyinTableLoadOkMethod() = 0;
-    virtual void callUsrWordLoadOkMethod() = 0;
-    virtual void callQuickTableLoadOkMethod() = 0;
 };
 
 } // namespace freewb::ipc

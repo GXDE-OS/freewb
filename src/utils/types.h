@@ -1,12 +1,23 @@
 #ifndef _FREEWB_UTILS_TYPES_H_
 #define _FREEWB_UTILS_TYPES_H_
 
+#include <cstdint>
 #include <functional>
 #include <string>
 #include <vector>
 
 namespace freewb
 {
+
+enum DictionaryReloadMask : std::uint32_t
+{
+    DictReloadNone = 0,
+    DictReloadUserWord = 1u << 0,
+    DictReloadWubiTable = 1u << 1,
+    DictReloadPinyinTable = 1u << 2,
+    DictReloadMainTables = DictReloadWubiTable | DictReloadPinyinTable,
+    DictReloadAll = DictReloadUserWord | DictReloadWubiTable | DictReloadPinyinTable,
+};
 
 enum LayoutType
 {

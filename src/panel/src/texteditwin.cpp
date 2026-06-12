@@ -4,6 +4,7 @@
 #include "settings.h"
 #include "settingshelper.h"
 #include "tools/ConversionTool.h"
+#include "types.h"
 #include "ui_texteditwin.h"
 #include "waylandwinhelper.h"
 
@@ -344,22 +345,19 @@ bool TextEditWin::save_text_to_file()
     else if (m_textEditMode == TEM_USER_WORD)
     {
         emit signal_userWord_file_saved();
-        emit signal_imTable_file_changed();
+        emit signal_reload_dictionaries(freewb::DictReloadUserWord);
     }
     else if (m_textEditMode == TEM_QUICK_TABLE)
     {
-        settings::instance().set_quickTableFlg(1);
         emit signal_quickTable_file_saved();
     }
     else if (m_textEditMode == TEM_WUBI_TABLE)
     {
-        settings::instance().set_wubiTableChanged(1);
-        emit signal_imTable_file_changed();
+        emit signal_reload_dictionaries(freewb::DictReloadWubiTable);
     }
     else if (m_textEditMode == TEM_PINYIN_TABLE)
     {
-        settings::instance().set_pinyinTableChanged(1);
-        emit signal_imTable_file_changed();
+        emit signal_reload_dictionaries(freewb::DictReloadPinyinTable);
     }
 
     return true;

@@ -6,6 +6,7 @@
 #include "settings.h"
 #include "settingshelper.h"
 #include "tools/ConversionTool.h"
+#include "types.h"
 #include "ui_lexicontoolwin.h"
 #include "waylandwinhelper.h"
 
@@ -486,8 +487,7 @@ void LexiconToolWin::on_btnMakeSysLexicon_clicked()
             QString cmd = QString("cp %1 %2").arg(m_tmpSysTable).arg(CUR_USED_WUBI_TABLE);
             system(cmd.toUtf8().data());
 
-            settings::instance().set_wubiTableChanged(1);
-            emit signal_ime_table_changed();
+            emit signal_reload_dictionaries(freewb::DictReloadWubiTable);
         }
         else if (ret == QMessageBox::No)
         {
@@ -590,8 +590,7 @@ void LexiconToolWin::on_btnMakePinyinLexicon_clicked()
             QString cmd = QString("cp %1 %2").arg(m_tmpPinyinTable).arg(CUR_USED_PINYIN_TABLE);
             system(cmd.toUtf8().data());
 
-            settings::instance().set_pinyinTableChanged(1);
-            emit signal_ime_table_changed();
+            emit signal_reload_dictionaries(freewb::DictReloadPinyinTable);
         }
         else if (ret == QMessageBox::No)
         {
@@ -779,8 +778,7 @@ void LexiconToolWin::add_del_user_word_from_file(int op, const QString &fileName
 
         if (count)
         {
-            settings::instance().set_userWordFlg(1);
-            emit signal_user_word_file_changed();
+            emit signal_reload_dictionaries(freewb::DictReloadUserWord);
         }
     }
 }

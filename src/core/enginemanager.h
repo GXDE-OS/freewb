@@ -35,7 +35,7 @@ public:
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
     void refreshEngineResult();
     void reset();
-    void reloadDictionaries();
+    void reloadDictionaries(int mask);
 
     void toggleCharset();
 

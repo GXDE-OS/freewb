@@ -340,27 +340,32 @@ void EngineManager::changeEngine(const std::string &engineName)
     }
 }
 
-void EngineManager::reloadDictionaries()
+void EngineManager::reloadDictionaries(int mask)
 {
-    const bool wubiTableChanged = settings::instance().get_wubiTableChanged() != 0;
-    const bool pinyinTableChanged = settings::instance().get_pinyinTableChanged() != 0;
-    const bool userWordFlg = settings::instance().get_userWordFlg() != 0;
+    if (mask == freewb::DictReloadNone)
+    {
+        return;
+    }
 
-    FREEWB_DEBUG("wubiTableChanged: {}, pinyinTableChanged: {}, userWordFlg: {}", wubiTableChanged, pinyinTableChanged,
-                 userWordFlg);
+    FREEWB_DEBUG("reloadDictionaries mask={:#x}", mask);
+
+    if ((mask & freewb::DictReloadMainTables) != 0)
+    {
+        settings::instance().reload();
+    }
 
     auto *wbzx = dynamic_cast<WbzxEngine *>(findEngineByName("engine:wbzx"));
     auto *py = dynamic_cast<PyEngine *>(findEngineByName("engine:py"));
 
-    if (pinyinTableChanged && py != nullptr)
+    if ((mask & freewb::DictReloadPinyinTable) != 0 && py != nullptr)
     {
         py->reloadMainDictionary();
     }
-    if (wubiTableChanged && wbzx != nullptr)
+    if ((mask & freewb::DictReloadWubiTable) != 0 && wbzx != nullptr)
     {
         wbzx->reloadMainDictionary();
     }
-    if (userWordFlg && wbzx != nullptr)
+    if ((mask & freewb::DictReloadUserWord) != 0 && wbzx != nullptr)
     {
         wbzx->reloadUserDictionary();
     }

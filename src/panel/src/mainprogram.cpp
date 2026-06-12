@@ -4,9 +4,11 @@
 #include <QMessageBox>
 
 #include "config.h"
+#include "ipc.h"
 #include "log.h"
 #include "settings.h"
 #include "settingshelper.h"
+#include "types.h"
 
 MainProgram::MainProgram(QObject *parent) : QObject(parent)
 {
@@ -121,8 +123,8 @@ void MainProgram::connectPanelDBus()
             &freewb::ipc::QDBusPanelService::ReloadConfig);
     connect(m_virtualKeyboard, &Keyboard::signal_kb_caps_changed, m_toolbar, &ToolbarWin::slot_kb_caps_changed);
 
-    connect(m_contextmenu, &ContextMenu::signal_ime_table_changed, m_panelDBusService,
-            &freewb::ipc::QDBusPanelService::ReloadConfig);
+    connect(m_contextmenu, &ContextMenu::signal_reload_dictionaries, m_panelDBusService,
+            &freewb::ipc::QDBusPanelService::ReloadDictionaries);
     connect(m_contextmenu, &ContextMenu::signal_open_lexicon_tool, m_lexicontoolWin, &LexiconToolWin::open_win);
     connect(m_contextmenu, &ContextMenu::signal_open_setting_win, m_settingWin, &SettingWin::slot_open_win);
     connect(m_contextmenu, &ContextMenu::signal_restore_all_settings, m_settingWin, &SettingWin::slot_init_all_setting_page);
@@ -137,26 +139,28 @@ void MainProgram::connectPanelDBus()
     connect(m_x11EventMonitor, &X11EventMonitor::signal_key_clicked, m_virtualKeyboard, &Keyboard::slot_key_clicked);
 
     connect(m_usrGenWordDialog, &UsrGenWordDialog::signal_user_word_changed, m_panelDBusService,
-            &freewb::ipc::QDBusPanelService::ReloadConfig);
+            [this]() { m_panelDBusService->ReloadDictionaries(freewb::DictReloadUserWord); });
 
     connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_panelDBusService,
             &freewb::ipc::QDBusPanelService::ReloadConfig);
     connect(m_textEditWin, &TextEditWin::signal_quickTable_file_saved, m_panelDBusService,
             &freewb::ipc::QDBusPanelService::ReloadConfig);
-    connect(m_textEditWin, &TextEditWin::signal_imTable_file_changed, m_panelDBusService,
-            &freewb::ipc::QDBusPanelService::ReloadConfig);
+    connect(m_textEditWin, &TextEditWin::signal_reload_dictionaries, m_panelDBusService,
+            &freewb::ipc::QDBusPanelService::ReloadDictionaries);
     connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_toolbar, &ToolbarWin::slot_load_setting_data);
     connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_virtualKeyboard, &Keyboard::slot_load_setting_data);
     connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_inputWin, &InputWin::slot_load_setting_data);
     connect(m_textEditWin, &TextEditWin::signal_userWord_file_saved, m_usrGenWordDialog,
             &UsrGenWordDialog::slot_userWord_file_saved);
 
-    connect(m_lexicontoolWin, &LexiconToolWin::signal_user_word_file_changed, m_panelDBusService,
-            &freewb::ipc::QDBusPanelService::ReloadConfig);
-    connect(m_lexicontoolWin, &LexiconToolWin::signal_ime_table_changed, m_panelDBusService,
-            &freewb::ipc::QDBusPanelService::ReloadConfig);
-    connect(m_backupDialog, &BackupDialog::signal_restore_lexicon_and_settings_ok, m_panelDBusService,
-            &freewb::ipc::QDBusPanelService::ReloadConfig);
+    connect(m_lexicontoolWin, &LexiconToolWin::signal_reload_dictionaries, m_panelDBusService,
+            &freewb::ipc::QDBusPanelService::ReloadDictionaries);
+    connect(m_backupDialog, &BackupDialog::signal_restore_lexicon_and_settings_ok, this,
+            [this]()
+            {
+                m_panelDBusService->ReloadConfig();
+                m_panelDBusService->ReloadDictionaries(freewb::DictReloadAll);
+            });
 
     connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_fcitx, m_panelDBusService,
             &freewb::ipc::QDBusPanelService::ReloadConfig);
@@ -197,8 +201,7 @@ void MainProgram::connectSettingsDBus()
                 {
                     m_usrGenWordDialog->add_user_word(wordText, wordCode);
                     m_inputWin->close_user_word_operation_prompt();
-                    settings::instance().set_userWordFlg(1);
-                    m_panelDBusService->ReloadConfig();
+                    m_panelDBusService->ReloadDictionaries(freewb::DictReloadUserWord);
                 }
                 else if (flg == 2)
                 {
@@ -222,23 +225,13 @@ void MainProgram::connectSettingsDBus()
                 {
                     m_usrGenWordDialog->delete_user_word(wordText, wordCode);
                     m_inputWin->close_user_word_operation_prompt();
-                    settings::instance().set_userWordFlg(1);
-                    m_panelDBusService->ReloadConfig();
+                    m_panelDBusService->ReloadDictionaries(freewb::DictReloadUserWord);
                 }
                 else if (flg == 2)
                 {
                     m_inputWin->close_user_word_operation_prompt();
                 }
             });
-
-    connect(s, &freewb::ipc::QDBusSettingsService::signal_usr_word_load_ok, this,
-            []() { settings::instance().set_userWordFlg(0); });
-    connect(s, &freewb::ipc::QDBusSettingsService::signal_quick_table_load_ok, this,
-            []() { settings::instance().set_quickTableFlg(0); });
-    connect(s, &freewb::ipc::QDBusSettingsService::signal_wubi_table_load_ok, this,
-            []() { settings::instance().set_wubiTableChanged(0); });
-    connect(s, &freewb::ipc::QDBusSettingsService::signal_pinyin_table_load_ok, this,
-            []() { settings::instance().set_pinyinTableChanged(0); });
 
     connect(s, &freewb::ipc::QDBusSettingsService::signal_panel_exit, this,
             [this]()
@@ -290,10 +283,9 @@ void MainProgram::connectSettingsDBus()
                         settings::instance().set_curUsedLexicon(lexicon);
                         settings::instance().set_wubiTable(lexicon + "/wbzx.mb");
                         settings::instance().set_pinyinTable(lexicon + "/pinyin.mb");
-                        settings::instance().set_wubiTableChanged(1);
-                        settings::instance().set_pinyinTableChanged(1);
+                        (void)settings::instance().save();
                         m_contextmenu->update_lexicon_checked_ico();
-                        m_panelDBusService->ReloadConfig();
+                        m_panelDBusService->ReloadDictionaries(freewb::DictReloadMainTables);
                         break;
                     }
                 }

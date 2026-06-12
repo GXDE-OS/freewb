@@ -369,26 +369,6 @@ void LibDbusProxy::callPanelToggleCapsStateMethod()
     callSettingsMethod("slot_dbus_switch_caps_state", "");
 }
 
-void LibDbusProxy::callWubiTableLoadOkMethod()
-{
-    callSettingsMethod("slot_dbus_wubi_table_load_ok", "");
-}
-
-void LibDbusProxy::callPinyinTableLoadOkMethod()
-{
-    callSettingsMethod("slot_dbus_pinyin_table_load_ok", "");
-}
-
-void LibDbusProxy::callUsrWordLoadOkMethod()
-{
-    callSettingsMethod("slot_dbus_usr_word_load_ok", "");
-}
-
-void LibDbusProxy::callQuickTableLoadOkMethod()
-{
-    callSettingsMethod("slot_dbus_quick_table_load_ok", "");
-}
-
 DBusHandlerResult LibDbusProxy::handlePanelSignal(DBusConnection *conn, DBusMessage *msg, void *userdata)
 {
     auto *self = static_cast<LibDbusProxy *>(userdata);

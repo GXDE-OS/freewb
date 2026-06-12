@@ -25,6 +25,7 @@ Q_SIGNALS:
     Q_SCRIPTABLE void LookupTablePageDown();
     Q_SCRIPTABLE void LookupTablePageUp();
     Q_SCRIPTABLE void ReloadConfig();
+    Q_SCRIPTABLE void ReloadDictionaries(int mask);
     Q_SCRIPTABLE void SelectCandidate(int index);
     Q_SCRIPTABLE void SwitchCharSetMode();
     Q_SCRIPTABLE void SwitchPunctuation();

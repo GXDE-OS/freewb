@@ -7,6 +7,7 @@
 #include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
+#include "types.h"
 #include "waylandwinhelper.h"
 
 // 一级菜单
@@ -308,9 +309,8 @@ void ContextMenu::on_actionGrpLexicon_clicked(QAction *action)
         settings::instance().set_curUsedLexicon(lexicon);
         settings::instance().set_wubiTable(lexicon + "/wbzx.mb");
         settings::instance().set_pinyinTable(lexicon + "/pinyin.mb");
-        settings::instance().set_wubiTableChanged(1);
-        settings::instance().set_pinyinTableChanged(1);
-        emit signal_ime_table_changed();
+        (void)settings::instance().save();
+        emit signal_reload_dictionaries(freewb::DictReloadMainTables);
 
         update_lexicon_checked_ico();
     }

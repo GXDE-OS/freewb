@@ -364,26 +364,6 @@ void SDBusProxy::callPanelToggleCapsStateMethod()
     callSettingsMethod("slot_dbus_switch_caps_state", "");
 }
 
-void SDBusProxy::callWubiTableLoadOkMethod()
-{
-    callSettingsMethod("slot_dbus_wubi_table_load_ok", "");
-}
-
-void SDBusProxy::callPinyinTableLoadOkMethod()
-{
-    callSettingsMethod("slot_dbus_pinyin_table_load_ok", "");
-}
-
-void SDBusProxy::callUsrWordLoadOkMethod()
-{
-    callSettingsMethod("slot_dbus_usr_word_load_ok", "");
-}
-
-void SDBusProxy::callQuickTableLoadOkMethod()
-{
-    callSettingsMethod("slot_dbus_quick_table_load_ok", "");
-}
-
 int SDBusProxy::handlePanelSignal(sd_bus_message *m, void *userdata, sd_bus_error *)
 {
     auto *self = static_cast<SDBusProxy *>(userdata);
@@ -412,7 +392,7 @@ int SDBusProxy::handlePanelSignal(sd_bus_message *m, void *userdata, sd_bus_erro
         int32_t tmp = 0;
         if (sd_bus_message_read(m, "i", &tmp) >= 0)
         {
-            index = static_cast<int>(tmp);
+            index = tmp;
         }
         self->onDBusSignal_(member, index);
     }

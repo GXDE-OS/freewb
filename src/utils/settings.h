@@ -66,14 +66,9 @@ enum class ValueType
     X(charSet, Misc, Int, "0", Misc, "")                                                                                         \
     X(enterClear, Misc, Bool, "true", Misc, "")                                                                                  \
     X(inputMode, Misc, String, "engine:wbzx", Misc, "")                                                                          \
-    X(quickTableFlg, Misc, Int, "0", Misc, "")                                                                                   \
-    X(wubiTableChanged, Misc, Int, "0", Misc, "")                                                                                \
-    X(pinyinTableChanged, Misc, Int, "0", Misc, "")                                                                              \
-    X(imeTableChanged, Misc, Int, "0", Misc, "")                                                                                 \
     X(simpTradFlg, Misc, Bool, "false", Misc, "")                                                                                \
     X(fullWidthFlg, Misc, Bool, "false", Misc, "")                                                                               \
     X(chinesePuncFlg, Misc, Bool, "true", Misc, "")                                                                              \
-    X(userWordFlg, Misc, Int, "0", Misc, "")                                                                                     \
     X(vkMode, Misc, Int, "-1", Misc, "")                                                                                         \
     X(separateChar, CandidateWinUi, String, ".", CandidateWinUi, "")                                                             \
     X(cnEnSwitch, ShortcutKey, String, "KEY_SHIFT", ShortcutKey, "")                                                             \
