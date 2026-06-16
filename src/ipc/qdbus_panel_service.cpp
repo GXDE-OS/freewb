@@ -5,7 +5,6 @@ namespace freewb::ipc
 
 QDBusPanelService::QDBusPanelService(QObject *parent) : QObject(parent)
 {
-    registerQDBusService();
 }
 
 QDBusPanelService::~QDBusPanelService()
@@ -22,15 +21,17 @@ void QDBusPanelService::unRegisterQDBusService()
 
 void QDBusPanelService::registerQDBusService()
 {
-    if (!QDBusConnection::connectToBus(QDBusConnection::SessionBus, FREEWUBI_PANEL_BUSNAME)
-             .registerService(FREEWUBI_PANEL_SERVICENAME))
+    QDBusConnection conn = QDBusConnection::connectToBus(QDBusConnection::SessionBus, FREEWUBI_PANEL_BUSNAME);
+    if (!conn.registerObject(FREEWUBI_PANEL_OBJECTPATH, this,
+                             QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals))
     {
         return;
     }
 
-    QDBusConnection::connectToBus(QDBusConnection::SessionBus, FREEWUBI_PANEL_BUSNAME)
-        .registerObject(FREEWUBI_PANEL_OBJECTPATH, this,
-                        QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals);
+    if (!conn.registerService(FREEWUBI_PANEL_SERVICENAME))
+    {
+        conn.unregisterObject(FREEWUBI_PANEL_OBJECTPATH);
+    }
 }
 
 void QDBusPanelService::ShowPreedit(bool show)

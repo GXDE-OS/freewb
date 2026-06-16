@@ -1,6 +1,13 @@
 #include "ukuiwaylandhelper.h"
 
+#include <poll.h>
+#include <unistd.h>
+
 #include <algorithm>
+#include <cerrno>
+#include <system_error>
+
+#include <sys/eventfd.h>
 
 #include "log.h"
 
@@ -25,7 +32,7 @@ void UkuiWaylandHelper::connectToWayland()
     }
     catch (...)
     {
-        FREEWB_DEBUG("UkuiWaylandHelper: failed to connect to wayland display");
+        FREEWB_ERROR("UkuiWaylandHelper: failed to connect to wayland display");
         return;
     }
 
@@ -36,6 +43,13 @@ void UkuiWaylandHelper::connectToWayland()
 
     display_->roundtrip();
 
+    wakeup_fd_ = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
+    if (wakeup_fd_ < 0)
+    {
+        FREEWB_ERROR("UkuiWaylandHelper: failed to create eventfd, errno={}", errno);
+        return;
+    }
+
     running_ = true;
     event_thread_ = std::thread([this]() { dispatchLoop(); });
 }
@@ -43,15 +57,21 @@ void UkuiWaylandHelper::connectToWayland()
 void UkuiWaylandHelper::disconnectFromWayland()
 {
     running_ = false;
-
-    if (display_)
+    if (wakeup_fd_ >= 0)
     {
-        display_->flush();
+        const uint64_t one = 1;
+        (void)write(wakeup_fd_, &one, sizeof(one));
     }
 
     if (event_thread_.joinable())
     {
         event_thread_.join();
+    }
+
+    if (wakeup_fd_ >= 0)
+    {
+        close(wakeup_fd_);
+        wakeup_fd_ = -1;
     }
 
     windows_.clear();
@@ -64,13 +84,64 @@ void UkuiWaylandHelper::disconnectFromWayland()
 
 void UkuiWaylandHelper::dispatchLoop()
 {
-    while (running_ && display_)
+    while (running_.load(std::memory_order_acquire) && display_)
     {
-        if (display_->dispatch() < 0)
+        try
+        {
+            display_->flush();
+
+            auto readIntent = display_->obtain_read_intent();
+
+            struct pollfd pollFds[2];
+            pollFds[0].fd = display_->get_fd();
+            pollFds[0].events = POLLIN;
+            pollFds[0].revents = 0;
+            pollFds[1].fd = wakeup_fd_;
+            pollFds[1].events = POLLIN;
+            pollFds[1].revents = 0;
+
+            const int pollRet = poll(pollFds, 2, -1);
+
+            if (!running_)
+            {
+                readIntent.cancel();
+                break;
+            }
+
+            if (pollFds[1].revents & POLLIN)
+            {
+                uint64_t counter = 0;
+                while (read(wakeup_fd_, &counter, sizeof(counter)) > 0)
+                {
+                }
+                readIntent.cancel();
+                continue;
+            }
+
+            if (pollRet > 0 && (pollFds[0].revents & POLLIN))
+            {
+                readIntent.read();
+                while (running_)
+                {
+                    if (display_->dispatch_pending() <= 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                readIntent.cancel();
+                if (pollRet < 0 && errno != EINTR)
+                {
+                    break;
+                }
+            }
+        }
+        catch (const std::system_error &)
         {
             break;
         }
-        display_->flush();
     }
 }
 
@@ -84,25 +155,22 @@ void UkuiWaylandHelper::handleRegistryGlobal(uint32_t name, const std::string &i
         has_window_management_ = true;
 
         window_management_.on_window_created() = [this](std::string uuid) { handleWindowCreated(uuid); };
-
-        display_->roundtrip();
     }
     else if (interface == wayland::kde_output_device_v2_t::interface_name)
     {
         const uint32_t bind_version = std::min(version, 2u);
         wayland::kde_output_device_v2_t iface;
-        OutputInfo output;
+        outputs_.emplace_back();
+        OutputInfo &output = outputs_.back();
         output.device = wayland::kde_output_device_v2_t(registry_.bind(name, iface, bind_version));
         output.registry_name = name;
-        setupOutputListeners(output);
-        outputs_.push_back(std::move(output));
-
-        display_->roundtrip();
+        setupOutputListeners(name);
     }
 }
 
 void UkuiWaylandHelper::handleRegistryGlobalRemove(uint32_t name)
 {
+    std::lock_guard lock(state_mutex_);
     outputs_.erase(std::remove_if(outputs_.begin(), outputs_.end(),
                                   [name](const OutputInfo &output) { return output.registry_name == name; }),
                    outputs_.end());
@@ -118,26 +186,57 @@ void UkuiWaylandHelper::handleWindowCreated(const std::string &uuid)
     WindowInfo info;
     info.uuid = uuid;
     info.window = wayland::ukui_window_t(window_management_.create_window(uuid));
-    setupWindowListeners(info);
     windows_.push_back(std::move(info));
-
-    display_->roundtrip();
+    setupWindowListeners(windows_.back());
 }
 
-void UkuiWaylandHelper::setupOutputListeners(OutputInfo &output)
+void UkuiWaylandHelper::setupOutputListeners(uint32_t registry_name)
 {
-    output.device.on_geometry() = [&output](int32_t x, int32_t y, int32_t physical_width, int32_t physical_height, int32_t,
-                                            std::string, std::string, int32_t)
+    OutputInfo *output = findOutput(registry_name);
+    if (output == nullptr)
     {
-        output.x = x;
-        output.y = y;
-        output.width = physical_width;
-        output.height = physical_height;
+        return;
+    }
+
+    output->device.on_geometry() = [this, registry_name](int32_t x, int32_t y, int32_t physical_width, int32_t physical_height,
+                                                         int32_t, std::string, std::string, int32_t)
+    {
+        OutputInfo *entry = findOutput(registry_name);
+        if (entry == nullptr)
+        {
+            return;
+        }
+
+        std::lock_guard lock(state_mutex_);
+        entry->x = x;
+        entry->y = y;
+        entry->width = physical_width;
+        entry->height = physical_height;
     };
 
-    output.device.on_scale() = [&output](double factor) { output.scale = factor; };
+    output->device.on_scale() = [this, registry_name](double factor)
+    {
+        OutputInfo *entry = findOutput(registry_name);
+        if (entry == nullptr)
+        {
+            return;
+        }
 
-    output.device.on_uuid() = [&output](std::string uuid) { output.uuid = std::move(uuid); };
+        std::lock_guard lock(state_mutex_);
+        entry->scale = factor;
+    };
+
+    output->device.on_uuid() = [this, registry_name](std::string uuid)
+    {
+        OutputInfo *entry = findOutput(registry_name);
+        if (entry == nullptr)
+        {
+            return;
+        }
+
+        std::lock_guard lock(state_mutex_);
+        entry->uuid = std::move(uuid);
+    };
 }
 
 void UkuiWaylandHelper::setupWindowListeners(WindowInfo &info)
@@ -150,6 +249,7 @@ void UkuiWaylandHelper::setupWindowListeners(WindowInfo &info)
             return;
         }
 
+        std::lock_guard lock(state_mutex_);
         entry->is_active = (flags & static_cast<uint32_t>(wayland::ukui_window_state::active)) != 0;
         if (entry->is_active)
         {
@@ -169,12 +269,14 @@ void UkuiWaylandHelper::setupWindowListeners(WindowInfo &info)
         entry->y = y;
         if (entry->is_active)
         {
+            std::lock_guard lock(state_mutex_);
             focus_window_position_ = {x, y};
         }
     };
 
     info.window.on_unmapped() = [this, window = info.window]()
     {
+        std::lock_guard lock(state_mutex_);
         windows_.erase(std::remove_if(windows_.begin(), windows_.end(),
                                       [&window](const WindowInfo &entry)
                                       { return static_cast<ukui_window *>(entry.window) == static_cast<ukui_window *>(window); }),
@@ -194,13 +296,27 @@ WindowInfo *UkuiWaylandHelper::findWindow(const wayland::ukui_window_t &window)
     return nullptr;
 }
 
-const std::array<int32_t, 2> &UkuiWaylandHelper::focusWindowPosition() const
+OutputInfo *UkuiWaylandHelper::findOutput(uint32_t registry_name)
 {
+    for (auto &output : outputs_)
+    {
+        if (output.registry_name == registry_name)
+        {
+            return &output;
+        }
+    }
+    return nullptr;
+}
+
+std::array<int32_t, 2> UkuiWaylandHelper::focusWindowPosition() const
+{
+    std::lock_guard lock(state_mutex_);
     return focus_window_position_;
 }
 
 double UkuiWaylandHelper::maxScreenScaleFactor() const
 {
+    std::lock_guard lock(state_mutex_);
     double max_scale = 1.0;
     for (const auto &output : outputs_)
     {

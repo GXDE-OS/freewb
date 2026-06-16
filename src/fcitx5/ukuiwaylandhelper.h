@@ -5,6 +5,7 @@
 #include <atomic>
 #include <cstdint>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <thread>
 #include <vector>
@@ -44,7 +45,7 @@ public:
     UkuiWaylandHelper();
     ~UkuiWaylandHelper();
 
-    const std::array<int32_t, 2> &focusWindowPosition() const;
+    std::array<int32_t, 2> focusWindowPosition() const;
     double maxScreenScaleFactor() const;
 
 private:
@@ -54,9 +55,10 @@ private:
     void handleRegistryGlobal(uint32_t name, const std::string &interface, uint32_t version);
     void handleRegistryGlobalRemove(uint32_t name);
     void handleWindowCreated(const std::string &uuid);
-    void setupOutputListeners(OutputInfo &output);
+    void setupOutputListeners(uint32_t registry_name);
     void setupWindowListeners(WindowInfo &info);
     WindowInfo *findWindow(const wayland::ukui_window_t &window);
+    OutputInfo *findOutput(uint32_t registry_name);
 
 private:
     std::unique_ptr<wayland::display_t> display_;
@@ -68,9 +70,11 @@ private:
     std::vector<OutputInfo> outputs_;
 
     std::array<int32_t, 2> focus_window_position_{0, 0};
+    mutable std::mutex state_mutex_;
 
     std::thread event_thread_;
     std::atomic<bool> running_{false};
+    int wakeup_fd_ = -1;
 };
 
 } // namespace freewb

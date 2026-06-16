@@ -33,6 +33,8 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
 
     connectPanelDBus();
     connectSettingsDBus();
+
+    m_panelDBusService->registerQDBusService();
 }
 
 MainProgram::~MainProgram()

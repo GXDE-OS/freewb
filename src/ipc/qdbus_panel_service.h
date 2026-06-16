@@ -20,6 +20,8 @@ public:
     explicit QDBusPanelService(QObject *parent = nullptr);
     ~QDBusPanelService() override;
 
+    void registerQDBusService();
+
 Q_SIGNALS:
     // Panel UI → 输入法引擎
     Q_SCRIPTABLE void LookupTablePageDown();
@@ -77,7 +79,6 @@ Q_SIGNALS:
     void signal_switch_punctuation_mode();
 
 private:
-    void registerQDBusService();
     void unRegisterQDBusService();
 };
 

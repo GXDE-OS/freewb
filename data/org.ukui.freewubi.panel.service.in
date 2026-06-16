@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=org.ukui.freewubi.panel
+Exec=@FREEWB_INSTALL_BINDIR@/org.freewb.start.sh
