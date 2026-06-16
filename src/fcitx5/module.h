@@ -15,7 +15,11 @@
 #include "ukuiwaylandhelper.h"
 #endif
 
+#if __FCITX5_MAJOR_VERSION__ >= 5
 class FreewbIMModule final : public fcitx::InputMethodEngineV3
+#else
+class FreewbIMModule final : public fcitx::InputMethodEngine
+#endif
 {
 public:
     FreewbIMModule(fcitx::Instance *instance);
@@ -26,7 +30,6 @@ public:
     void keyEvent(const fcitx::InputMethodEntry &entry, fcitx::KeyEvent &keyEvent);
     void reloadConfig();
     void reset(const fcitx::InputMethodEntry &entry, fcitx::InputContextEvent &event);
-    void doReset(fcitx::InputContext *inputContext);
     void save();
 
 private:

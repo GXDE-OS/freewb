@@ -72,11 +72,6 @@ void FreewbIMModule::reset(const fcitx::InputMethodEntry &entry, fcitx::InputCon
     freewb_->reset();
 }
 
-void FreewbIMModule::doReset(fcitx::InputContext *inputContext)
-{
-    FCITX_UNUSED(inputContext);
-}
-
 void FreewbIMModule::save()
 {
 }
@@ -107,7 +102,9 @@ void FreewbIMModule::updateCursorPosition()
 
     // get cursor position from input method framework
     fcitx::Rect rectFromFcitx = inputContext->cursorRect();
+#if (__FCITX5_MAJOR_VERSION__ >= 5)
     scaleFactorFromFcitx = inputContext->scaleFactor();
+#endif
     const bool appIsWaylandDisplay = (strncmp(inputContext->display().c_str(), "wayland", 7) == 0);
 
     // calculate cursor position
