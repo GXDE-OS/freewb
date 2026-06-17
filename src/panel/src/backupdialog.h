@@ -2,7 +2,6 @@
 #define BACKUPDIALOG_H
 
 #include <QDateTime>
-#include <QDebug>
 #include <QDesktopWidget>
 #include <QDialog>
 #include <QFileDialog>

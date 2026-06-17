@@ -4,7 +4,6 @@
 #include <string>
 
 #include <QActionGroup>
-#include <QDebug>
 #include <QDesktopWidget>
 #include <QMenu>
 #include <QMessageBox>

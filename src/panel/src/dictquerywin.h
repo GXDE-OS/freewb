@@ -4,7 +4,6 @@
 #include <QAbstractButton>
 #include <QAction>
 #include <QClipboard>
-#include <QDebug>
 #include <QDesktopWidget>
 #include <QKeyEvent>
 #include <QListWidgetItem>

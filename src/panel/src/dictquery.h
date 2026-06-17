@@ -1,7 +1,7 @@
 #ifndef DICTQUERY_H
 #define DICTQUERY_H
 
-#include <QDebug>
+#include <QHash>
 #include <QObject>
 
 #include "sqlite3/sqlite3.h"

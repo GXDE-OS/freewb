@@ -2,7 +2,6 @@
 #define INPUTWIN_H
 
 #include <QDateTime>
-#include <QDebug>
 #include <QDesktopWidget>
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>

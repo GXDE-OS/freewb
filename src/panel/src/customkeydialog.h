@@ -1,7 +1,6 @@
 #ifndef CUSTOMKEYDIALOG_H
 #define CUSTOMKEYDIALOG_H
 
-#include <QDebug>
 #include <QDesktopWidget>
 #include <QDialog>
 #include <QMouseEvent>

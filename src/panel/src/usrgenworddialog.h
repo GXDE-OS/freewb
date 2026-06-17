@@ -1,7 +1,6 @@
 #ifndef USRGENWORDDIALOG_H
 #define USRGENWORDDIALOG_H
 
-#include <QDebug>
 #include <QDialog>
 #include <QMouseEvent>
 #include <QRegExpValidator>

@@ -1,6 +1,7 @@
 #include "lexicontoolwin.h"
 
 #include <QEventLoop>
+#include <QTextStream>
 
 #include "config.h"
 #include "settings.h"
@@ -114,11 +115,7 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
 
     // 载入窗口全局UI样式表
     QFile qssFile(QSS_FILE);
-    if (!qssFile.open(QFile::ReadOnly))
-    {
-        qWarning() << "open qss file failed!";
-    }
-    else
+    if (qssFile.open(QFile::ReadOnly))
     {
         this->setStyleSheet(qssFile.readAll());
         qssFile.close();
@@ -414,7 +411,6 @@ void LexiconToolWin::slot_process_updated(LexiconToolOp opType, int opStatus, in
 
 void LexiconToolWin::slot_worker_thread_finished()
 {
-    // qDebug() << "thread quit ok!";
 }
 
 void LexiconToolWin::on_btnClose_clicked()
@@ -650,7 +646,6 @@ void LexiconToolWin::add_del_user_word_from_file(int op, const QString &fileName
     {
         if (!selectFile.open(QIODevice::ReadOnly | QIODevice::Text))
         {
-            qWarning() << selectFile.fileName() << " open failed!";
             return;
         }
         QTextStream selectFileStream(&selectFile);
@@ -664,7 +659,6 @@ void LexiconToolWin::add_del_user_word_from_file(int op, const QString &fileName
             QTextStream userWordStream(&userWordFile);
             if (!userWordFile.open(QIODevice::ReadWrite | QIODevice::Text))
             {
-                qWarning() << userWordFile.fileName() << " open failed!";
                 return;
             }
             QStringList userWordList = userWordStream.readAll().split('\n');

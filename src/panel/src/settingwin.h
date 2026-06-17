@@ -3,7 +3,6 @@
 
 #include <QColorDialog>
 #include <QDateTime>
-#include <QDebug>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QEvent>

@@ -1,6 +1,5 @@
 #include "toolbarwin.h"
 
-#include <QDebug>
 #include <QFile>
 #include <QLabel>
 #include <QWindow>
@@ -265,7 +264,6 @@ void ToolbarWin::slot_load_skin(const QString &skinId)
 
     if (!QFile(skinFolder + "skin.ini").exists())
     {
-        qWarning() << "skin file isn't exist:" << skinFolder;
         return;
     }
 
@@ -619,7 +617,6 @@ void ToolbarWin::install_evt_filter()
 
 bool ToolbarWin::eventFilter(QObject *obj, QEvent *event)
 {
-    // qDebug() << obj->objectName() << event->type();
     bool isProcessed = false;
 
     if (event->type() == QEvent::Enter)
@@ -865,7 +862,6 @@ void ToolbarWin::update_vk_mode_ckecked_state(VirtualKeyboardMode mode)
 
 void ToolbarWin::on_btnLogo_clicked()
 {
-    //    qDebug() << DBG_TRACE;
 }
 
 void ToolbarWin::on_btnMenuExtend_clicked()
@@ -894,7 +890,6 @@ void ToolbarWin::on_btnMode_clicked()
 
 void ToolbarWin::fcitx_charFont_updated(const QString &param)
 {
-    //    qDebug() << param;
     if (param.contains("fcitx-chttrans-inactive"))
     {
         // set_char_font_mode( CHAR_SIMPLIFIED );
@@ -923,7 +918,6 @@ void ToolbarWin::fcitx_charWidth_updated(const QString &param)
 
 void ToolbarWin::fcitx_charMark_updated(const QString &param)
 {
-    // qDebug() << param;
 
     if (param.contains("fcitx-punc-inactive"))
     {
@@ -1131,7 +1125,6 @@ void ToolbarWin::slot_hide_toolbar()
 
 void ToolbarWin::slot_vk_mode_triggered(QAction *action)
 {
-    //    qDebug() << DBG_TRACE;
     m_keyboardMenu.close();
 
     VirtualKeyboardMode vkm = VKM_INPUT_PC;

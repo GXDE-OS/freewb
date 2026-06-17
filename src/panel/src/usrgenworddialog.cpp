@@ -1,5 +1,7 @@
 #include "usrgenworddialog.h"
 
+#include <QTextStream>
+
 #include "config.h"
 #include "settings.h"
 #include "ui_usrgenworddialog.h"
@@ -97,7 +99,6 @@ void UsrGenWordDialog::init_user_word_file()
     {
         if (!textFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
         {
-            qWarning() << textFile.fileName() << " open failed!";
             return;
         }
 
@@ -143,7 +144,6 @@ void UsrGenWordDialog::add_user_word(const QString &wordText, const QString &wor
 
     if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
     {
-        qWarning() << textFile.fileName() << " open failed!";
         return;
     }
 
@@ -178,7 +178,6 @@ void UsrGenWordDialog::delete_user_word(const QString &wordText, const QString &
 
     if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
     {
-        qWarning() << textFile.fileName() << " open failed!";
         return;
     }
 

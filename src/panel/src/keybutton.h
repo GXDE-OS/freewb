@@ -2,7 +2,6 @@
 #define KEYBUTTON_H
 
 #include <QChar>
-#include <QDebug>
 #include <QKeyEvent>
 #include <QObject>
 #include <QPaintEvent>

@@ -3,7 +3,6 @@
 
 #include <QAbstractButton>
 #include <QApplication>
-#include <QDebug>
 #include <QDesktopWidget>
 #include <QEventLoop>
 #include <QFile>

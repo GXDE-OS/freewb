@@ -1,7 +1,6 @@
 #ifndef CANDIDATEITEM_H
 #define CANDIDATEITEM_H
 
-#include <QDebug>
 #include <QEvent>
 #include <QWidget>
 

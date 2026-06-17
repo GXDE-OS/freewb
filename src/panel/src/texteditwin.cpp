@@ -66,11 +66,7 @@ void TextEditWin::init_quick_table_file()
                        "s=……\n"
                        "d=、\n";
 
-        if (!textFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
-        {
-            qWarning() << textFile.fileName() << " open failed!";
-        }
-        else
+        if (textFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
         {
             textStream << tips;
             textStream.flush();
@@ -114,7 +110,6 @@ void TextEditWin::open_user_word_file()
     textStream.setCodec("UTF-8");
     if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
     {
-        qWarning() << textFile.fileName() << " open failed!";
         setWindowTitle(_("File open failed!"));
         ui->plainTextEdit->setPlainText("");
     }
@@ -141,7 +136,6 @@ void TextEditWin::open_quick_table_file()
     textStream.setCodec("UTF-8");
     if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
     {
-        qWarning() << textFile.fileName() << " open failed!";
         setWindowTitle(_("File open failed!"));
         ui->plainTextEdit->setPlainText("");
     }
@@ -171,7 +165,6 @@ void TextEditWin::open_wubi_table_file()
     int count;
     if (!freewb::tools::mb2txt(m_textFileName.toUtf8().data(), QString(WUBI_TABLE_FILE).toUtf8().data(), &count))
     {
-        qWarning() << "convert mb to txt failed!";
         return;
     }
 
@@ -180,7 +173,6 @@ void TextEditWin::open_wubi_table_file()
     textStream.setCodec("UTF-8");
     if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
     {
-        qWarning() << textFile.fileName() << " open failed!";
         setWindowTitle(_("File open failed!"));
         ui->plainTextEdit->setPlainText("");
     }
@@ -211,7 +203,6 @@ void TextEditWin::open_pinyin_table_file()
     int count;
     if (!freewb::tools::mb2txt(m_textFileName.toUtf8().data(), QString(PINYIN_TABLE_FILE).toUtf8().data(), &count))
     {
-        qWarning() << "convert mb to txt failed!";
         return;
     }
 
@@ -221,7 +212,6 @@ void TextEditWin::open_pinyin_table_file()
     textFile.setFileName(m_textFileName);
     if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
     {
-        qWarning() << textFile.fileName() << " open failed!";
         setWindowTitle("文件打开失败!");
         ui->plainTextEdit->setPlainText("");
     }
@@ -248,7 +238,6 @@ void TextEditWin::open_setting_file()
     textStream.setCodec("UTF-8");
     if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
     {
-        qWarning() << textFile.fileName() << " open failed!";
         setWindowTitle("文件打开失败!");
         ui->plainTextEdit->setPlainText("");
     }
@@ -273,7 +262,6 @@ bool TextEditWin::save_text_to_file()
 
     if (!textFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
     {
-        qWarning() << textFile.fileName() << " open failed!";
         return false;
     }
 
@@ -311,7 +299,6 @@ bool TextEditWin::save_text_to_file()
         int count;
         if (!freewb::tools::txt2mb(m_textFileName.toUtf8().data(), QString(WUBI_TABLE_FILE).toUtf8().data(), &count))
         {
-            qWarning() << "convert txt to mb failed!";
             return false;
         }
     }
@@ -324,7 +311,6 @@ bool TextEditWin::save_text_to_file()
         int count;
         if (!freewb::tools::txt2mb(m_textFileName.toUtf8().data(), QString(PINYIN_TABLE_FILE).toUtf8().data(), &count))
         {
-            qWarning() << "convert txt to mb failed!";
             return false;
         }
     }
@@ -387,7 +373,6 @@ bool TextEditWin::close_text_win()
             bool savOK = save_text_to_file();
             if (!savOK)
             {
-                qWarning() << m_textFileName << "save failed!";
             }
         }
         else if (ret == QMessageBox::No)
@@ -467,7 +452,6 @@ void TextEditWin::slot_text_is_changed()
 
 void TextEditWin::slot_find_text(const QString &text, bool prevFlg, bool caseSensitiveFlg, bool wholeWordMatchFlg)
 {
-    // qDebug() << text << prevFlg << caseSensitiveFlg << wholeWordMatchFlg;
 
     QTextDocument::FindFlags findOpt = static_cast<QTextDocument::FindFlag>(0);
     if (prevFlg)

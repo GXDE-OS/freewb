@@ -10,7 +10,6 @@ void X11EventMonitor::run()
     Display *x11Display = XOpenDisplay(nullptr);
     if (x11Display == nullptr)
     {
-        qWarning() << "unable to open x11 display!";
         return;
     }
 
@@ -19,7 +18,6 @@ void X11EventMonitor::run()
     XRecordRange *range = XRecordAllocRange();
     if (range == nullptr)
     {
-        qWarning() << "unable to allocate XRecordRange!";
         return;
     }
 
@@ -32,7 +30,6 @@ void X11EventMonitor::run()
     XRecordContext context = XRecordCreateContext(x11Display, 0, &clients, 1, &range, 1);
     if (context == 0)
     {
-        qWarning() << "XRecordCreateContext failed!";
         return;
     }
 
@@ -42,13 +39,11 @@ void X11EventMonitor::run()
     Display *displayDatalink = XOpenDisplay(nullptr);
     if (displayDatalink == nullptr)
     {
-        qWarning() << "unable to open second display!";
         return;
     }
 
     if (!XRecordEnableContext(displayDatalink, context, x11EventCallback, reinterpret_cast<XPointer>(this)))
     {
-        qWarning() << "XRecordEnableContext failed!";
         return;
     }
 }
@@ -71,7 +66,6 @@ void X11EventMonitor::handleMonitorX11Event(XRecordInterceptData *data)
             value = reinterpret_cast<unsigned char *>(data->data)[1];
             emit signal_key_pressed(value);
             m_keyValue = value;
-            // qDebug() << "KeyPress:" << m_keyValue;
             break;
         }
         case KeyRelease:
@@ -80,7 +74,6 @@ void X11EventMonitor::handleMonitorX11Event(XRecordInterceptData *data)
             if (m_keyValue == value)
             {
                 emit signal_key_clicked(value);
-                // qDebug() << "keyClicked:" << value;
             }
             m_keyValue = 0;
             break;

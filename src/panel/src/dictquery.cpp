@@ -27,7 +27,6 @@ void DictQuery::init_wbpy_table()
             m_wbpyTable.insert(tmp.at(0), tmp.at(1));
         }
     }
-    // qDebug() << m_wbpyTable.size();
 }
 
 void DictQuery::set_cur_dict(const QString &dbFile)
@@ -40,7 +39,6 @@ sqlite3 *DictQuery::open_dict()
     sqlite3 *db = nullptr;
     if (sqlite3_open(m_dictFile.toUtf8().data(), &db) != SQLITE_OK)
     {
-        qWarning() << sqlite3_errmsg(db);
         return nullptr;
     }
     else

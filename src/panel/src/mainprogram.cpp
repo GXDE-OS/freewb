@@ -1,6 +1,5 @@
 #include "mainprogram.h"
 
-#include <QDebug>
 #include <QMessageBox>
 
 #include "config.h"
@@ -236,7 +235,6 @@ void MainProgram::connectSettingsDBus()
     connect(s, &freewb::ipc::QDBusSettingsService::signal_panel_exit, this,
             [this]()
             {
-                qDebug() << "Freewb quit!";
                 m_toolbar->hide();
                 m_inputWin->hide();
             });

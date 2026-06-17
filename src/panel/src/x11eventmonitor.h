@@ -1,7 +1,6 @@
 #ifndef X11EVENTMONITOR_H
 #define X11EVENTMONITOR_H
 
-#include <QDebug>
 #include <QThread>
 #include <X11/Xlibint.h> //其内部包含了"X11/Xlib.h"
 #include <X11/extensions/record.h>

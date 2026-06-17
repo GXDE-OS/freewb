@@ -10,7 +10,6 @@
 #include <unistd.h>
 
 #include <QApplication>
-#include <QDebug>
 #include <QFontDatabase>
 #include <QMutex>
 

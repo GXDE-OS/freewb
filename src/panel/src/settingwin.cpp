@@ -407,11 +407,7 @@ void SettingWin::init_window_appearance()
 
     // 载入窗口全局UI样式表
     QFile qssFile(QSS_FILE);
-    if (!qssFile.open(QFile::ReadOnly))
-    {
-        qWarning() << "open qss file failed!";
-    }
-    else
+    if (qssFile.open(QFile::ReadOnly))
     {
         this->setStyleSheet(qssFile.readAll());
         qssFile.close();
@@ -1308,7 +1304,6 @@ void SettingWin::on_btnHelp_clicked()
 
 void SettingWin::on_ckbCodeRemind_stateChanged(int arg1)
 {
-    //    qDebug() << DBG_TRACE << arg1;
 
     if (arg1 == Qt::Checked)
     {
@@ -1538,7 +1533,6 @@ void SettingWin::on_btnRestoreShortcutKey_clicked()
 
 void SettingWin::slot_custom_keyboard_char_clicked(SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue)
 {
-    // qDebug() << keyValue.commChar;
 
     m_curSymbolKeyIdx = keyIdx;
     m_curCustomKeyValue = keyValue;
@@ -1550,7 +1544,6 @@ void SettingWin::slot_custom_keyboard_char_clicked(SymbolKeyIdx keyIdx, const QS
 
 void SettingWin::slot_custom_keyboard_mark_clicked(SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue)
 {
-    // qDebug() << keyValue.commMark;
 
     m_curSymbolKeyIdx = keyIdx;
     m_curCustomKeyValue = keyValue;
@@ -1562,7 +1555,6 @@ void SettingWin::slot_custom_keyboard_mark_clicked(SymbolKeyIdx keyIdx, const QS
 
 void SettingWin::slot_custom_btn_ok_clicked(const QString &commSymbol, const QString &shiftSymbol)
 {
-    // qDebug() << commSymbol << shiftSymbol;
 
     if (ui->stackedWidget->currentWidget() == ui->pageCustomKeyChar)
     {
@@ -1576,10 +1568,6 @@ void SettingWin::slot_custom_btn_ok_clicked(const QString &commSymbol, const QSt
         m_curCustomKeyValue.shiftMark = shiftSymbol;
         m_kbCustomKeyMark->update_customkey_button(m_curSymbolKeyIdx, commSymbol, shiftSymbol);
     }
-#ifdef DEBUG
-    qDebug() << m_curCustomKeyValue.commChar << m_curCustomKeyValue.shiftChar << m_curCustomKeyValue.commMark
-             << m_curCustomKeyValue.shiftMark;
-#endif
     std::string chars = settings::instance().get_CoustomChar();
     std::string marks = settings::instance().get_CoustomMark();
     if (freewb_custom_key_info_apply_to_values(chars, marks, static_cast<int>(m_curSymbolKeyIdx), KEY_SYMBOL_NUM,

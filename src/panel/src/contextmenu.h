@@ -5,7 +5,6 @@
 #include <QAction>
 #include <QActionGroup>
 #include <QApplication>
-#include <QDebug>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QMenu>

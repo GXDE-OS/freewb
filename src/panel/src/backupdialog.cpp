@@ -71,7 +71,6 @@ void BackupWorker::start_backup()
     QDataStream backupStream(&backupFile);
     if (!backupFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
-        qWarning() << m_backupFile << "open failed!";
         failedFlg = 1;
     }
     else
@@ -87,7 +86,6 @@ void BackupWorker::start_backup()
         // 备份五笔词库
         if (!wbTableFile.open(QIODevice::ReadOnly))
         {
-            qWarning() << FILE_WUBI_TABLE << "open failed!";
             failedFlg = 1;
         }
         else
@@ -107,15 +105,10 @@ void BackupWorker::start_backup()
                 }
             }
             wbTableFile.close();
-            // qDebug() << "wubimb file size: " << wbTableSize;
         }
 
         // 备份拼音词库
-        if (!pyTableFile.open(QIODevice::ReadOnly))
-        {
-            qWarning() << FILE_PINYIN_TABLE << "open failed!";
-        }
-        else
+        if (pyTableFile.open(QIODevice::ReadOnly))
         {
             dataStream.setDevice(&pyTableFile);
             while (1)
@@ -132,15 +125,10 @@ void BackupWorker::start_backup()
                 }
             }
             pyTableFile.close();
-            // qDebug() << "pinyinmb file size: " << pyTableSize;
         }
 
         // 备份用户词组表
-        if (!userTableFile.open(QIODevice::ReadOnly))
-        {
-            qWarning() << FILE_USER_TABLE << "open failed!";
-        }
-        else
+        if (userTableFile.open(QIODevice::ReadOnly))
         {
             dataStream.setDevice(&userTableFile);
             while (1)
@@ -157,15 +145,10 @@ void BackupWorker::start_backup()
                 }
             }
             userTableFile.close();
-            // qDebug() << "userword file size: " << userTableSize;
         }
 
         // 备份快捷码表
-        if (!quickTableFile.open(QIODevice::ReadOnly))
-        {
-            qWarning() << FILE_QUICK_TABLE << "open failed!";
-        }
-        else
+        if (quickTableFile.open(QIODevice::ReadOnly))
         {
             dataStream.setDevice(&quickTableFile);
             while (1)
@@ -182,15 +165,10 @@ void BackupWorker::start_backup()
                 }
             }
             quickTableFile.close();
-            // qDebug() << "quick table file size: " << quickTableSize;
         }
 
         // 备份用户设置文件
-        if (!settingFile.open(QIODevice::ReadOnly))
-        {
-            qWarning() << FILE_SETTINGS << "open failed!";
-        }
-        else
+        if (settingFile.open(QIODevice::ReadOnly))
         {
             dataStream.setDevice(&settingFile);
             while (1)
@@ -207,7 +185,6 @@ void BackupWorker::start_backup()
                 }
             }
             settingFile.close();
-            // qDebug() << "settings file size: " << sysSettingSize;
         }
 
         // 写入文件头部信息
@@ -250,7 +227,6 @@ void BackupWorker::start_restore()
     QDataStream backupStream(&backupFile);
     if (!backupFile.open(QIODevice::ReadOnly))
     {
-        qWarning() << m_backupFile << "open failed!";
         failedFlg = 1;
     }
     else
@@ -271,7 +247,6 @@ void BackupWorker::start_restore()
         // 判断备份文件是否有效
         if ((backupFileHead != g_backupFileHead) || (dataHeadSize + dataSize != backupFile.size()))
         {
-            qWarning() << m_backupFile << "is invalid!";
             failedFlg = 1;
         }
         else
@@ -284,17 +259,12 @@ void BackupWorker::start_restore()
             {
                 if (!QDir().mkdir(lexiconDir))
                 {
-                    qWarning() << lexiconDir << "create failed!";
                 }
             }
 
             // 恢复五笔词库
             wbTableFile.setFileName(lexiconDir + "/wbzx.mb");
-            if (!wbTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
-            {
-                qWarning() << FILE_WUBI_TABLE << "open failed!";
-            }
-            else
+            if (wbTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
             {
                 backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize));
                 dataStream.setDevice(&wbTableFile);
@@ -326,11 +296,7 @@ void BackupWorker::start_restore()
 
             // 恢复拼音词库
             pyTableFile.setFileName(lexiconDir + "/pinyin.mb");
-            if (!pyTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
-            {
-                qWarning() << FILE_PINYIN_TABLE << "open failed!";
-            }
-            else
+            if (pyTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
             {
                 backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize));
                 dataStream.setDevice(&pyTableFile);
@@ -361,11 +327,7 @@ void BackupWorker::start_restore()
             }
 
             // 恢复用户词组表
-            if (!userTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
-            {
-                qWarning() << FILE_USER_TABLE << "open failed!";
-            }
-            else
+            if (userTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
             {
                 backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize) +
                                 static_cast<quint32>(pyTableSize));
@@ -397,11 +359,7 @@ void BackupWorker::start_restore()
             }
 
             // 恢复快捷码表
-            if (!quickTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
-            {
-                qWarning() << FILE_QUICK_TABLE << "open failed!";
-            }
-            else
+            if (quickTableFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
             {
                 backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize) +
                                 static_cast<quint32>(pyTableSize) + static_cast<quint32>(userTableSize));
@@ -433,11 +391,7 @@ void BackupWorker::start_restore()
             }
 
             // 恢复用户设置文件
-            if (!settingFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
-            {
-                qWarning() << FILE_SETTINGS << "open failed!";
-            }
-            else
+            if (settingFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
             {
                 backupFile.seek(dataHeadSize + static_cast<quint32>(lexiconNameSize) + static_cast<quint32>(wbTableSize) +
                                 static_cast<quint32>(pyTableSize) + static_cast<quint32>(userTableSize) +

@@ -370,7 +370,6 @@ void InputWin::slot_load_skin(const QString &skinId)
 
     if (!QFile(skinFolder + "skin.ini").exists())
     {
-        qWarning() << "skin file isn't exist:" << skinFolder;
         return;
     }
 

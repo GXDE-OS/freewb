@@ -1,7 +1,6 @@
 #ifndef TEXTFINDDIALOG_H
 #define TEXTFINDDIALOG_H
 
-#include <QDebug>
 #include <QDialog>
 
 namespace Ui
