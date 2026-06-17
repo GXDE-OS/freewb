@@ -32,7 +32,6 @@ signals:
     void signal_restore_lexicon_and_settings();                                          // 恢复词库与设置
     void signal_show_version_info();                                                     // 查看版本信息
     void signal_reload_dictionaries(int mask);
-    void signal_app_register();
     void signal_menu_visibility_changed(bool visible);
 
 public slots:
@@ -54,7 +53,6 @@ protected slots:
     void on_action31_clicked();
     void on_action32_clicked();
     void on_action33_clicked();
-    void on_action34_clicked();
     void on_action211_clicked();
     void on_action212_clicked();
     void on_action213_clicked();
@@ -85,7 +83,6 @@ private:
     QAction m_action31; // 快速入门
     QAction m_action32; // 快捷命令
     QAction m_action33; // 版本信息
-    QAction m_action34; // 软件注册
 
     // 三级菜单
     QAction m_action211; // 词库生成与维护

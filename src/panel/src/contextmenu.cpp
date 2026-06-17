@@ -31,7 +31,6 @@
 #define STR_ACTION31 _("Quick start")
 #define STR_ACTION32 _("Shortcut command")
 #define STR_ACTION33 _("Version information")
-#define STR_ACTION34 _("Software registration")
 
 // 三级菜单
 #define STR_ACTION211 _("Lexicon generation and maintenance")
@@ -93,11 +92,9 @@ ContextMenu::ContextMenu(QWidget *parent) : QMenu(parent)
     m_action31.setText(STR_ACTION31);
     m_action32.setText(STR_ACTION32);
     m_action33.setText(STR_ACTION33);
-    m_action34.setText(STR_ACTION34);
     m_menu4.addAction(&m_action31);
     m_menu4.addAction(&m_action32);
     m_menu4.addAction(&m_action33);
-    m_menu4.addAction(&m_action34);
 
     // 三级菜单
     m_action211.setText(STR_ACTION211);
@@ -121,7 +118,6 @@ ContextMenu::ContextMenu(QWidget *parent) : QMenu(parent)
     connect(&m_action31, SIGNAL(triggered()), this, SLOT(on_action31_clicked()));
     connect(&m_action32, SIGNAL(triggered()), this, SLOT(on_action32_clicked()));
     connect(&m_action33, SIGNAL(triggered()), this, SLOT(on_action33_clicked()));
-    connect(&m_action34, SIGNAL(triggered()), this, SLOT(on_action34_clicked()));
     connect(&m_action211, SIGNAL(triggered()), this, SLOT(on_action211_clicked()));
     connect(&m_action212, SIGNAL(triggered()), this, SLOT(on_action212_clicked()));
     connect(&m_action213, SIGNAL(triggered()), this, SLOT(on_action213_clicked()));
@@ -274,12 +270,6 @@ void ContextMenu::on_action33_clicked()
 {
     close();
     emit signal_show_version_info();
-}
-
-void ContextMenu::on_action34_clicked()
-{
-    close();
-    emit signal_app_register();
 }
 
 void ContextMenu::on_action211_clicked()
