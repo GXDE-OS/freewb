@@ -35,7 +35,7 @@ static char **makeStrv(const std::vector<std::string> &strings, std::vector<char
     return scratch.data();
 }
 
-/** Append @p payload as SetLookupTable D-Bus body: as, as, as, b, b, i, i. */
+/** Append @p payload as SetLookupTable D-Bus body: as, as, as, b, b, i. */
 static int appendSetCandidateBody(sd_bus_message *m, const CandidatePayload &payload)
 {
     std::vector<char *> strvLabels;
@@ -60,7 +60,6 @@ static int appendSetCandidateBody(sd_bus_message *m, const CandidatePayload &pay
     int hasPrev = payload.hasPrev ? 1 : 0;
     int hasNext = payload.hasNext ? 1 : 0;
     int cursor = payload.cursor;
-    int layout = static_cast<int>(payload.layout);
     r = sd_bus_message_append_basic(m, 'b', &hasPrev);
     if (r < 0)
     {
@@ -76,7 +75,7 @@ static int appendSetCandidateBody(sd_bus_message *m, const CandidatePayload &pay
     {
         return r;
     }
-    return sd_bus_message_append_basic(m, 'i', &layout);
+    return r;
 }
 
 } // namespace
@@ -184,8 +183,8 @@ void SDBusProxy::callPanelUpdateCandidate(const CandidatePayload &payload)
         FREEWB_ERROR("emitUpdateCandidate skipped: bus={} available_={}", static_cast<const void *>(bus_), available_);
         return;
     }
-    FREEWB_DEBUG("emitUpdateCandidate: texts={} prompts={} hasPrev={} hasNext={} cursor={} layout={}", payload.texts.size(),
-                 payload.prompts.size(), payload.hasPrev, payload.hasNext, payload.cursor, static_cast<int>(payload.layout));
+    FREEWB_DEBUG("emitUpdateCandidate: texts={} prompts={} hasPrev={} hasNext={} cursor={}", payload.texts.size(),
+                 payload.prompts.size(), payload.hasPrev, payload.hasNext, payload.cursor);
 
     sd_bus_message *m = nullptr;
     const int newCallR = sd_bus_message_new_method_call(bus_, &m, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH,
@@ -219,7 +218,6 @@ void SDBusProxy::callPanelUpdatePreeditText(const PreeditPayload &payload)
 {
     static const char *const kEmptyAttr = "";
     sendPanelMethod("UpdatePreeditText", "ss", payload.text.c_str(), kEmptyAttr);
-    sendPanelMethod("ShowPreedit", "b", payload.show ? 1 : 0);
 }
 
 void SDBusProxy::callPanelUpdatePreeditCaret(int caret)
@@ -231,7 +229,6 @@ void SDBusProxy::callPanelUpdateAux(const CandidateAuxPayload &payload)
 {
     static const char *const kEmptyAttr = "";
     sendPanelMethod("UpdateAux", "ss", payload.text.c_str(), kEmptyAttr);
-    sendPanelMethod("ShowAux", "b", payload.show ? 1 : 0);
 }
 
 void SDBusProxy::callAddUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText)

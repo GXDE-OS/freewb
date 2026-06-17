@@ -37,8 +37,6 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     // 输入法引擎 → Panel UI
-    Q_SCRIPTABLE void ShowPreedit(bool show);
-    Q_SCRIPTABLE void ShowAux(bool show);
     Q_SCRIPTABLE void ShowLookupTable(bool show);
     Q_SCRIPTABLE void UpdateLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev,
                                         bool hasNext);
@@ -49,7 +47,7 @@ public Q_SLOTS:
     Q_SCRIPTABLE void UpdateProperty(const QString &prop);
     Q_SCRIPTABLE void RegisterProperties(const QStringList &props);
     Q_SCRIPTABLE void SetLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev,
-                                     bool hasNext, int cursor, int layout);
+                                     bool hasNext, int cursor);
     Q_SCRIPTABLE void SetSpotRect(int x, int y, int w, int h);
 
     Q_SCRIPTABLE void SwitchInputMode(const QString &inputMode);
@@ -60,8 +58,6 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     // UI内部信号
-    void signal_ShowPreedit(bool);
-    void signal_ShowAux(bool);
     void signal_ShowLookupTable(bool);
     void signal_UpdateLookupTable(const QStringList &, const QStringList &, const QStringList &, bool, bool);
     void signal_UpdatePreeditCaret(int);

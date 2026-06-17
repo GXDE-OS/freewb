@@ -77,7 +77,7 @@ bool appendStringArray(DBusMessageIter *parent, const std::vector<std::string> &
     return dbus_message_iter_close_container(parent, &arrayIter);
 }
 
-/** Append @p payload as SetLookupTable D-Bus body: as, as, as, b, b, i, i. */
+/** Append @p payload as SetLookupTable D-Bus body: as, as, as, b, b, i. */
 bool appendSetCandidateBody(DBusMessage *msg, const freewb::CandidatePayload &payload)
 {
     DBusMessageIter args;
@@ -90,11 +90,9 @@ bool appendSetCandidateBody(DBusMessage *msg, const freewb::CandidatePayload &pa
     dbus_bool_t hasPrev = payload.hasPrev ? TRUE : FALSE;
     dbus_bool_t hasNext = payload.hasNext ? TRUE : FALSE;
     dbus_int32_t cursor = payload.cursor;
-    dbus_int32_t layout = static_cast<dbus_int32_t>(payload.layout);
     return dbus_message_iter_append_basic(&args, DBUS_TYPE_BOOLEAN, &hasPrev) &&
            dbus_message_iter_append_basic(&args, DBUS_TYPE_BOOLEAN, &hasNext) &&
-           dbus_message_iter_append_basic(&args, DBUS_TYPE_INT32, &cursor) &&
-           dbus_message_iter_append_basic(&args, DBUS_TYPE_INT32, &layout);
+           dbus_message_iter_append_basic(&args, DBUS_TYPE_INT32, &cursor);
 }
 
 } // namespace
@@ -191,8 +189,8 @@ void LibDbusProxy::callPanelUpdateCandidate(const ::freewb::CandidatePayload &pa
         FREEWB_ERROR("callPanelUpdateCandidate skipped: conn={} available_={}", static_cast<const void *>(conn_), available_);
         return;
     }
-    FREEWB_DEBUG("callPanelUpdateCandidate: texts={} prompts={} hasPrev={} hasNext={} cursor={} layout={}", payload.texts.size(),
-                 payload.prompts.size(), payload.hasPrev, payload.hasNext, payload.cursor, static_cast<int>(payload.layout));
+    FREEWB_DEBUG("callPanelUpdateCandidate: texts={} prompts={} hasPrev={} hasNext={} cursor={}", payload.texts.size(),
+                 payload.prompts.size(), payload.hasPrev, payload.hasNext, payload.cursor);
 
     DBusMessage *msg = dbus_message_new_method_call(FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH,
                                                     FREEWUBI_PANEL_INTERFACE, "SetLookupTable");
@@ -224,7 +222,6 @@ void LibDbusProxy::callPanelUpdatePreeditText(const ::freewb::PreeditPayload &pa
 {
     static const char *const kEmptyAttr = "";
     sendPanelMethod("UpdatePreeditText", "ss", payload.text.c_str(), kEmptyAttr);
-    sendPanelMethod("ShowPreedit", "b", payload.show ? 1 : 0);
 }
 
 void LibDbusProxy::callPanelUpdatePreeditCaret(int caret)
@@ -236,7 +233,6 @@ void LibDbusProxy::callPanelUpdateAux(const ::freewb::CandidateAuxPayload &paylo
 {
     static const char *const kEmptyAttr = "";
     sendPanelMethod("UpdateAux", "ss", payload.text.c_str(), kEmptyAttr);
-    sendPanelMethod("ShowAux", "b", payload.show ? 1 : 0);
 }
 
 void LibDbusProxy::callAddUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText)

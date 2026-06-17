@@ -19,12 +19,6 @@ enum DictionaryReloadMask : std::uint32_t
     DictReloadAll = DictReloadUserWord | DictReloadWubiTable | DictReloadPinyinTable,
 };
 
-enum LayoutType
-{
-    Horizontal = 1,
-    Vertical
-};
-
 struct SpotRectPayload
 {
     int x = 0;
@@ -41,7 +35,6 @@ struct CandidatePayload
     bool hasPrev = false;
     bool hasNext = false;
     int cursor = -1;
-    LayoutType layout = Horizontal;
 
     void clearRows()
     {
@@ -55,13 +48,11 @@ struct PreeditPayload
 {
     std::string text;
     int caret = 0;
-    bool show = false;
 };
 
 struct CandidateAuxPayload
 {
     std::string text;
-    bool show = false;
 };
 
 struct ToolbarPropertiesPayload

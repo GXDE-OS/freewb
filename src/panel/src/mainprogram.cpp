@@ -53,8 +53,6 @@ MainProgram::~MainProgram()
 
 void MainProgram::connectPanelDBus()
 {
-    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_ShowPreedit, m_inputWin, &InputWin::slot_kim_ShowPreedit);
-    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_ShowAux, m_inputWin, &InputWin::slot_kim_ShowAux);
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_ShowLookupTable, m_inputWin,
             &InputWin::slot_kim_ShowLookupTable);
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_UpdateLookupTable, m_inputWin,

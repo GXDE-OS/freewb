@@ -70,14 +70,11 @@ void initDemoPayloads(DemoState &s)
     s.candidate.hasPrev = false;
     s.candidate.hasNext = true;
     s.candidate.cursor = 0;
-    s.candidate.layout = freewb::Horizontal;
 
     s.preedit.text = "demo preedit";
     s.preedit.caret = 4;
-    s.preedit.show = true;
 
     s.aux.text = "demo aux";
-    s.aux.show = true;
 }
 
 void onDBusSignalCallback(const char *member, int index)
@@ -250,8 +247,6 @@ void handleCommand(DemoState &s, const std::string &cmd)
         freewb::CandidatePayload emptyCand;
         freewb::PreeditPayload pe{};
         freewb::CandidateAuxPayload ax{};
-        pe.show = false;
-        ax.show = false;
         emitCandidateFrame(proxy, s.spotRect, emptyCand, pe, ax);
         FREEWB_WARN("cmd=1 emitCandidateFrame (hide)");
         std::cout << "hidden\n";

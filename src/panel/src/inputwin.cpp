@@ -1232,26 +1232,6 @@ void InputWin::slot_caret_blink()
 }
 
 /**************************** fcitx信号处理函数 *********************************/
-// isShow: 切换到中文输入后是否在光标处出现短暂的提示信息， 辅助窗口显示
-void InputWin::slot_kim_ShowAux(bool enable)
-{
-    if (enable)
-    {
-        m_labelImPrompt->move(m_imPromptPosition);
-    }
-
-    if (enable)
-    {
-        m_labelImPrompt->show();
-        QTimer::singleShot(500, m_labelImPrompt, SLOT(hide()));
-    }
-
-    //    else
-    //    {
-    //        m_labelImPrompt->hide();
-    //    }
-}
-
 // isShow: 是否显示候选词组列表
 void InputWin::slot_kim_ShowLookupTable(bool enable)
 {
@@ -1381,27 +1361,6 @@ void InputWin::slot_kim_UpdatePreeditCaret(int position)
     }
 }
 
-// enable 是否显示预编辑输入框，每次按键输入或输入框失去焦点都会触发
-void InputWin::slot_kim_ShowPreedit(bool enable)
-{
-    if (enable)
-    {
-        show();
-    }
-    else
-    {
-        if (m_isUserWordMode)
-        {
-            close_user_word_operation_prompt();
-        }
-        else
-        {
-            hide();
-            m_caretBlinkTimer.stop();
-        }
-    }
-}
-
 // text：预编辑输入框中的显示内容， attr:空
 void InputWin::slot_kim_UpdatePreeditText(const QString &text, const QString &attr)
 {
@@ -1419,6 +1378,23 @@ void InputWin::slot_kim_UpdatePreeditText(const QString &text, const QString &at
         m_caretPhase = 0;
     }
 
+    if (text.isEmpty())
+    {
+        if (m_isUserWordMode)
+        {
+            close_user_word_operation_prompt();
+        }
+        else
+        {
+            hide();
+            m_caretBlinkTimer.stop();
+        }
+    }
+    else
+    {
+        show();
+    }
+
     handle_candiwin_op_help_info();
     auto_adjust_candi_win_geometry();
 }
@@ -1429,6 +1405,15 @@ void InputWin::slot_kim_UpdateAux(const QString &text, const QString &attr)
     Q_UNUSED(attr);
     m_labelImPrompt->setText(text);
     m_labelImPrompt->adjustSize();
+
+    if (text.isEmpty())
+    {
+        return;
+    }
+
+    m_labelImPrompt->move(m_imPromptPosition);
+    m_labelImPrompt->show();
+    QTimer::singleShot(500, m_labelImPrompt, SLOT(hide()));
 }
 
 //

@@ -80,9 +80,9 @@ void Freewb::deactivate()
 {
     reset();
     dbusProxy_->callPanelHideToolbar();
-    dbusProxy_->callPanelUpdatePreeditText({.text = "", .caret = 0, .show = false});
+    dbusProxy_->callPanelUpdatePreeditText({.text = "", .caret = 0});
     dbusProxy_->callPanelUpdateCandidate(
-        {.fullCodes = {}, .texts = {}, .prompts = {}, .hasPrev = false, .hasNext = false, .cursor = -1, .layout = Horizontal});
+        {.fullCodes = {}, .texts = {}, .prompts = {}, .hasPrev = false, .hasNext = false, .cursor = -1});
 }
 
 EngineManager *Freewb::engineManager() const
@@ -540,17 +540,14 @@ void Freewb::updateCandidateAndPreeditToUI()
     {
         return;
     }
-    dbusProxy_->callPanelUpdatePreeditText({.text = candidateList_->preeditText(),
-                                            .caret = candidateList_->cursor(),
-                                            .show = !candidateList_->preeditText().empty()});
+    dbusProxy_->callPanelUpdatePreeditText({.text = candidateList_->preeditText(), .caret = candidateList_->cursor()});
     dbusProxy_->callPanelUpdatePreeditCaret(candidateList_->cursor());
     dbusProxy_->callPanelUpdateCandidate({.fullCodes = {},
                                           .texts = candidateList_->candidateTexts(),
                                           .prompts = candidateList_->candidatePrompts(),
                                           .hasPrev = candidateList_->hasPrev(),
                                           .hasNext = candidateList_->hasNext(),
-                                          .cursor = -1,
-                                          .layout = Horizontal});
+                                          .cursor = -1});
 }
 
 } // namespace freewb

@@ -131,8 +131,6 @@ public slots:
     void slot_update_mark_btn_ico();
 
     // 以下槽函数被fcitx所发出的信号连接
-    void slot_kim_ShowPreedit(bool);
-    void slot_kim_ShowAux(bool);
     void slot_kim_ShowLookupTable(bool);
     void slot_kim_UpdateLookupTable(const QStringList &, const QStringList &, const QStringList &, bool, bool);
     void slot_kim_SetLookupTable(const QStringList &, const QStringList &, const QStringList &, bool, bool, int);

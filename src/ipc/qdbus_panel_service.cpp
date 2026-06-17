@@ -34,16 +34,6 @@ void QDBusPanelService::registerQDBusService()
     }
 }
 
-void QDBusPanelService::ShowPreedit(bool show)
-{
-    emit signal_ShowPreedit(show);
-}
-
-void QDBusPanelService::ShowAux(bool show)
-{
-    emit signal_ShowAux(show);
-}
-
 void QDBusPanelService::ShowLookupTable(bool show)
 {
     emit signal_ShowLookupTable(show);
@@ -86,9 +76,8 @@ void QDBusPanelService::RegisterProperties(const QStringList &props)
 }
 
 void QDBusPanelService::SetLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev,
-                                       bool hasNext, int cursor, int layout)
+                                       bool hasNext, int cursor)
 {
-    Q_UNUSED(layout);
     emit signal_SetLookupTable(label, text, attr, hasPrev, hasNext, cursor);
 }
 
