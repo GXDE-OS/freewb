@@ -196,7 +196,7 @@ FreewbKeySym Key::normalizedKeySymbol(FreewbKeySym sym, FreewbKeyState state)
 
     if (state == FreewbKeyState_None)
     {
-        return !isLetterDigit && isPrintableAscii ? sym : FreewbKey_None;
+        return isPrintableAscii ? sym : FreewbKey_None;
     }
 
     constexpr FreewbKeyState kShiftCaps = static_cast<FreewbKeyState>(FreewbKeyState_Shift | FreewbKeyState_CapsLock);
@@ -204,7 +204,7 @@ FreewbKeySym Key::normalizedKeySymbol(FreewbKeySym sym, FreewbKeyState state)
     {
         return FreewbKey_None;
     }
-    if (!isLetterDigit && isPrintableAscii)
+    if (isLetterDigit || isPrintableAscii)
     {
         return sym;
     }
