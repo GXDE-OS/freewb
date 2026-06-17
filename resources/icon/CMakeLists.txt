@@ -1,5 +1,5 @@
-set(usrdata ${CMAKE_INSTALL_PREFIX}/share)
-set(pkgdatadir ${usrdata}/fcitx)
+if (ENABLE_FCITX4)
+    install(FILES freewb.svg DESTINATION ${FREEWB_INSTALL_DATADIR}/fcitx/imicon)
+endif()
 
-install(FILES freewb.svg DESTINATION ${pkgdatadir}/imicon)
-install(FILES freewb.svg DESTINATION ${usrdata}/icons/hicolor/scalable/apps)
+install(FILES freewb.svg DESTINATION ${FREEWB_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
