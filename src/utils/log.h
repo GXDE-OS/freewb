@@ -12,27 +12,27 @@
 #define FREEWB_DEBUG(...)                                                                                                        \
     do                                                                                                                           \
     {                                                                                                                            \
-        if (!FreewbLog::isCleaned() && spdlog::default_logger_raw() != nullptr)                                                  \
+        if (auto *logger = FreewbLog::activeLogger())                                                                            \
         {                                                                                                                        \
-            SPDLOG_LOGGER_DEBUG(spdlog::default_logger_raw(), __VA_ARGS__);                                                      \
+            SPDLOG_LOGGER_DEBUG(logger, __VA_ARGS__);                                                                            \
         }                                                                                                                        \
     } while (0)
 
 #define FREEWB_WARN(...)                                                                                                         \
     do                                                                                                                           \
     {                                                                                                                            \
-        if (!FreewbLog::isCleaned() && spdlog::default_logger_raw() != nullptr)                                                  \
+        if (auto *logger = FreewbLog::activeLogger())                                                                            \
         {                                                                                                                        \
-            SPDLOG_LOGGER_WARN(spdlog::default_logger_raw(), __VA_ARGS__);                                                       \
+            SPDLOG_LOGGER_WARN(logger, __VA_ARGS__);                                                                             \
         }                                                                                                                        \
     } while (0)
 
 #define FREEWB_ERROR(...)                                                                                                        \
     do                                                                                                                           \
     {                                                                                                                            \
-        if (!FreewbLog::isCleaned() && spdlog::default_logger_raw() != nullptr)                                                  \
+        if (auto *logger = FreewbLog::activeLogger())                                                                            \
         {                                                                                                                        \
-            SPDLOG_LOGGER_ERROR(spdlog::default_logger_raw(), __VA_ARGS__);                                                      \
+            SPDLOG_LOGGER_ERROR(logger, __VA_ARGS__);                                                                            \
         }                                                                                                                        \
     } while (0)
 
@@ -51,6 +51,7 @@ public:
     };
 
     static bool isCleaned();
+    static spdlog::logger *activeLogger();
 
 private:
     void init(const LogOption &option);
@@ -60,6 +61,7 @@ private:
 private:
     std::shared_ptr<spdlog::logger> m_logger;
     static std::atomic<bool> s_cleaned;
+    static std::atomic<spdlog::logger *> s_activeLogger;
     std::string m_logFilePath;
 };
 

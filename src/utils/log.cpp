@@ -12,6 +12,7 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 std::atomic<bool> FreewbLog::s_cleaned{false};
+std::atomic<spdlog::logger *> FreewbLog::s_activeLogger{nullptr};
 
 FreewbLog::FreewbLog(const std::string &logFilePath) : m_logFilePath(logFilePath)
 {
@@ -45,19 +46,18 @@ void FreewbLog::init(const LogOption &option)
     }
     catch (const spdlog::spdlog_ex &e)
     {
-        spdlog::warn("Failed to create log file:{} Error:{} Falling back to console output only.", m_logFilePath, e.what());
-        spdlog::drop(m_logFilePath);
+        std::cerr << "Failed to create log file: " << m_logFilePath << " Error: " << e.what()
+                  << " Falling back to console output only." << std::endl;
         m_logger = nullptr;
         return;
     }
 
-    m_logger = std::make_shared<spdlog::logger>(m_logFilePath, sinks.begin(), sinks.end());
+    m_logger = std::make_shared<spdlog::logger>("freewb", sinks.begin(), sinks.end());
     m_logger->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%s:%!:%#] %v");
     m_logger->set_level(level);
     m_logger->flush_on(level);
 
-    spdlog::register_logger(m_logger);
-    spdlog::set_default_logger(m_logger);
+    s_activeLogger.store(m_logger.get());
     s_cleaned.store(false);
 }
 
@@ -74,11 +74,8 @@ void FreewbLog::cleanUp()
     try
     {
         m_logger->flush();
-        if (spdlog::get(m_logFilePath))
-        {
-            spdlog::drop(m_logFilePath);
-        }
         m_logger.reset();
+        s_activeLogger.store(nullptr);
     }
     catch (const std::system_error &e)
     {
@@ -97,6 +94,15 @@ void FreewbLog::cleanUp()
 bool FreewbLog::isCleaned()
 {
     return s_cleaned.load() == true;
+}
+
+spdlog::logger *FreewbLog::activeLogger()
+{
+    if (s_cleaned.load())
+    {
+        return nullptr;
+    }
+    return s_activeLogger.load();
 }
 
 const spdlog::level::level_enum FreewbLog::logLevel() const
