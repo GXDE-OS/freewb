@@ -33,7 +33,7 @@ if(NOT DBUS1_FOUND AND NOT SDBus_FOUND AND NOT Qt5DBus_FOUND)
 endif()
 
 add_library(${PROJECT_NAME}-ipc SHARED ${IPC_SOURCES})
-target_include_directories(${PROJECT_NAME}-ipc PUBLIC ${CMAKE_SOURCE_DIR}/src/ipc ${CMAKE_SOURCE_DIR}/src/core)
+target_include_directories(${PROJECT_NAME}-ipc PUBLIC ${CMAKE_SOURCE_DIR}/src/ipc)
 if(DBUS1_FOUND)
     target_include_directories(${PROJECT_NAME}-ipc PRIVATE ${DBus1_INCLUDE_DIRS})
 endif()
