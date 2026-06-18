@@ -2,7 +2,9 @@
 #define _MODULE_H_
 
 #include <iostream>
+#include <map>
 
+#include <fcitx/action.h>
 #include <fcitx/addonfactory.h>
 #include <fcitx/addonmanager.h>
 #include <fcitx/inputcontext.h>
@@ -35,10 +37,13 @@ public:
 private:
     void updateCursorPosition();
     void commitString(const std::string &text) const;
+    void initActions();
+    void registerTrayMenu(fcitx::InputContext &inputContext);
 
 private:
     fcitx::Instance *instance_;
     std::unique_ptr<freewb::Freewb> freewb_;
+    std::map<std::string, fcitx::SimpleAction> actions_;
 #if defined(__HAS_WAYLAND__)
     std::unique_ptr<freewb::UkuiWaylandHelper> ukuiWaylandHelper_ = nullptr;
 #endif

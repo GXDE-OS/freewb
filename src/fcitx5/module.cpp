@@ -1,7 +1,11 @@
 #include "module.h"
 
 #include <fcitx-utils/event.h>
+#include <fcitx/action.h>
+#include <fcitx/userinterfacemanager.h>
 
+#include "config.h"
+#include "log.h"
 #include "sdbus_proxy.h"
 #include "types.h"
 
@@ -13,6 +17,8 @@ FreewbIMModule::FreewbIMModule(fcitx::Instance *instance) : instance_(instance)
 #if defined(__HAS_WAYLAND__)
     ukuiWaylandHelper_ = std::make_unique<freewb::UkuiWaylandHelper>();
 #endif
+
+    initActions();
 }
 
 FreewbIMModule::~FreewbIMModule()
@@ -50,14 +56,16 @@ void FreewbIMModule::keyEvent(const fcitx::InputMethodEntry &entry, fcitx::KeyEv
 void FreewbIMModule::activate(const fcitx::InputMethodEntry &entry, fcitx::InputContextEvent &event)
 {
     FCITX_UNUSED(entry);
-    FCITX_UNUSED(event);
+    if (auto *inputContext = event.inputContext())
+    {
+        registerTrayMenu(*inputContext);
+    }
     freewb_->activate();
 }
 
 void FreewbIMModule::deactivate(const fcitx::InputMethodEntry &entry, fcitx::InputContextEvent &event)
 {
     FCITX_UNUSED(entry);
-    FCITX_UNUSED(event);
     freewb_->deactivate();
 }
 
@@ -138,6 +146,42 @@ void FreewbIMModule::commitString(const std::string &text) const
 
     FREEWB_DEBUG("will commit string: {}", text);
     inputContext->commitString(text.c_str());
+}
+
+void FreewbIMModule::initActions()
+{
+    actions_["about"].setShortText(_("About"));
+    actions_["about"].connect<fcitx::SimpleAction::Activated>(
+        [this](fcitx::InputContext *ic)
+        {
+            FCITX_UNUSED(ic);
+            freewb_->dbusProxy()->callShowVersionInfoMethod();
+        });
+
+    actions_["settings"].setShortText(_("Settings"));
+    actions_["settings"].connect<fcitx::SimpleAction::Activated>(
+        [this](fcitx::InputContext *ic)
+        {
+            FCITX_UNUSED(ic);
+            freewb_->dbusProxy()->callOpenUiSettingMethod();
+        });
+}
+
+void FreewbIMModule::registerTrayMenu(fcitx::InputContext &inputContext)
+{
+    auto &statusArea = inputContext.statusArea();
+    for (auto &action : actions_)
+    {
+        if (instance_->userInterfaceManager().lookupAction(action.first) == nullptr)
+        {
+            bool isRegister = instance_->userInterfaceManager().registerAction(action.first, &action.second);
+            FREEWB_DEBUG("will register action: {} return value: {}", action.first, isRegister);
+        }
+
+        FREEWB_DEBUG("will add action: {} to status area", action.first);
+        statusArea.addAction(fcitx::StatusGroup::InputMethod, &action.second);
+    }
+    inputContext.updateUserInterface(fcitx::UserInterfaceComponent::StatusArea);
 }
 
 FCITX_ADDON_FACTORY(FreewbIMModuleFactory)
