@@ -1,4 +1,7 @@
 #include <QApplication>
+#include <QLibraryInfo>
+#include <QLocale>
+#include <QTranslator>
 
 #include "config.h"
 #include "log.h"
@@ -21,6 +24,12 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     app.setApplicationName("freewb");
     app.setQuitOnLastWindowClosed(false);
+
+    QTranslator qtTranslator;
+    if (qtTranslator.load("qtbase_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+    {
+        app.installTranslator(&qtTranslator);
+    }
 
     settings::instance().reload();
 
