@@ -218,6 +218,8 @@ public:
     void update_mark_mode_ico(MarkMode markMode);
     void update_char_font_ico();
     void set_context_menu(ContextMenu *contextMenu);
+    void reset();
+    void hide();
 
 public:
     // 静态成员函数

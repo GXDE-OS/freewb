@@ -1,5 +1,7 @@
 #include "mainprogram.h"
 
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
 #include <QMessageBox>
 
 #include "config.h"
@@ -32,6 +34,8 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
 
     connectPanelDBus();
     connectSettingsDBus();
+
+    initFcitxServiceWatcher();
 
     m_panelDBusService->registerQDBusService();
 }
@@ -365,4 +369,31 @@ void MainProgram::connectSettingsDBus()
     connect(s, &freewb::ipc::QDBusSettingsService::signal_edit_quick_table, this,
             [this]() { m_textEditWin->slot_open_textEdit_win(TEM_QUICK_TABLE); });
     connect(s, &freewb::ipc::QDBusSettingsService::signal_show_version_info, m_settingWin, &SettingWin::slot_show_version_info);
+}
+
+void MainProgram::initFcitxServiceWatcher()
+{
+    static constexpr char kFcitx5Service[] = "org.fcitx.Fcitx5";
+    static constexpr char kFcitx4ServicePrefix[] = "org.fcitx.Fcitx-";
+
+    auto *iface = QDBusConnection::sessionBus().interface();
+    connect(iface, &QDBusConnectionInterface::serviceOwnerChanged, this,
+            [this](const QString &serviceName, const QString &oldOwner, const QString &newOwner)
+            {
+                const bool isFcitx5 = serviceName == QLatin1String(kFcitx5Service);
+                const bool isFcitx4 = serviceName.startsWith(QLatin1String(kFcitx4ServicePrefix));
+                if (!isFcitx5 && !isFcitx4)
+                {
+                    return;
+                }
+                if (!oldOwner.isEmpty() && newOwner.isEmpty())
+                {
+                    FREEWB_ERROR("fcitx service lost (name: {}, oldOwner: {}, newOwner: {}), reset and hide panel ui",
+                                 serviceName.toUtf8().constData(), oldOwner.toUtf8().constData(), newOwner.toUtf8().constData());
+                    m_toolbar->reset();
+                    m_toolbar->hide();
+                    m_inputWin->reset();
+                    m_inputWin->hide();
+                }
+            });
 }

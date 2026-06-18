@@ -1082,6 +1082,43 @@ bool ToolbarWin::is_panel_menu_visible() const
     return m_contextMenuVisible || m_keyboardMenuVisible;
 }
 
+void ToolbarWin::hide()
+{
+    m_kimPropertyDebounceTimer.stop();
+    m_pendingKimProperty.clear();
+    QWidget::hide();
+}
+
+void ToolbarWin::reset()
+{
+    set_input_mode(QString::fromStdString(settings::instance().get_inputMode()));
+    s_charSetMode = static_cast<CharSetMode>(settings::instance().get_charSet());
+    s_charWidthMode = settings::instance().get_fullWidthFlg() ? WIDTH_FULL : WIDTH_HALF;
+    s_markMode = settings::instance().get_chinesePuncFlg() ? MARK_CN : MARK_EN;
+    s_capsFlg = Keyboard::get_caps_flg();
+
+    set_traditional_mode(settings::instance().get_simpTradFlg());
+    update_char_set_ico();
+
+    if (s_charWidthMode == WIDTH_FULL)
+    {
+        ui->btnCharWidth->setStyleSheet(QSS_FULL_WIDTH);
+    }
+    else
+    {
+        ui->btnCharWidth->setStyleSheet(QSS_HALF_WIDTH);
+    }
+
+    if (s_markMode == MARK_CN)
+    {
+        ui->btnMark->setStyleSheet(QSS_MARK_CN);
+    }
+    else
+    {
+        ui->btnMark->setStyleSheet(QSS_MARK_EN);
+    }
+}
+
 void ToolbarWin::slot_apply_pending_kim_property()
 {
     const QString &prop = m_pendingKimProperty;

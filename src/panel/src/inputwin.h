@@ -134,6 +134,7 @@ public slots:
 public:
     void show_user_word_operation_prompt(int addOrDel, const QString &wordText, const QString &wordCode);
     void close_user_word_operation_prompt();
+    void reset();
 
 protected:
     void init_ui_candidates();

@@ -788,6 +788,27 @@ void InputWin::close_user_word_operation_prompt()
     hide();
 }
 
+void InputWin::reset()
+{
+    if (m_isUserWordMode)
+    {
+        exit_user_word_mode();
+    }
+    m_caretBlinkTimer.stop();
+    m_preEidtText.clear();
+    m_candiWordCount = 0;
+    m_candiWordItem = 0;
+    m_caretPos = -1;
+    ui->labelPreEdit->clear();
+    ui->labelPrompt->clear();
+    m_labelImPrompt->clear();
+    for (int i = 0; i < MAX_CANDIDATE_WORD_COUNT; i++)
+    {
+        clear_candidate_text(i);
+    }
+    update_candidate_visibility(0);
+}
+
 void InputWin::set_display_mode(CandiWinDispMode mode)
 {
     m_displayMode = mode;

@@ -28,6 +28,7 @@ public:
 private:
     void connectPanelDBus();
     void connectSettingsDBus();
+    void initFcitxServiceWatcher();
 
     X11EventMonitor *m_x11EventMonitor = nullptr;
     freewb::ipc::QDBusPanelService *m_panelDBusService = nullptr;
