@@ -131,6 +131,8 @@ void FreewbIMModule::updateCursorPosition()
         spotRect.h = rectFromFcitx.height();
     }
 
+    FREEWB_DEBUG("will update spotRect: x={} y={} w={} h={}", spotRect.x, spotRect.y, spotRect.w, spotRect.h);
+
     freewb_->dbusProxy()->callPanelUpdateSpotRect(spotRect);
 }
 
