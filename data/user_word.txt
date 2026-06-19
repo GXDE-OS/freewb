@@ -5,7 +5,6 @@ day=$D日
 day=$d日
 hour=$H时
 hour=$h时
-joke=嘦巭好，兲嫑跑*_*!
 minute=$MI分
 minute=$mi分
 month=$M月

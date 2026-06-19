@@ -109,7 +109,6 @@ void UsrGenWordDialog::init_user_word_file()
         strList << "day=$d日\n";
         strList << "hour=$H时\n";
         strList << "hour=$h时\n";
-        strList << "joke=嘦巭好，兲嫑跑*_*!\n";
         strList << "minute=$MI分\n";
         strList << "minute=$mi分\n";
         strList << "month=$M月\n";
