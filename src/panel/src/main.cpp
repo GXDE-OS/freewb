@@ -15,6 +15,9 @@ int main(int argc, char *argv[])
     FreewbLog log("/tmp/freewb-ui-panel.log");
     FREEWB_DEBUG("panel started");
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
     QApplication app(argc, argv);
     app.setApplicationName("freewb");
 
