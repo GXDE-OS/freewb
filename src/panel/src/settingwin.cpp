@@ -397,7 +397,7 @@ void SettingWin::init_window_appearance()
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
     setFixedSize(size());
     setWindowIcon(QIcon::fromTheme("freewb"));
-    setWindowTitle(_("settings"));
+    setWindowTitle(_("Settings"));
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
     // setFont(freewb_candi_text_qfont(settings::instance()));
 
