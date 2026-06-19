@@ -50,8 +50,8 @@ else()
     message(STATUS "Unknown architecture.")
 endif()
 
-option(ENABLE_FCITX4 "enable support fcitx4" On)
-option(ENABLE_FCITX5 "enable support fcitx5" On)
+option(ENABLE_FCITX4 "enable support fcitx4" Off)
+option(ENABLE_FCITX5 "enable support fcitx5" Off)
 option(ENABLE_TEST "enable freewb test cases" Off)
 
 if (${OS_TYPE} STREQUAL "Linux")
