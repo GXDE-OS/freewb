@@ -66,6 +66,7 @@ void FreewbIMModule::activate(const fcitx::InputMethodEntry &entry, fcitx::Input
 void FreewbIMModule::deactivate(const fcitx::InputMethodEntry &entry, fcitx::InputContextEvent &event)
 {
     FCITX_UNUSED(entry);
+    FCITX_UNUSED(event);
     freewb_->deactivate();
 }
 
@@ -88,9 +89,7 @@ void FreewbIMModule::updateCursorPosition()
 {
     ::freewb::SpotRectPayload spotRect = {0, 0, 0, 0};
     std::array<int32_t, 2> focusWindowPositionFromWlcom = {0, 0};
-    double maxScreenScaleFactorFromWlcom = 1.0;
     double scaleFactorFromFcitx = 1.0;
-    std::string appDisplay;
 
     fcitx::InputContext *inputContext = instance_->lastFocusedInputContext();
     if (inputContext == nullptr)
@@ -104,7 +103,6 @@ void FreewbIMModule::updateCursorPosition()
     if (ukuiWaylandHelper_ != nullptr)
     {
         focusWindowPositionFromWlcom = ukuiWaylandHelper_->focusWindowPosition();
-        maxScreenScaleFactorFromWlcom = ukuiWaylandHelper_->maxScreenScaleFactor();
     }
 #endif
 

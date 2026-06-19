@@ -105,7 +105,7 @@ spdlog::logger *FreewbLog::activeLogger()
     return s_activeLogger.load();
 }
 
-const spdlog::level::level_enum FreewbLog::logLevel() const
+spdlog::level::level_enum FreewbLog::logLevel() const
 {
     const char *home = std::getenv("HOME");
     if (!home || !home[0])

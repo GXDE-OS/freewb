@@ -56,7 +56,7 @@ public:
 private:
     void init(const LogOption &option);
     void cleanUp();
-    const spdlog::level::level_enum logLevel() const;
+    spdlog::level::level_enum logLevel() const;
 
 private:
     std::shared_ptr<spdlog::logger> m_logger;
