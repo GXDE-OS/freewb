@@ -1,19 +1,3 @@
-/****************************************************************************************
-** 面板 UI 跨窗口辅助层：集中存放真正跨 TU 复用的类型与工具。
-**
-**   - 软键盘相关：SymbolKeyIdx / CtrlKeyIdx / CustomKeyStrings / CustomKeyValue
-**                （keyboard + settingwin 共用）
-**   - 中英切换键预设：CnEnSwitchPreset（inputwin 展示 displayName，settingwin 下拉反查 token）
-**   - SettingsNotifier：本地/Fcitx 配置变更信号转发
-**   - 运行时态：皮肤/词库列表（mainprogram 载入，contextmenu / settingwin 消费）
-**   - QString ↔ UTF-8 / char ↔ std::string 等基础互转
-**   - 自定义功能键 "CTRL+<KEY_X>" 的展示格式化（toolbarwin / inputwin 操作提示共用）
-**
-** 窗口专属枚举（CandiWinDispMode / InputMode / CharFontMode / AutoWordGroupOpt）已拆回
-** 各自窗口 .h；仅 settingwin 使用的 accessor 表、候选列表、预设表（RecodeSelectPreset /
-** CandiPagePreset）、会话开关（useAudioFile）已下沉到 settingwin.cpp 匿名 ns。
-***************************************************************************************/
-
 #ifndef SETTINGSHELPER_H
 #define SETTINGSHELPER_H
 
