@@ -148,7 +148,7 @@ private:
     int charset_ = 0;
     Gb2312Filter gb2312Filter_;
 
-    static const std::size_t maxCandidatesPages_ = 500;
+    static const std::size_t maxCandidatesPages_ = 20;
 };
 
 } // namespace freewb
