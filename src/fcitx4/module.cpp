@@ -108,7 +108,7 @@ static INPUT_RETURN_VALUE FreewbIMDoReleaseInput(void *arg, FcitxKeySym sym, uns
 static void FreewbIMOnChanged(void *arg)
 {
     freewb_fcitx4_imclass *imclass = static_cast<freewb_fcitx4_imclass *>(arg);
-    if (imclass == nullptr || imclass->freewb_ == nullptr || imclass->fcitxInstance_ == nullptr)
+    if (imclass == nullptr || imclass->freewb_ == nullptr)
     {
         return;
     }
@@ -145,6 +145,12 @@ static void FreewbIMOnChanged(void *arg)
 
 void *FreewbIMCreate(FcitxInstance *instance)
 {
+    if (instance == nullptr)
+    {
+        FREEWB_ERROR("instance is nullptr,will not create freewb instance.");
+        return nullptr;
+    }
+
     DBusConnection *dbusConnection = FcitxDBusGetConnection(instance);
     freewb_fcitx4_imclass *imclass = static_cast<freewb_fcitx4_imclass *>(fcitx_utils_malloc0(sizeof(freewb_fcitx4_imclass)));
     imclass->freewb_ = nullptr;
@@ -197,7 +203,7 @@ void FreewbIMDestroy(void *arg)
 
 static void updateCursorPosition(freewb_fcitx4_imclass *imclass)
 {
-    if (imclass == nullptr || imclass->freewb_ == nullptr || imclass->fcitxInstance_ == nullptr)
+    if (imclass == nullptr || imclass->freewb_ == nullptr)
     {
         return;
     }
@@ -215,11 +221,6 @@ static void updateCursorPosition(freewb_fcitx4_imclass *imclass)
 
 static void detachFcitxGlobalCharWidthPunc(FcitxInstance *instance, boolean detach)
 {
-    if (instance == nullptr)
-    {
-        return;
-    }
-
     FcitxInstanceSetContext(instance, CONTEXT_DISABLE_FULLWIDTH, &detach);
     FcitxInstanceSetContext(instance, CONTEXT_DISABLE_PUNC, &detach);
     if (detach)
@@ -276,22 +277,12 @@ static void freewbAboutStatusToggle(void *arg)
 
 static void setFreewbStatusVisible(FcitxInstance *instance, boolean visible)
 {
-    if (instance == nullptr)
-    {
-        return;
-    }
-
     FcitxUISetStatusVisable(instance, "freewb-settings", visible);
     FcitxUISetStatusVisable(instance, "freewb-about", visible);
 }
 
 static void registerTrayMenu(FcitxInstance *instance, freewb_fcitx4_imclass *imclass)
 {
-    if (instance == nullptr || imclass == nullptr)
-    {
-        return;
-    }
-
     FcitxUIRegisterStatus(instance, imclass, "freewb-settings", _("Settings"), _("Open input method settings"),
                           freewbSettingsStatusToggle, freewbStatusGetInactive);
     FcitxUIRegisterStatus(instance, imclass, "freewb-about", _("About"), _("Show version information"),
