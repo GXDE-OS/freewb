@@ -37,6 +37,12 @@ static void FreewbIMOnChanged(void *arg);
 static void updateCursorPosition(freewb_fcitx4_imclass *imclass);
 static void detachFcitxGlobalCharWidthPunc(FcitxInstance *instance, boolean detach);
 
+static void registerTrayMenu(FcitxInstance *instance, freewb_fcitx4_imclass *imclass);
+static void freewbSettingsStatusToggle(void *arg);
+static void freewbAboutStatusToggle(void *arg);
+static boolean freewbStatusGetInactive(void *arg);
+static void setFreewbStatusVisible(FcitxInstance *instance, boolean visible);
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -124,7 +130,7 @@ static void FreewbIMOnChanged(void *arg)
         FcitxLog(INFO, "will activate freewb and show ui.");
         FREEWB_DEBUG("will activate freewb and show ui.");
         detachFcitxGlobalCharWidthPunc(imclass->fcitxInstance_, true);
-        FcitxUISetStatusVisable(imclass->fcitxInstance_, _("settings"), true);
+        setFreewbStatusVisible(imclass->fcitxInstance_, true);
         imclass->freewb_->activate();
     }
     else
@@ -132,7 +138,7 @@ static void FreewbIMOnChanged(void *arg)
         FcitxLog(INFO, "will deactivate freewb and hide ui.");
         FREEWB_DEBUG("will deactivate freewb and hide ui.");
         detachFcitxGlobalCharWidthPunc(imclass->fcitxInstance_, false);
-        FcitxUISetStatusVisable(imclass->fcitxInstance_, _("settings"), false);
+        setFreewbStatusVisible(imclass->fcitxInstance_, false);
         imclass->freewb_->deactivate();
     }
 }
@@ -166,6 +172,8 @@ void *FreewbIMCreate(FcitxInstance *instance)
     iface.DoReleaseInput = FreewbIMDoReleaseInput;
 
     FcitxInstanceRegisterIMv2(instance, imclass, "freewb", "freewb", "freewb", iface, 10, "zh_CN");
+
+    registerTrayMenu(instance, imclass);
 
     return imclass;
 }
@@ -222,6 +230,73 @@ static void detachFcitxGlobalCharWidthPunc(FcitxInstance *instance, boolean deta
     {
         FcitxUISetStatusVisable(instance, "punc", true);
     }
+}
+
+static boolean freewbStatusGetInactive(void *arg)
+{
+    FCITX_UNUSED(arg);
+    return false;
+}
+
+static void freewbSettingsStatusToggle(void *arg)
+{
+    freewb_fcitx4_imclass *imclass = static_cast<freewb_fcitx4_imclass *>(arg);
+    if (imclass == nullptr || imclass->freewb_ == nullptr)
+    {
+        return;
+    }
+
+    freewb::ipc::IDBus *dbus = imclass->freewb_->dbusProxy();
+    if (dbus == nullptr)
+    {
+        return;
+    }
+
+    FREEWB_DEBUG("status menu: open settings");
+    dbus->callOpenUiSettingMethod();
+}
+
+static void freewbAboutStatusToggle(void *arg)
+{
+    freewb_fcitx4_imclass *imclass = static_cast<freewb_fcitx4_imclass *>(arg);
+    if (imclass == nullptr || imclass->freewb_ == nullptr)
+    {
+        return;
+    }
+
+    freewb::ipc::IDBus *dbus = imclass->freewb_->dbusProxy();
+    if (dbus == nullptr)
+    {
+        return;
+    }
+
+    FREEWB_DEBUG("status menu: show about");
+    dbus->callShowVersionInfoMethod();
+}
+
+static void setFreewbStatusVisible(FcitxInstance *instance, boolean visible)
+{
+    if (instance == nullptr)
+    {
+        return;
+    }
+
+    FcitxUISetStatusVisable(instance, "freewb-settings", visible);
+    FcitxUISetStatusVisable(instance, "freewb-about", visible);
+}
+
+static void registerTrayMenu(FcitxInstance *instance, freewb_fcitx4_imclass *imclass)
+{
+    if (instance == nullptr || imclass == nullptr)
+    {
+        return;
+    }
+
+    FcitxUIRegisterStatus(instance, imclass, "freewb-settings", _("Settings"), _("Open input method settings"),
+                          freewbSettingsStatusToggle, freewbStatusGetInactive);
+    FcitxUIRegisterStatus(instance, imclass, "freewb-about", _("About"), _("Show version information"),
+                          freewbAboutStatusToggle, freewbStatusGetInactive);
+    setFreewbStatusVisible(instance, false);
 }
 
 #endif
