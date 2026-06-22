@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 #endif
     QApplication app(argc, argv);
     app.setApplicationName("freewb");
+    app.setQuitOnLastWindowClosed(false);
 
     settings::instance().reload();
 
