@@ -22,9 +22,10 @@ public:
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
 
     const std::string &lastCommitString() const;
+    const std::string &lastCommitCode() const;
     std::string committedText(std::size_t charCount) const;
 
-    void commit(const std::string &text);
+    void commit(const std::string &text, const std::string &code = {});
     bool selectCandidate(int index);
     void loadSettings();
     void handleCommittedBackspace();
@@ -43,6 +44,7 @@ private:
     FreewbKeySym nextPageKey_;
 
     std::string lastCommitString_;
+    std::string lastCommitCode_;
     std::vector<std::string> committedTexts_;
 
     static constexpr std::size_t kMaxCommittedTextRecords = 128;

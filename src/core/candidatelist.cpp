@@ -165,6 +165,7 @@ void CandidateList::clear()
 {
     allTexts_.clear();
     allPrompts_.clear();
+    allFullCodes_.clear();
     currentPageTexts_.clear();
     currentPagePrompts_.clear();
     preeditText_.clear();
@@ -172,12 +173,15 @@ void CandidateList::clear()
     pageIndex_ = 0;
 }
 
-void CandidateList::setCandidates(std::vector<std::string> texts, std::vector<std::string> prompts)
+void CandidateList::setCandidates(std::vector<std::string> texts, std::vector<std::string> prompts,
+                                  std::vector<std::string> fullCodes)
 {
     allTexts_ = std::move(texts);
     pageIndex_ = 0;
     allPrompts_ = std::move(prompts);
     allPrompts_.resize(allTexts_.size());
+    allFullCodes_ = std::move(fullCodes);
+    allFullCodes_.resize(allTexts_.size());
     syncVisiblePage();
 }
 
@@ -189,6 +193,31 @@ const std::string &CandidateList::selectCandidateText(int index) const
         return kEmpty;
     }
     return currentPageTexts_[static_cast<std::size_t>(index)];
+}
+
+const std::string &CandidateList::selectCandidateFullCode(int index) const
+{
+    static const std::string kEmpty;
+    if (index < 0 || index >= static_cast<int>(currentPageTexts_.size()))
+    {
+        return kEmpty;
+    }
+    const int globalIndex = pageIndex_ * wordCount_ + index;
+    if (globalIndex < 0 || globalIndex >= static_cast<int>(allFullCodes_.size()))
+    {
+        return kEmpty;
+    }
+    return allFullCodes_[static_cast<std::size_t>(globalIndex)];
+}
+
+const std::string &CandidateList::firstVisibleCandidateFullCode() const
+{
+    if (size() > 0)
+    {
+        return selectCandidateFullCode(0);
+    }
+    static const std::string kEmpty;
+    return kEmpty;
 }
 
 const std::string &CandidateList::firstVisibleCandidateOrPreedit() const

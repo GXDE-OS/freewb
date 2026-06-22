@@ -208,7 +208,7 @@ void EngineManager::commitPreeditOverflow(const std::string &prefix)
     }
     else
     {
-        committer_->commit(candidateList_->selectCandidateText(0));
+        committer_->commit(candidateList_->selectCandidateText(0), candidateList_->selectCandidateFullCode(0));
     }
 }
 
@@ -225,7 +225,7 @@ void EngineManager::tryExactDictionarySingleCandidateCommit()
         return;
     }
 
-    committer_->commit(candidateList_->selectCandidateText(0));
+    committer_->commit(candidateList_->selectCandidateText(0), candidateList_->selectCandidateFullCode(0));
 }
 
 bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
@@ -289,7 +289,7 @@ void EngineManager::refreshEngineResult()
     engine->putKey(candidateList_->preeditText().c_str());
 
     CandidatePayload payload = engine->getResult();
-    candidateList_->setCandidates(std::move(payload.texts), std::move(payload.prompts));
+    candidateList_->setCandidates(std::move(payload.texts), std::move(payload.prompts), std::move(payload.fullCodes));
 }
 
 void EngineManager::reset()
@@ -324,6 +324,28 @@ std::string EngineManager::calculateWubiPhraseCode(const std::string &phrase) co
         return {};
     }
     return wbzx->calculateWubiPhraseCode(phrase);
+}
+
+bool EngineManager::addUserWord(const std::string &code, const std::string &text)
+{
+    auto *wbzx = dynamic_cast<WbzxEngine *>(findEngineByName("engine:wbzx"));
+    if (wbzx == nullptr)
+    {
+        FREEWB_ERROR("EngineManager::addUserWord: wbzx engine unavailable");
+        return false;
+    }
+    return wbzx->addUserWord(code, text);
+}
+
+bool EngineManager::deleteUserWord(const std::string &code, const std::string &text)
+{
+    auto *wbzx = dynamic_cast<WbzxEngine *>(findEngineByName("engine:wbzx"));
+    if (wbzx == nullptr)
+    {
+        FREEWB_ERROR("EngineManager::deleteUserWord: wbzx engine unavailable");
+        return false;
+    }
+    return wbzx->deleteUserWord(code, text);
 }
 
 void EngineManager::changeEngine(const std::string &engineName)

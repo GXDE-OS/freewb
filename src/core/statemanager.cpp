@@ -308,7 +308,11 @@ bool AddUserPhraseState::processKey(FreewbKeySym keysym, FreewbKeyState state)
         }
         if (state == FreewbKeyState_None)
         {
-            freewb_->dbusProxy()->callAddUsrParseMethod(1, wordCode_, wordText_);
+            if (freewb_->engineManager() != nullptr)
+            {
+                (void)freewb_->engineManager()->addUserWord(wordCode_, wordText_);
+            }
+            freewb_->dbusProxy()->callAddUsrParseMethod(2, "", "");
             if (manager_ != nullptr)
             {
                 manager_->enterIdleState();
@@ -345,7 +349,7 @@ void DeleteUserPhraseState::changeAvailable()
     available_ = !available_;
 }
 
-bool DeleteUserPhraseState::begin(const std::string &wordText)
+bool DeleteUserPhraseState::begin(const std::string &wordText, const std::string &wordCode)
 {
     if (freewb_ == nullptr || freewb_->dbusProxy() == nullptr)
     {
@@ -358,11 +362,7 @@ bool DeleteUserPhraseState::begin(const std::string &wordText)
         FREEWB_WARN("[{}] begin: no hanzi in commit text", name());
         return false;
     }
-    wordCode_.clear();
-    if (freewb_->engineManager() != nullptr)
-    {
-        wordCode_ = freewb_->engineManager()->calculateWubiPhraseCode(wordText_);
-    }
+    wordCode_ = wordCode;
     freewb_->dbusProxy()->callDeleteUsrParseMethod(0, wordCode_, wordText_);
     return true;
 }
@@ -384,7 +384,11 @@ bool DeleteUserPhraseState::processKey(FreewbKeySym keysym, FreewbKeyState state
 
     if (keysym == FreewbKey_Return && state == FreewbKeyState_None)
     {
-        freewb_->dbusProxy()->callDeleteUsrParseMethod(1, wordCode_, wordText_);
+        if (freewb_->engineManager() != nullptr)
+        {
+            (void)freewb_->engineManager()->deleteUserWord(wordCode_, wordText_);
+        }
+        freewb_->dbusProxy()->callDeleteUsrParseMethod(2, "", "");
         if (manager_ != nullptr)
         {
             manager_->enterIdleState();
@@ -450,7 +454,8 @@ bool TempEnglishState::handleDeletePhrase()
     {
         return false;
     }
-    const bool entered = manager_->enterDeletePhraseState(freewb_->committer()->lastCommitString());
+    const bool entered =
+        manager_->enterDeletePhraseState(freewb_->committer()->lastCommitString(), freewb_->committer()->lastCommitCode());
     if (!entered)
     {
         FREEWB_WARN("[{}] delete phrase failed: empty commit text", name());
@@ -658,7 +663,7 @@ bool TempEnglishState::processKey(FreewbKeySym keysym, FreewbKeyState state)
         ((keysym == secondRecodeKey_ && candidateCount > 1) || (keysym == thirdRecodeKey_ && candidateCount > 2)))
     {
         const int idx = keysym == secondRecodeKey_ ? 1 : 2;
-        committer->commit(candidates->selectCandidateText(idx));
+        committer->commit(candidates->selectCandidateText(idx), candidates->selectCandidateFullCode(idx));
         manager_->reset();
         return true;
     }
@@ -696,7 +701,7 @@ bool TempEnglishState::processKey(FreewbKeySym keysym, FreewbKeyState state)
         {
             if (candidates->size() > 0)
             {
-                committer->commit(candidates->selectCandidateText(0));
+                committer->commit(candidates->selectCandidateText(0), candidates->selectCandidateFullCode(0));
             }
             else
             {
@@ -771,10 +776,10 @@ bool StateManager::enterAddPhraseState(bool useClipboardText)
     return entered;
 }
 
-bool StateManager::enterDeletePhraseState(const std::string &wordText)
+bool StateManager::enterDeletePhraseState(const std::string &wordText, const std::string &wordCode)
 {
     CHECK_ENGINE(*this, del_);
-    const bool entered = del_.begin(wordText);
+    const bool entered = del_.begin(wordText, wordCode);
     if (entered)
     {
         current_ = &del_;

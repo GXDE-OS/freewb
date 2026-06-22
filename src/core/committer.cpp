@@ -62,14 +62,21 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
         {
             return false;
         }
-        commit(freewb_->candidateList()->selectCandidateText(idx));
+        commit(freewb_->candidateList()->selectCandidateText(idx), freewb_->candidateList()->selectCandidateFullCode(idx));
         return true;
     }
 
     // 空格上屏
     if (keysym == FreewbKey_space && state == FreewbKeyState_None)
     {
-        commit(candidates->firstVisibleCandidateOrPreedit());
+        if (candidates->size() > 0)
+        {
+            commit(candidates->selectCandidateText(0), candidates->selectCandidateFullCode(0));
+        }
+        else
+        {
+            commit(candidates->preeditText());
+        }
         return true;
     }
 
@@ -89,8 +96,9 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
         }
 
         const std::string visible = candidates->firstVisibleCandidateOrPreedit();
+        const std::string code = candidates->firstVisibleCandidateFullCode();
         const PuncPushResult symbolPush = punc->convert(keysym, state);
-        commit(symbolPush.before + visible + symbolPush.after);
+        commit(symbolPush.before + visible + symbolPush.after, code);
         return true;
     }
 }
@@ -98,6 +106,11 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
 const std::string &Committer::lastCommitString() const
 {
     return lastCommitString_;
+}
+
+const std::string &Committer::lastCommitCode() const
+{
+    return lastCommitCode_;
 }
 
 void Committer::appendCommittedText(const std::string &text)
@@ -134,13 +147,14 @@ std::string Committer::committedText(std::size_t charCount) const
     return text;
 }
 
-void Committer::commit(const std::string &text)
+void Committer::commit(const std::string &text, const std::string &code)
 {
     std::string output = text;
     freewb_->charWidth()->convertString(output);
 
-    FREEWB_DEBUG("committer will commit text : {}", output);
+    FREEWB_DEBUG("committer will commit text : {}, code : {}", output, code);
     lastCommitString_ = output;
+    lastCommitCode_ = code;
     appendCommittedText(output);
     commitCallback_(output);
 
@@ -167,11 +181,18 @@ bool Committer::selectCandidate(int index)
     }
     else if (index >= freewb_->candidateList()->size())
     {
-        commit(candidates->firstVisibleCandidateOrPreedit());
+        if (candidates->size() > 0)
+        {
+            commit(candidates->selectCandidateText(0), candidates->selectCandidateFullCode(0));
+        }
+        else
+        {
+            commit(candidates->firstVisibleCandidateOrPreedit());
+        }
     }
     else
     {
-        commit(freewb_->candidateList()->selectCandidateText(index));
+        commit(freewb_->candidateList()->selectCandidateText(index), freewb_->candidateList()->selectCandidateFullCode(index));
     }
     return true;
 }

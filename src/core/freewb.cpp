@@ -245,6 +245,21 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         }
     }
     {
+        const char *keyString = Key::readKeyString(settings::instance().get_backFindCode().c_str());
+        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
+        const FreewbKeyState wantState = static_cast<FreewbKeyState>(FreewbKeyState_Ctrl | FreewbKeyState_Alt);
+        if (keysym == keySym && state == wantState)
+        {
+            // 查询剪贴板文本
+            const std::string clipText = dbusProxy_->callGetClipboardMethod();
+            if (!clipText.empty())
+            {
+                dbusProxy_->callDictQueryMethod(clipText);
+            }
+            return true;
+        }
+    }
+    {
         const char *keyString = Key::readKeyString(settings::instance().get_markAutoPair().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)
@@ -281,7 +296,8 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
         {
             // 在线删词
             const std::string &delText = committer_->lastCommitString();
-            return stateManager_->enterDeletePhraseState(delText);
+            const std::string &delCode = committer_->lastCommitCode();
+            return stateManager_->enterDeletePhraseState(delText, delCode);
         }
     }
     {
@@ -483,49 +499,57 @@ bool Freewb::handleDirectSymbolKey(FreewbKeySym keysym, FreewbKeyState state)
 void Freewb::connectDBusCallback()
 {
     dbusProxy_->bindDBusSignalCallback(
-        [this](const char *member, int index)
+        [this](const PanelSignalEvent &evt)
         {
-            if (std::strcmp(member, "SelectCandidate") == 0)
+            if (evt.member == nullptr)
             {
-                this->committer_->selectCandidate(static_cast<int>(index));
+                return;
             }
-            else if (std::strcmp(member, "LookupTablePageUp") == 0)
+            if (std::strcmp(evt.member, "CommitUserWordAdd") == 0)
+            {
+                (void)this->engineManager_->addUserWord(evt.str0, evt.str1);
+            }
+            else if (std::strcmp(evt.member, "SelectCandidate") == 0)
+            {
+                this->committer_->selectCandidate(evt.index);
+            }
+            else if (std::strcmp(evt.member, "LookupTablePageUp") == 0)
             {
                 this->candidateList_->prev();
                 this->updateCandidateAndPreeditToUI();
             }
-            else if (std::strcmp(member, "LookupTablePageDown") == 0)
+            else if (std::strcmp(evt.member, "LookupTablePageDown") == 0)
             {
                 this->candidateList_->next();
                 this->updateCandidateAndPreeditToUI();
             }
-            else if (std::strcmp(member, "ReloadConfig") == 0)
+            else if (std::strcmp(evt.member, "ReloadConfig") == 0)
             {
                 this->reloadConfig();
             }
-            else if (std::strcmp(member, "ReloadDictionaries") == 0)
+            else if (std::strcmp(evt.member, "ReloadDictionaries") == 0)
             {
-                this->engineManager_->reloadDictionaries(index);
+                this->engineManager_->reloadDictionaries(evt.index);
             }
-            else if (std::strcmp(member, "RequestNextInputMode") == 0)
+            else if (std::strcmp(evt.member, "RequestNextInputMode") == 0)
             {
                 this->engineManager_->nextEngine();
                 const std::string nextEngine = this->engineManager_->currentEngineName();
                 this->dbusProxy_->callPanelSwitchInputModeMethod(nextEngine.c_str());
             }
-            else if (std::strcmp(member, "SwitchPunctuation") == 0)
+            else if (std::strcmp(evt.member, "SwitchPunctuation") == 0)
             {
                 this->punc_->changeAvailable();
             }
-            else if (std::strcmp(member, "SwitchFullWidth") == 0)
+            else if (std::strcmp(evt.member, "SwitchFullWidth") == 0)
             {
                 this->charWidth_->changeAvailable();
             }
-            else if (std::strcmp(member, "SwitchCharSetMode") == 0)
+            else if (std::strcmp(evt.member, "SwitchCharSetMode") == 0)
             {
                 this->engineManager_->toggleCharset();
             }
-            else if (std::strcmp(member, "SwitchChttrans") == 0)
+            else if (std::strcmp(evt.member, "SwitchChttrans") == 0)
             {
                 this->chttrans_->changeAvailable();
             }

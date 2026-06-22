@@ -29,8 +29,10 @@ public:
 
     void clear();
 
-    void setCandidates(std::vector<std::string> texts, std::vector<std::string> prompts);
+    void setCandidates(std::vector<std::string> texts, std::vector<std::string> prompts, std::vector<std::string> fullCodes = {});
     const std::string &selectCandidateText(int index) const;
+    const std::string &selectCandidateFullCode(int index) const;
+    const std::string &firstVisibleCandidateFullCode() const;
     const std::string &firstVisibleCandidateOrPreedit() const;
     std::vector<std::string> candidateTexts() const;
     std::vector<std::string> candidatePrompts() const;
@@ -46,6 +48,7 @@ private:
     int cursor_;
     std::vector<std::string> allTexts_;
     std::vector<std::string> allPrompts_;
+    std::vector<std::string> allFullCodes_;
     std::vector<std::string> currentPageTexts_;
     std::vector<std::string> currentPagePrompts_;
     int pageIndex_ = 0;

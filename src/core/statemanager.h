@@ -78,7 +78,7 @@ class DeleteUserPhraseState : public IState, public IFreewb
 public:
     DeleteUserPhraseState(StateManager *manager, Freewb *freewb);
 
-    bool begin(const std::string &wordText);
+    bool begin(const std::string &wordText, const std::string &wordCode);
 
     bool processKey(FreewbKeySym keysym, FreewbKeyState state) override;
     std::vector<std::string> uninterestedEngines() const override;
@@ -151,7 +151,7 @@ public:
     bool processKey(FreewbKeySym keysym, FreewbKeyState state);
 
     bool enterAddPhraseState(bool useClipboardText = false);
-    bool enterDeletePhraseState(const std::string &wordText);
+    bool enterDeletePhraseState(const std::string &wordText, const std::string &wordCode = "");
     bool enterTempEnglishState(const std::string &commandPrefix);
 
     void enterIdleState()
