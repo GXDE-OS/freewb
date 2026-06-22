@@ -68,7 +68,7 @@ bool WbzxEngine::isPreeditOverflow(const std::string &full) const
         return false;
     }
 
-    return !mbTable_.hasCandidateForPrefix(full) && !userDict_.hasEntryStartingWithPrefix(full);
+    return !hasVisibleMainDictCandidate(full) && !userDict_.hasEntryStartingWithPrefix(full);
 }
 
 void WbzxEngine::putKey(const char *strCode)
@@ -82,7 +82,9 @@ void WbzxEngine::putKey(const char *strCode)
 
     const std::string prefix(strCode);
     userDict_.appendCandidatesForPrefix(prefix, result_);
+    const std::size_t userCandidateCount = result_.texts.size();
     mbTable_.appendCandidatesForPrefix(prefix, result_);
+    filterDeletedMainDictCandidates(result_, userCandidateCount);
     fillCandidatePayloadPrompts(prefix, result_);
 }
 
@@ -276,6 +278,172 @@ void WbzxEngine::reloadUserDictionary()
     userDict_.reload();
 }
 
+void WbzxEngine::filterDeletedMainDictCandidates(CandidatePayload &payload, const std::size_t userCandidateCount) const
+{
+    if (userCandidateCount >= payload.texts.size())
+    {
+        return;
+    }
+
+    CandidatePayload filtered;
+    filtered.texts.reserve(payload.texts.size());
+    filtered.fullCodes.reserve(payload.fullCodes.size());
+    filtered.prompts.reserve(payload.prompts.size());
+
+    for (std::size_t i = 0; i < payload.texts.size(); ++i)
+    {
+        if (i >= userCandidateCount)
+        {
+            const std::string &code = (i < payload.fullCodes.size()) ? payload.fullCodes[i] : std::string{};
+            if (userDict_.isDeleted(code, payload.texts[i]))
+            {
+                continue;
+            }
+        }
+
+        filtered.texts.push_back(payload.texts[i]);
+        if (i < payload.fullCodes.size())
+        {
+            filtered.fullCodes.push_back(payload.fullCodes[i]);
+        }
+        if (i < payload.prompts.size())
+        {
+            filtered.prompts.push_back(payload.prompts[i]);
+        }
+    }
+
+    payload.texts = std::move(filtered.texts);
+    payload.fullCodes = std::move(filtered.fullCodes);
+    payload.prompts = std::move(filtered.prompts);
+}
+
+bool WbzxEngine::hasVisibleMainDictCandidate(const std::string &prefix) const
+{
+    if (prefix.empty() || !mbTable_.hasCandidateForPrefix(prefix))
+    {
+        return false;
+    }
+
+    const auto scanPrefix = [this, &prefix](const std::unordered_map<std::string, std::vector<std::string>> &dict) -> bool
+    {
+        for (const auto &kv : dict)
+        {
+            const std::string &key = kv.first;
+            if (key.size() < prefix.size() || key.compare(0, prefix.size(), prefix) != 0)
+            {
+                continue;
+            }
+            for (const std::string &hz : kv.second)
+            {
+                if (mbTable_.isCandidateTextVisible(hz) && !userDict_.isDeleted(key, hz))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    return scanPrefix(mbTable_.singleCharLexicon()) || scanPrefix(mbTable_.multiCharLexicon());
+}
+
+bool WbzxEngine::addUserWord(const std::string &code, const std::string &text)
+{
+    if (code.empty() || text.empty())
+    {
+        FREEWB_ERROR("WbzxEngine::addUserWord: empty code or text");
+        return false;
+    }
+
+    bool changed = false;
+    if (mbTable_.hasEntry(code, text))
+    {
+        // 主码表词条：恢复候选，不写 UserWord
+        if (userDict_.hasUserEntry(code, text))
+        {
+            changed = userDict_.removeUserEntry(code, text);
+        }
+        if (userDict_.isDeleted(code, text))
+        {
+            changed = userDict_.removeDeletedEntry(code, text) || changed;
+        }
+    }
+    else if (userDict_.hasUserEntry(code, text) && !userDict_.isDeleted(code, text))
+    {
+        return true;
+    }
+    else
+    {
+        // 自造词：写入 UserWord
+        if (!userDict_.hasUserEntry(code, text))
+        {
+            if (!userDict_.addUserEntry(code, text))
+            {
+                FREEWB_WARN("WbzxEngine::addUserWord: add failed code={} text={}", code, text);
+                return false;
+            }
+            changed = true;
+        }
+        if (userDict_.isDeleted(code, text))
+        {
+            changed = userDict_.removeDeletedEntry(code, text) || changed;
+        }
+    }
+
+    if (!changed)
+    {
+        return true;
+    }
+
+    const bool saved = userDict_.save();
+    userDict_.reload();
+    if (!saved)
+    {
+        FREEWB_ERROR("WbzxEngine::addUserWord: save failed code={} text={}", code, text);
+    }
+    return saved;
+}
+
+bool WbzxEngine::deleteUserWord(const std::string &code, const std::string &text)
+{
+    if (code.empty() || text.empty())
+    {
+        FREEWB_ERROR("WbzxEngine::deleteUserWord: empty code or text");
+        return false;
+    }
+
+    if (userDict_.hasUserEntry(code, text))
+    {
+        if (!userDict_.removeUserEntry(code, text))
+        {
+            FREEWB_ERROR("WbzxEngine::deleteUserWord: remove user entry failed code={} text={}", code, text);
+            return false;
+        }
+        (void)userDict_.removeDeletedEntry(code, text);
+    }
+    else if (userDict_.isDeleted(code, text))
+    {
+        return true;
+    }
+    else if (!mbTable_.hasEntry(code, text))
+    {
+        FREEWB_ERROR("WbzxEngine::deleteUserWord: entry not found in user dict or main table code={} text={}", code, text);
+        return false;
+    }
+    else if (!userDict_.markDeleted(code, text))
+    {
+        return true;
+    }
+
+    const bool saved = userDict_.save();
+    userDict_.reload();
+    if (!saved)
+    {
+        FREEWB_ERROR("WbzxEngine::deleteUserWord: save failed code={} text={}", code, text);
+    }
+    return saved;
+}
+
 bool WbzxEngine::shouldProcessKey(const char *key) const
 {
     return mbTable_.strInputCode().find(key) != std::string::npos;
@@ -283,7 +451,23 @@ bool WbzxEngine::shouldProcessKey(const char *key) const
 
 bool WbzxEngine::isExactDictionaryKey(const std::string &preedit) const
 {
-    return mbTable_.hasExactCode(preedit) || userDict_.contains(preedit);
+    if (preedit.empty())
+    {
+        return false;
+    }
+    if (userDict_.contains(preedit))
+    {
+        return true;
+    }
+    for (std::size_t i = 0; i < result_.texts.size(); ++i)
+    {
+        const std::string &fullCode = (i < result_.fullCodes.size()) ? result_.fullCodes[i] : std::string{};
+        if (fullCode == preedit)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 } // namespace freewb

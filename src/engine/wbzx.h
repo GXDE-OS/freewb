@@ -40,12 +40,22 @@ public:
     void reloadMainDictionary();
     void reloadUserDictionary();
 
+    bool addUserWord(const std::string &code, const std::string &text);
+    bool deleteUserWord(const std::string &code, const std::string &text);
+
 private:
     void clearMbLoadState();
     void loadDictionary();
     /** 从 mbTable_ 单字码表构建单字→首选码（仅首字节为字母的编码参与）。 */
     void initSingleHanziPrimaryCodeFromMbTable();
     void fillCandidatePayloadPrompts(const std::string &preedit, CandidatePayload &payload) const;
+    /** 按 [DeletedWord] 过滤 @p payload 中自 @p userCandidateCount 起的主码表候选段。 */
+    void filterDeletedMainDictCandidates(CandidatePayload &payload, std::size_t userCandidateCount) const;
+    /**
+     * 主码表在 @p prefix 下是否存在对用户可见的候选（charset 一致，且不在 [DeletedWord]）。
+     * 用于 isPreeditOverflow —— 判断再输入一字后 preedit 是否还能在主码表续码。
+     */
+    bool hasVisibleMainDictCandidate(const std::string &prefix) const;
 
 private:
     MbDictionaryTable mbTable_{true};

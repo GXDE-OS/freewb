@@ -250,6 +250,33 @@ const std::string &MbDictionaryTable::strInputCode() const
     return strInputCode_;
 }
 
+bool MbDictionaryTable::hasEntry(const std::string &code, const std::string &text) const
+{
+    if (code.empty() || text.empty())
+    {
+        return false;
+    }
+
+    const auto scan = [&code, &text](const std::unordered_map<std::string, std::vector<std::string>> &dict) -> bool
+    {
+        const auto it = dict.find(code);
+        if (it == dict.end())
+        {
+            return false;
+        }
+        for (const std::string &hz : it->second)
+        {
+            if (hz == text)
+            {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    return scan(singleChardict_) || scan(multiChardict_);
+}
+
 bool MbDictionaryTable::hasExactCode(const std::string &code) const
 {
     if (code.empty())

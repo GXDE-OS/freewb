@@ -1,10 +1,10 @@
 #include "userdict.h"
 
-#include <sys/stat.h>
-
 #include <algorithm>
 #include <fstream>
+#include <sstream>
 
+#include "log.h"
 #include "utils.h"
 
 namespace freewb
@@ -19,7 +19,8 @@ UserDict::~UserDict() = default;
 
 void UserDict::reload()
 {
-    entries_.clear();
+    userEntries_.clear();
+    deletedEntries_.clear();
     if (filePath_.empty())
     {
         return;
@@ -28,9 +29,51 @@ void UserDict::reload()
     parseFile(filePath_);
 }
 
+bool UserDict::save() const
+{
+    if (filePath_.empty())
+    {
+        FREEWB_ERROR("UserDict::save: empty file path");
+        return false;
+    }
+
+    std::ofstream out(filePath_, std::ios::binary | std::ios::trunc);
+    if (!out)
+    {
+        FREEWB_ERROR("UserDict::save: open failed path={}", filePath_);
+        return false;
+    }
+
+    appendSectionEntries(out, Section::UserWord, userEntries_);
+    out << '\n';
+    appendSectionEntries(out, Section::DeletedWord, deletedEntries_);
+    out << '\n';
+    return static_cast<bool>(out);
+}
+
 bool UserDict::contains(const std::string &code) const
 {
-    return entries_.find(code) != entries_.end();
+    return userEntries_.find(code) != userEntries_.end();
+}
+
+bool UserDict::hasUserEntry(const std::string &code, const std::string &text) const
+{
+    const auto it = userEntries_.find(code);
+    if (it == userEntries_.end())
+    {
+        return false;
+    }
+    return std::find(it->second.begin(), it->second.end(), text) != it->second.end();
+}
+
+bool UserDict::isDeleted(const std::string &code, const std::string &text) const
+{
+    const auto it = deletedEntries_.find(code);
+    if (it == deletedEntries_.end())
+    {
+        return false;
+    }
+    return std::find(it->second.begin(), it->second.end(), text) != it->second.end();
 }
 
 bool UserDict::hasEntryStartingWithPrefix(const std::string &prefix) const
@@ -43,7 +86,7 @@ bool UserDict::hasEntryStartingWithPrefix(const std::string &prefix) const
     {
         return true;
     }
-    for (const auto &kv : entries_)
+    for (const auto &kv : userEntries_)
     {
         const std::string &key = kv.first;
         if (key.size() < prefix.size())
@@ -73,8 +116,8 @@ void UserDict::appendCandidatesForPrefix(const std::string &prefix, CandidatePay
     }
 
     std::vector<std::string> keys;
-    keys.reserve(entries_.size());
-    for (const auto &kv : entries_)
+    keys.reserve(userEntries_.size());
+    for (const auto &kv : userEntries_)
     {
         const std::string &key = kv.first;
         if (key.size() < prefix.size() || key.compare(0, prefix.size(), prefix) != 0)
@@ -86,8 +129,8 @@ void UserDict::appendCandidatesForPrefix(const std::string &prefix, CandidatePay
     std::sort(keys.begin(), keys.end());
     for (const std::string &key : keys)
     {
-        const auto it = entries_.find(key);
-        if (it == entries_.end())
+        const auto it = userEntries_.find(key);
+        if (it == userEntries_.end())
         {
             continue;
         }
@@ -101,6 +144,62 @@ void UserDict::appendCandidatesForPrefix(const std::string &prefix, CandidatePay
             out.fullCodes.push_back(key);
         }
     }
+}
+
+bool UserDict::addUserEntry(const std::string &code, const std::string &text)
+{
+    if (code.empty() || text.empty())
+    {
+        FREEWB_ERROR("UserDict::addUserEntry: empty code or text");
+        return false;
+    }
+    return appendUnique(userEntries_[code], text);
+}
+
+bool UserDict::removeUserEntry(const std::string &code, const std::string &text)
+{
+    const auto it = userEntries_.find(code);
+    if (it == userEntries_.end())
+    {
+        return false;
+    }
+    if (!removeExact(it->second, text))
+    {
+        return false;
+    }
+    if (it->second.empty())
+    {
+        userEntries_.erase(it);
+    }
+    return true;
+}
+
+bool UserDict::markDeleted(const std::string &code, const std::string &text)
+{
+    if (code.empty() || text.empty())
+    {
+        FREEWB_ERROR("UserDict::markDeleted: empty code or text");
+        return false;
+    }
+    return appendUnique(deletedEntries_[code], text);
+}
+
+bool UserDict::removeDeletedEntry(const std::string &code, const std::string &text)
+{
+    const auto it = deletedEntries_.find(code);
+    if (it == deletedEntries_.end())
+    {
+        return false;
+    }
+    if (!removeExact(it->second, text))
+    {
+        return false;
+    }
+    if (it->second.empty())
+    {
+        deletedEntries_.erase(it);
+    }
+    return true;
 }
 
 std::string UserDict::filePath() const
@@ -123,6 +222,31 @@ std::string UserDict::trim(const std::string &s)
     return s.substr(first, last - first);
 }
 
+bool UserDict::appendUnique(std::vector<std::string> &list, const std::string &text)
+{
+    if (text.empty())
+    {
+        return false;
+    }
+    if (std::find(list.begin(), list.end(), text) != list.end())
+    {
+        return false;
+    }
+    list.push_back(text);
+    return true;
+}
+
+bool UserDict::removeExact(std::vector<std::string> &list, const std::string &text)
+{
+    const auto it = std::find(list.begin(), list.end(), text);
+    if (it == list.end())
+    {
+        return false;
+    }
+    list.erase(it);
+    return true;
+}
+
 bool UserDict::parseFile(const std::string &filePath)
 {
     std::ifstream in(filePath);
@@ -131,12 +255,25 @@ bool UserDict::parseFile(const std::string &filePath)
         return false;
     }
 
+    Section section = Section::UserWord;
     std::string line;
     while (std::getline(in, line))
     {
         const std::string trimmed = trim(line);
-        if (trimmed.empty() || trimmed[0] == '#' || trimmed[0] == '[')
+        if (trimmed.empty() || trimmed[0] == '#')
         {
+            continue;
+        }
+        if (trimmed[0] == '[')
+        {
+            if (trimmed == "[UserWord]")
+            {
+                section = Section::UserWord;
+            }
+            else if (trimmed == "[DeletedWord]")
+            {
+                section = Section::DeletedWord;
+            }
             continue;
         }
 
@@ -152,9 +289,52 @@ bool UserDict::parseFile(const std::string &filePath)
         {
             continue;
         }
-        entries_[code].push_back(text);
+
+        if (section == Section::DeletedWord)
+        {
+            appendUnique(deletedEntries_[code], text);
+        }
+        else
+        {
+            appendUnique(userEntries_[code], text);
+        }
     }
     return true;
+}
+
+void UserDict::appendSectionEntries(std::ostream &out, Section section,
+                                    const std::unordered_map<std::string, std::vector<std::string>> &entries)
+{
+    out << (section == Section::UserWord ? "[UserWord]\n" : "[DeletedWord]\n");
+
+    std::vector<std::string> keys;
+    keys.reserve(entries.size());
+    for (const auto &kv : entries)
+    {
+        if (!kv.second.empty())
+        {
+            keys.push_back(kv.first);
+        }
+    }
+    std::sort(keys.begin(), keys.end());
+
+    for (const std::string &code : keys)
+    {
+        const auto it = entries.find(code);
+        if (it == entries.end())
+        {
+            continue;
+        }
+        std::vector<std::string> texts = it->second;
+        std::sort(texts.begin(), texts.end());
+        for (const std::string &text : texts)
+        {
+            if (!text.empty())
+            {
+                out << code << '=' << text << '\n';
+            }
+        }
+    }
 }
 
 } // namespace freewb

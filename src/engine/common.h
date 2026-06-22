@@ -41,6 +41,8 @@ public:
     void appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const;
     const std::string &strInputCode() const;
     bool hasExactCode(const std::string &code) const;
+    /** 主码表是否含 code=text 条目（精确匹配）。 */
+    bool hasEntry(const std::string &code, const std::string &text) const;
     /** 是否与 appendCandidatesForPrefix 至少产出一条一致（非空 hz）；供引擎续码判断 */
     bool hasCandidateForPrefix(const std::string &prefix) const;
 
@@ -48,6 +50,18 @@ public:
     const std::unordered_map<std::string, std::vector<std::string>> &singleCharLexicon() const
     {
         return singleChardict_;
+    }
+
+    /** 词组码表（code → 若干 hz）；与 singleCharLexicon 对称，供引擎精确编码查找。 */
+    const std::unordered_map<std::string, std::vector<std::string>> &multiCharLexicon() const
+    {
+        return multiChardict_;
+    }
+
+    /** 候选 hz 是否满足当前 charset 过滤（与 appendCandidatesForPrefix 一致）。 */
+    bool isCandidateTextVisible(const std::string &hz) const
+    {
+        return !hz.empty() && filtCharset(hz);
     }
 
     const std::vector<EngineRuleBlock> &phraseEncodeRules() const
