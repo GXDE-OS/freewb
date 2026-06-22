@@ -21,6 +21,7 @@ public:
     ~QDBusPanelService() override;
 
     void registerQDBusService();
+    void commitUserWordAdd(const QString &wordCode, const QString &wordText);
 
 Q_SIGNALS:
     // Panel UI → 输入法引擎
@@ -29,6 +30,7 @@ Q_SIGNALS:
     Q_SCRIPTABLE void ReloadConfig();
     Q_SCRIPTABLE void ReloadDictionaries(int mask);
     Q_SCRIPTABLE void SelectCandidate(int index);
+    Q_SCRIPTABLE void CommitUserWordAdd(const QString &wordCode, const QString &wordText);
     Q_SCRIPTABLE void SwitchCharSetMode();
     Q_SCRIPTABLE void SwitchPunctuation();
     Q_SCRIPTABLE void SwitchFullWidth();

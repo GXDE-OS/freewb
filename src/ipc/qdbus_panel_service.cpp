@@ -111,4 +111,9 @@ void QDBusPanelService::SwitchPunctuationMode()
     emit signal_switch_punctuation_mode();
 }
 
+void QDBusPanelService::commitUserWordAdd(const QString &wordCode, const QString &wordText)
+{
+    emit CommitUserWordAdd(wordCode, wordText);
+}
+
 } // namespace freewb::ipc

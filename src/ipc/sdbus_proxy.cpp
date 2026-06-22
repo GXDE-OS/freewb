@@ -143,7 +143,7 @@ void SDBusProxy::changeAvailable()
 
 bool SDBusProxy::bindDBusSignalCallback(DBusSignalCallback callback)
 {
-    onDBusSignal_ = callback;
+    onDBusSignal_ = std::move(callback);
     if (!bus_)
     {
         return false;
@@ -383,6 +383,27 @@ int SDBusProxy::handlePanelSignal(sd_bus_message *m, void *userdata, sd_bus_erro
 
     if (self->onDBusSignal_)
     {
+        if (std::strcmp(member, "CommitUserWordAdd") == 0)
+        {
+            sd_bus_message_rewind(m, true);
+            const char *code = nullptr;
+            const char *text = nullptr;
+            if (sd_bus_message_read(m, "ss", &code, &text) >= 0 && code != nullptr && text != nullptr)
+            {
+                FREEWB_DEBUG("panel signal CommitUserWordAdd code={} text={}", code, text);
+                PanelSignalEvent evt;
+                evt.member = member;
+                evt.str0 = code;
+                evt.str1 = text;
+                self->onDBusSignal_(evt);
+            }
+            else
+            {
+                FREEWB_ERROR("panel signal CommitUserWordAdd: invalid payload");
+            }
+            return 0;
+        }
+
         FREEWB_DEBUG("panel signal passthrough: member={}", member);
         sd_bus_message_rewind(m, true);
         int index = 0;
@@ -391,7 +412,10 @@ int SDBusProxy::handlePanelSignal(sd_bus_message *m, void *userdata, sd_bus_erro
         {
             index = tmp;
         }
-        self->onDBusSignal_(member, index);
+        PanelSignalEvent evt;
+        evt.member = member;
+        evt.index = index;
+        self->onDBusSignal_(evt);
     }
     else
     {

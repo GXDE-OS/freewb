@@ -65,7 +65,15 @@ struct ToolbarPropertiesPayload
     bool active = false;
 };
 
-using DBusSignalCallback = std::function<void(const char *member, int index)>;
+struct PanelSignalEvent
+{
+    const char *member = nullptr;
+    int index = 0;
+    std::string str0;
+    std::string str1;
+};
+
+using DBusSignalCallback = std::function<void(const PanelSignalEvent &)>;
 using CommitCallback = std::function<void(const std::string &text)>;
 
 } // namespace freewb

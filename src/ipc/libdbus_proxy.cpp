@@ -396,6 +396,35 @@ DBusHandlerResult LibDbusProxy::handlePanelSignal(DBusConnection *conn, DBusMess
 
     if (self->onDBusSignal_)
     {
+        if (std::strcmp(member, "CommitUserWordAdd") == 0)
+        {
+            const char *code = nullptr;
+            const char *text = nullptr;
+            DBusMessageIter iter;
+            if (dbus_message_iter_init(msg, &iter) && dbus_message_iter_get_arg_type(&iter) == DBUS_TYPE_STRING)
+            {
+                dbus_message_iter_get_basic(&iter, &code);
+                if (dbus_message_iter_next(&iter) && dbus_message_iter_get_arg_type(&iter) == DBUS_TYPE_STRING)
+                {
+                    dbus_message_iter_get_basic(&iter, &text);
+                }
+            }
+            if (code != nullptr && text != nullptr)
+            {
+                FREEWB_DEBUG("panel signal CommitUserWordAdd code={} text={}", code, text);
+                PanelSignalEvent evt;
+                evt.member = member;
+                evt.str0 = code;
+                evt.str1 = text;
+                self->onDBusSignal_(evt);
+            }
+            else
+            {
+                FREEWB_ERROR("panel signal CommitUserWordAdd: invalid payload");
+            }
+            return DBUS_HANDLER_RESULT_HANDLED;
+        }
+
         FREEWB_DEBUG("panel signal passthrough: member={}", member);
         int index = 0;
         DBusMessageIter iter;
@@ -405,7 +434,10 @@ DBusHandlerResult LibDbusProxy::handlePanelSignal(DBusConnection *conn, DBusMess
             dbus_message_iter_get_basic(&iter, &tmp);
             index = static_cast<int>(tmp);
         }
-        self->onDBusSignal_(member, index);
+        PanelSignalEvent evt;
+        evt.member = member;
+        evt.index = index;
+        self->onDBusSignal_(evt);
     }
     else
     {
