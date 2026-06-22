@@ -218,6 +218,46 @@ void testReload()
     removeRecursively(home);
 }
 
+void testDeletedWordSection()
+{
+    const std::string home = makeTempHome();
+    ::setenv("HOME", home.c_str(), 1);
+
+    const std::string content = "[UserWord]\n"
+                                "cs=测试\n"
+                                "cs=自定义\n"
+                                "[DeletedWord]\n"
+                                "cs=主码表词\n";
+    EXPECT(prepareUserWord(home, content));
+
+    freewb::UserDict dict;
+    EXPECT(dict.hasUserEntry("cs", "测试"));
+    EXPECT(dict.hasUserEntry("cs", "自定义"));
+    EXPECT(!dict.hasUserEntry("cs", "主码表词"));
+    EXPECT(dict.isDeleted("cs", "主码表词"));
+    EXPECT(!dict.isDeleted("cs", "测试"));
+
+    EXPECT(dict.removeUserEntry("cs", "测试"));
+    EXPECT(dict.save());
+    dict.reload();
+    EXPECT(!dict.hasUserEntry("cs", "测试"));
+    EXPECT(dict.isDeleted("cs", "主码表词"));
+
+    EXPECT(dict.markDeleted("cs", "另一词"));
+    EXPECT(dict.save());
+    dict.reload();
+    EXPECT(dict.isDeleted("cs", "另一词"));
+
+    EXPECT(dict.addUserEntry("cs", "主码表词"));
+    EXPECT(dict.removeDeletedEntry("cs", "主码表词"));
+    EXPECT(dict.save());
+    dict.reload();
+    EXPECT(dict.hasUserEntry("cs", "主码表词"));
+    EXPECT(!dict.isDeleted("cs", "主码表词"));
+
+    removeRecursively(home);
+}
+
 } // namespace
 
 int main()
@@ -226,6 +266,7 @@ int main()
     testBasicParse();
     testTolerantParse();
     testReload();
+    testDeletedWordSection();
 
     if (g_failed != 0)
     {

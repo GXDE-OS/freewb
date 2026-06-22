@@ -77,9 +77,9 @@ void initDemoPayloads(DemoState &s)
     s.aux.text = "demo aux";
 }
 
-void onDBusSignalCallback(const char *member, int index)
+void onDBusSignalCallback(const freewb::PanelSignalEvent &evt)
 {
-    if (!member || !*member)
+    if (!evt.member || !*evt.member)
     {
         return;
     }
@@ -89,25 +89,25 @@ void onDBusSignalCallback(const char *member, int index)
         return;
     }
     ++state->cbSignalCount;
-    if (std::strcmp(member, "SelectCandidate") == 0)
+    if (std::strcmp(evt.member, "SelectCandidate") == 0)
     {
         ++state->cbSelectCount;
-        std::cout << "[callback] SelectCandidate index=" << index << " (count=" << state->cbSelectCount << ")\n";
-        FREEWB_WARN("callback SelectCandidate index={} count={}", index, state->cbSelectCount);
+        std::cout << "[callback] SelectCandidate index=" << evt.index << " (count=" << state->cbSelectCount << ")\n";
+        FREEWB_WARN("callback SelectCandidate index={} count={}", evt.index, state->cbSelectCount);
     }
-    else if (std::strcmp(member, "LookupTablePageUp") == 0)
+    else if (std::strcmp(evt.member, "LookupTablePageUp") == 0)
     {
         ++state->cbPageUpCount;
         std::cout << "[callback] LookupTablePageUp (count=" << state->cbPageUpCount << ")\n";
         FREEWB_WARN("callback LookupTablePageUp count={}", state->cbPageUpCount);
     }
-    else if (std::strcmp(member, "LookupTablePageDown") == 0)
+    else if (std::strcmp(evt.member, "LookupTablePageDown") == 0)
     {
         ++state->cbPageDownCount;
         std::cout << "[callback] LookupTablePageDown (count=" << state->cbPageDownCount << ")\n";
         FREEWB_WARN("callback LookupTablePageDown count={}", state->cbPageDownCount);
     }
-    else if (std::strcmp(member, "ReloadConfig") == 0)
+    else if (std::strcmp(evt.member, "ReloadConfig") == 0)
     {
         ++state->cbReloadCount;
         std::cout << "[callback] ReloadConfig (count=" << state->cbReloadCount << ")\n";
@@ -116,8 +116,8 @@ void onDBusSignalCallback(const char *member, int index)
     else
     {
         ++state->cbUnknownCount;
-        std::cout << "[callback] unknown signal: " << member << '\n';
-        FREEWB_WARN("callback unknown panel signal: {}", member);
+        std::cout << "[callback] unknown signal: " << evt.member << '\n';
+        FREEWB_WARN("callback unknown panel signal: {}", evt.member);
     }
 }
 
