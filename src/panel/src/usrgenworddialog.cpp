@@ -130,9 +130,41 @@ void UsrGenWordDialog::init_user_word_file()
         {
             textStream << str;
         }
+        textStream << "[DeletedWord]\n";
         textStream.flush();
         textFile.close();
     }
+}
+
+void UsrGenWordDialog::writeUserWordFile(const QStringList &userLines, const QStringList &deletedLines)
+{
+    QFile textFile(m_userWordFile);
+    QTextStream textStream(&textFile);
+    textStream.setCodec("UTF-8");
+
+    if (!textFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+    {
+        return;
+    }
+
+    textStream << "[UserWord]\n";
+    foreach(const QString &str, userLines)
+    {
+        if (!str.isEmpty())
+        {
+            textStream << str << "\n";
+        }
+    }
+    textStream << "[DeletedWord]\n";
+    foreach(const QString &str, deletedLines)
+    {
+        if (!str.isEmpty())
+        {
+            textStream << str << "\n";
+        }
+    }
+    textStream.flush();
+    textFile.close();
 }
 
 void UsrGenWordDialog::add_user_word(const QString &wordText, const QString &wordCode)
@@ -141,32 +173,48 @@ void UsrGenWordDialog::add_user_word(const QString &wordText, const QString &wor
     QTextStream textStream(&textFile);
     textStream.setCodec("UTF-8");
 
-    if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
+    if (!textFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         return;
     }
 
-    QStringList strList = textStream.readAll().split('\n');
-    textFile.resize(0);
+    QStringList userLines;
+    QStringList deletedLines;
+    bool inDeleted = false;
+    const QStringList strList = textStream.readAll().split('\n');
+    textFile.close();
 
-    if (strList.length())
+    for (QString line : strList)
     {
-        strList.takeAt(0);
-    }
-    strList << QString("%1=%2").arg(wordCode).arg(wordText);
-    strList.removeDuplicates();
-    strList.sort();
-    strList.insert(0, "[UserWord]");
-
-    foreach(QString str, strList)
-    {
-        if (!str.isEmpty())
+        line = line.trimmed();
+        if (line.isEmpty() || line.startsWith('#'))
         {
-            textStream << str + "\n";
+            continue;
+        }
+        if (line == "[UserWord]")
+        {
+            inDeleted = false;
+            continue;
+        }
+        if (line == "[DeletedWord]")
+        {
+            inDeleted = true;
+            continue;
+        }
+        if (inDeleted)
+        {
+            deletedLines << line;
+        }
+        else
+        {
+            userLines << line;
         }
     }
-    textStream.flush();
-    textFile.close();
+
+    userLines << QString("%1=%2").arg(wordCode).arg(wordText);
+    userLines.removeDuplicates();
+    userLines.sort();
+    writeUserWordFile(userLines, deletedLines);
 }
 
 void UsrGenWordDialog::delete_user_word(const QString &wordText, const QString &wordCode)
@@ -175,35 +223,51 @@ void UsrGenWordDialog::delete_user_word(const QString &wordText, const QString &
     QTextStream textStream(&textFile);
     textStream.setCodec("UTF-8");
 
-    if (!textFile.open(QIODevice::ReadWrite | QIODevice::Text))
+    if (!textFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         return;
     }
 
-    QStringList strList = textStream.readAll().split('\n');
-    textFile.resize(0);
-    if (strList.length())
+    QStringList userLines;
+    QStringList deletedLines;
+    bool inDeleted = false;
+    const QString target = QString("%1=%2").arg(wordCode).arg(wordText);
+    const QStringList strList = textStream.readAll().split('\n');
+    textFile.close();
+
+    for (QString line : strList)
     {
-        int pos;
-        if ((pos = strList.indexOf(QString("%1=%2").arg(wordCode).arg(wordText))) != -1)
+        line = line.trimmed();
+        if (line.isEmpty() || line.startsWith('#'))
         {
-            strList.removeAt(pos);
+            continue;
+        }
+        if (line == "[UserWord]")
+        {
+            inDeleted = false;
+            continue;
+        }
+        if (line == "[DeletedWord]")
+        {
+            inDeleted = true;
+            continue;
+        }
+        if (inDeleted)
+        {
+            deletedLines << line;
+        }
+        else if (line != target)
+        {
+            userLines << line;
         }
     }
 
-    foreach(QString str, strList)
-    {
-        if (!str.isEmpty())
-        {
-            textStream << str + "\n";
-        }
-    }
-    textStream.flush();
-    textFile.close();
+    writeUserWordFile(userLines, deletedLines);
 }
 
-void UsrGenWordDialog::slot_show_dialog(const QString &wordText, const QString &wordCode)
+void UsrGenWordDialog::showDialog(const QString &wordText, const QString &wordCode, bool online)
 {
+    m_onlineMode = online;
     ui->ledtWordText->setText(wordText);
     ui->ledtWordCode->setText(wordCode);
     if (wordCode.length() < 1)
@@ -211,6 +275,17 @@ void UsrGenWordDialog::slot_show_dialog(const QString &wordText, const QString &
         ui->ledtWordCode->setFocus();
     }
     exec();
+    m_onlineMode = false;
+}
+
+void UsrGenWordDialog::slot_show_dialog(const QString &wordText, const QString &wordCode)
+{
+    showDialog(wordText, wordCode, false);
+}
+
+void UsrGenWordDialog::slot_show_dialog_online(const QString &wordText, const QString &wordCode)
+{
+    showDialog(wordText, wordCode, true);
 }
 
 void UsrGenWordDialog::slot_userWord_file_saved()
@@ -220,10 +295,18 @@ void UsrGenWordDialog::slot_userWord_file_saved()
 
 void UsrGenWordDialog::on_btnOk_clicked()
 {
-    add_user_word(ui->ledtWordText->text(), ui->ledtWordCode->text());
+    const QString wordText = ui->ledtWordText->text();
+    const QString wordCode = ui->ledtWordCode->text();
+    if (m_onlineMode)
+    {
+        emit signal_commit_user_word(wordText, wordCode);
+    }
+    else
+    {
+        add_user_word(wordText, wordCode);
+        emit signal_user_word_changed();
+    }
     accept();
-
-    emit signal_user_word_changed();
 }
 
 void UsrGenWordDialog::on_btnExit_clicked()

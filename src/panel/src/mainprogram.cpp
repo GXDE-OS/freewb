@@ -146,6 +146,9 @@ void MainProgram::connectPanelDBus()
 
     connect(m_usrGenWordDialog, &UsrGenWordDialog::signal_user_word_changed, m_panelDBusService,
             [this]() { m_panelDBusService->ReloadDictionaries(freewb::DictReloadUserWord); });
+    connect(m_usrGenWordDialog, &UsrGenWordDialog::signal_commit_user_word, this,
+            [this](const QString &wordText, const QString &wordCode)
+            { m_panelDBusService->commitUserWordAdd(wordCode, wordText); });
 
     connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_panelDBusService,
             &freewb::ipc::QDBusPanelService::ReloadConfig);
@@ -205,9 +208,7 @@ void MainProgram::connectSettingsDBus()
                 }
                 else if (flg == 1)
                 {
-                    m_usrGenWordDialog->add_user_word(wordText, wordCode);
                     m_inputWin->close_user_word_operation_prompt();
-                    m_panelDBusService->ReloadDictionaries(freewb::DictReloadUserWord);
                 }
                 else if (flg == 2)
                 {
@@ -216,7 +217,7 @@ void MainProgram::connectSettingsDBus()
                 else if (flg == 3)
                 {
                     m_inputWin->close_user_word_operation_prompt();
-                    m_usrGenWordDialog->slot_show_dialog(wordText, wordCode);
+                    m_usrGenWordDialog->slot_show_dialog_online(wordText, wordCode);
                 }
             });
 
@@ -229,9 +230,7 @@ void MainProgram::connectSettingsDBus()
                 }
                 else if (flg == 1)
                 {
-                    m_usrGenWordDialog->delete_user_word(wordText, wordCode);
                     m_inputWin->close_user_word_operation_prompt();
-                    m_panelDBusService->ReloadDictionaries(freewb::DictReloadUserWord);
                 }
                 else if (flg == 2)
                 {

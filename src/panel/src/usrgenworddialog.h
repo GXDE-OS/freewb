@@ -21,9 +21,11 @@ public:
 
 signals:
     void signal_user_word_changed();
+    void signal_commit_user_word(const QString &wordText, const QString &wordCode);
 
 public slots:
     void slot_show_dialog(const QString &wordText, const QString &wordCode);
+    void slot_show_dialog_online(const QString &wordText, const QString &wordCode);
     void slot_userWord_file_saved();
 
 public:
@@ -45,9 +47,13 @@ private slots:
 
 private:
     void setUiTexts();
+    void writeUserWordFile(const QStringList &userLines, const QStringList &deletedLines);
+    void showDialog(const QString &wordText, const QString &wordCode, bool online);
 
 private:
     Ui::UsrGenWordDialog *ui;
+
+    bool m_onlineMode = false;
 
     // 用于窗口拖动计算
     bool m_mouseIsPressed;
