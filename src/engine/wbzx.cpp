@@ -38,7 +38,7 @@ void WbzxEngine::changeAvailable()
 
 void WbzxEngine::toggleCharset()
 {
-    mbTable_.toggleCharset();
+    gb2312Filter_.changeAvailable();
 }
 
 void WbzxEngine::fillCandidatePayloadPrompts(const std::string &preedit, CandidatePayload &payload) const
@@ -84,7 +84,7 @@ void WbzxEngine::putKey(const char *strCode)
     userDict_.appendCandidatesForPrefix(prefix, result_);
     const std::size_t userCandidateCount = result_.texts.size();
     mbTable_.appendCandidatesForPrefix(prefix, result_);
-    filterDeletedMainDictCandidates(result_, userCandidateCount);
+    filterMainDictCandidates(result_, userCandidateCount);
     fillCandidatePayloadPrompts(prefix, result_);
 }
 
@@ -278,7 +278,7 @@ void WbzxEngine::reloadUserDictionary()
     userDict_.reload();
 }
 
-void WbzxEngine::filterDeletedMainDictCandidates(CandidatePayload &payload, const std::size_t userCandidateCount) const
+void WbzxEngine::filterMainDictCandidates(CandidatePayload &payload, const std::size_t userCandidateCount) const
 {
     if (userCandidateCount >= payload.texts.size())
     {
@@ -295,7 +295,7 @@ void WbzxEngine::filterDeletedMainDictCandidates(CandidatePayload &payload, cons
         if (i >= userCandidateCount)
         {
             const std::string &code = (i < payload.fullCodes.size()) ? payload.fullCodes[i] : std::string{};
-            if (userDict_.isDeleted(code, payload.texts[i]))
+            if (userDict_.isDeleted(code, payload.texts[i]) || gb2312Filter_.needFilt(payload.texts[i]))
             {
                 continue;
             }
@@ -319,7 +319,7 @@ void WbzxEngine::filterDeletedMainDictCandidates(CandidatePayload &payload, cons
 
 bool WbzxEngine::hasVisibleMainDictCandidate(const std::string &prefix) const
 {
-    if (prefix.empty() || !mbTable_.hasCandidateForPrefix(prefix))
+    if (prefix.empty())
     {
         return false;
     }
@@ -335,7 +335,7 @@ bool WbzxEngine::hasVisibleMainDictCandidate(const std::string &prefix) const
             }
             for (const std::string &hz : kv.second)
             {
-                if (mbTable_.isCandidateTextVisible(hz) && !userDict_.isDeleted(key, hz))
+                if (!gb2312Filter_.needFilt(hz) && !userDict_.isDeleted(key, hz))
                 {
                     return true;
                 }

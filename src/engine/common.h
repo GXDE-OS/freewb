@@ -9,7 +9,6 @@
 #include <vector>
 
 #include "engine.h"
-#include "gb2312filter.h"
 
 namespace freewb
 {
@@ -17,7 +16,7 @@ namespace freewb
 class MbDictionaryTable
 {
 public:
-    explicit MbDictionaryTable(bool enableCharsetFilter = false);
+    MbDictionaryTable() = default;
 
     /** UTF-8 字节串中的字符数（按首字节判定宽度；非法序列按单字节步进）。 */
     static std::size_t utf8CharCount(const std::string &s);
@@ -56,12 +55,6 @@ public:
     const std::unordered_map<std::string, std::vector<std::string>> &multiCharLexicon() const
     {
         return multiChardict_;
-    }
-
-    /** 候选 hz 是否满足当前 charset 过滤（与 appendCandidatesForPrefix 一致）。 */
-    bool isCandidateTextVisible(const std::string &hz) const
-    {
-        return !hz.empty() && filtCharset(hz);
     }
 
     const std::vector<EngineRuleBlock> &phraseEncodeRules() const
@@ -124,11 +117,7 @@ public:
         return records_;
     }
 
-    void toggleCharset();
-
 private:
-    bool filtCharset(const std::string &hz) const;
-
     void collectCandidateItemsForPrefix(const std::string &prefix,
                                         const std::unordered_map<std::string, std::vector<std::string>> &dict,
                                         CandidatePayload &out) const;
@@ -158,9 +147,6 @@ private:
     std::vector<EngineRuleBlock> rules_;
     std::vector<std::pair<std::string, std::string>> records_;
     uint32_t recordCount_ = 0;
-    bool charsetFilterEnabled_ = false;
-    int charset_ = 0;
-    Gb2312Filter gb2312Filter_;
 
     static const std::size_t maxCandidatesPages_ = 20;
 };

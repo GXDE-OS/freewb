@@ -3,32 +3,11 @@
 #include <algorithm>
 #include <vector>
 
-#include "gb2312filter.h"
 #include "log.h"
-#include "settings.h"
 
 namespace freewb
 {
 const uint32_t kMaxHzFieldBytes = 7U * 30U;
-
-MbDictionaryTable::MbDictionaryTable(bool enableCharsetFilter)
-    : charsetFilterEnabled_(enableCharsetFilter), charset_(settings::instance().get_charSet())
-{
-}
-
-void MbDictionaryTable::toggleCharset()
-{
-    charset_ = (charset_ == 0) ? 1 : 0;
-}
-
-bool MbDictionaryTable::filtCharset(const std::string &hz) const
-{
-    if (!charsetFilterEnabled_ || charset_ != 0 || utf8CharCount(hz) != 1U)
-    {
-        return true;
-    }
-    return gb2312Filter_.isGb2312(hz);
-}
 
 void MbDictionaryTable::collectCandidateItemsForPrefix(const std::string &prefix,
                                                        const std::unordered_map<std::string, std::vector<std::string>> &dict,
@@ -67,10 +46,6 @@ void MbDictionaryTable::collectCandidateItemsForPrefix(const std::string &prefix
         for (const std::string &hz : it->second)
         {
             if (hz.empty())
-            {
-                continue;
-            }
-            if (!filtCharset(hz))
             {
                 continue;
             }
@@ -284,30 +259,24 @@ bool MbDictionaryTable::hasExactCode(const std::string &code) const
         return false;
     }
 
-    const auto hasVisible = [this](const std::unordered_map<std::string, std::vector<std::string>> &dict,
-                                   const std::string &key) -> bool
+    const auto hasNonEmpty = [&code](const std::unordered_map<std::string, std::vector<std::string>> &dict) -> bool
     {
-        const auto it = dict.find(key);
+        const auto it = dict.find(code);
         if (it == dict.end())
         {
             return false;
         }
         for (const std::string &hz : it->second)
         {
-            if (hz.empty())
+            if (!hz.empty())
             {
-                continue;
+                return true;
             }
-            if (!filtCharset(hz))
-            {
-                continue;
-            }
-            return true;
         }
         return false;
     };
 
-    return hasVisible(singleChardict_, code) || hasVisible(multiChardict_, code);
+    return hasNonEmpty(singleChardict_) || hasNonEmpty(multiChardict_);
 }
 
 bool MbDictionaryTable::hasCandidateForPrefix(const std::string &prefix) const
@@ -316,7 +285,7 @@ bool MbDictionaryTable::hasCandidateForPrefix(const std::string &prefix) const
     {
         return false;
     }
-    const auto scan = [this, &prefix](const std::unordered_map<std::string, std::vector<std::string>> &dict) -> bool
+    const auto scan = [&prefix](const std::unordered_map<std::string, std::vector<std::string>> &dict) -> bool
     {
         for (const auto &kv : dict)
         {
@@ -327,15 +296,10 @@ bool MbDictionaryTable::hasCandidateForPrefix(const std::string &prefix) const
             }
             for (const std::string &hz : kv.second)
             {
-                if (hz.empty())
+                if (!hz.empty())
                 {
-                    continue;
+                    return true;
                 }
-                if (!filtCharset(hz))
-                {
-                    continue;
-                }
-                return true;
             }
         }
         return false;

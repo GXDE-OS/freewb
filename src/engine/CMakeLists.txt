@@ -15,12 +15,9 @@ if(ICONV_LIBRARIES)
 endif()
 install(TARGETS ${PROJECT_NAME}-engine-wbzx DESTINATION ${FREEWB_INSTALL_LIBDIR})
 
-add_library(${PROJECT_NAME}-engine-py SHARED py.cpp userdict.cpp common.cpp gb2312filter.cpp)
+add_library(${PROJECT_NAME}-engine-py SHARED py.cpp userdict.cpp common.cpp)
 target_include_directories(${PROJECT_NAME}-engine-py PUBLIC ${CMAKE_SOURCE_DIR}/src/engine)
 target_link_libraries(${PROJECT_NAME}-engine-py PUBLIC ${PROJECT_NAME}-utils)
-if(ICONV_LIBRARIES)
-    target_link_libraries(${PROJECT_NAME}-engine-py PRIVATE ${ICONV_LIBRARIES})
-endif()
 install(TARGETS ${PROJECT_NAME}-engine-py DESTINATION ${FREEWB_INSTALL_LIBDIR})
 
 add_library(${PROJECT_NAME}-engine-en SHARED en.cpp)

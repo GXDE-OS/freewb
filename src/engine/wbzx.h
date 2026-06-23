@@ -7,6 +7,7 @@
 
 #include "common.h"
 #include "engine.h"
+#include "gb2312filter.h"
 #include "ifreewb.h"
 #include "userdict.h"
 
@@ -49,8 +50,8 @@ private:
     /** 从 mbTable_ 单字码表构建单字→首选码（仅首字节为字母的编码参与）。 */
     void initSingleHanziPrimaryCodeFromMbTable();
     void fillCandidatePayloadPrompts(const std::string &preedit, CandidatePayload &payload) const;
-    /** 按 [DeletedWord] 过滤 @p payload 中自 @p userCandidateCount 起的主码表候选段。 */
-    void filterDeletedMainDictCandidates(CandidatePayload &payload, std::size_t userCandidateCount) const;
+    /** 按 [DeletedWord] 与 charset 过滤 @p payload 中自 @p userCandidateCount 起的主码表候选段。 */
+    void filterMainDictCandidates(CandidatePayload &payload, std::size_t userCandidateCount) const;
     /**
      * 主码表在 @p prefix 下是否存在对用户可见的候选（charset 一致，且不在 [DeletedWord]）。
      * 用于 isPreeditOverflow —— 判断再输入一字后 preedit 是否还能在主码表续码。
@@ -58,8 +59,9 @@ private:
     bool hasVisibleMainDictCandidate(const std::string &prefix) const;
 
 private:
-    MbDictionaryTable mbTable_{true};
+    MbDictionaryTable mbTable_;
     UserDict userDict_;
+    Gb2312Filter gb2312Filter_;
     std::unordered_map<std::string, std::string> singleHanziPrimaryCode_;
     std::string inputCodes_;
     bool available_ = true;

@@ -3,12 +3,14 @@
 #include <cerrno>
 #include <cstring>
 
+#include "common.h"
 #include "log.h"
+#include "settings.h"
 
 namespace freewb
 {
 
-Gb2312Filter::Gb2312Filter()
+Gb2312Filter::Gb2312Filter() : available_(settings::instance().get_charSet() == 0)
 {
     conv_ = iconv_open("GB2312", "UTF-8");
     if (conv_ == reinterpret_cast<iconv_t>(-1))
@@ -23,6 +25,34 @@ Gb2312Filter::~Gb2312Filter()
     {
         iconv_close(conv_);
     }
+}
+
+const char *Gb2312Filter::name() const
+{
+    return "charset:gb2312filter";
+}
+
+bool Gb2312Filter::available() const
+{
+    return available_;
+}
+
+void Gb2312Filter::changeAvailable()
+{
+    available_ = !available_;
+}
+
+bool Gb2312Filter::needFilt(const std::string &hz) const
+{
+    if (hz.empty())
+    {
+        return true;
+    }
+    if (!available_ || MbDictionaryTable::utf8CharCount(hz) != 1U)
+    {
+        return false;
+    }
+    return !isGb2312(hz);
 }
 
 bool Gb2312Filter::valid() const
