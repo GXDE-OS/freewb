@@ -38,6 +38,9 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
     initFcitxServiceWatcher();
 
     m_panelDBusService->registerQDBusService();
+
+    m_panelDBusService->ReloadConfig();
+    m_panelDBusService->ReloadDictionaries(freewb::DictReloadAll);
 }
 
 MainProgram::~MainProgram()

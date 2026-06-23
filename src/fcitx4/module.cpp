@@ -285,8 +285,8 @@ static void registerTrayMenu(FcitxInstance *instance, freewb_fcitx4_imclass *imc
 {
     FcitxUIRegisterStatus(instance, imclass, "freewb-settings", _("Settings"), _("Open input method settings"),
                           freewbSettingsStatusToggle, freewbStatusGetInactive);
-    FcitxUIRegisterStatus(instance, imclass, "freewb-about", _("About"), _("Show version information"),
-                          freewbAboutStatusToggle, freewbStatusGetInactive);
+    FcitxUIRegisterStatus(instance, imclass, "freewb-about", _("About"), _("Show version information"), freewbAboutStatusToggle,
+                          freewbStatusGetInactive);
     setFreewbStatusVisible(instance, false);
 }
 
