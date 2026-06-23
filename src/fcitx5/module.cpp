@@ -121,6 +121,8 @@ void FreewbIMModule::updateCursorPosition()
         spotRect.y = focusWindowPositionFromWlcom[1] + rectFromFcitx.top() / scaleFactorFromFcitx;
         spotRect.w = rectFromFcitx.width() / scaleFactorFromFcitx;
         spotRect.h = rectFromFcitx.height() / scaleFactorFromFcitx;
+        FREEWB_DEBUG("{} is running on wayland, will update spotRect: x={} y={} w={} h={}", inputContext->display().c_str(),
+                     spotRect.x, spotRect.y, spotRect.w, spotRect.h);
     }
     else if (!appIsWaylandDisplay)
     {
@@ -129,9 +131,9 @@ void FreewbIMModule::updateCursorPosition()
         spotRect.y = rectFromFcitx.top();
         spotRect.w = rectFromFcitx.width();
         spotRect.h = rectFromFcitx.height();
+        FREEWB_DEBUG("{} is running on x11, will update spotRect: x={} y={} w={} h={}", inputContext->display().c_str(),
+                     spotRect.x, spotRect.y, spotRect.w, spotRect.h);
     }
-
-    FREEWB_DEBUG("will update spotRect: x={} y={} w={} h={}", spotRect.x, spotRect.y, spotRect.w, spotRect.h);
 
     freewb_->dbusProxy()->callPanelUpdateSpotRect(spotRect);
 }
