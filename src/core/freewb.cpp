@@ -136,13 +136,13 @@ bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return true;
     }
 
-    processed = handleSingleShortcutKey(keysym, state);
+    processed = handleSingleKey(keysym, state);
     if (processed)
     {
         return true;
     }
 
-    processed = handleGlobalShortcutKey(keysym, state);
+    processed = handleComboKey(keysym, state);
     if (processed)
     {
         return true;
@@ -214,7 +214,7 @@ void Freewb::reloadConfig()
     updateCandidateAndPreeditToUI();
 }
 
-bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
+bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
 {
     if (settings::instance().get_disableAllShortcutKey())
     {
@@ -395,7 +395,7 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
     return false;
 }
 
-bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
+bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
 {
     const FreewbKeyState switchMod =
         Key::modifierStateFromKeySym(Key::keySymFromUniqueName(settings::instance().get_cnEnSwitch().c_str()));

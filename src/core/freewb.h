@@ -41,8 +41,8 @@ public:
     Special *special() const;
 
 private:
-    bool handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state);
-    bool handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state);
+    bool handleSingleKey(FreewbKeySym keysym, FreewbKeyState state);
+    bool handleComboKey(FreewbKeySym keysym, FreewbKeyState state);
     bool handleDirectSymbolKey(FreewbKeySym keysym, FreewbKeyState state);
     void connectDBusCallback();
 
