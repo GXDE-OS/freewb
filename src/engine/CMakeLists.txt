@@ -7,7 +7,7 @@ else()
     message(STATUS "iconv: using libc built-in (no separate link)")
 endif()
 
-add_library(${PROJECT_NAME}-engine-wbzx SHARED wbzx.cpp userdict.cpp common.cpp gb2312filter.cpp)
+add_library(${PROJECT_NAME}-engine-wbzx SHARED wbzx.cpp autophrase.cpp userdict.cpp common.cpp gb2312filter.cpp)
 target_include_directories(${PROJECT_NAME}-engine-wbzx PUBLIC ${CMAKE_SOURCE_DIR}/src/engine)
 target_link_libraries(${PROJECT_NAME}-engine-wbzx PUBLIC ${PROJECT_NAME}-utils)
 if(ICONV_LIBRARIES)

@@ -46,10 +46,14 @@ public:
     bool addUserWord(const std::string &code, const std::string &text);
     bool deleteUserWord(const std::string &code, const std::string &text);
 
+    /** 上屏后处理自动词组；选中会话词组上屏时写入 autophrase.mb。 */
+    void addAutoPhrase(const std::string &committedText, const std::string &code);
+
 private:
     void initAllEngines();
     void loadDefaultEngines();
     IFreewbEngine *findEngineByName(const char *name) const;
+
     void restoreLastEngine();
 
     void commitPreeditOverflow(const std::string &prefix);

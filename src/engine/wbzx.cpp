@@ -1,5 +1,6 @@
 #include "wbzx.h"
 
+#include <algorithm>
 #include <cctype>
 #include <fstream>
 #include <unordered_set>
@@ -12,11 +13,12 @@
 namespace freewb
 {
 
-WbzxEngine::WbzxEngine()
+WbzxEngine::WbzxEngine() : autoPhrase_(*this)
 {
     clearMbLoadState();
     loadDictionary();
     initSingleHanziPrimaryCodeFromMbTable();
+    reloadAutoPhraseDictionary();
 }
 
 WbzxEngine::~WbzxEngine() = default;
@@ -68,7 +70,8 @@ bool WbzxEngine::isPreeditOverflow(const std::string &full) const
         return false;
     }
 
-    return !hasVisibleMainDictCandidate(full) && !userDict_.hasEntryStartingWithPrefix(full);
+    return !hasVisibleMainDictCandidate(full) && !userDict_.hasEntryStartingWithPrefix(full) &&
+           !autoPhrase_.hasEntryStartingWithPrefix(full);
 }
 
 void WbzxEngine::putKey(const char *strCode)
@@ -85,6 +88,7 @@ void WbzxEngine::putKey(const char *strCode)
     const std::size_t userCandidateCount = result_.texts.size();
     mbTable_.appendCandidatesForPrefix(prefix, result_);
     filterMainDictCandidates(result_, userCandidateCount);
+    autoPhrase_.appendCandidatesForExactCode(prefix, result_);
     fillCandidatePayloadPrompts(prefix, result_);
 }
 
@@ -226,6 +230,23 @@ std::string WbzxEngine::calculateWubiPhraseCode(const std::string &phrase) const
         code.push_back(singleCode[cell.iIndex - 1]);
     }
     return code;
+}
+
+const MbDictionaryTable &WbzxEngine::mainDictionaryTable() const
+{
+    return mbTable_;
+}
+
+void WbzxEngine::addAutoPhrase(const std::string &committedText, const std::string &code)
+{
+    FREEWB_DEBUG("WbzxEngine::addAutoPhrase enabled={} text={} code={}", settings::instance().get_autoPhrase(), committedText,
+                 code);
+    autoPhrase_.add(committedText, code);
+}
+
+void WbzxEngine::reloadAutoPhraseDictionary()
+{
+    autoPhrase_.reloadDictionary();
 }
 
 void WbzxEngine::loadDictionary()
@@ -467,7 +488,7 @@ bool WbzxEngine::isExactDictionaryKey(const std::string &preedit) const
             return true;
         }
     }
-    return false;
+    return autoPhrase_.hasExactCode(preedit);
 }
 
 } // namespace freewb

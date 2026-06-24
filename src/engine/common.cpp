@@ -432,6 +432,26 @@ bool MbDictionaryTable::appendSortedRecord(const std::string &code, const std::s
     return true;
 }
 
+bool MbDictionaryTable::insertRecord(const std::string &code, const std::string &text)
+{
+    if (code.empty() || text.empty())
+    {
+        return false;
+    }
+    if (hasEntry(code, text))
+    {
+        return true;
+    }
+
+    const auto it =
+        std::lower_bound(records_.begin(), records_.end(), code,
+                         [](const std::pair<std::string, std::string> &rec, const std::string &c) { return rec.first < c; });
+    records_.insert(it, {code, text});
+    rebuildLexiconFromRecord(code, text);
+    recordCount_ = static_cast<uint32_t>(records_.size());
+    return true;
+}
+
 void MbDictionaryTable::rebuildLexiconFromRecord(const std::string &code, const std::string &text)
 {
     const size_t nChar = MbDictionaryTable::utf8CharCount(text);

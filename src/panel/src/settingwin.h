@@ -23,13 +23,6 @@ namespace Ui
 class SettingWin;
 }
 
-typedef enum
-{
-    AWGO_FORBID,
-    AWGO_LOSS,
-    AWGO_SAVE
-} AutoWordGroupOpt;
-
 class SettingWin : public QWidget
 {
     Q_OBJECT
@@ -101,7 +94,7 @@ private slots:
     void on_ckbInputStatistic_toggled(bool checked);
     void on_ckbTypeEffect_toggled(bool checked);
     void on_ckbRepeatCalib_toggled(bool checked);
-    void on_ckbAutoWordGroup_activated(int index);
+    void on_ckbAutoPhrase_toggled(bool checked);
 
     /****************** 其他选项设置 ***************/
     void on_ledtAutoToEnStr_textChanged(const QString &arg1);

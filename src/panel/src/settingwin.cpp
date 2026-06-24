@@ -459,7 +459,6 @@ void SettingWin::setUiTexts()
     ui->ckbTypeEffect->setText(_("Enable typing sound effects"));
     ui->ckbShiftCommitChar->setText(_("Shift+letter commits directly"));
     ui->ckbInputStatistic->setText(_("Enable input statistics"));
-    ui->label_3->setText(_("Auto phrase options"));
     ui->labelOthers->setText(_("Other settings"));
     ui->label_4->setText(_("Auto-switch to English strings"));
     ui->labelAutoEnPrompt->setText(_("Freewb switches to English when you type these strings; Enter returns to Chinese.\n"
@@ -528,9 +527,7 @@ void SettingWin::setUiTexts()
     ui->labelVersion->setText(_("Freewb Input Method"));
     ui->btnOk->setText(_("OK"));
     ui->btnCancel->setText(_("Cancel"));
-    ui->ckbAutoWordGroup->setItemText(0, _("Disable auto phrase creation"));
-    ui->ckbAutoWordGroup->setItemText(1, _("Discard on exit"));
-    ui->ckbAutoWordGroup->setItemText(2, _("Save to lexicon immediately"));
+    ui->ckbAutoPhrase->setText(_("Auto phrase options"));
     ui->cmbWhenLossLocation->setItemText(0, _("Hide toolbar"));
     ui->cmbWhenLossLocation->setItemText(1, _("Top-left of desktop"));
     ui->cmbWhenLossLocation->setItemText(2, _("Top-right of desktop"));
@@ -591,10 +588,8 @@ void SettingWin::init_mouse_hover_tips()
     ui->ckbTypeEffect->setToolTip(_("Your computer behaves like a typewriter (useful for Wubi beginners)."));
     ui->ckbRepeatCalib->setToolTip(_("When enabled, duplicate or empty codes output the first two candidates or codes for batch "
                                      "proofreading."));
-    ui->ckbAutoWordGroup->setToolTip(
-        _("① Disable auto word grouping.\n② Discard on exit: type by character, then use as phrase until "
-          "exit; not saved to user lexicon.\n③ Save to lexicon: same as ② but selected auto phrases "
-          "are saved.\n\nNote: use Ctrl+number to select and save auto phrases in candidates."));
+    ui->ckbAutoPhrase->setToolTip(_("When enabled, consecutive single-character commits form auto phrases; selected auto phrases "
+                                    "are saved to the auto phrase lexicon."));
 
     ui->ledtAutoToEnStr->setToolTip(_("When typing URLs such as 'www.freewb.org', entering 'www.' switches to English so browser "
                                       "autocomplete can be used."));
@@ -873,20 +868,7 @@ void SettingWin::init_advance_page()
     ui->ckbInputStatistic->setChecked(settings::instance().get_inputStatistic());
     ui->ckbTypeEffect->setChecked(settings::instance().get_typeEffect());
     ui->ckbRepeatCalib->setChecked(settings::instance().get_recodeCalib());
-
-    AutoWordGroupOpt opt = static_cast<AutoWordGroupOpt>(settings::instance().get_autoWordGroupOpt());
-    if (opt == AWGO_FORBID)
-    {
-        ui->ckbAutoWordGroup->setCurrentIndex(0);
-    }
-    else if (opt == AWGO_LOSS)
-    {
-        ui->ckbAutoWordGroup->setCurrentIndex(1);
-    }
-    else if (opt == AWGO_SAVE)
-    {
-        ui->ckbAutoWordGroup->setCurrentIndex(2);
-    }
+    ui->ckbAutoPhrase->setChecked(settings::instance().get_autoPhrase());
 }
 
 // 初始化其它选项设置页面
@@ -1384,20 +1366,9 @@ void SettingWin::on_ckbTypeEffect_toggled(bool checked)
     settings::instance().set_typeEffect(checked);
 }
 
-void SettingWin::on_ckbAutoWordGroup_activated(int index)
+void SettingWin::on_ckbAutoPhrase_toggled(bool checked)
 {
-    if (index == 0)
-    {
-        settings::instance().set_autoWordGroupOpt(AWGO_LOSS);
-    }
-    else if (index == 1)
-    {
-        settings::instance().set_autoWordGroupOpt(AWGO_FORBID);
-    }
-    else if (index == 2)
-    {
-        settings::instance().set_autoWordGroupOpt(AWGO_SAVE);
-    }
+    settings::instance().set_autoPhrase(checked);
 }
 
 void SettingWin::on_ledtAutoToEnStr_textChanged(const QString &arg1)

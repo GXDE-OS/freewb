@@ -112,8 +112,6 @@ void EngineManager::restoreLastEngine()
                     fallbackName != nullptr ? fallbackName->name() : "null");
     }
 
-    const auto *targetName = dynamic_cast<const IFreewb *>(targetEngine);
-
     if (currentEngine_ != nullptr)
     {
         currentEngine_->reset();
@@ -140,7 +138,6 @@ void EngineManager::toggleEnglishEngine()
         return;
     }
 
-    const auto *fromName = dynamic_cast<const IFreewb *>(currentEngine_);
     lastEngine_ = currentEngine_;
     if (currentEngine_ != nullptr)
     {
@@ -337,6 +334,26 @@ bool EngineManager::addUserWord(const std::string &code, const std::string &text
     return wbzx->addUserWord(code, text);
 }
 
+void EngineManager::addAutoPhrase(const std::string &committedText, const std::string &code)
+{
+    const char *const engineName = currentEngineName();
+    if (engineName == nullptr || (std::strcmp(engineName, "engine:wbzx") != 0 && std::strcmp(engineName, "engine:wbpy") != 0))
+    {
+        return;
+    }
+
+    auto *wbzx = dynamic_cast<WbzxEngine *>(findEngineByName("engine:wbzx"));
+    if (wbzx == nullptr)
+    {
+        FREEWB_DEBUG("EngineManager::addAutoPhrase: wbzx engine unavailable");
+        return;
+    }
+
+    FREEWB_DEBUG("EngineManager::addAutoPhrase engine={} text={} code={}", engineName, committedText, code);
+
+    wbzx->addAutoPhrase(committedText, code);
+}
+
 bool EngineManager::deleteUserWord(const std::string &code, const std::string &text)
 {
     auto *wbzx = dynamic_cast<WbzxEngine *>(findEngineByName("engine:wbzx"));
@@ -390,6 +407,10 @@ void EngineManager::reloadDictionaries(int mask)
     if ((mask & freewb::DictReloadUserWord) != 0 && wbzx != nullptr)
     {
         wbzx->reloadUserDictionary();
+    }
+    if ((mask & freewb::DictReloadAutoPhrase) != 0 && wbzx != nullptr)
+    {
+        wbzx->reloadAutoPhraseDictionary();
     }
 }
 

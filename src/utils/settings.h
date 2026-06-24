@@ -113,7 +113,7 @@ enum class ValueType
     X(inputStatistic, Advanced, Bool, "false", Advanced, "")                                                                     \
     X(typeEffect, Advanced, Bool, "false", Advanced, "")                                                                         \
     X(recodeCalib, Advanced, Bool, "false", Advanced, "")                                                                        \
-    X(autoWordGroupOpt, Advanced, Int, "1", Advanced, "")                                                                        \
+    X(autoPhrase, Advanced, Bool, "true", Advanced, "")                                                                          \
     X(autoToEnStr, Others, String, "www. ftp: http mail. bbs.", Others, "")                                                      \
     X(autoToHalfMarkFlg, Others, Bool, "false", Others, "")                                                                      \
     X(curSkinId, Ui, String, "default", Ui, "")                                                                                  \

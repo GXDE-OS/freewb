@@ -1456,7 +1456,7 @@
        <string>Enable input statistics</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_3">
+     <widget class="QCheckBox" name="ckbAutoPhrase">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -1464,7 +1464,7 @@
        <rect>
         <x>230</x>
         <y>80</y>
-        <width>101</width>
+        <width>220</width>
         <height>21</height>
        </rect>
       </property>
@@ -1478,41 +1478,6 @@
       <property name="text">
        <string>Auto phrase options</string>
       </property>
-     </widget>
-     <widget class="QComboBox" name="ckbAutoWordGroup">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>230</x>
-        <y>107</y>
-        <width>151</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <item>
-       <property name="text">
-        <string>Disable auto phrase creation</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Discard on exit</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Save to lexicon immediately</string>
-       </property>
-      </item>
      </widget>
     </widget>
     <widget class="QWidget" name="pageOthers">

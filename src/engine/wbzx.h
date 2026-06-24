@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "autophrase.h"
 #include "common.h"
 #include "engine.h"
 #include "gb2312filter.h"
@@ -40,9 +41,16 @@ public:
 
     void reloadMainDictionary();
     void reloadUserDictionary();
+    void reloadAutoPhraseDictionary();
 
     bool addUserWord(const std::string &code, const std::string &text);
     bool deleteUserWord(const std::string &code, const std::string &text);
+
+    /** 上屏后处理自动词组。 */
+    void addAutoPhrase(const std::string &committedText, const std::string &code);
+
+    /** 主五笔码表；供自动造词读取元数据与已有词条。 */
+    const MbDictionaryTable &mainDictionaryTable() const;
 
 private:
     void clearMbLoadState();
@@ -58,7 +66,6 @@ private:
      */
     bool hasVisibleMainDictCandidate(const std::string &prefix) const;
 
-private:
     MbDictionaryTable mbTable_;
     UserDict userDict_;
     Gb2312Filter gb2312Filter_;
@@ -66,6 +73,7 @@ private:
     std::string inputCodes_;
     bool available_ = true;
     CandidatePayload result_;
+    AutoPhrase autoPhrase_;
 };
 } // namespace freewb
 

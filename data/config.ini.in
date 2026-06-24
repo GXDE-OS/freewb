@@ -23,7 +23,7 @@ CoustomChar="ˉ  ，  、  ；  ：  ？  ！  …  —  •  〔  （  【  〈
 CoustomMark=" ）  ！  ·  #  ￥  %  …  —  *  （                                                     ` ~ － — ＝ + [ { ] } 、 ｜ ； ： ’  ，  。  、 ？ "
 
 [Advanced]
-autoWordGroupOpt=1
+autoPhrase=true
 recodeCalib=false
 shiftCommitChar=true
 typeEffect=false

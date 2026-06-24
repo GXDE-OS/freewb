@@ -619,7 +619,7 @@ msgstr "Shift+字母直接上屏"
 msgid "Enable input statistics"
 msgstr "启用输入统计功能"
 
-#: src/panel/src/settingwin.cpp:472
+#: src/panel/src/settingwin.cpp:530
 msgid "Auto phrase options"
 msgstr "自动词组选项"
 
@@ -1088,24 +1088,13 @@ msgstr ""
 "选中此项，当重码或空码时极点会同时输入前2\n"
 "个候选项或编码，供批量校对时参考。"
 
-#: src/panel/src/settingwin.cpp:603
+#: src/panel/src/settingwin.cpp:591
 msgid ""
-"① Disable auto word grouping.\n"
-"② Discard on exit: type by character, then use as phrase until exit; not "
-"saved to user lexicon.\n"
-"③ Save to lexicon: same as ② but selected auto phrases are saved.\n"
-"\n"
-"Note: use Ctrl+number to select and save auto phrases in candidates."
+"When enabled, consecutive single-character commits form auto phrases; "
+"selected auto phrases are saved to the auto phrase lexicon."
 msgstr ""
-"①禁用自动造词 ：禁用此功能。\n"
-"②关闭极点时消失：以单字方式录入汉字，其后\n"
-"即可按词组的方式输入，关闭程序后这些词组不\n"
-"存入用户词库。\n"
-"③随时保存到词库：同选项②，只是被选择的\n"
-"自动词组会保存到用户词库中。\n"
-"\n"
-"注：当候选中有自动词组时，可以用\n"
-"Ctrl+序号的方式来选择并保存它。"
+"选中此项，连续以单字方式上屏可形成自动词组；\n"
+"选中的词组会保存到自动词组词库。"
 
 #: src/panel/src/settingwin.cpp:607
 msgid ""

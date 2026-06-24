@@ -15,8 +15,9 @@ enum DictionaryReloadMask : std::uint32_t
     DictReloadUserWord = 1u << 0,
     DictReloadWubiTable = 1u << 1,
     DictReloadPinyinTable = 1u << 2,
+    DictReloadAutoPhrase = 1u << 3,
     DictReloadMainTables = DictReloadWubiTable | DictReloadPinyinTable,
-    DictReloadAll = DictReloadUserWord | DictReloadWubiTable | DictReloadPinyinTable,
+    DictReloadAll = DictReloadUserWord | DictReloadWubiTable | DictReloadPinyinTable | DictReloadAutoPhrase,
 };
 
 struct SpotRectPayload

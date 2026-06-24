@@ -156,7 +156,11 @@ void Committer::commit(const std::string &text, const std::string &code)
     lastCommitString_ = output;
     lastCommitCode_ = code;
     appendCommittedText(output);
+
+    const std::string preedit = freewb_->candidateList()->preeditText();
+    const std::string inputCode = code.empty() ? preedit : code;
     commitCallback_(output);
+    freewb_->engineManager()->addAutoPhrase(output, inputCode);
 
     freewb_->candidateList()->clear();
     freewb_->engineManager()->reset();
