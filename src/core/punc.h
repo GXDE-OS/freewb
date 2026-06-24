@@ -61,11 +61,13 @@ public:
     void reset();
 
 private:
+    bool effectiveChinesePunc() const;
     static bool isAsciiSymbolKey(FreewbKeySym sym);
     static bool isDigitChar(const std::string &textChar);
     static const PuncPairEntry *lookupPair(FreewbKeySym sym, char pairKey[2]);
     static const PuncMapEntry *lookupMap(char ascii);
 
+private:
     static const PuncPairEntry kAutoPairList[];
     static const PuncMapEntry kPuncMap[];
 

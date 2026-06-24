@@ -215,7 +215,7 @@ public:
     void switch_char_set();
     void set_traditional_mode(bool isTraditional);
     void update_char_width_mode_ico(CharWidthMode charWidth);
-    void update_mark_mode_ico(MarkMode markMode);
+    void update_mark_mode_ico();
     void update_char_font_ico();
     void set_context_menu(ContextMenu *contextMenu);
     void reset();
@@ -229,6 +229,8 @@ public:
     static CharWidthMode get_char_width_mode();
     static void set_mark_mode(MarkMode markMode);
     static MarkMode get_mark_mode();
+    /** 工具栏/候选窗当前应显示的标点模式（英文输入态固定为 EN）。 */
+    static MarkMode effective_mark_mode();
     static bool is_traditional_mode();
     static void switch_char_set_mode();
     static CharSetMode get_char_set_mode();
@@ -244,7 +246,6 @@ protected:
     void update_extend_menu(bool state);
     void update_toolbar_bg();
     void update_extend_menu_ico();
-    void update_mark_mode_ico();
     void update_char_set_ico();
     void update_vk_mode_ckecked_state(VirtualKeyboardMode mode);
 

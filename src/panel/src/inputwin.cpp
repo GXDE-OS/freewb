@@ -1143,7 +1143,8 @@ void InputWin::slot_update_charWidth_btn_ico()
 
 void InputWin::slot_update_mark_btn_ico()
 {
-    if (ToolbarWin::get_mark_mode() == MARK_CN)
+    const bool englishMode = ToolbarWin::get_input_mode() == ToolbarWin::kEngineEn;
+    if (ToolbarWin::effective_mark_mode() == MARK_CN)
     {
         ui->btnMark->setStyleSheet(QSS_MARK_CN);
     }
@@ -1151,6 +1152,7 @@ void InputWin::slot_update_mark_btn_ico()
     {
         ui->btnMark->setStyleSheet(QSS_MARK_EN);
     }
+    ui->btnMark->setEnabled(!englishMode);
 }
 
 void InputWin::slot_dict_find(const QString &wordText)

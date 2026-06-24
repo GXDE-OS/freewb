@@ -230,6 +230,11 @@ bool Freewb::handleGlobalShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
 
     if (keysym == FreewbKey_period && state == FreewbKeyState_Ctrl)
     {
+        const char *engineName = engineManager_->currentEngineName();
+        if (engineName != nullptr && std::strcmp(engineName, "engine:en") == 0)
+        {
+            return true;
+        }
         punc_->changeAvailable();
         dbusProxy_->callPanelSwitchPunctuationModeMethod();
         return true;
@@ -415,7 +420,7 @@ bool Freewb::handleSingleShortcutKey(FreewbKeySym keysym, FreewbKeyState state)
     if (keysym == FreewbKey_Escape)
     {
         reset();
-        return true;
+        return false;
     }
 
     const FreewbKeySym prevPageKey = Key::keySymFromUniqueName(settings::instance().get_prevPageKey().c_str());

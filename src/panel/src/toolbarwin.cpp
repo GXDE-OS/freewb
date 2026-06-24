@@ -96,6 +96,11 @@ MarkMode ToolbarWin::get_mark_mode()
     return s_markMode;
 }
 
+MarkMode ToolbarWin::effective_mark_mode()
+{
+    return (s_inputMode == kEngineEn) ? MARK_EN : s_markMode;
+}
+
 bool ToolbarWin::is_traditional_mode()
 {
     return s_isTraditionalMode;
@@ -245,7 +250,7 @@ void ToolbarWin::slot_load_setting_data()
     s_charWidthMode = settings::instance().get_fullWidthFlg() ? WIDTH_FULL : WIDTH_HALF;
     s_markMode = settings::instance().get_chinesePuncFlg() ? MARK_CN : MARK_EN;
     slot_update_char_width_mode_ico();
-    slot_update_mark_mode_ico();
+    update_mark_mode_ico();
 
     // 载入皮肤
     if (m_curSkinId != toQStringUtf8(settings::instance().get_curSkinId()))
@@ -764,6 +769,7 @@ void ToolbarWin::slot_update_input_mode_ico()
     const qreal dpr = qMax(1.0, ui->btnMode->devicePixelRatioF());
     ui->btnMode->setIcon(freewb_icon_from_skin_path(iconPath, iconSize, dpr));
     ui->btnMode->setIconSize(iconSize);
+    update_mark_mode_ico();
 }
 
 // 更新工具条上的全半角指示图标
@@ -781,30 +787,24 @@ void ToolbarWin::slot_update_char_width_mode_ico()
     emit signal_btn_charWidth_clicked();
 }
 
-void ToolbarWin::slot_update_mark_mode_ico()
-{
-    if (get_mark_mode() == MARK_CN)
-    {
-        ui->btnMark->setStyleSheet(QSS_MARK_CN);
-    }
-    else
-    {
-        ui->btnMark->setStyleSheet(QSS_MARK_EN);
-    }
-
-    emit signal_btn_mark_clicked();
-}
-
 void ToolbarWin::slot_set_traditional_mode(bool isTraditional)
 {
     set_traditional_mode(isTraditional);
     emit signal_switch_chttrans();
 }
 
-// 更新工具条上的中英文标点指示图标
+void ToolbarWin::slot_update_mark_mode_ico()
+{
+    if (s_inputMode != kEngineEn)
+    {
+        s_markMode = (s_markMode == MARK_CN) ? MARK_EN : MARK_CN;
+    }
+    update_mark_mode_ico();
+}
+
 void ToolbarWin::update_mark_mode_ico()
 {
-    if (get_mark_mode() == MARK_CN)
+    if (effective_mark_mode() == MARK_CN)
     {
         ui->btnMark->setStyleSheet(QSS_MARK_CN);
     }
@@ -812,6 +812,8 @@ void ToolbarWin::update_mark_mode_ico()
     {
         ui->btnMark->setStyleSheet(QSS_MARK_EN);
     }
+    ui->btnMark->setEnabled(s_inputMode != kEngineEn);
+    emit signal_btn_mark_clicked();
 }
 
 // 更新工具条上的简体繁体按钮图标
@@ -929,7 +931,6 @@ void ToolbarWin::fcitx_charMark_updated(const QString &param)
     }
 
     update_mark_mode_ico();
-    emit signal_btn_mark_clicked(); // 通知输入面板同步更新标点模式
 }
 
 void ToolbarWin::on_btnGenerate_clicked()
@@ -970,29 +971,16 @@ void ToolbarWin::update_char_width_mode_ico(CharWidthMode charWidth)
 
 void ToolbarWin::on_btnMark_clicked()
 {
+    if (s_inputMode == kEngineEn)
+    {
+        return;
+    }
+
     Sound::play(SOUND_LETTER);
 
-    update_mark_mode_ico(s_markMode);
+    s_markMode = (s_markMode == MARK_CN) ? MARK_EN : MARK_CN;
+    update_mark_mode_ico();
     emit signal_fcitx_switch_mark("/Fcitx/punc");
-}
-
-void ToolbarWin::update_mark_mode_ico(MarkMode markMode)
-{
-    if (s_markMode == MARK_CN)
-        s_markMode = MARK_EN;
-    else
-        s_markMode = MARK_CN;
-
-    if (s_markMode == MARK_CN)
-    {
-        ui->btnMark->setStyleSheet(QSS_MARK_CN);
-    }
-    else
-    {
-        ui->btnMark->setStyleSheet(QSS_MARK_EN);
-    }
-
-    emit signal_btn_mark_clicked();
 }
 
 void ToolbarWin::set_traditional_mode(bool isTraditional)
@@ -1109,14 +1097,7 @@ void ToolbarWin::reset()
         ui->btnCharWidth->setStyleSheet(QSS_HALF_WIDTH);
     }
 
-    if (s_markMode == MARK_CN)
-    {
-        ui->btnMark->setStyleSheet(QSS_MARK_CN);
-    }
-    else
-    {
-        ui->btnMark->setStyleSheet(QSS_MARK_EN);
-    }
+    update_mark_mode_ico();
 }
 
 void ToolbarWin::slot_apply_pending_kim_property()

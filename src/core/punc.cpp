@@ -58,6 +58,20 @@ bool Punc::available() const
     return chinesePuncEnabled_;
 }
 
+bool Punc::effectiveChinesePunc() const
+{
+    if (!chinesePuncEnabled_)
+    {
+        return false;
+    }
+    if (freewb_ == nullptr || freewb_->engineManager() == nullptr)
+    {
+        return true;
+    }
+    const char *const engineName = freewb_->engineManager()->currentEngineName();
+    return engineName == nullptr || std::strcmp(engineName, "engine:en") != 0;
+}
+
 void Punc::changeAvailable()
 {
     chinesePuncEnabled_ = !chinesePuncEnabled_;
@@ -139,6 +153,8 @@ PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
         return {{}, "\\"};
     }
 
+    const bool useChinesePunc = effectiveChinesePunc();
+
     char pairKey[2] = {};
     const PuncPairEntry *pair = lookupPair(sym, pairKey);
     if (pair != nullptr)
@@ -147,7 +163,7 @@ PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
         const bool opening = sameKey || std::strcmp(pairKey, pair->asciiLeft) == 0;
 
         bool skipPair = false;
-        if (chinesePuncEnabled_)
+        if (useChinesePunc)
         {
             const PuncMapEntry *mapEntry = lookupMap(static_cast<char>(sym));
             skipPair = mapEntry != nullptr && mapEntry->variantCount > 1 && !(smartMarkEnabled_ && opening);
@@ -155,8 +171,8 @@ PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
 
         if (!skipPair)
         {
-            const char *left = chinesePuncEnabled_ ? pair->chineseLeft : pair->asciiLeft;
-            const char *right = chinesePuncEnabled_ ? pair->chineseRight : pair->asciiRight;
+            const char *left = useChinesePunc ? pair->chineseLeft : pair->asciiLeft;
+            const char *right = useChinesePunc ? pair->chineseRight : pair->asciiRight;
 
             if (smartMarkEnabled_)
             {
@@ -179,7 +195,7 @@ PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     const char ascii = static_cast<char>(sym);
-    if (chinesePuncEnabled_ && autoHalfMarkAfterNum_ && isDigitChar(freewb_->committer()->committedText(1)) &&
+    if (useChinesePunc && autoHalfMarkAfterNum_ && isDigitChar(freewb_->committer()->committedText(1)) &&
         (sym == FreewbKey_comma || sym == FreewbKey_period || sym == FreewbKey_semicolon))
     {
         return {{}, std::string(1, ascii)};
@@ -194,7 +210,7 @@ PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
         return {};
     }
 
-    if (chinesePuncEnabled_)
+    if (useChinesePunc)
     {
         const PuncMapEntry *mapEntry = lookupMap(ascii);
         if (mapEntry != nullptr && mapEntry->variantCount > 0 && mapEntry->variants[0] != nullptr)
