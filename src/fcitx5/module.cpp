@@ -28,28 +28,25 @@ FreewbIMModule::~FreewbIMModule()
 void FreewbIMModule::keyEvent(const fcitx::InputMethodEntry &entry, fcitx::KeyEvent &keyEvent)
 {
     FCITX_UNUSED(entry);
+    bool processed = false;
+    const auto keysym = static_cast<FreewbKeySym>(keyEvent.key().sym());
+    const auto state = static_cast<FreewbKeyState>(keyEvent.key().states().toInteger());
+
     if (keyEvent.isRelease())
     {
-        const auto keysym = static_cast<FreewbKeySym>(keyEvent.key().sym());
-        const auto state = static_cast<FreewbKeyState>(keyEvent.key().states().toInteger());
-        bool processed = freewb_->processKeyRelease(keysym, state);
-        if (processed)
-        {
-            keyEvent.filterAndAccept();
-            freewb_->updateCandidateAndPreeditToUI();
-        }
-        return;
+        processed = freewb_->processKeyRelease(keysym, state);
+    }
+    else
+    {
+        processed = freewb_->processKeyPress(keysym, state);
     }
 
-    updateCursorPosition();
-
-    bool processed = freewb_->processKeyPress(static_cast<FreewbKeySym>(keyEvent.key().sym()),
-                                              static_cast<FreewbKeyState>(keyEvent.key().states().toInteger()));
     if (processed)
     {
         keyEvent.filterAndAccept();
     }
 
+    updateCursorPosition();
     freewb_->updateCandidateAndPreeditToUI();
 }
 
