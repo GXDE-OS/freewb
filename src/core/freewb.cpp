@@ -125,7 +125,7 @@ Special *Freewb::special() const
     return special_;
 }
 
-bool Freewb::processKey(FreewbKeySym keysym, FreewbKeyState state)
+bool Freewb::processKeyPress(FreewbKeySym keysym, FreewbKeyState state)
 {
     FREEWB_DEBUG("keysym: {}, state: {}", static_cast<int>(keysym), static_cast<int>(state));
 

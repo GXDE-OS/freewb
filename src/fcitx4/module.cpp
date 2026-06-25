@@ -78,7 +78,7 @@ static INPUT_RETURN_VALUE FreewbIMDoInput(void *arg, FcitxKeySym sym, unsigned i
 
     updateCursorPosition(imclass);
 
-    const bool processed = imclass->freewb_->processKey(static_cast<FreewbKeySym>(sym), static_cast<FreewbKeyState>(state));
+    const bool processed = imclass->freewb_->processKeyPress(static_cast<FreewbKeySym>(sym), static_cast<FreewbKeyState>(state));
     if (processed)
     {
         imclass->freewb_->updateCandidateAndPreeditToUI();

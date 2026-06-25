@@ -25,7 +25,7 @@ public:
     ~Freewb();
     void activate();
     void deactivate();
-    bool processKey(FreewbKeySym keysym, FreewbKeyState state);
+    bool processKeyPress(FreewbKeySym keysym, FreewbKeyState state);
     bool processKeyRelease(FreewbKeySym keysym, FreewbKeyState state);
     void updateCandidateAndPreeditToUI();
     void reset();

@@ -43,8 +43,8 @@ void FreewbIMModule::keyEvent(const fcitx::InputMethodEntry &entry, fcitx::KeyEv
 
     updateCursorPosition();
 
-    bool processed = freewb_->processKey(static_cast<FreewbKeySym>(keyEvent.key().sym()),
-                                         static_cast<FreewbKeyState>(keyEvent.key().states().toInteger()));
+    bool processed = freewb_->processKeyPress(static_cast<FreewbKeySym>(keyEvent.key().sym()),
+                                              static_cast<FreewbKeyState>(keyEvent.key().states().toInteger()));
     if (processed)
     {
         keyEvent.filterAndAccept();
