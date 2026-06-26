@@ -74,7 +74,6 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
-    bool eventFilter(QObject *obj, QEvent *event);
 
     void add_del_user_word_from_file(int op, const QString &fileName);
     void lexicon_thread_quit();
@@ -84,7 +83,6 @@ protected slots:
     void slot_worker_thread_finished();
 
 private slots:
-    void on_btnClose_clicked();
     void on_btnHelp_clicked();
     void on_btnDumpSysLexicon_clicked();
     void on_btnMakeSysLexicon_clicked();

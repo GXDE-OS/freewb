@@ -409,7 +409,8 @@ void SettingWin::init_window_appearance()
     QFile qssFile(QSS_FILE);
     if (qssFile.open(QFile::ReadOnly))
     {
-        this->setStyleSheet(qssFile.readAll());
+        // 仅作用于 frame 内控件，避免 QMessageBox 子窗口继承 QWidget 样式。
+        ui->frame->setStyleSheet(qssFile.readAll());
         qssFile.close();
     }
 
@@ -1483,7 +1484,6 @@ void SettingWin::on_cmbTmpPinyin_activated(const QString &arg1)
 void SettingWin::on_btnRestoreShortcutKey_clicked()
 {
     m_msgBox = new QMessageBox(this);
-    // m_msgBox->setWindowFlag( Qt::FramelessWindowHint );
     m_msgBox->setIcon(QMessageBox::Warning);
     m_msgBox->setText(_("Confirm to restore all shortcut keys to the default key value?"));
     m_msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -1493,7 +1493,7 @@ void SettingWin::on_btnRestoreShortcutKey_clicked()
     m_msgBox->button(QMessageBox::No)->setText(_("No(&N)"));
     m_msgBox->setDefaultButton(QMessageBox::Yes);
 
-    int ret = m_msgBox->exec();
+    const int ret = m_msgBox->exec();
     delete m_msgBox;
     if (ret == QMessageBox::Yes)
     {

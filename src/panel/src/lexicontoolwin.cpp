@@ -11,15 +11,8 @@
 #include "ui_lexicontoolwin.h"
 #include "waylandwinhelper.h"
 
-// 设置窗口样式表
+// 词库工具窗口样式表
 #define QSS_FILE ":/qss/lexiconwin.qss"
-
-#define QSS_BORDER_ACTIVE "color: rgb(255, 255, 255);background-color: rgb(10, 120, 203);"
-#define QSS_BORDER_DEACTIVE "color: rgb(0, 0, 0);background-color: rgb(200, 200, 200);"
-
-#define QSS_BTN_CLOSE0 "border-image: url(:/image/setting/close0.png);"
-#define QSS_BTN_CLOSE1 "border-image: url(:/image/setting/close1.png);"
-#define QSS_BTN_CLOSE2 "border-image: url(:/image/setting/close2.png);"
 
 #define CUR_USED_WUBI_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/wbzx.mb"
 #define CUR_USED_PINYIN_TABLE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/pinyin.mb"
@@ -83,8 +76,8 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
 {
     ui->setupUi(this);
     setUiTexts();
-    setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
-
+    setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
+    setFixedSize(size());
     setWindowIcon(QIcon::fromTheme("freewb"));
     setWindowTitle(_("Freewb lexicon tool"));
 
@@ -95,9 +88,6 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
     m_defaultPopPosition = QPoint((d->width() - size().width()) / 2, (d->height() - size().height()) / 2);
     move(m_defaultPopPosition);
 
-    installEventFilter(this);
-    ui->btnClose->installEventFilter(this);
-
     m_lexiconThread = new QThread(this);
     m_lexiconWorker = new LexiconWorker();
     m_lexiconWorker->moveToThread(m_lexiconThread);
@@ -107,7 +97,6 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
             Qt::QueuedConnection);
 
     m_msgBox = new QMessageBox(this);
-    m_msgBox->setWindowFlag(Qt::FramelessWindowHint);
     m_msgBox->setIcon(QMessageBox::NoIcon);
 
     m_tmpSysTable = QString(qgetenv("HOME")) + "/wbzx.mb";
@@ -117,7 +106,8 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
     QFile qssFile(QSS_FILE);
     if (qssFile.open(QFile::ReadOnly))
     {
-        this->setStyleSheet(qssFile.readAll());
+        // 仅作用于 frame 内控件，避免 QMessageBox 子窗口继承 QPushButton 样式。
+        ui->frame->setStyleSheet(qssFile.readAll());
         qssFile.close();
     }
 
@@ -126,12 +116,10 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
     ui->btnOptimize->hide();
 
     freewb::applyWaylandOverlayWindowHints(this);
-    freewb::applyWaylandOverlayWindowHints(m_msgBox);
 }
 
 void LexiconToolWin::setUiTexts()
 {
-    ui->labelLexiconTool->setText(_("Freewb lexicon toolbox"));
     ui->btnDumpSysLexicon->setText(_("Export"));
     ui->label->setText(_("Wbzx lexicon"));
     ui->label_2->setText(_("Pinyin lexicon"));
@@ -159,7 +147,8 @@ LexiconToolWin::~LexiconToolWin()
 
 void LexiconToolWin::open_win()
 {
-    show();
+    showNormal();
+    activateWindow();
 }
 
 void LexiconToolWin::mousePressEvent(QMouseEvent *event)
@@ -195,43 +184,6 @@ void LexiconToolWin::mouseMoveEvent(QMouseEvent *event)
     QWidget::mouseMoveEvent(event);
 }
 
-bool LexiconToolWin::eventFilter(QObject *obj, QEvent *event)
-{
-    bool isProcessed = false;
-    if (event->type() == QEvent::WindowActivate)
-    {
-        ui->labelLexiconTool->setStyleSheet(QSS_BORDER_ACTIVE);
-        ui->btnClose->setStyleSheet(QSS_BTN_CLOSE1);
-    }
-    else if (event->type() == QEvent::WindowDeactivate)
-    {
-        ui->labelLexiconTool->setStyleSheet(QSS_BORDER_DEACTIVE);
-        ui->btnClose->setStyleSheet(QSS_BTN_CLOSE0);
-    }
-    else if (event->type() == QEvent::Enter && obj == ui->btnClose)
-    {
-        ui->btnClose->setStyleSheet(QSS_BTN_CLOSE2);
-    }
-    else if (event->type() == QEvent::Leave && obj == ui->btnClose)
-    {
-        if (isActiveWindow())
-        {
-            ui->btnClose->setStyleSheet(QSS_BTN_CLOSE1);
-        }
-        else
-        {
-            ui->btnClose->setStyleSheet(QSS_BTN_CLOSE0);
-        }
-    }
-
-    if (isProcessed == false)
-    {
-        return QWidget::eventFilter(obj, event);
-    }
-
-    return isProcessed;
-}
-
 void LexiconToolWin::lexicon_thread_quit()
 {
     if (m_lexiconThread)
@@ -246,8 +198,6 @@ void LexiconToolWin::lexicon_thread_quit()
 
 void LexiconToolWin::showLexiconProgressMsgBox(QMessageBox *box, const char *textMsgid)
 {
-    box->setWindowFlag(Qt::FramelessWindowHint);
-    freewb::applyWaylandOverlayWindowHints(box);
     box->setIcon(QMessageBox::NoIcon);
     box->setText(_(textMsgid));
     box->setStandardButtons(QMessageBox::NoButton);
@@ -285,8 +235,6 @@ void LexiconToolWin::startDumpLexicon(LexiconToolOp opType, const QString &txtPa
     delete progressBox;
 
     QMessageBox *msgBox = new QMessageBox(this);
-    msgBox->setWindowFlag(Qt::FramelessWindowHint);
-    freewb::applyWaylandOverlayWindowHints(msgBox);
     if (m_workerOpStatus == 1)
     {
         msgBox->setIcon(QMessageBox::Information);
@@ -331,8 +279,6 @@ int LexiconToolWin::startGenLexicon(LexiconToolOp opType, const QString &txtPath
     if (m_workerOpStatus != 1)
     {
         QMessageBox *msgBox = new QMessageBox(this);
-        msgBox->setWindowFlag(Qt::FramelessWindowHint);
-        freewb::applyWaylandOverlayWindowHints(msgBox);
         msgBox->setIcon(QMessageBox::Critical);
         msgBox->setText(_("File open failed or format error!"));
         msgBox->setStandardButtons(QMessageBox::Ok);
@@ -345,8 +291,6 @@ int LexiconToolWin::startGenLexicon(LexiconToolOp opType, const QString &txtPath
     }
 
     QMessageBox *msgBox = new QMessageBox(this);
-    msgBox->setWindowFlag(Qt::FramelessWindowHint);
-    freewb::applyWaylandOverlayWindowHints(msgBox);
     msgBox->setIcon(QMessageBox::Question);
     msgBox->setText(_("Lexicon generated successfully, whether to replace the current used lexicon?"));
     msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -413,12 +357,6 @@ void LexiconToolWin::slot_worker_thread_finished()
 {
 }
 
-void LexiconToolWin::on_btnClose_clicked()
-{
-    close();
-    move(m_defaultPopPosition);
-}
-
 void LexiconToolWin::on_btnHelp_clicked()
 {
     QString helpInfo = "\n"
@@ -452,7 +390,6 @@ void LexiconToolWin::on_btnHelp_clicked()
                        "    格式同“生成词库”。\n\n";
 
     QMessageBox *msgBox = new QMessageBox(this);
-    msgBox->setWindowFlag(Qt::FramelessWindowHint);
     msgBox->setIcon(QMessageBox::Information);
     msgBox->setText(helpInfo);
     msgBox->setStandardButtons(QMessageBox::Ok);
@@ -604,7 +541,6 @@ void LexiconToolWin::on_btnDumpUserLexicon_clicked()
     QProcess::execute("cp", args);
 
     QMessageBox *msgBox = new QMessageBox(this);
-    msgBox->setWindowFlag(Qt::FramelessWindowHint);
     msgBox->setIcon(QMessageBox::Question);
     msgBox->setText(QString(_("User lexicon exported to: %1/user_word.txt, whether to view?")).arg(QString(qgetenv("HOME"))));
     msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -760,7 +696,6 @@ void LexiconToolWin::add_del_user_word_from_file(int op, const QString &fileName
         }
 
         QMessageBox *msgBox = new QMessageBox(this);
-        msgBox->setWindowFlag(Qt::FramelessWindowHint);
         msgBox->setIcon(QMessageBox::Information);
         msgBox->setText(QString(_("Success %1 user word count: %2")).arg(op ? _("add") : _("delete")).arg(count));
         msgBox->setStandardButtons(QMessageBox::Ok);

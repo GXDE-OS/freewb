@@ -1,5 +1,7 @@
 #include "backupdialog.h"
 
+#include <QMessageBox>
+
 #include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
@@ -568,27 +570,45 @@ void BackupDialog::slot_progress_updated(int opFlg, int percentage)
     if (percentage >= 100)
     {
         backup_thread_quit(); // 请求线程退出
+        accept();
+
+        QMessageBox *msgBox = new QMessageBox(this);
+        msgBox->setWindowFlag(Qt::FramelessWindowHint);
+        freewb::applyWaylandOverlayWindowHints(msgBox);
+        msgBox->setIcon(QMessageBox::Information);
         if (opFlg == 0)
         {
-            // ui->stackedWidget->setCurrentWidget( ui->pageBackupOk );
-            ui->labelPrompt->setText(_("Dictionary and settings backup completed"));
-            ui->labelDir->setText(m_backupFile);
-            ui->stackedWidget->setCurrentWidget(ui->pagePrompt);
+            msgBox->setText(_("Dictionary and settings backup completed"));
+            msgBox->setInformativeText(m_backupFile);
         }
         else
         {
-            ui->labelPrompt->setText(_("Dictionary and settings recovery completed！"));
-            ui->labelDir->setText("");
-            ui->stackedWidget->setCurrentWidget(ui->pagePrompt);
-
+            msgBox->setText(_("Dictionary and settings recovery completed！"));
             emit signal_restore_lexicon_and_settings_ok();
         }
+        msgBox->setStandardButtons(QMessageBox::Ok);
+        msgBox->button(QMessageBox::Ok)->setIcon(QIcon());
+        msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&OK)"));
+        msgBox->setDefaultButton(QMessageBox::Ok);
+        msgBox->exec();
+        delete msgBox;
     }
     else if (percentage < 0)
     {
         backup_thread_quit(); // 请求线程退出
-        ui->labelPrompt->setText(QString(_("Dictionary and settings %1 failed！")).arg(opFlg ? _("recovery") : _("backup")));
-        ui->stackedWidget->setCurrentWidget(ui->pagePrompt);
+        accept();
+
+        QMessageBox *msgBox = new QMessageBox(this);
+        msgBox->setWindowFlag(Qt::FramelessWindowHint);
+        freewb::applyWaylandOverlayWindowHints(msgBox);
+        msgBox->setIcon(QMessageBox::Critical);
+        msgBox->setText(QString(_("Dictionary and settings %1 failed！")).arg(opFlg ? _("recovery") : _("backup")));
+        msgBox->setStandardButtons(QMessageBox::Ok);
+        msgBox->button(QMessageBox::Ok)->setIcon(QIcon());
+        msgBox->button(QMessageBox::Ok)->setText(_("Confirm(&OK)"));
+        msgBox->setDefaultButton(QMessageBox::Ok);
+        msgBox->exec();
+        delete msgBox;
     }
     else
     {
