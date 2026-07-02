@@ -110,6 +110,7 @@ InputWin::InputWin(QWidget *parent) : QWidget(parent), ui(new Ui::InputWin)
 
     setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint |
                    Qt::WindowDoesNotAcceptFocus);
+    freewb::WaylandWinHelper::applyInputPanelWindowFlags(this);
 
     setAttribute(Qt::WA_TranslucentBackground);
 
@@ -143,8 +144,8 @@ InputWin::InputWin(QWidget *parent) : QWidget(parent), ui(new Ui::InputWin)
 
     connect(&m_caretBlinkTimer, &QTimer::timeout, this, &InputWin::slot_caret_blink);
 
-    freewb::applyWaylandOverlayWindowHints(this);
-    freewb::applyWaylandOverlayWindowHints(&m_dictFindWin);
+    freewb::WaylandWinHelper::applyInputPanelHints(this);
+    freewb::WaylandWinHelper::applyInputPanelHints(&m_dictFindWin);
 }
 
 InputWin::~InputWin()
@@ -164,7 +165,6 @@ void InputWin::init_im_prompt_lable()
                                     Qt::X11BypassWindowManagerHint);
     m_labelImPrompt->setAttribute(Qt::WA_TranslucentBackground, true);
     m_labelImPrompt->hide();
-    freewb::applyWaylandOverlayWindowHints(m_labelImPrompt);
 }
 
 void InputWin::slot_load_setting_data()

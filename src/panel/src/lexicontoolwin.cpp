@@ -115,7 +115,7 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
     ui->btnMarkThinkWord->hide();
     ui->btnOptimize->hide();
 
-    freewb::applyWaylandOverlayWindowHints(this);
+    freewb::WaylandWinHelper::applyOverlayHints(this);
 }
 
 void LexiconToolWin::setUiTexts()

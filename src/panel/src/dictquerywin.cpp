@@ -43,7 +43,7 @@ DictQueryWin::DictQueryWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::Di
     // ui->textEditBase->setReadOnly( true );
     ui->ledtFind->installEventFilter(this);
 
-    freewb::applyWaylandOverlayWindowHints(this);
+    freewb::WaylandWinHelper::applyOverlayHints(this);
 }
 
 void DictQueryWin::setUiTexts()

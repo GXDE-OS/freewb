@@ -41,8 +41,8 @@ TextEditWin::TextEditWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::Text
 
     init_quick_table_file();
 
-    freewb::applyWaylandOverlayWindowHints(this);
-    freewb::applyWaylandOverlayWindowHints(m_textFindDialog);
+    freewb::WaylandWinHelper::applyOverlayHints(this);
+    freewb::WaylandWinHelper::applyOverlayHints(m_textFindDialog);
 }
 
 TextEditWin::~TextEditWin()

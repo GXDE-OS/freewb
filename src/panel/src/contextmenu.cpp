@@ -128,7 +128,7 @@ ContextMenu::ContextMenu(QWidget *parent) : QMenu(parent)
     connect(this, &QMenu::aboutToShow, this, [this]() { emit signal_menu_visibility_changed(true); });
     connect(this, &QMenu::aboutToHide, this, [this]() { emit signal_menu_visibility_changed(false); });
 
-    freewb::applyWaylandOverlayWindowHints(this);
+    freewb::WaylandWinHelper::applyInputPanelHints(this);
 }
 
 ContextMenu::~ContextMenu()

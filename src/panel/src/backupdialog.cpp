@@ -460,7 +460,7 @@ BackupDialog::BackupDialog(QDialog *parent) : QDialog(parent), ui(new Ui::Backup
 
     ui->btnClose->installEventFilter(this);
 
-    freewb::applyWaylandOverlayWindowHints(this);
+    freewb::WaylandWinHelper::applyOverlayHints(this);
 }
 
 void BackupDialog::setUiTexts()
@@ -574,7 +574,7 @@ void BackupDialog::slot_progress_updated(int opFlg, int percentage)
 
         QMessageBox *msgBox = new QMessageBox(this);
         msgBox->setWindowFlag(Qt::FramelessWindowHint);
-        freewb::applyWaylandOverlayWindowHints(msgBox);
+        freewb::WaylandWinHelper::applyOverlayHints(msgBox);
         msgBox->setIcon(QMessageBox::Information);
         if (opFlg == 0)
         {
@@ -600,7 +600,7 @@ void BackupDialog::slot_progress_updated(int opFlg, int percentage)
 
         QMessageBox *msgBox = new QMessageBox(this);
         msgBox->setWindowFlag(Qt::FramelessWindowHint);
-        freewb::applyWaylandOverlayWindowHints(msgBox);
+        freewb::WaylandWinHelper::applyOverlayHints(msgBox);
         msgBox->setIcon(QMessageBox::Critical);
         msgBox->setText(QString(_("Dictionary and settings %1 failed！")).arg(opFlg ? _("recovery") : _("backup")));
         msgBox->setStandardButtons(QMessageBox::Ok);

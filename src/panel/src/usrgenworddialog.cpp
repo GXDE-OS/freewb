@@ -27,7 +27,7 @@ UsrGenWordDialog::UsrGenWordDialog(QWidget *parent) : QDialog(parent), ui(new Ui
 
     init_user_word_file();
 
-    freewb::applyWaylandOverlayWindowHints(this);
+    freewb::WaylandWinHelper::applyOverlayHints(this);
 }
 
 void UsrGenWordDialog::setUiTexts()

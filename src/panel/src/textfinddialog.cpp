@@ -11,7 +11,7 @@ TextFindDialog::TextFindDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Te
     setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
     setWindowTitle(_("Find"));
 
-    freewb::applyWaylandOverlayWindowHints(this);
+    freewb::WaylandWinHelper::applyOverlayHints(this);
 }
 
 void TextFindDialog::setUiTexts()

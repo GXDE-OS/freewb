@@ -122,7 +122,7 @@ Keyboard::Keyboard(VirtualKeyboardMode mode, QWidget *parent) : QWidget(parent),
         qssFile.close();
     }
 
-    freewb::applyWaylandOverlayWindowHints(this);
+    freewb::WaylandWinHelper::applyOverlayHints(this);
 }
 
 Keyboard::~Keyboard()

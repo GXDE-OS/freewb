@@ -2,39 +2,73 @@
 
 #include <QByteArray>
 #include <QGuiApplication>
-#include <QWidget>
+#include <QPair>
+#include <QVariant>
 #include <QWindow>
 
 namespace freewb
 {
 
-void applyWaylandOverlayWindowHints(QWidget *widget)
+const char WaylandWinHelper::kSurfaceRole[] = "ukui_surface_role";
+const char WaylandWinHelper::kSurfaceState[] = "ukui_surface_state";
+const char WaylandWinHelper::kSurfaceNoTitlebar[] = "ukui_surface_no_titlebar";
+const char WaylandWinHelper::kSurfaceSkipTaskbar[] = "ukui_surface_skip_taskbar";
+const char WaylandWinHelper::kSurfaceSkipSwitcher[] = "ukui_surface_skip_switcher";
+const char WaylandWinHelper::kRoleInputPanel[] = "inputpanel";
+
+bool WaylandWinHelper::isUkuiWayland()
 {
-    if (!widget)
-    {
-        return;
-    }
     if (!QGuiApplication::platformName().startsWith(QLatin1String("wayland")))
     {
-        return;
+        return false;
     }
-    if (!qgetenv("XDG_CURRENT_DESKTOP").toLower().contains("ukui"))
+    return qgetenv("XDG_CURRENT_DESKTOP").toLower().contains("ukui");
+}
+
+void WaylandWinHelper::setWidgetProperty(QWidget *widget, const char *name, const QVariant &value)
+{
+    widget->setProperty(name, value);
+    if (QWindow *window = widget->windowHandle())
+    {
+        window->setProperty(name, value);
+    }
+}
+
+void WaylandWinHelper::applyOverlayHints(QWidget *widget)
+{
+    if (!widget || !isUkuiWayland())
     {
         return;
     }
 
-    if (!widget->windowHandle())
-    {
-        widget->winId();
-    }
-    QWindow *window = widget->windowHandle();
-    if (!window)
+    setWidgetProperty(widget, kSurfaceSkipTaskbar, true);
+    setWidgetProperty(widget, kSurfaceSkipSwitcher, true);
+}
+
+void WaylandWinHelper::applyInputPanelWindowFlags(QWidget *widget)
+{
+    if (!widget || !isUkuiWayland())
     {
         return;
     }
 
-    window->setProperty("ukui_surface_skip_taskbar", true);
-    window->setProperty("ukui_surface_skip_switcher", true);
+    widget->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus);
+}
+
+void WaylandWinHelper::applyInputPanelHints(QWidget *widget)
+{
+    if (!widget || !isUkuiWayland())
+    {
+        return;
+    }
+
+    widget->setProperty("useStyleWindowManager", QVariant(false));
+    setWidgetProperty(widget, kSurfaceRole, kRoleInputPanel);
+    const QPair<uint32_t, uint32_t> movableState(kWindowStateMaskAll, kWindowStateMovable);
+    setWidgetProperty(widget, kSurfaceState, QVariant::fromValue(movableState));
+    setWidgetProperty(widget, kSurfaceNoTitlebar, true);
+    setWidgetProperty(widget, kSurfaceSkipTaskbar, true);
+    setWidgetProperty(widget, kSurfaceSkipSwitcher, true);
 }
 
 } // namespace freewb

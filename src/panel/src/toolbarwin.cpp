@@ -1,7 +1,9 @@
 #include "toolbarwin.h"
 
 #include <QFile>
+#include <QGuiApplication>
 #include <QLabel>
+#include <QScreen>
 #include <QWindow>
 
 #include "config.h"
@@ -178,10 +180,17 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     // 载入配置数据
     slot_load_setting_data();
 
-    m_desktopSize = QApplication::desktop()->size();
-
-    // 工具条初始化默认显示位置,注意必须要载入皮肤数据后才能知道工具条的尺寸!!!
-    m_defaultPosition = QPoint(m_desktopSize.width() - size().width() - 12, m_desktopSize.height() - size().height() - 50);
+    if (const QScreen *screen = QGuiApplication::primaryScreen())
+    {
+        const QRect geo = screen->availableGeometry();
+        m_desktopSize = geo.size();
+        m_defaultPosition = QPoint(geo.x() + geo.width() - size().width() - 12, geo.y() + geo.height() - size().height() - 50);
+    }
+    else
+    {
+        m_desktopSize = QApplication::desktop()->size();
+        m_defaultPosition = QPoint(m_desktopSize.width() - size().width() - 12, m_desktopSize.height() - size().height() - 50);
+    }
     move(m_defaultPosition);
 
     m_tooltipsWin.setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint |
@@ -202,9 +211,9 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
 
     s_capsFlg = Keyboard::get_caps_flg();
 
-    freewb::applyWaylandOverlayWindowHints(this);
-    freewb::applyWaylandOverlayWindowHints(&m_tooltipsWin);
-    freewb::applyWaylandOverlayWindowHints(&m_keyboardMenu);
+    freewb::WaylandWinHelper::applyInputPanelHints(this);
+    freewb::WaylandWinHelper::applyInputPanelHints(&m_tooltipsWin);
+    freewb::WaylandWinHelper::applyInputPanelHints(&m_keyboardMenu);
 }
 
 ToolbarWin::~ToolbarWin()
@@ -577,22 +586,40 @@ void ToolbarWin::show_keyboard_menu()
 
 void ToolbarWin::move_toolbar(QPoint targetPos)
 {
-    if (targetPos.x() < 0)
+    QRect bounds;
+    for (const QScreen *screen : QGuiApplication::screens())
     {
-        targetPos.setX(0);
+        const QRect geo = screen->availableGeometry();
+        bounds = bounds.isNull() ? geo : bounds.united(geo);
     }
-    else if (targetPos.x() + size().width() > m_desktopSize.width())
+    if (!bounds.isNull())
     {
-        targetPos.setX(m_desktopSize.width() - size().width());
+        const int minX = bounds.x();
+        const int minY = bounds.y();
+        const int maxX = bounds.x() + bounds.width() - width();
+        const int maxY = bounds.y() + bounds.height() - height();
+        targetPos.setX(qBound(minX, targetPos.x(), maxX));
+        targetPos.setY(qBound(minY, targetPos.y(), maxY));
     }
+    else
+    {
+        if (targetPos.x() < 0)
+        {
+            targetPos.setX(0);
+        }
+        else if (targetPos.x() + size().width() > m_desktopSize.width())
+        {
+            targetPos.setX(m_desktopSize.width() - size().width());
+        }
 
-    if (targetPos.y() < 0)
-    {
-        targetPos.setY(0);
-    }
-    else if (targetPos.y() + size().height() > m_desktopSize.height())
-    {
-        targetPos.setY(m_desktopSize.height() - size().height());
+        if (targetPos.y() < 0)
+        {
+            targetPos.setY(0);
+        }
+        else if (targetPos.y() + size().height() > m_desktopSize.height())
+        {
+            targetPos.setY(m_desktopSize.height() - size().height());
+        }
     }
 
     move(targetPos);

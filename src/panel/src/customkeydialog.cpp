@@ -18,7 +18,7 @@ CustomKeyDialog::CustomKeyDialog(QWidget *parent) : QDialog(parent), ui(new Ui::
 
     installEventFilter(this);
 
-    freewb::applyWaylandOverlayWindowHints(this);
+    freewb::WaylandWinHelper::applyOverlayHints(this);
 }
 
 void CustomKeyDialog::setUiTexts()
