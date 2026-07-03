@@ -612,12 +612,20 @@ void LexiconToolWin::add_del_user_word_from_file(int op, const QString &fileName
                     {
                         code = tempList.at(0);
                         code = code.trimmed();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+                        valueList = tempList.at(1).split(' ', Qt::SkipEmptyParts);
+#else
                         valueList = tempList.at(1).split(' ', QString::SkipEmptyParts);
+#endif
                     }
                 }
                 else if (line.contains(' '))
                 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+                    tempList = line.split(' ', Qt::SkipEmptyParts);
+#else
                     tempList = line.split(' ', QString::SkipEmptyParts);
+#endif
                     if (tempList.length() > 1)
                     {
                         code = tempList.takeAt(0);

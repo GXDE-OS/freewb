@@ -1,5 +1,7 @@
 #include "texteditwin.h"
 
+#include <algorithm>
+
 #include "config.h"
 #include "settings.h"
 #include "settingshelper.h"
@@ -268,8 +270,8 @@ bool TextEditWin::save_text_to_file()
             tmp.removeFirst();
             tmp.removeDuplicates();
             // tmp.sort(Qt::CaseInsensitive);
-            qSort(tmp.begin(), tmp.end(),
-                  [](const QString &a, const QString &b) { return QString::compare(a, b, Qt::CaseInsensitive) < 0; });
+            std::sort(tmp.begin(), tmp.end(),
+                      [](const QString &a, const QString &b) { return QString::compare(a, b, Qt::CaseInsensitive) < 0; });
 
             tmp.insert(0, "[UserWord]");
             foreach(QString str, tmp)
