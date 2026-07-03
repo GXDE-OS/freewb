@@ -160,10 +160,11 @@ void Committer::commit(const std::string &text, const std::string &code)
 
 void Committer::handleCommittedBackspace()
 {
-    if (!committedTexts_.empty())
+    if (committedTexts_.empty())
     {
-        committedTexts_.pop_back();
+        return;
     }
+    committedTexts_.pop_back();
 }
 
 bool Committer::selectCandidate(int index)
