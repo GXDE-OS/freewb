@@ -5,6 +5,7 @@
 极点五笔输入法以五笔输入为主，拼音输入为辅，支持智能造词、字典功能以及命令操作等。自诞生以来，极点五笔输入法凭借其高效、稳定的输入体验，赢得了广大中文用户的喜爱。杜志民先生作为这一优秀软件的创造者，一直致力于为用户提供更加便捷、智能的输入解决方案。
 
 目前，极点五笔输入法由openKylin Input Method SIG和杜志民先生共同开发维护。
+
 ## 编译安装
 ### 1. 配置编译环境
 ```bash
@@ -16,8 +17,6 @@ sudo apt install g++ cmake fcitx-libs-dev libgl1-mesa-dev libglu1-mesa-dev libxi
 ### fcitx5输入法插件
 sudo apt install g++ cmake libfcitx5core-dev libgl1-mesa-dev libglu1-mesa-dev libxi-dev libxtst-dev libdbus-1-dev libsystemd-dev qtbase5-dev libqt5svg5-dev extra-cmake-modules libspdlog-dev wayland-scanner++ libwayland-dev waylandpp-dev
 
-####if can't install above then
-sudo apt --fix-broken install
 ```
 ### 2. 编译源码
 ```bash
@@ -27,21 +26,20 @@ cd freewb
 mkdir build && cd build
 
 ## 编译fcitx4输入法插件
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu -DENABLE_FCITX5=Off
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu -DENABLE_FCITX4=On
 
 ## 编译fcitx5输入法插件
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu -DENABLE_FCITX4=Off
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu -DENABLE_FCITX5=On
 
 make
 sudo make install
 ```
 
 ### 3. fcitx添加极点五笔输入法
-任务栏右键输入法图标选择配置，添加极点五笔输入法
+```kylin v10```
 ![Screenshot of Fcitx Configuration](./assets/kylin-fcitx-configtool-freewb.png)
+```kylin v11```
+![Screenshot of Fcitx Configuration](./assets/kylin-v11-fcitx5.png)
 
-### 4. 重新启动fcitx
-```
-fcitx -rD 
-```
+### 4. 重新启动输入法框架
 
