@@ -426,7 +426,7 @@ bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
     const FreewbKeySym prevPageKey = Key::keySymFromUniqueName(settings::instance().get_prevPageKey().c_str());
     if (keysym == prevPageKey)
     {
-        if (candidateList_->size() == 0)
+        if (!candidateList_->hasPrev())
         {
             return false;
         }
@@ -437,7 +437,7 @@ bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
     const FreewbKeySym nextPageKey = Key::keySymFromUniqueName(settings::instance().get_nextPageKey().c_str());
     if (keysym == nextPageKey)
     {
-        if (candidateList_->size() == 0)
+        if (!candidateList_->hasNext())
         {
             return false;
         }
