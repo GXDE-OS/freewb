@@ -12,7 +12,6 @@
 #include "settings.h"
 #include "settingshelper.h"
 #include "ui_settingwin.h"
-#include "waylandwinhelper.h"
 
 namespace
 {
@@ -394,7 +393,7 @@ SettingWin::~SettingWin()
 
 void SettingWin::init_window_appearance()
 {
-    setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
+    setWindowFlags(Qt::Window);
     setFixedSize(size());
     setWindowIcon(QIcon::fromTheme("freewb"));
     setWindowTitle(_("Settings"));
@@ -413,8 +412,6 @@ void SettingWin::init_window_appearance()
         ui->frame->setStyleSheet(qssFile.readAll());
         qssFile.close();
     }
-
-    freewb::WaylandWinHelper::applyOverlayHints(this);
 }
 
 void SettingWin::init_member_data()
@@ -441,7 +438,6 @@ void SettingWin::init_member_data()
     m_customKeyDialog = new CustomKeyDialog();
     connect(m_customKeyDialog, SIGNAL(signal_custom_ok_btn_clicked(const QString &, const QString &)), this,
             SLOT(slot_custom_btn_ok_clicked(const QString &, const QString &)));
-    freewb::WaylandWinHelper::applyOverlayHints(m_customKeyDialog);
 }
 
 void SettingWin::setUiTexts()
@@ -556,12 +552,10 @@ void SettingWin::setUiTexts()
 
 void SettingWin::init_mouse_hover_tips()
 {
-    m_tooltipsWin.setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint |
-                                 Qt::WindowDoesNotAcceptFocus);
+    m_tooltipsWin.setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus);
     m_tooltipsWin.setAttribute(Qt::WA_TranslucentBackground);
     m_tooltipsLabel = new QLabel(&m_tooltipsWin);
     m_tooltipsLabel->setStyleSheet(QSS_TOOL_TIPS);
-    freewb::WaylandWinHelper::applyOverlayHints(&m_tooltipsWin);
 
     ui->ckbCodeRemind->setToolTip(_("When you enter code 'a', besides the character for 'a', candidates starting with 'a' "
                                     "are also shown, e.g. entries like '式a 节b'."));

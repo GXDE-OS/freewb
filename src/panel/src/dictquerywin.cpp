@@ -2,15 +2,12 @@
 
 #include "config.h"
 #include "ui_dictquerywin.h"
-#include "waylandwinhelper.h"
 
 DictQueryWin::DictQueryWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::DictQueryWin)
 {
     ui->setupUi(this);
     setUiTexts();
     setWindowTitle(_("Freewb query"));
-    setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
-
     setWindowIcon(QIcon::fromTheme("freewb"));
 
     QDesktopWidget *d = QApplication::desktop();
@@ -42,8 +39,6 @@ DictQueryWin::DictQueryWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::Di
 
     // ui->textEditBase->setReadOnly( true );
     ui->ledtFind->installEventFilter(this);
-
-    freewb::WaylandWinHelper::applyOverlayHints(this);
 }
 
 void DictQueryWin::setUiTexts()

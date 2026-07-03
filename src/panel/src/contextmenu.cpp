@@ -8,7 +8,7 @@
 #include "settings.h"
 #include "settingshelper.h"
 #include "types.h"
-#include "waylandwinhelper.h"
+#include "ukuiwaylandhelper.h"
 
 // 一级菜单
 #define STR_MENU1 _("Input method settings")
@@ -128,7 +128,7 @@ ContextMenu::ContextMenu(QWidget *parent) : QMenu(parent)
     connect(this, &QMenu::aboutToShow, this, [this]() { emit signal_menu_visibility_changed(true); });
     connect(this, &QMenu::aboutToHide, this, [this]() { emit signal_menu_visibility_changed(false); });
 
-    freewb::WaylandWinHelper::applyInputPanelHints(this);
+    freewb::UkuiWaylandHelper::applyInputPanelHints(this);
 }
 
 ContextMenu::~ContextMenu()

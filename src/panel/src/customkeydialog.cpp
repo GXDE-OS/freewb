@@ -2,13 +2,12 @@
 
 #include "config.h"
 #include "ui_customkeydialog.h"
-#include "waylandwinhelper.h"
 
 CustomKeyDialog::CustomKeyDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CustomKeyDialog)
 {
     ui->setupUi(this);
     setUiTexts();
-    setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::Dialog);
 
     m_mouseIsPressed = false;
     m_mouseLastPosition = QPoint();
@@ -17,8 +16,6 @@ CustomKeyDialog::CustomKeyDialog(QWidget *parent) : QDialog(parent), ui(new Ui::
     m_defaultPopPosition = QPoint((d->width() - size().width()) / 2, (d->height() - size().height()) / 2);
 
     installEventFilter(this);
-
-    freewb::WaylandWinHelper::applyOverlayHints(this);
 }
 
 void CustomKeyDialog::setUiTexts()

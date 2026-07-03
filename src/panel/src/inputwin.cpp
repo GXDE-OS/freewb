@@ -11,7 +11,7 @@
 #include "sound.h"
 #include "toolbarwin.h"
 #include "ui_inputwin.h"
-#include "waylandwinhelper.h"
+#include "ukuiwaylandhelper.h"
 
 namespace
 {
@@ -110,7 +110,7 @@ InputWin::InputWin(QWidget *parent) : QWidget(parent), ui(new Ui::InputWin)
 
     setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint |
                    Qt::WindowDoesNotAcceptFocus);
-    freewb::WaylandWinHelper::applyInputPanelWindowFlags(this);
+    freewb::UkuiWaylandHelper::applyInputPanelWindowFlags(this);
 
     setAttribute(Qt::WA_TranslucentBackground);
 
@@ -144,8 +144,8 @@ InputWin::InputWin(QWidget *parent) : QWidget(parent), ui(new Ui::InputWin)
 
     connect(&m_caretBlinkTimer, &QTimer::timeout, this, &InputWin::slot_caret_blink);
 
-    freewb::WaylandWinHelper::applyInputPanelHints(this);
-    freewb::WaylandWinHelper::applyInputPanelHints(&m_dictFindWin);
+    freewb::UkuiWaylandHelper::applyInputPanelHints(this);
+    freewb::UkuiWaylandHelper::applyInputPanelHints(&m_dictFindWin);
 }
 
 InputWin::~InputWin()

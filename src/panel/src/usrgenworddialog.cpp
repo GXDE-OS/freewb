@@ -5,7 +5,6 @@
 #include "config.h"
 #include "settings.h"
 #include "ui_usrgenworddialog.h"
-#include "waylandwinhelper.h"
 
 #define QSS_BORDER_ACTIVE "color: rgb(255, 255, 255);background-color: rgb(10, 120, 203);"
 #define QSS_BORDER_DEACTIVE "color: rgb(0, 0, 0);background-color: rgb(200, 200, 200);"
@@ -14,8 +13,7 @@ UsrGenWordDialog::UsrGenWordDialog(QWidget *parent) : QDialog(parent), ui(new Ui
 {
     ui->setupUi(this);
     setUiTexts();
-    // setWindowFlags( Qt::Tool | Qt::FramelessWindowHint );
-    setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
+    setWindowFlags(Qt::Dialog);
     m_mouseIsPressed = false;
     m_mouseLastPosition = QPoint();
 
@@ -26,8 +24,6 @@ UsrGenWordDialog::UsrGenWordDialog(QWidget *parent) : QDialog(parent), ui(new Ui
     m_userWordFile = INSTALL_DIR + "/data/user_word.txt";
 
     init_user_word_file();
-
-    freewb::WaylandWinHelper::applyOverlayHints(this);
 }
 
 void UsrGenWordDialog::setUiTexts()

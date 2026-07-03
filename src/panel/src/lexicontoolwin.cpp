@@ -9,7 +9,6 @@
 #include "tools/ConversionTool.h"
 #include "types.h"
 #include "ui_lexicontoolwin.h"
-#include "waylandwinhelper.h"
 
 // 词库工具窗口样式表
 #define QSS_FILE ":/qss/lexiconwin.qss"
@@ -76,7 +75,7 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
 {
     ui->setupUi(this);
     setUiTexts();
-    setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Tool);
+    setWindowFlags(Qt::Window);
     setFixedSize(size());
     setWindowIcon(QIcon::fromTheme("freewb"));
     setWindowTitle(_("Freewb lexicon tool"));
@@ -114,8 +113,6 @@ LexiconToolWin::LexiconToolWin(QWidget *parent) : QWidget(parent), ui(new Ui::Le
     ui->btnMarkRareWord->hide();
     ui->btnMarkThinkWord->hide();
     ui->btnOptimize->hide();
-
-    freewb::WaylandWinHelper::applyOverlayHints(this);
 }
 
 void LexiconToolWin::setUiTexts()

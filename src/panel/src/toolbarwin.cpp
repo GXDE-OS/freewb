@@ -12,7 +12,7 @@
 #include "settingshelper.h"
 #include "sound.h"
 #include "ui_toolbarwin.h"
-#include "waylandwinhelper.h"
+#include "ukuiwaylandhelper.h"
 
 // 桌面工具条按钮样式表
 #define QSS_BG0 QString("border-image: url(%1);").arg(m_skinData.bg0ImagePath)
@@ -211,9 +211,9 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
 
     s_capsFlg = Keyboard::get_caps_flg();
 
-    freewb::WaylandWinHelper::applyInputPanelHints(this);
-    freewb::WaylandWinHelper::applyInputPanelHints(&m_tooltipsWin);
-    freewb::WaylandWinHelper::applyInputPanelHints(&m_keyboardMenu);
+    freewb::UkuiWaylandHelper::applyInputPanelHints(this);
+    freewb::UkuiWaylandHelper::applyInputPanelHints(&m_tooltipsWin);
+    freewb::UkuiWaylandHelper::applyInputPanelHints(&m_keyboardMenu);
 }
 
 ToolbarWin::~ToolbarWin()

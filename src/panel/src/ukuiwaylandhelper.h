@@ -1,5 +1,5 @@
-#ifndef WAYLANDWINHELPER_H
-#define WAYLANDWINHELPER_H
+#ifndef UKUIWAYLANDHELPER_H
+#define UKUIWAYLANDHELPER_H
 
 #include <cstdint>
 
@@ -9,12 +9,9 @@
 namespace freewb
 {
 
-class WaylandWinHelper
+class UkuiWaylandHelper
 {
 public:
-    // UKUI Wayland 下为普通浮层窗口设置跳过任务栏、窗口切换器（设置页、菜单等）。
-    static void applyOverlayHints(QWidget *widget);
-
     // UKUI Wayland 下调整 Qt 窗口 flags，配合 inputpanel 使用（候选窗等）。
     static void applyInputPanelWindowFlags(QWidget *widget);
 

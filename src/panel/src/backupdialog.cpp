@@ -6,7 +6,6 @@
 #include "settings.h"
 #include "settingshelper.h"
 #include "ui_backupdialog.h"
-#include "waylandwinhelper.h"
 
 #define QSS_BORDER_ACTIVE "color: rgb(255, 255, 255);background-color: rgb(10, 120, 203);"
 #define QSS_BORDER_DEACTIVE "color: rgb(0, 0, 0);background-color: rgb(200, 200, 200);"
@@ -444,7 +443,7 @@ BackupDialog::BackupDialog(QDialog *parent) : QDialog(parent), ui(new Ui::Backup
 {
     ui->setupUi(this);
     setUiTexts();
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
+    setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 
     m_mouseIsPressed = false;
     m_mouseLastPosition = QPoint();
@@ -459,8 +458,6 @@ BackupDialog::BackupDialog(QDialog *parent) : QDialog(parent), ui(new Ui::Backup
     connect(m_backupWorker, &BackupWorker::signal_process_updated, this, &BackupDialog::slot_progress_updated);
 
     ui->btnClose->installEventFilter(this);
-
-    freewb::WaylandWinHelper::applyOverlayHints(this);
 }
 
 void BackupDialog::setUiTexts()
@@ -574,7 +571,6 @@ void BackupDialog::slot_progress_updated(int opFlg, int percentage)
 
         QMessageBox *msgBox = new QMessageBox(this);
         msgBox->setWindowFlag(Qt::FramelessWindowHint);
-        freewb::WaylandWinHelper::applyOverlayHints(msgBox);
         msgBox->setIcon(QMessageBox::Information);
         if (opFlg == 0)
         {
@@ -600,7 +596,6 @@ void BackupDialog::slot_progress_updated(int opFlg, int percentage)
 
         QMessageBox *msgBox = new QMessageBox(this);
         msgBox->setWindowFlag(Qt::FramelessWindowHint);
-        freewb::WaylandWinHelper::applyOverlayHints(msgBox);
         msgBox->setIcon(QMessageBox::Critical);
         msgBox->setText(QString(_("Dictionary and settings %1 failed！")).arg(opFlg ? _("recovery") : _("backup")));
         msgBox->setStandardButtons(QMessageBox::Ok);

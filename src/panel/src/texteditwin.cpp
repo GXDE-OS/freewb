@@ -6,7 +6,6 @@
 #include "tools/ConversionTool.h"
 #include "types.h"
 #include "ui_texteditwin.h"
-#include "waylandwinhelper.h"
 
 #define WUBI_TABLE_FILE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/wbzx.mb"
 #define PINYIN_TABLE_FILE INSTALL_DIR + "/data/mb/" + toQStringUtf8(settings::instance().get_curUsedLexicon()) + "/pinyin.mb"
@@ -14,7 +13,6 @@
 TextEditWin::TextEditWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::TextEditWin)
 {
     ui->setupUi(this);
-    setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
 
     m_modifiedFlg = 0;
 
@@ -40,9 +38,6 @@ TextEditWin::TextEditWin(QWidget *parent) : QMainWindow(parent), ui(new Ui::Text
     connect(m_textFindDialog, &TextFindDialog::signal_find_text, this, &TextEditWin::slot_find_text);
 
     init_quick_table_file();
-
-    freewb::WaylandWinHelper::applyOverlayHints(this);
-    freewb::WaylandWinHelper::applyOverlayHints(m_textFindDialog);
 }
 
 TextEditWin::~TextEditWin()
