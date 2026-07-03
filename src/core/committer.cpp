@@ -24,9 +24,6 @@ void Committer::loadSettings()
 {
     secondRecodeKey_ = Key::keySymFromUniqueName(settings::instance().get_secondRecodeKey().c_str());
     thirdRecodeKey_ = Key::keySymFromUniqueName(settings::instance().get_thirdRecodeKey().c_str());
-
-    prevPageKey_ = Key::keySymFromUniqueName(settings::instance().get_prevPageKey().c_str());
-    nextPageKey_ = Key::keySymFromUniqueName(settings::instance().get_nextPageKey().c_str());
 }
 
 bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
@@ -35,14 +32,9 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         return false;
     }
+
     CandidateList *candidates = freewb_->candidateList();
     if (candidates->size() == 0 && candidates->preeditText().empty())
-    {
-        return false;
-    }
-
-    // 上下翻页按键不支持上屏
-    if ((keysym == prevPageKey_ && state == FreewbKeyState_None) || (keysym == nextPageKey_ && state == FreewbKeyState_None))
     {
         return false;
     }
