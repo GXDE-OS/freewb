@@ -278,7 +278,7 @@ void ToolbarWin::slot_load_skin(const QString &skinId)
         return;
 
     m_curSkinId = skinId;
-    QString skinFolder = INSTALL_DIR + "/skin/" + m_curSkinId + "/";
+    QString skinFolder = QString(FREEWB_INSTALL_PKGDATADIR) + "/skin/" + m_curSkinId + "/";
 
     if (!QFile(skinFolder + "skin.ini").exists())
     {

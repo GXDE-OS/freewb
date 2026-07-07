@@ -223,7 +223,7 @@ void ContextMenu::on_action22_clicked()
 void ContextMenu::on_action31_clicked()
 {
     close();
-    QDesktopServices::openUrl(QUrl(FREEWB_INSTALL_PKGDATADIR + "/help/help.html"));
+    QDesktopServices::openUrl(QUrl(QString(FREEWB_INSTALL_PKGDATADIR) + "/help/help.html"));
 }
 
 void ContextMenu::on_action32_clicked()

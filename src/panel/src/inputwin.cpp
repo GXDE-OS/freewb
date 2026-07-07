@@ -381,7 +381,7 @@ void InputWin::slot_load_skin(const QString &skinId)
         return;
     m_curSkinId = skinId;
 
-    QString skinFolder = INSTALL_DIR + "/skin/" + m_curSkinId + "/";
+    QString skinFolder = QString(FREEWB_INSTALL_PKGDATADIR) + "/skin/" + m_curSkinId + "/";
 
     if (!QFile(skinFolder + "skin.ini").exists())
     {
@@ -404,7 +404,7 @@ void InputWin::slot_load_skin(const QString &skinId)
     m_skinData.cnMarkIcoPath = skinFolder + settings.value("cnMarkIco").toString();
     m_skinData.enMarkIcoPath = skinFolder + settings.value("enMarkIco").toString();
 
-    m_skinData.logoIcoPath = INSTALL_DIR + "/skin/freewb.png";
+    m_skinData.logoIcoPath = QString(FREEWB_INSTALL_PKGDATADIR) + "/skin/freewb.png";
 
     m_skinData.prev0PageIcoPath = skinFolder + settings.value("prev0PageIco").toString();
     m_skinData.prev1PageIcoPath = skinFolder + settings.value("prev1PageIco").toString();

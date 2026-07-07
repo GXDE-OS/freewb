@@ -966,7 +966,7 @@ void SettingWin::init_skin_select_cmb()
 {
     ui->cmbSkinSelect->clear();
 
-    QString skinDir = INSTALL_DIR + "/skin/";
+    QString skinDir = QString(FREEWB_INSTALL_PKGDATADIR) + "/skin/";
     QStringList dirList = QDir(skinDir).entryList(QDir::Dirs);
     dirList.removeOne(".");
     dirList.removeOne("..");
@@ -1000,7 +1000,7 @@ void SettingWin::init_skin_select_cmb()
 
 void SettingWin::update_toolbar_preview(const QString &skinId)
 {
-    QString iamge = INSTALL_DIR + "/skin/" + skinId + "/toolbar.png";
+    QString iamge = QString(FREEWB_INSTALL_PKGDATADIR) + "/skin/" + skinId + "/toolbar.png";
     ui->labelToolbar->setStyleSheet(QString("border-image:url(%1);").arg(iamge));
 }
 
@@ -1276,7 +1276,7 @@ void SettingWin::on_btnCancel_clicked()
 
 void SettingWin::on_btnHelp_clicked()
 {
-    QDesktopServices::openUrl(QUrl(FREEWB_INSTALL_PKGDATADIR + "/help/help.html"));
+    QDesktopServices::openUrl(QUrl(QString(FREEWB_INSTALL_PKGDATADIR) + "/help/help.html"));
 }
 
 void SettingWin::on_ckbCodeRemind_stateChanged(int arg1)
