@@ -1,5 +1,8 @@
 #include "module.h"
 
+#include <algorithm>
+#include <cmath>
+
 #include <fcitx-utils/event.h>
 #include <fcitx/action.h>
 #include <fcitx/userinterfacemanager.h>
@@ -87,6 +90,7 @@ void FreewbIMModule::updateCursorPosition()
     ::freewb::SpotRectPayload spotRect = {0, 0, 0, 0};
     std::array<int32_t, 2> focusWindowPositionFromWlcom = {0, 0};
     double scaleFactorFromFcitx = 1.0;
+    double compositorScale = 1.0;
 
     fcitx::InputContext *inputContext = instance_->lastFocusedInputContext();
     if (inputContext == nullptr)
@@ -95,11 +99,12 @@ void FreewbIMModule::updateCursorPosition()
         return;
     }
 
-    // get focus window position and scale factor from wayland wlcom
+    // 从 UKUI 合成器获取焦点窗口坐标与全局缩放（XWayland 坐标空间使用 max scale）
 #if defined(__HAS_WAYLAND__)
     if (ukuiWaylandHelper_ != nullptr)
     {
         focusWindowPositionFromWlcom = ukuiWaylandHelper_->focusWindowPosition();
+        compositorScale = ukuiWaylandHelper_->maxScreenScaleFactor();
     }
 #endif
 
@@ -110,10 +115,8 @@ void FreewbIMModule::updateCursorPosition()
 #endif
     const bool appIsWaylandDisplay = (strncmp(inputContext->display().c_str(), "wayland", 7) == 0);
 
-    // calculate cursor position
     if (appIsWaylandDisplay)
     {
-        // app is running on wayland.
         spotRect.x = focusWindowPositionFromWlcom[0] + rectFromFcitx.left() / scaleFactorFromFcitx;
         spotRect.y = focusWindowPositionFromWlcom[1] + rectFromFcitx.top() / scaleFactorFromFcitx;
         spotRect.w = rectFromFcitx.width() / scaleFactorFromFcitx;
@@ -121,15 +124,19 @@ void FreewbIMModule::updateCursorPosition()
         FREEWB_DEBUG("{} is running on wayland, will update spotRect: x={} y={} w={} h={}", inputContext->display().c_str(),
                      spotRect.x, spotRect.y, spotRect.w, spotRect.h);
     }
-    else if (!appIsWaylandDisplay)
+    else
     {
-        // app is running on x11.
-        spotRect.x = rectFromFcitx.left();
-        spotRect.y = rectFromFcitx.top();
-        spotRect.w = rectFromFcitx.width();
-        spotRect.h = rectFromFcitx.height();
-        FREEWB_DEBUG("{} is running on x11, will update spotRect: x={} y={} w={} h={}", inputContext->display().c_str(),
-                     spotRect.x, spotRect.y, spotRect.w, spotRect.h);
+        const int rawX = rectFromFcitx.left();
+        const int rawY = rectFromFcitx.top();
+        const int rawW = rectFromFcitx.width();
+        const int rawH = rectFromFcitx.height();
+        spotRect.x = static_cast<int>(std::lround(rawX / compositorScale));
+        spotRect.y = static_cast<int>(std::lround(rawY / compositorScale));
+        spotRect.w = std::max(1, static_cast<int>(std::lround(rawW / compositorScale)));
+        spotRect.h = std::max(1, static_cast<int>(std::lround(rawH / compositorScale)));
+        FREEWB_DEBUG("{} is running on x11, cursorRect=({},{},{},{}) scaleFactor={} compositorScale={} spotRect=({},{},{},{})",
+                     inputContext->display().c_str(), rawX, rawY, rawW, rawH, scaleFactorFromFcitx, compositorScale, spotRect.x,
+                     spotRect.y, spotRect.w, spotRect.h);
     }
 
     freewb_->dbusProxy()->callPanelUpdateSpotRect(spotRect);

@@ -198,22 +198,6 @@ void UkuiWaylandHelper::setupOutputListeners(uint32_t registry_name)
         return;
     }
 
-    output->device.on_geometry() = [this, registry_name](int32_t x, int32_t y, int32_t physical_width, int32_t physical_height,
-                                                         int32_t, std::string, std::string, int32_t)
-    {
-        OutputInfo *entry = findOutput(registry_name);
-        if (entry == nullptr)
-        {
-            return;
-        }
-
-        std::lock_guard lock(state_mutex_);
-        entry->x = x;
-        entry->y = y;
-        entry->width = physical_width;
-        entry->height = physical_height;
-    };
-
     output->device.on_scale() = [this, registry_name](double factor)
     {
         OutputInfo *entry = findOutput(registry_name);
@@ -224,18 +208,6 @@ void UkuiWaylandHelper::setupOutputListeners(uint32_t registry_name)
 
         std::lock_guard lock(state_mutex_);
         entry->scale = factor;
-    };
-
-    output->device.on_uuid() = [this, registry_name](std::string uuid)
-    {
-        OutputInfo *entry = findOutput(registry_name);
-        if (entry == nullptr)
-        {
-            return;
-        }
-
-        std::lock_guard lock(state_mutex_);
-        entry->uuid = std::move(uuid);
     };
 }
 
@@ -320,7 +292,7 @@ double UkuiWaylandHelper::maxScreenScaleFactor() const
     double max_scale = 1.0;
     for (const auto &output : outputs_)
     {
-        if (output.width < 0 || output.height < 0 || output.scale <= 0.0)
+        if (output.scale <= 0.0)
         {
             continue;
         }

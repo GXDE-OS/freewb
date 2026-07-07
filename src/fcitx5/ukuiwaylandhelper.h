@@ -21,11 +21,6 @@ namespace freewb
 struct OutputInfo
 {
     wayland::kde_output_device_v2_t device;
-    std::string uuid;
-    int32_t x = 0;
-    int32_t y = 0;
-    int32_t width = 0;
-    int32_t height = 0;
     double scale = 1.0;
     uint32_t registry_name = 0;
 };
