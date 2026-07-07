@@ -7,4 +7,4 @@ Label=极
 Icon=freewb
 LangCode=zh_CN
 Addon=freewb
-Configurable=True
+Configurable=False

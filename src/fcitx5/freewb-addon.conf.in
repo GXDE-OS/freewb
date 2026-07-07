@@ -6,4 +6,4 @@ Name[zh_TW]=極點五筆輸入法
 Library=libfreewb-fcitx5
 Type=SharedLibrary
 OnDemand=True
-Configurable=True
+Configurable=False
