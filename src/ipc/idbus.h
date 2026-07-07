@@ -36,7 +36,6 @@ public:
     virtual void callAddUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText) = 0;
     virtual void callDeleteUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText) = 0;
     virtual void callDictQueryMethod(const std::string &wordText) = 0;
-    virtual void callSwitchSkinMethod() = 0;
     virtual void callSwitchRecodeProofMethod() = 0;
     virtual void callSwitchUncommonParseStateMethod(const std::string &wordText, int flg) = 0;
     virtual void callOpenUiSettingMethod() = 0;

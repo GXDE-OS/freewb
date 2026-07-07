@@ -293,31 +293,6 @@ void MainProgram::connectSettingsDBus()
                 }
             });
 
-    connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_skin, this,
-            []()
-            {
-                const std::vector<std::string> &skinList = freewb_runtime_skin_list();
-                const std::string &curSkin = settings::instance().get_curSkinId();
-                if (skinList.size() < 2)
-                {
-                    return;
-                }
-                size_t i = 0;
-                while (i < skinList.size())
-                {
-                    if (skinList.at(i++) == curSkin)
-                    {
-                        if (i >= skinList.size())
-                        {
-                            i = 0;
-                        }
-                        settings::instance().set_curSkinId(skinList.at(i));
-                        g_settingsNotifier.notifySettingDataChangedToLocal();
-                        break;
-                    }
-                }
-            });
-
     connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_mark_auto_pairs_flg, this,
             []()
             {

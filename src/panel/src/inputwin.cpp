@@ -75,26 +75,30 @@ QString cnEnSwitchDisplayText(const std::string &token)
 #define QSS_IM_PROMPT "color:rgb(136, 138, 133);"
 
 // 输入候选窗样式表
-#define QSS_BG_CENTER QString("#frameText{border-image: url(%1);}").arg(m_skinData.bgCenterImagePath)
-#define QSS_BG_TOP QString("#labelTop{border-image: url(%1);}").arg(m_skinData.bgTopImagePath)
-#define QSS_BG_BOTTOM QString("#labelBottom{border-image: url(%1);}").arg(m_skinData.bgBottomImagePath)
-#define QSS_BG_LEFT QString("#labelLeft{border-image: url(%1);}").arg(m_skinData.bgLeftImagePath)
-#define QSS_BG_RIGHT QString("#labelRight{border-image: url(%1);}").arg(m_skinData.bgRightImagePath)
-#define QSS_FULL_WIDTH QString("border-image: url(%1);").arg(m_skinData.fullIcoPath)
-#define QSS_HALF_WIDTH QString("border-image: url(%1);").arg(m_skinData.halfIcoPath)
-#define QSS_MARK_CN QString("border-image: url(%1);").arg(m_skinData.cnMarkIcoPath)
-#define QSS_MARK_EN QString("border-image: url(%1);").arg(m_skinData.enMarkIcoPath)
+#define QSS_BG_CENTER QString("#frameText{border-image: url(%1);}").arg(Skin::instance().inputWin().bgCenterImagePath)
+#define QSS_BG_TOP QString("#labelTop{border-image: url(%1);}").arg(Skin::instance().inputWin().bgTopImagePath)
+#define QSS_BG_BOTTOM QString("#labelBottom{border-image: url(%1);}").arg(Skin::instance().inputWin().bgBottomImagePath)
+#define QSS_BG_LEFT QString("#labelLeft{border-image: url(%1);}").arg(Skin::instance().inputWin().bgLeftImagePath)
+#define QSS_BG_RIGHT QString("#labelRight{border-image: url(%1);}").arg(Skin::instance().inputWin().bgRightImagePath)
+#define QSS_FULL_WIDTH QString("border-image: url(%1);").arg(Skin::instance().inputWin().fullIcoPath)
+#define QSS_HALF_WIDTH QString("border-image: url(%1);").arg(Skin::instance().inputWin().halfIcoPath)
+#define QSS_MARK_CN QString("border-image: url(%1);").arg(Skin::instance().inputWin().cnMarkIcoPath)
+#define QSS_MARK_EN QString("border-image: url(%1);").arg(Skin::instance().inputWin().enMarkIcoPath)
 
-#define QSS_FREEIME_LOGO QString("background-image: url(%1);").arg(m_skinData.logoIcoPath)
+#define QSS_FREEIME_LOGO QString("background-image: url(%1);").arg(Skin::instance().inputWin().logoIcoPath)
 
 #define QSS_PREV0_PAGE                                                                                                           \
-    QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;").arg(m_skinData.prev0PageIcoPath)
+    QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;")                                 \
+        .arg(Skin::instance().inputWin().prev0PageIcoPath)
 #define QSS_PREV1_PAGE                                                                                                           \
-    QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;").arg(m_skinData.prev1PageIcoPath)
+    QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;")                                 \
+        .arg(Skin::instance().inputWin().prev1PageIcoPath)
 #define QSS_NEXT0_PAGE                                                                                                           \
-    QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;").arg(m_skinData.next0PageIcoPath)
+    QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;")                                 \
+        .arg(Skin::instance().inputWin().next0PageIcoPath)
 #define QSS_NEXT1_PAGE                                                                                                           \
-    QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;").arg(m_skinData.next1PageIcoPath)
+    QString("background-image: url(%1);background-position:center;background-repeat:no-repeat;")                                 \
+        .arg(Skin::instance().inputWin().next1PageIcoPath)
 
 #define QSS_DICT_INFO_WIN                                                                                                        \
     "color: rgb(56, 56, 56);"                                                                                                    \
@@ -234,9 +238,10 @@ void InputWin::slot_load_setting_data()
     }
 
     // 载入皮肤
-    if (m_curSkinId != toQStringUtf8(settings::instance().get_curSkinId()))
+    const QString curSkinId = toQStringUtf8(settings::instance().get_curSkinId());
+    if (Skin::instance().currentSkinId() != curSkinId)
     {
-        slot_load_skin(toQStringUtf8(settings::instance().get_curSkinId()));
+        slot_load_skin(curSkinId);
     }
     else
     {
@@ -377,134 +382,29 @@ void InputWin::update_candidate_visibility(int activeCount)
 
 void InputWin::slot_load_skin(const QString &skinId)
 {
-    if (m_curSkinId == skinId)
-        return;
-    m_curSkinId = skinId;
-
-    QString skinFolder = QString(FREEWB_INSTALL_PKGDATADIR) + "/skin/" + m_curSkinId + "/";
-
-    if (!QFile(skinFolder + "skin.ini").exists())
+    if (Skin::instance().load(skinId))
     {
-        return;
+        update_skin();
     }
-
-    QSettings settings(skinFolder + "skin.ini", QSettings::IniFormat);
-    settings.beginGroup("CandidateWin");
-    m_skinData.bgTopImageHeight = settings.value("bgTopImgHeight").toInt();
-    m_skinData.bgBottomImageHeight = settings.value("bgBottomImgHeight").toInt();
-    m_skinData.bgLeftImageWidth = settings.value("bgLeftImgWidth").toInt();
-    m_skinData.bgRightImageWidth = settings.value("bgRightImgWidth").toInt();
-    m_skinData.bgCenterImagePath = skinFolder + settings.value("bgCenterImg").toString();
-    m_skinData.bgTopImagePath = skinFolder + settings.value("bgTopImg").toString();
-    m_skinData.bgBottomImagePath = skinFolder + settings.value("bgBottomImg").toString();
-    m_skinData.bgLeftImagePath = skinFolder + settings.value("bgLeftImg").toString();
-    m_skinData.bgRightImagePath = skinFolder + settings.value("bgRightImg").toString();
-    m_skinData.fullIcoPath = skinFolder + settings.value("fullIco").toString();
-    m_skinData.halfIcoPath = skinFolder + settings.value("halfIco").toString();
-    m_skinData.cnMarkIcoPath = skinFolder + settings.value("cnMarkIco").toString();
-    m_skinData.enMarkIcoPath = skinFolder + settings.value("enMarkIco").toString();
-
-    m_skinData.logoIcoPath = QString(FREEWB_INSTALL_PKGDATADIR) + "/skin/freewb.png";
-
-    m_skinData.prev0PageIcoPath = skinFolder + settings.value("prev0PageIco").toString();
-    m_skinData.prev1PageIcoPath = skinFolder + settings.value("prev1PageIco").toString();
-    m_skinData.next0PageIcoPath = skinFolder + settings.value("next0PageIco").toString();
-    m_skinData.next1PageIcoPath = skinFolder + settings.value("next1PageIco").toString();
-    settings.endGroup();
-
-    update_skin();
 }
 
 void InputWin::update_skin()
 {
-    if (m_curSkinId == "default")
-    {
-        ui->frameText->setStyleSheet("");
-        ui->labelTop->setFixedHeight(0);
-        ui->labelBottom->setFixedHeight(0);
-        ui->labelLeft->setFixedWidth(0);
-        ui->labelRight->setFixedWidth(0);
+    const Skin &skin = Skin::instance();
+    const SkinInputWin &skinData = skin.inputWin();
+    const bool imageBorder = skin.inputWinUsesImageBorder();
 
-        QString style;
-        QColor boderColor = fwbcQColorFromSpec(settings::instance().get_borderColor());
-        QColor bgColor = fwbcQColorFromSpec(settings::instance().get_bgColor());
-        QColor gradienColor0 = fwbcQColorFromSpec(settings::instance().get_gradientColor0());
-        QColor gradienColor1 = fwbcQColorFromSpec(settings::instance().get_gradientColor1());
+    ui->labelTop->setFixedHeight(skinData.bgTopImageHeight);
+    ui->labelBottom->setFixedHeight(skinData.bgBottomImageHeight);
+    ui->labelLeft->setFixedWidth(skinData.bgLeftImageWidth);
+    ui->labelRight->setFixedWidth(skinData.bgRightImageWidth);
 
-        QString borderColorStyle =
-            QString("border-color:rgb(%1,%2,%3);").arg(boderColor.red()).arg(boderColor.green()).arg(boderColor.blue());
-
-        if (settings::instance().get_useGradientColor())
-        {
-            QString gradienColorStyle = QString("background-color:qlineargradient(spread:pad,x1:0, y1:0, x2:0, y2:1,stop:0 "
-                                                "rgb(%1,%2,%3),stop:1 rgb(%4,%5,%6));")
-                                            .arg(gradienColor0.red())
-                                            .arg(gradienColor0.green())
-                                            .arg(gradienColor0.blue())
-                                            .arg(gradienColor1.red())
-                                            .arg(gradienColor1.green())
-                                            .arg(gradienColor1.blue());
-            style = QString("#frameBg{"
-                            "border-width:1px;"
-                            "border-style:solid;"
-                            "border-radius:%1px;"
-                            "%2"
-                            "%3"
-                            "}")
-                        .arg(m_radius)
-                        .arg(borderColorStyle)
-                        .arg(gradienColorStyle);
-        }
-        else if (settings::instance().get_useBgImage())
-        {
-            QString bgImageStyle = QString("%1:url(%2);")
-                                       .arg(settings::instance().get_enableTiled() ? "background-image" : "border-image")
-                                       .arg(toQStringUtf8(settings::instance().get_bgImage()));
-
-            style = QString("#frameBg{"
-                            "border-width:1px;"
-                            "border-style:solid;"
-                            "border-radius:%1px;"
-                            "%2"
-                            "%3"
-                            "}")
-                        .arg(m_radius)
-                        .arg(borderColorStyle)
-                        .arg(bgImageStyle);
-        }
-        else
-        {
-            style = QString("#frameBg{"
-                            "border-width:1px;"
-                            "border-style:solid;"
-                            "border-radius:%1px;"
-                            "%2"
-                            "background-color:rgb(%3,%4,%5);"
-                            "}")
-                        .arg(m_radius)
-                        .arg(borderColorStyle)
-                        .arg(bgColor.red())
-                        .arg(bgColor.green())
-                        .arg(bgColor.blue());
-        }
-
-        ui->frameBg->setStyleSheet(style);
-    }
-    else
-    {
-        ui->frameBg->setStyleSheet("");
-
-        ui->labelTop->setFixedHeight(m_skinData.bgTopImageHeight);
-        ui->labelBottom->setFixedHeight(m_skinData.bgBottomImageHeight);
-        ui->labelLeft->setFixedWidth(m_skinData.bgLeftImageWidth);
-        ui->labelRight->setFixedWidth(m_skinData.bgRightImageWidth);
-
-        ui->frameText->setStyleSheet(QSS_BG_CENTER);
-        ui->labelTop->setStyleSheet(QSS_BG_TOP);
-        ui->labelBottom->setStyleSheet(QSS_BG_BOTTOM);
-        ui->labelLeft->setStyleSheet(QSS_BG_LEFT);
-        ui->labelRight->setStyleSheet(QSS_BG_RIGHT);
-    }
+    ui->frameBg->setStyleSheet(skin.inputWinFrameBgStyle(m_radius));
+    ui->frameText->setStyleSheet(imageBorder ? QSS_BG_CENTER : QString());
+    ui->labelTop->setStyleSheet(imageBorder ? QSS_BG_TOP : QString());
+    ui->labelBottom->setStyleSheet(imageBorder ? QSS_BG_BOTTOM : QString());
+    ui->labelLeft->setStyleSheet(imageBorder ? QSS_BG_LEFT : QString());
+    ui->labelRight->setStyleSheet(imageBorder ? QSS_BG_RIGHT : QString());
 
     slot_update_charWidth_btn_ico();
     slot_update_mark_btn_ico();
@@ -1059,9 +959,10 @@ void InputWin::set_candiwin_op_help_info()
     //    }
     else if (oti == OTI_SK_SWITCH_SKIN)
     {
-        const QString keyText = customShortcutDisplayText(settings::instance().get_switchSkin());
-        if (!keyText.isEmpty())
-            tips = QString(_("【%1 Switch skin】")).arg(keyText);
+        const QString skinId = toQStringUtf8(settings::instance().get_curSkinId());
+        const QString skinName = Skin::instance().skinName(skinId);
+        if (!skinName.isEmpty())
+            tips = QString(_("【Current skin: %1】")).arg(skinName);
     }
     else if (oti == OTI_SK_QUICK_DEL_SCREEN_CHAR)
     {

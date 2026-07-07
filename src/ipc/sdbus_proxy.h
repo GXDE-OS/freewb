@@ -44,7 +44,6 @@ public:
     void callAddUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText) override;
     void callDeleteUsrParseMethod(int flg, const std::string &wordCode, const std::string &wordText) override;
     void callDictQueryMethod(const std::string &wordText) override;
-    void callSwitchSkinMethod() override;
     void callSwitchRecodeProofMethod() override;
     void callSwitchUncommonParseStateMethod(const std::string &wordText, int flg) override;
     void callOpenUiSettingMethod() override;

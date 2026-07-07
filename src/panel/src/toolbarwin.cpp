@@ -16,23 +16,23 @@
 #include "ukuiwaylandhelper.h"
 
 // 桌面工具条按钮样式表
-#define QSS_BG0 QString("border-image: url(%1);").arg(m_skinData.bg0ImagePath)
-#define QSS_BG1 QString("border-image: url(%1);").arg(m_skinData.bg1ImagePath)
-#define QSS_MENU_EXTEND_OPEN QString("border-image: url(%1);").arg(m_skinData.stbMenuExtendBtn.closeIcoPath)
-#define QSS_MENU_EXTEND_CLOSE QString("border-image: url(%1);").arg(m_skinData.stbMenuExtendBtn.openIcoPath)
+#define QSS_BG0 QString("border-image: url(%1);").arg(Skin::instance().toolbar().bg0ImagePath)
+#define QSS_BG1 QString("border-image: url(%1);").arg(Skin::instance().toolbar().bg1ImagePath)
+#define QSS_MENU_EXTEND_OPEN QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbMenuExtendBtn.closeIcoPath)
+#define QSS_MENU_EXTEND_CLOSE QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbMenuExtendBtn.openIcoPath)
 #define QSS_MODE_BTN QStringLiteral("border:none;padding:0;margin:0;background:transparent;")
-#define QSS_FULL_WIDTH QString("border-image: url(%1);").arg(m_skinData.stbFullHalfBtn.fullIcoPath)
-#define QSS_HALF_WIDTH QString("border-image: url(%1);").arg(m_skinData.stbFullHalfBtn.halfIcoPath)
-#define QSS_MARK_CN QString("border-image: url(%1);").arg(m_skinData.stbCnEnMarkBtn.cnMarkIcoPath)
-#define QSS_MARK_EN QString("border-image: url(%1);").arg(m_skinData.stbCnEnMarkBtn.enMarkIcoPath)
-#define QSS_SETTING QString("border-image: url(%1);").arg(m_skinData.stbSettingBtn.icoPath)
-#define QSS_GENERATE QString("border-image: url(%1);").arg(m_skinData.stbGenerateBtn.icoPath)
-#define QSS_SEARCH QString("border-image: url(%1);").arg(m_skinData.stbSearchBtn.icoPath)
-#define QSS_CHAR_SIMPLIFIED QString("border-image: url(%1);").arg(m_skinData.stbCharFontBtn.simpIcoPath)
-#define QSS_CHAR_TRADITIONAL QString("border-image: url(%1);").arg(m_skinData.stbCharFontBtn.tradIcoPath)
-#define QSS_CHAR_GB QString("border-image: url(%1);").arg(m_skinData.stbCharSetBtn.gbIcoPath)
-#define QSS_CHAR_GBK QString("border-image: url(%1);").arg(m_skinData.stbCharSetBtn.gbkIcoPath)
-#define QSS_KEYBOARD QString("border-image: url(%1);").arg(m_skinData.stbKeyboardBtn.icoPath)
+#define QSS_FULL_WIDTH QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbFullHalfBtn.fullIcoPath)
+#define QSS_HALF_WIDTH QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbFullHalfBtn.halfIcoPath)
+#define QSS_MARK_CN QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbCnEnMarkBtn.cnMarkIcoPath)
+#define QSS_MARK_EN QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbCnEnMarkBtn.enMarkIcoPath)
+#define QSS_SETTING QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbSettingBtn.icoPath)
+#define QSS_GENERATE QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbGenerateBtn.icoPath)
+#define QSS_SEARCH QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbSearchBtn.icoPath)
+#define QSS_CHAR_SIMPLIFIED QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbCharFontBtn.simpIcoPath)
+#define QSS_CHAR_TRADITIONAL QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbCharFontBtn.tradIcoPath)
+#define QSS_CHAR_GB QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbCharSetBtn.gbIcoPath)
+#define QSS_CHAR_GBK QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbCharSetBtn.gbkIcoPath)
+#define QSS_KEYBOARD QString("border-image: url(%1);").arg(Skin::instance().toolbar().stbKeyboardBtn.icoPath)
 
 // 桌面工具条窗口样式表文件
 #define QSS_FILE ":/qss/toolbar.qss"
@@ -266,94 +266,23 @@ void ToolbarWin::slot_load_setting_data()
     update_mark_mode_ico();
 
     // 载入皮肤
-    if (m_curSkinId != toQStringUtf8(settings::instance().get_curSkinId()))
+    const QString curSkinId = toQStringUtf8(settings::instance().get_curSkinId());
+    if (Skin::instance().currentSkinId() != curSkinId)
     {
-        slot_load_skin(toQStringUtf8(settings::instance().get_curSkinId()));
+        slot_load_skin(curSkinId);
+    }
+    else
+    {
+        update_skin();
     }
 }
 
 void ToolbarWin::slot_load_skin(const QString &skinId)
 {
-    if (m_curSkinId == skinId)
-        return;
-
-    m_curSkinId = skinId;
-    QString skinFolder = QString(FREEWB_INSTALL_PKGDATADIR) + "/skin/" + m_curSkinId + "/";
-
-    if (!QFile(skinFolder + "skin.ini").exists())
+    if (Skin::instance().load(skinId))
     {
-        return;
+        update_skin();
     }
-
-    QSettings settings(skinFolder + "skin.ini", QSettings::IniFormat);
-
-    // 背景框
-    settings.beginGroup("ToolbarBg");
-    m_skinData.size0 = settings.value("size0").toSize();
-    m_skinData.size1 = settings.value("size1").toSize();
-    m_skinData.bg0ImagePath = skinFolder + settings.value("bgImg0").toString();
-    m_skinData.bg1ImagePath = skinFolder + settings.value("bgImg1").toString();
-    settings.endGroup();
-
-    // 按钮
-    settings.beginGroup("ToolbarBtn");
-
-    m_skinData.stbMenuExtendBtn.isExist = settings.value("btnExtMenuFlg").toInt();
-    m_skinData.stbMenuExtendBtn.rect = settings.value("btnExtMenuGeometry").toRect();
-    m_skinData.stbMenuExtendBtn.openIcoPath = skinFolder + settings.value("btnExtMenuOpenImg").toString();
-    m_skinData.stbMenuExtendBtn.closeIcoPath = skinFolder + settings.value("btnExtMenuClosedImg").toString();
-
-    m_skinData.stbLogoBtn.isExist = settings.value("btnLogoFlg").toInt();
-    m_skinData.stbLogoBtn.rect = settings.value("btnLogoGeometry").toRect();
-    m_skinData.stbLogoBtn.icoPath = skinFolder + settings.value("btnLogoImg").toString();
-
-    m_skinData.stbModeBtn.isExist = settings.value("btnModeFlg").toInt();
-    m_skinData.stbModeBtn.rect = settings.value("btnModeGeometry").toRect();
-    m_skinData.stbModeBtn.wbFontIcoPath = skinFolder + settings.value("btnModewbFontImg").toString();
-    m_skinData.stbModeBtn.wbPinyinIcoPath = skinFolder + settings.value("btnModewbPyImg").toString();
-    m_skinData.stbModeBtn.stdPinyinIcoPath = skinFolder + settings.value("btnModeStdPyImg").toString();
-    m_skinData.stbModeBtn.englishIcoPath = skinFolder + settings.value("btnModeEnglishImg").toString();
-    m_skinData.stbModeBtn.capsIcoPath = skinFolder + settings.value("btnModeCapsImg").toString();
-
-    m_skinData.stbFullHalfBtn.isExist = settings.value("btnCharWidthFlg").toInt();
-    m_skinData.stbFullHalfBtn.rect = settings.value("btnCharWidthGeometry").toRect();
-    m_skinData.stbFullHalfBtn.fullIcoPath = skinFolder + settings.value("btnCharWidthFullImg").toString();
-    m_skinData.stbFullHalfBtn.halfIcoPath = skinFolder + settings.value("btnCharWidthHalfImg").toString();
-
-    m_skinData.stbCnEnMarkBtn.isExist = settings.value("btnMarkFlg").toInt();
-    m_skinData.stbCnEnMarkBtn.rect = settings.value("btnMarkGeometry").toRect();
-    m_skinData.stbCnEnMarkBtn.cnMarkIcoPath = skinFolder + settings.value("btnMarkCnImg").toString();
-    m_skinData.stbCnEnMarkBtn.enMarkIcoPath = skinFolder + settings.value("btnMarkEnImg").toString();
-
-    m_skinData.stbSettingBtn.isExist = settings.value("btnSettingFlg").toInt();
-    m_skinData.stbSettingBtn.rect = settings.value("btnSettingGeometry").toRect();
-    m_skinData.stbSettingBtn.icoPath = skinFolder + settings.value("btnSettingCnImg").toString();
-
-    m_skinData.stbGenerateBtn.isExist = settings.value("btnGenerateFlg").toInt();
-    m_skinData.stbGenerateBtn.rect = settings.value("btnGenerateGeometry").toRect();
-    m_skinData.stbGenerateBtn.icoPath = skinFolder + settings.value("btnGenerateImg").toString();
-
-    m_skinData.stbSearchBtn.isExist = settings.value("btnSearchFlg").toInt();
-    m_skinData.stbSearchBtn.rect = settings.value("btnSearchGeometry").toRect();
-    m_skinData.stbSearchBtn.icoPath = skinFolder + settings.value("btnSearchImg").toString();
-
-    m_skinData.stbCharFontBtn.isExist = settings.value("btnCharFontFlg").toInt();
-    m_skinData.stbCharFontBtn.rect = settings.value("btnCharFontGeometry").toRect();
-    m_skinData.stbCharFontBtn.simpIcoPath = skinFolder + settings.value("btnCharFontSimpImg").toString();
-    m_skinData.stbCharFontBtn.tradIcoPath = skinFolder + settings.value("btnCharFontTradImg").toString();
-
-    m_skinData.stbCharSetBtn.isExist = settings.value("btnCharSetFlg").toInt();
-    m_skinData.stbCharSetBtn.rect = settings.value("btnCharSetGeometry").toRect();
-    m_skinData.stbCharSetBtn.gbIcoPath = skinFolder + settings.value("btnCharSetGbImg").toString();
-    m_skinData.stbCharSetBtn.gbkIcoPath = skinFolder + settings.value("btnCharSetGbkImg").toString();
-
-    m_skinData.stbKeyboardBtn.isExist = settings.value("btnKeyboardFlg").toInt();
-    m_skinData.stbKeyboardBtn.rect = settings.value("btnKeyboardGeometry").toRect();
-    m_skinData.stbKeyboardBtn.icoPath = skinFolder + settings.value("btnKeyboardImg").toString();
-
-    settings.endGroup();
-
-    update_skin();
 }
 
 // 初始工具条外观
@@ -362,7 +291,7 @@ void ToolbarWin::update_skin()
     update_toolbar_bg();
 
     // LOGO按钮，没有LOGO按钮
-    if (m_skinData.stbLogoBtn.isExist)
+    if (Skin::instance().toolbar().stbLogoBtn.isExist)
     {
     }
     else
@@ -371,9 +300,9 @@ void ToolbarWin::update_skin()
     }
 
     // 扩展菜单按钮
-    if (m_skinData.stbMenuExtendBtn.isExist)
+    if (Skin::instance().toolbar().stbMenuExtendBtn.isExist)
     {
-        ui->btnMenuExtend->setGeometry(m_skinData.stbMenuExtendBtn.rect);
+        ui->btnMenuExtend->setGeometry(Skin::instance().toolbar().stbMenuExtendBtn.rect);
         update_extend_menu_ico();
     }
     else
@@ -382,9 +311,9 @@ void ToolbarWin::update_skin()
     }
 
     // 输入模式按钮
-    if (m_skinData.stbModeBtn.isExist)
+    if (Skin::instance().toolbar().stbModeBtn.isExist)
     {
-        ui->btnMode->setGeometry(m_skinData.stbModeBtn.rect);
+        ui->btnMode->setGeometry(Skin::instance().toolbar().stbModeBtn.rect);
         slot_update_input_mode_ico();
     }
     else
@@ -393,9 +322,9 @@ void ToolbarWin::update_skin()
     }
 
     // 全半角模式切换按钮
-    if (m_skinData.stbFullHalfBtn.isExist)
+    if (Skin::instance().toolbar().stbFullHalfBtn.isExist)
     {
-        ui->btnCharWidth->setGeometry(m_skinData.stbFullHalfBtn.rect);
+        ui->btnCharWidth->setGeometry(Skin::instance().toolbar().stbFullHalfBtn.rect);
         slot_update_char_width_mode_ico();
     }
     else
@@ -404,9 +333,9 @@ void ToolbarWin::update_skin()
     }
 
     // 中英文标点按钮
-    if (m_skinData.stbCnEnMarkBtn.isExist)
+    if (Skin::instance().toolbar().stbCnEnMarkBtn.isExist)
     {
-        ui->btnMark->setGeometry(m_skinData.stbCnEnMarkBtn.rect);
+        ui->btnMark->setGeometry(Skin::instance().toolbar().stbCnEnMarkBtn.rect);
         update_mark_mode_ico();
     }
     else
@@ -415,9 +344,9 @@ void ToolbarWin::update_skin()
     }
 
     // 设置按钮
-    if (m_skinData.stbSettingBtn.isExist)
+    if (Skin::instance().toolbar().stbSettingBtn.isExist)
     {
-        ui->btnSetting->setGeometry(m_skinData.stbSettingBtn.rect);
+        ui->btnSetting->setGeometry(Skin::instance().toolbar().stbSettingBtn.rect);
         ui->btnSetting->setStyleSheet(QSS_SETTING);
     }
     else
@@ -426,9 +355,9 @@ void ToolbarWin::update_skin()
     }
 
     // 造词按钮
-    if (m_skinData.stbGenerateBtn.isExist)
+    if (Skin::instance().toolbar().stbGenerateBtn.isExist)
     {
-        ui->btnGenerate->setGeometry(m_skinData.stbGenerateBtn.rect);
+        ui->btnGenerate->setGeometry(Skin::instance().toolbar().stbGenerateBtn.rect);
         ui->btnGenerate->setStyleSheet(QSS_GENERATE);
     }
     else
@@ -437,9 +366,9 @@ void ToolbarWin::update_skin()
     }
 
     // 搜索按钮
-    if (m_skinData.stbSearchBtn.isExist)
+    if (Skin::instance().toolbar().stbSearchBtn.isExist)
     {
-        ui->btnSearch->setGeometry(m_skinData.stbSearchBtn.rect);
+        ui->btnSearch->setGeometry(Skin::instance().toolbar().stbSearchBtn.rect);
         ui->btnSearch->setStyleSheet(QSS_SEARCH);
     }
     else
@@ -448,9 +377,9 @@ void ToolbarWin::update_skin()
     }
 
     // 简体繁体切换按钮
-    if (m_skinData.stbCharFontBtn.isExist)
+    if (Skin::instance().toolbar().stbCharFontBtn.isExist)
     {
-        ui->btnCharFont->setGeometry(m_skinData.stbCharFontBtn.rect);
+        ui->btnCharFont->setGeometry(Skin::instance().toolbar().stbCharFontBtn.rect);
         update_char_font_ico();
     }
     else
@@ -459,9 +388,9 @@ void ToolbarWin::update_skin()
     }
 
     // 字符集选择按钮
-    if (m_skinData.stbCharSetBtn.isExist)
+    if (Skin::instance().toolbar().stbCharSetBtn.isExist)
     {
-        ui->btnCharSet->setGeometry(m_skinData.stbCharSetBtn.rect);
+        ui->btnCharSet->setGeometry(Skin::instance().toolbar().stbCharSetBtn.rect);
 
         update_char_set_ico();
     }
@@ -471,9 +400,9 @@ void ToolbarWin::update_skin()
     }
 
     // 虚拟键盘按钮
-    if (m_skinData.stbKeyboardBtn.isExist)
+    if (Skin::instance().toolbar().stbKeyboardBtn.isExist)
     {
-        ui->btnKeyboard->setGeometry(m_skinData.stbKeyboardBtn.rect);
+        ui->btnKeyboard->setGeometry(Skin::instance().toolbar().stbKeyboardBtn.rect);
         ui->btnKeyboard->setStyleSheet(QSS_KEYBOARD);
     }
     else
@@ -713,13 +642,13 @@ void ToolbarWin::update_toolbar_bg()
 {
     if (m_extendMenuOpenState)
     {
-        resize(m_skinData.size1);
+        resize(Skin::instance().toolbar().size1);
         ui->frameToolbar->setStyleSheet(QSS_BG1);
     }
     else
     {
-        resize(m_skinData.size0);
-        ui->frameToolbar->setGeometry(QRect(QPoint(0, 0), m_skinData.size0));
+        resize(Skin::instance().toolbar().size0);
+        ui->frameToolbar->setGeometry(QRect(QPoint(0, 0), Skin::instance().toolbar().size0));
         ui->frameToolbar->setStyleSheet(QSS_BG0);
     }
 }
@@ -744,26 +673,26 @@ void ToolbarWin::slot_update_input_mode_ico()
     ui->btnMode->setText(QString());
 
     const QString &inputMode = get_input_mode();
-    QString iconPath = m_skinData.stbModeBtn.wbFontIcoPath;
+    QString iconPath = Skin::instance().toolbar().stbModeBtn.wbFontIcoPath;
     if (s_capsFlg)
     {
-        iconPath = m_skinData.stbModeBtn.capsIcoPath;
+        iconPath = Skin::instance().toolbar().stbModeBtn.capsIcoPath;
     }
     else if (inputMode == kEngineWbpy)
     {
-        iconPath = m_skinData.stbModeBtn.wbPinyinIcoPath;
+        iconPath = Skin::instance().toolbar().stbModeBtn.wbPinyinIcoPath;
     }
     else if (inputMode == kEnginePy)
     {
-        iconPath = m_skinData.stbModeBtn.stdPinyinIcoPath;
+        iconPath = Skin::instance().toolbar().stbModeBtn.stdPinyinIcoPath;
     }
     else if (inputMode == kEngineEn)
     {
-        iconPath = m_skinData.stbModeBtn.englishIcoPath;
+        iconPath = Skin::instance().toolbar().stbModeBtn.englishIcoPath;
     }
 
     ui->btnMode->setStyleSheet(QSS_MODE_BTN);
-    const QSize iconSize = m_skinData.stbModeBtn.rect.size();
+    const QSize iconSize = Skin::instance().toolbar().stbModeBtn.rect.size();
     const qreal dpr = qMax(1.0, ui->btnMode->devicePixelRatioF());
     ui->btnMode->setIcon(freewb_icon_from_skin_path(iconPath, iconSize, dpr));
     ui->btnMode->setIconSize(iconSize);

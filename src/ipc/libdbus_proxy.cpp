@@ -255,11 +255,6 @@ void LibDbusProxy::callPanelSwitchInputModeMethod(const std::string &inputMode)
     sendPanelMethod("SwitchInputMode", "s", inputMode.c_str());
 }
 
-void LibDbusProxy::callSwitchSkinMethod()
-{
-    callSettingsMethod("slot_dbus_switch_skin", "");
-}
-
 void LibDbusProxy::callSwitchVirtualKeyboardModeMethod(int flg)
 {
     callSettingsMethod("slot_dbus_switch_vk", "i", flg);

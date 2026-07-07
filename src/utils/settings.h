@@ -140,7 +140,6 @@ enum class ValueType
     X(switchInputMode, ShortcutKey, String, "CTRL+KEY_BACK_SLASH", ShortcutKey, "")                                              \
     X(switchWordState, ShortcutKey, String, "CTRL+KEY_INSERT", ShortcutKey, "")                                                  \
     X(switchLexicon, ShortcutKey, String, "CTRL+KEY_QUOTE", ShortcutKey, "")                                                     \
-    X(switchSkin, ShortcutKey, String, "CTRL+KEY_NONE", ShortcutKey, "")                                                         \
     X(switchVKb, ShortcutKey, String, "CTRL+KEY_ESC", ShortcutKey, "")                                                           \
     X(tempEnglish, ShortcutKey, String, "KEY_SEMICOLON", ShortcutKey, "")                                                        \
     X(tempPinyin, ShortcutKey, String, "KEY_BACKQUOTE", ShortcutKey, "")                                                         \

@@ -99,11 +99,6 @@ void QDBusSettingsService::slot_dbus_switch_lexicon()
     emit signal_switch_lexicon();
 }
 
-void QDBusSettingsService::slot_dbus_switch_skin()
-{
-    emit signal_switch_skin();
-}
-
 void QDBusSettingsService::slot_dbus_switch_mark_auto_pairs_flg()
 {
     emit signal_switch_mark_auto_pairs_flg();

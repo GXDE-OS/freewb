@@ -30,7 +30,6 @@ Q_SIGNALS:
     void signal_switch_simp_or_trad();
     void signal_switch_toolbar_hide_flg();
     void signal_switch_lexicon();
-    void signal_switch_skin();
     void signal_switch_mark_auto_pairs_flg();
     void signal_switch_caps_state();
     void signal_switch_char_width();
@@ -58,7 +57,6 @@ public Q_SLOTS:
     void slot_dbus_switch_simp_or_trad();
     void slot_dbus_switch_toolbar_hide_flg();
     void slot_dbus_switch_lexicon();
-    void slot_dbus_switch_skin();
     void slot_dbus_switch_mark_auto_pairs_flg();
     void slot_dbus_switch_caps_state();
     void slot_dbus_switch_char_width();

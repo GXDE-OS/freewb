@@ -364,16 +364,6 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
         }
     }
     {
-        const char *keyString = Key::readKeyString(settings::instance().get_switchSkin().c_str());
-        const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
-        if (keysym == keySym && state == FreewbKeyState_Ctrl)
-        {
-            dbusProxy_->callSwitchSkinMethod();
-            return true;
-        }
-    }
-
-    {
         const char *keyString = Key::readKeyString(settings::instance().get_switchVKb().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         if (keysym == keySym && state == FreewbKeyState_Ctrl)

@@ -11,6 +11,7 @@
 #include "key.h"
 #include "settings.h"
 #include "settingshelper.h"
+#include "skin.h"
 #include "ui_settingwin.h"
 
 namespace
@@ -157,7 +158,6 @@ const std::array<CustomShortcutAccessor, 13> kCustomShortcutAccessors = {{
     {&settings::Settings::get_setupOption, &settings::Settings::set_setupOption},               // 打开系统设置
     {&settings::Settings::get_showHideToolbar, &settings::Settings::set_showHideToolbar},       // 显/隐状态栏
     {&settings::Settings::get_switchLexicon, &settings::Settings::set_switchLexicon},           // 切换词库
-    {&settings::Settings::get_switchSkin, &settings::Settings::set_switchSkin},                 // 切换皮肤
     {&settings::Settings::get_quickDelScreenItem, &settings::Settings::set_quickDelScreenItem}, // 快删上屏项
     {&settings::Settings::get_markAutoPair, &settings::Settings::set_markAutoPair},             // 标点自动配对
 }};
@@ -966,42 +966,30 @@ void SettingWin::init_skin_select_cmb()
 {
     ui->cmbSkinSelect->clear();
 
-    QString skinDir = QString(FREEWB_INSTALL_PKGDATADIR) + "/skin/";
-    QStringList dirList = QDir(skinDir).entryList(QDir::Dirs);
-    dirList.removeOne(".");
-    dirList.removeOne("..");
+    Skin &skin = Skin::instance();
+    skin.refreshSkinList();
 
-    QStringList skinIdList;
-    foreach(QString skinId, dirList)
+    const QStringList skinIds = skin.availableSkinIds();
+    for (const QString &skinId : skinIds)
     {
-        if (QFile(skinDir + skinId + "/skin.ini").exists())
-        {
-            skinIdList << skinId;
-            ui->cmbSkinSelect->addItem(skinId);
-        }
+        ui->cmbSkinSelect->addItem(skin.skinName(skinId), skinId);
     }
-    std::vector<std::string> skinVec;
-    skinVec.reserve(static_cast<size_t>(skinIdList.size()));
-    for (const QString &id : skinIdList)
-        skinVec.push_back(fromStdUtf8(id));
-    freewb_runtime_set_skin_list(skinVec);
 
     for (int i = 0; i < ui->cmbSkinSelect->count(); i++)
     {
-        if (ui->cmbSkinSelect->itemText(i) == toQStringUtf8(settings::instance().get_curSkinId()))
+        if (ui->cmbSkinSelect->itemData(i).toString() == toQStringUtf8(settings::instance().get_curSkinId()))
         {
             ui->cmbSkinSelect->setCurrentIndex(i);
             break;
         }
     }
 
-    update_toolbar_preview(ui->cmbSkinSelect->currentText());
+    update_toolbar_preview(ui->cmbSkinSelect->currentData().toString());
 }
 
 void SettingWin::update_toolbar_preview(const QString &skinId)
 {
-    QString iamge = QString(FREEWB_INSTALL_PKGDATADIR) + "/skin/" + skinId + "/toolbar.png";
-    ui->labelToolbar->setStyleSheet(QString("border-image:url(%1);").arg(iamge));
+    ui->labelToolbar->setStyleSheet(QString("border-image:url(%1);").arg(Skin::instance().toolbarPreviewPath(skinId)));
 }
 
 void SettingWin::init_candidate_ui_page()
@@ -1543,10 +1531,11 @@ void SettingWin::slot_custom_btn_ok_clicked(const QString &commSymbol, const QSt
     }
 }
 
-void SettingWin::on_cmbSkinSelect_activated(const QString &arg1)
+void SettingWin::on_cmbSkinSelect_activated(const QString &)
 {
-    settings::instance().set_curSkinId(fromStdUtf8(arg1));
-    update_toolbar_preview(arg1);
+    const QString skinId = ui->cmbSkinSelect->currentData().toString();
+    settings::instance().set_curSkinId(fromStdUtf8(skinId));
+    update_toolbar_preview(skinId);
     init_candidate_ui_page();
 }
 

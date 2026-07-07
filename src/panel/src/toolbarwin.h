@@ -17,6 +17,7 @@
 #include "contextmenu.h"
 #include "keyboard.h"
 #include "settingshelper.h"
+#include "skin.h"
 
 namespace Ui
 {
@@ -40,124 +41,6 @@ typedef enum
     CHAR_GB, // GB字符集
     CHAR_GBK // GBK字符集
 } CharSetMode;
-
-// 工具条界面按钮-LOGO按钮
-typedef struct
-{
-    bool isExist;
-    QRect rect;
-    QString icoPath;
-} SkinToolBarLogoBtn;
-
-// 工具条界面按钮-扩展菜单按钮
-typedef struct
-{
-    bool isExist;
-    QRect rect;
-    QString openIcoPath;
-    QString closeIcoPath;
-} SkinToolBarMenuExtendBtn;
-
-// 工具条界面按钮-输入模式按钮
-typedef struct
-{
-    bool isExist;
-    QRect rect;
-    QString wbFontIcoPath;
-    QString wbPinyinIcoPath;
-    QString stdPinyinIcoPath;
-    QString englishIcoPath;
-    QString capsIcoPath;
-} SkinToolBarModeBtn;
-
-// 工具条界面按钮-全半角按钮
-typedef struct
-{
-    bool isExist;
-    QRect rect;
-    QString fullIcoPath;
-    QString halfIcoPath;
-} SkinToolBarFullHalfBtn;
-
-// 工具条界面按钮-中英文标点切换按钮
-typedef struct
-{
-    bool isExist;
-    QRect rect;
-    QString cnMarkIcoPath;
-    QString enMarkIcoPath;
-} SkinToolBarCnEnMarkBtn;
-
-// 工具条界面按钮-设置按钮
-typedef struct
-{
-    bool isExist;
-    QRect rect;
-    QString icoPath;
-} SkinToolBarSettingBtn;
-
-// 工具条界面按钮-造词按钮
-typedef struct
-{
-    bool isExist;
-    QRect rect;
-    QString icoPath;
-} SkinToolBarGenerateBtn;
-
-// 工具条界面按钮-搜索按钮
-typedef struct
-{
-    bool isExist;
-    QRect rect;
-    QString icoPath;
-} SkinToolBarSearchBtn;
-
-// 工具条界面按钮-简体繁体切换按钮
-typedef struct
-{
-    bool isExist;
-    QRect rect;
-    QString simpIcoPath;
-    QString tradIcoPath;
-} SkinToolBarCharFontBtn;
-
-// 工具条界面按钮-字符集切换按钮
-typedef struct
-{
-    bool isExist;
-    QRect rect;
-    QString gbIcoPath;
-    QString gbkIcoPath;
-} SkinToolBarCharSetBtn;
-
-// 工具条界面按钮-虚拟键盘按钮
-typedef struct
-{
-    bool isExist;
-    QRect rect;
-    QString icoPath;
-} SkinToolBarKeyboardBtn;
-
-// 工具条界面配置数据
-typedef struct
-{
-    QSize size0;
-    QSize size1;
-    QString bg0ImagePath;
-    QString bg1ImagePath;
-
-    SkinToolBarLogoBtn stbLogoBtn;
-    SkinToolBarMenuExtendBtn stbMenuExtendBtn;
-    SkinToolBarModeBtn stbModeBtn;
-    SkinToolBarFullHalfBtn stbFullHalfBtn;
-    SkinToolBarCnEnMarkBtn stbCnEnMarkBtn;
-    SkinToolBarSettingBtn stbSettingBtn;
-    SkinToolBarGenerateBtn stbGenerateBtn;
-    SkinToolBarSearchBtn stbSearchBtn;
-    SkinToolBarCharFontBtn stbCharFontBtn;
-    SkinToolBarCharSetBtn stbCharSetBtn;
-    SkinToolBarKeyboardBtn stbKeyboardBtn;
-} SkinToolBar;
 
 class ToolbarWin : public QWidget
 {
@@ -322,15 +205,12 @@ private:
     QAction *m_kbInputSpecial;      // 特殊符号输入模式
     QAction *m_kbUserCharInputMode; // 用户自定义字符模式
 
-    SkinToolBar m_skinData; // 皮肤配置数据
-
     /******************* 设置界面可配置数据 ***********************/
-    QString m_curSkinId = "9999"; // 当前使用皮肤
-    bool m_autoLocate;            // 工具条自动定位
-    bool m_autoMenuExpand;        // 工具条菜单自动扩展
-    bool m_useUiAudioEffect;      // 是否使用界面音效
-    bool m_showRealtimeHelp;      // 是否显示实时提示
-    int m_transparency;           // 工具条透明度
+    bool m_autoLocate;       // 工具条自动定位
+    bool m_autoMenuExpand;   // 工具条菜单自动扩展
+    bool m_useUiAudioEffect; // 是否使用界面音效
+    bool m_showRealtimeHelp; // 是否显示实时提示
+    int m_transparency;      // 工具条透明度
 };
 
 #endif

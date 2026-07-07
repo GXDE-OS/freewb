@@ -17,6 +17,7 @@
 #include "contextmenu.h"
 #include "dictquery.h"
 #include "settingshelper.h"
+#include "skin.h"
 
 namespace Ui
 {
@@ -74,29 +75,6 @@ typedef enum
 
     OTI_TOTAL_NUM
 } OpTipsInfo;
-
-// 文字输入框界面皮肤配置数据
-typedef struct
-{
-    int bgTopImageHeight;      // 顶部背景图片高度
-    int bgBottomImageHeight;   //
-    int bgLeftImageWidth;      //
-    int bgRightImageWidth;     //
-    QString bgCenterImagePath; // 中心背景图片路径
-    QString bgTopImagePath;    //
-    QString bgBottomImagePath; //
-    QString bgLeftImagePath;   //
-    QString bgRightImagePath;  //
-    QString fullIcoPath;       //
-    QString halfIcoPath;       //
-    QString cnMarkIcoPath;     //
-    QString enMarkIcoPath;     //
-    QString prev0PageIcoPath;  //
-    QString prev1PageIcoPath;  //
-    QString next0PageIcoPath;  //
-    QString next1PageIcoPath;  //
-    QString logoIcoPath;       //
-} SkinInputWin;
 
 class InputWin : public QWidget
 {
@@ -207,9 +185,6 @@ private:
     int m_winWidth;
     int m_winHeight; // 根据候选框的显示模式、候选词个数、显示字体确定的候选框固定高度
 
-    // 皮肤配置数据
-    SkinInputWin m_skinData;
-
     // 实时字典查询
     DictQuery m_dictquery;
     QWidget m_dictFindWin;
@@ -217,7 +192,6 @@ private:
 
     /******************* 设置界面可配置数据 ***********************/
     CandiWinDispMode m_displayMode; // 显示模式
-    QString m_curSkinId;            // 当前使用的皮肤
     char m_separateChar;            // 候选序号与候选词之间的分隔符
     int m_radius;                   // 候选框圆角弧度
     int m_transparency;             // 候选框透明度

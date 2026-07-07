@@ -93,7 +93,6 @@ switchInputMode=CTRL+KEY_BACK_SLASH
 # legacy-reserved: kept for backward compatibility
 # switchWordState=CTRL+KEY_INSERT
 switchLexicon=CTRL+KEY_QUOTE
-switchSkin=CTRL+KEY_NONE
 switchVKb=CTRL+KEY_ESC
 tempEnglish=KEY_SEMICOLON
 tempPinyin=KEY_BACKQUOTE
