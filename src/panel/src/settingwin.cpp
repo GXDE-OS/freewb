@@ -1276,7 +1276,7 @@ void SettingWin::on_btnCancel_clicked()
 
 void SettingWin::on_btnHelp_clicked()
 {
-    system("firefox ~/.local/freewb/help/help.html > /dev/null 2>&1 &");
+    QDesktopServices::openUrl(QUrl(FREEWB_INSTALL_PKGDATADIR + "/help/help.html"));
 }
 
 void SettingWin::on_ckbCodeRemind_stateChanged(int arg1)

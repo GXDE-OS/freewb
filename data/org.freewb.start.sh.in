@@ -15,10 +15,6 @@ if [ ! -d $HOME/.local/freewb/skin ];then
 	cp @CMAKE_INSTALL_PREFIX@/share/freewb/skin $HOME/.local/freewb/ -r
 fi
 
-if [ ! -d $HOME/.local/freewb/help ]; then
-	cp @CMAKE_INSTALL_PREFIX@/share/freewb/help $HOME/.local/freewb/ -r
-fi
-
 # run freewb
 
 desktop_env=$(echo "$XDG_CURRENT_DESKTOP" | tr '[:upper:]' '[:lower:]')

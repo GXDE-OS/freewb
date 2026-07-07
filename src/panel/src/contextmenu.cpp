@@ -223,8 +223,7 @@ void ContextMenu::on_action22_clicked()
 void ContextMenu::on_action31_clicked()
 {
     close();
-    // system( "firefox ~/.local/freewb/help/help.html > /dev/null 2>&1 &" );
-    QDesktopServices::openUrl(QUrl(INSTALL_DIR + "/help/help.html"));
+    QDesktopServices::openUrl(QUrl(FREEWB_INSTALL_PKGDATADIR + "/help/help.html"));
 }
 
 void ContextMenu::on_action32_clicked()
