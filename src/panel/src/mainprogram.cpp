@@ -70,8 +70,6 @@ void MainProgram::connectPanelDBus()
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_UpdatePreeditText, m_inputWin,
             &InputWin::slot_kim_UpdatePreeditText);
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_UpdateAux, m_inputWin, &InputWin::slot_kim_UpdateAux);
-    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_UpdateSpotLocation, m_inputWin,
-            &InputWin::slot_kim_UpdateSpotLocation);
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_SetSpotLocation, m_inputWin,
             &InputWin::slot_kim_SetSpotLocation);
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_UpdateProperty, m_toolbar,

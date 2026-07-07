@@ -289,7 +289,6 @@ private:
     bool m_mouseMoveFlag;
     QPoint m_mouseLastPosition;
 
-    QSize m_desktopSize;
     // 工具条默认显示位置
     QPoint m_defaultPosition;
     // 扩展菜单是否打开

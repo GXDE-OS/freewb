@@ -1,11 +1,13 @@
 #include "inputwin.h"
 
+#include <QGuiApplication>
 #include <QHBoxLayout>
 #include <QRegExp>
 
 #include "config.h"
 #include "key.h"
 #include "log.h"
+#include "screenhelper.h"
 #include "settings.h"
 #include "settingshelper.h"
 #include "sound.h"
@@ -114,8 +116,21 @@ InputWin::InputWin(QWidget *parent) : QWidget(parent), ui(new Ui::InputWin)
 
     setAttribute(Qt::WA_TranslucentBackground);
 
-    m_desktopSize = QApplication::desktop()->size();
-    m_defaultPosition = QPoint((m_desktopSize.width() - width() / 2), (m_desktopSize.height() - height()) / 2);
+    QPoint anchor(0, 0);
+    if (const QScreen *primary = QGuiApplication::primaryScreen())
+    {
+        anchor = primary->availableGeometry().center();
+    }
+    const QRect desktopBounds = freewb::ScreenHelper::availableGeometryAt(anchor);
+    if (!desktopBounds.isNull())
+    {
+        m_defaultPosition = QPoint(desktopBounds.x() + (desktopBounds.width() - width()) / 2,
+                                   desktopBounds.y() + (desktopBounds.height() - height()) / 2);
+    }
+    else
+    {
+        m_defaultPosition = QPoint(0, 0);
+    }
     m_mouseIsPressed = false;
     m_mouseLastPosition = QPoint();
     m_isUserWordMode = false;
@@ -650,15 +665,17 @@ void InputWin::auto_adjust_candi_win_geometry()
     resize(ui->frameBg->width(), ui->frameBg->height());
 
     // 调整显示位置
-    int x = pos().x(), y = pos().y();
-    if (x + width() > m_desktopSize.width())
+    int x = pos().x();
+    int y = pos().y();
+    const QPoint clamped = freewb::ScreenHelper::clampTopLeft(QPoint(x, y), size());
+    if (clamped.x() != x)
     {
-        x = m_desktopSize.width() - width();
-        move(x, pos().y());
+        move(clamped.x(), pos().y());
+        x = clamped.x();
     }
-    if (y + height() > m_desktopSize.height())
+    if (clamped.y() != y)
     {
-        y = y - 30;
+        y = clamped.y() - 30;
         move(x, y);
     }
 }
@@ -673,16 +690,20 @@ void InputWin::show_dict_find_win()
     m_dictFindLabel->adjustSize();
     m_dictFindWin.adjustSize();
 
-    if (position.x() + m_dictFindWin.width() > m_desktopSize.width())
+    const QRect desktopBounds = freewb::ScreenHelper::availableGeometryAt(position);
+    const int desktopRight = desktopBounds.x() + desktopBounds.width();
+    const int desktopBottom = desktopBounds.y() + desktopBounds.height();
+
+    if (position.x() + m_dictFindWin.width() > desktopRight)
     {
-        position.setX(m_desktopSize.width() - m_dictFindWin.width());
+        position.setX(desktopRight - m_dictFindWin.width());
     }
     else
     {
         position.setX(position.x() + 15);
     }
 
-    if (position.y() + m_dictFindWin.height() > m_desktopSize.height() && m_dictFindWin.height() < position.y())
+    if (position.y() + m_dictFindWin.height() > desktopBottom && m_dictFindWin.height() < position.y())
     {
         position.setY(position.y() - m_dictFindWin.height() - 15);
     }
@@ -691,7 +712,7 @@ void InputWin::show_dict_find_win()
         position.setY(position.y() + 15);
     }
 
-    m_dictFindWin.move(position);
+    m_dictFindWin.move(freewb::ScreenHelper::clampTopLeft(position, m_dictFindWin.size()));
     m_dictFindWin.show();
     m_dictFindWin.raise();
 }
@@ -749,20 +770,17 @@ void InputWin::show_user_word_operation_prompt(int addOrDel, const QString &word
         }
         else*/
         {
+            const QRect desktopBounds = freewb::ScreenHelper::availableGeometryAt(m_imPromptPosition);
             if (m_imPromptPosition.x() < 2 || m_imPromptPosition.y() < 2)
             {
-                QSize sz = QApplication::desktop()->size();
-                QPoint pt = QPoint((sz.width() - len) / 2, sz.height() * 0.75);
+                QPoint pt(desktopBounds.x() + (desktopBounds.width() - len) / 2,
+                          desktopBounds.y() + desktopBounds.height() * 3 / 4);
                 move(pt);
             }
             else
             {
-                QPoint pt = m_imPromptPosition;
-                if (pt.x() + this->width() > m_desktopSize.width())
-                {
-                    pt.setX(m_desktopSize.width() - this->width());
-                }
-                if (pt.y() + this->height() > m_desktopSize.height())
+                QPoint pt = freewb::ScreenHelper::clampTopLeft(m_imPromptPosition, size());
+                if (pt.y() + height() > desktopBounds.y() + desktopBounds.height())
                 {
                     pt.setY(pt.y() - 30);
                 }
@@ -1438,35 +1456,14 @@ void InputWin::slot_kim_UpdateAux(const QString &text, const QString &attr)
     QTimer::singleShot(500, m_labelImPrompt, SLOT(hide()));
 }
 
-//
-void InputWin::slot_kim_UpdateSpotLocation(int x, int y)
-{
-    m_imPromptPosition = QPoint(x, y);
-
-    if (x + width() > m_desktopSize.width())
-    {
-        x = m_desktopSize.width() - width();
-    }
-
-    if (y + height() > m_desktopSize.height())
-    {
-        y = y - height();
-    }
-
-    move(x, y);
-}
-
 void InputWin::slot_kim_SetSpotLocation(int x, int y, int w, int h)
 {
     x += w;
     m_imPromptPosition = QPoint(x, y + h);
 
-    if (x + width() > m_desktopSize.width())
-    {
-        x = m_desktopSize.width() - width();
-    }
-
-    if (y + height() > m_desktopSize.height())
+    const QRect desktopBounds = freewb::ScreenHelper::availableGeometryAt(QPoint(x, y));
+    const int desktopBottom = desktopBounds.y() + desktopBounds.height();
+    if (y + height() > desktopBottom)
     {
         y = y - height();
     }
@@ -1475,5 +1472,5 @@ void InputWin::slot_kim_SetSpotLocation(int x, int y, int w, int h)
         y += h;
     }
 
-    move(x, y);
+    move(freewb::ScreenHelper::clampTopLeft(QPoint(x, y), size()));
 }

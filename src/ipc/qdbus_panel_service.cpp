@@ -60,11 +60,6 @@ void QDBusPanelService::UpdateAux(const QString &text, const QString &attr)
     emit signal_UpdateAux(text, attr);
 }
 
-void QDBusPanelService::UpdateSpotLocation(int x, int y)
-{
-    emit signal_UpdateSpotLocation(x, y);
-}
-
 void QDBusPanelService::UpdateProperty(const QString &prop)
 {
     emit signal_UpdateProperty(prop);

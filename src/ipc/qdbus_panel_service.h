@@ -45,7 +45,6 @@ public Q_SLOTS:
     Q_SCRIPTABLE void UpdatePreeditCaret(int position);
     Q_SCRIPTABLE void UpdatePreeditText(const QString &text, const QString &attr);
     Q_SCRIPTABLE void UpdateAux(const QString &text, const QString &attr);
-    Q_SCRIPTABLE void UpdateSpotLocation(int x, int y);
     Q_SCRIPTABLE void UpdateProperty(const QString &prop);
     Q_SCRIPTABLE void RegisterProperties(const QStringList &props);
     Q_SCRIPTABLE void SetLookupTable(const QStringList &label, const QStringList &text, const QStringList &attr, bool hasPrev,
@@ -65,7 +64,6 @@ Q_SIGNALS:
     void signal_UpdatePreeditCaret(int);
     void signal_UpdatePreeditText(const QString &, const QString &);
     void signal_UpdateAux(const QString &, const QString &);
-    void signal_UpdateSpotLocation(int, int);
     void signal_UpdateProperty(const QString &);
     void signal_RegisterProperties(const QStringList &);
     void signal_SetSpotLocation(int, int, int, int);

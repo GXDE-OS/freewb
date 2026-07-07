@@ -8,6 +8,7 @@
 
 #include "config.h"
 #include "log.h"
+#include "screenhelper.h"
 #include "settings.h"
 #include "settingshelper.h"
 #include "sound.h"
@@ -180,16 +181,19 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     // 载入配置数据
     slot_load_setting_data();
 
-    if (const QScreen *screen = QGuiApplication::primaryScreen())
+    QPoint anchor(0, 0);
+    if (const QScreen *primary = QGuiApplication::primaryScreen())
     {
-        const QRect geo = screen->availableGeometry();
-        m_desktopSize = geo.size();
+        anchor = primary->availableGeometry().center();
+    }
+    const QRect geo = freewb::ScreenHelper::availableGeometryAt(anchor);
+    if (!geo.isNull())
+    {
         m_defaultPosition = QPoint(geo.x() + geo.width() - size().width() - 12, geo.y() + geo.height() - size().height() - 50);
     }
     else
     {
-        m_desktopSize = QApplication::desktop()->size();
-        m_defaultPosition = QPoint(m_desktopSize.width() - size().width() - 12, m_desktopSize.height() - size().height() - 50);
+        m_defaultPosition = QPoint(0, 0);
     }
     move(m_defaultPosition);
 
@@ -545,17 +549,20 @@ void ToolbarWin::show_mouse_hover_tips(QWidget *widget)
     m_tooltipsWin.adjustSize();
 
     QPoint position = QCursor::pos();
-    QSize desktopSize = QApplication::desktop()->size();
-    if (position.x() + m_tooltipsWin.width() > desktopSize.width())
+    const QRect desktopBounds = freewb::ScreenHelper::availableGeometryAt(position);
+    const int desktopRight = desktopBounds.x() + desktopBounds.width();
+    const int desktopBottom = desktopBounds.y() + desktopBounds.height();
+
+    if (position.x() + m_tooltipsWin.width() > desktopRight)
     {
-        position.setX(desktopSize.width() - m_tooltipsWin.width());
+        position.setX(desktopRight - m_tooltipsWin.width());
     }
     else
     {
         position.setX(position.x() + 10);
     }
 
-    if (position.y() + m_tooltipsWin.height() > desktopSize.height() && m_tooltipsWin.height() < position.y())
+    if (position.y() + m_tooltipsWin.height() > desktopBottom && m_tooltipsWin.height() < position.y())
     {
         position.setY(position.y() - m_tooltipsWin.height() - 10);
     }
@@ -564,7 +571,7 @@ void ToolbarWin::show_mouse_hover_tips(QWidget *widget)
         position.setY(position.y() + 10);
     }
 
-    m_tooltipsWin.move(position);
+    m_tooltipsWin.move(freewb::ScreenHelper::clampTopLeft(position, m_tooltipsWin.size()));
     m_tooltipsWin.show();
     m_tooltipsWinShowFlg = true;
 }
@@ -586,43 +593,7 @@ void ToolbarWin::show_keyboard_menu()
 
 void ToolbarWin::move_toolbar(QPoint targetPos)
 {
-    QRect bounds;
-    for (const QScreen *screen : QGuiApplication::screens())
-    {
-        const QRect geo = screen->availableGeometry();
-        bounds = bounds.isNull() ? geo : bounds.united(geo);
-    }
-    if (!bounds.isNull())
-    {
-        const int minX = bounds.x();
-        const int minY = bounds.y();
-        const int maxX = bounds.x() + bounds.width() - width();
-        const int maxY = bounds.y() + bounds.height() - height();
-        targetPos.setX(qBound(minX, targetPos.x(), maxX));
-        targetPos.setY(qBound(minY, targetPos.y(), maxY));
-    }
-    else
-    {
-        if (targetPos.x() < 0)
-        {
-            targetPos.setX(0);
-        }
-        else if (targetPos.x() + size().width() > m_desktopSize.width())
-        {
-            targetPos.setX(m_desktopSize.width() - size().width());
-        }
-
-        if (targetPos.y() < 0)
-        {
-            targetPos.setY(0);
-        }
-        else if (targetPos.y() + size().height() > m_desktopSize.height())
-        {
-            targetPos.setY(m_desktopSize.height() - size().height());
-        }
-    }
-
-    move(targetPos);
+    move(freewb::ScreenHelper::clampTopLeft(targetPos, size()));
 }
 
 void ToolbarWin::install_evt_filter()

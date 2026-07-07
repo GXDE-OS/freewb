@@ -2,7 +2,6 @@
 #define INPUTWIN_H
 
 #include <QDateTime>
-#include <QDesktopWidget>
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>
 #include <QLineEdit>
@@ -128,7 +127,6 @@ public slots:
     void slot_kim_UpdatePreeditCaret(int);
     void slot_kim_UpdatePreeditText(const QString &, const QString &);
     void slot_kim_UpdateAux(const QString &, const QString &);
-    void slot_kim_UpdateSpotLocation(int, int);
     void slot_kim_SetSpotLocation(int, int, int, int);
 
 public:
@@ -177,9 +175,6 @@ private slots:
 
 private:
     Ui::InputWin *ui;
-
-    // 桌面分辨率
-    QSize m_desktopSize;
 
     // 用于窗口拖动计算
     bool m_mouseIsPressed;
