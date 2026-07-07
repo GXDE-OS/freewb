@@ -21,6 +21,7 @@ namespace freewb
 struct OutputInfo
 {
     wayland::kde_output_device_v2_t device;
+    std::vector<wayland::kde_output_device_mode_v2_t> modes;
     double scale = 1.0;
     uint32_t registry_name = 0;
 };
@@ -50,7 +51,7 @@ private:
     void handleRegistryGlobal(uint32_t name, const std::string &interface, uint32_t version);
     void handleRegistryGlobalRemove(uint32_t name);
     void handleWindowCreated(const std::string &uuid);
-    void setupOutputListeners(uint32_t registry_name);
+    void setupOutputListeners(OutputInfo &output);
     void setupWindowListeners(WindowInfo &info);
     WindowInfo *findWindow(const wayland::ukui_window_t &window);
     OutputInfo *findOutput(uint32_t registry_name);
