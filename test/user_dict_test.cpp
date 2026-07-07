@@ -258,6 +258,35 @@ void testDeletedWordSection()
     removeRecursively(home);
 }
 
+void testExactCodeMatchOnly()
+{
+    const std::string home = makeTempHome();
+    ::setenv("HOME", home.c_str(), 1);
+
+    const std::string content = "[UserWord]\n"
+                                "date=$Y年$M月$D日\n"
+                                "date=$y年$m月$d日\n"
+                                "joke=hello\n";
+    EXPECT(prepareUserWord(home, content));
+
+    freewb::UserDict dict;
+
+    EXPECT(candidatesFor(dict, "da").texts.empty());
+    EXPECT(candidatesFor(dict, "dat").texts.empty());
+
+    const auto dateCand = candidatesFor(dict, "date");
+    EXPECT(dateCand.texts.size() == 2);
+    if (dateCand.texts.size() == 2)
+    {
+        EXPECT(dateCand.texts[0] == "$Y年$M月$D日");
+        EXPECT(dateCand.texts[1] == "$y年$m月$d日");
+        EXPECT(dateCand.fullCodes[0] == "date");
+        EXPECT(dateCand.fullCodes[1] == "date");
+    }
+
+    removeRecursively(home);
+}
+
 } // namespace
 
 int main()
@@ -267,6 +296,7 @@ int main()
     testTolerantParse();
     testReload();
     testDeletedWordSection();
+    testExactCodeMatchOnly();
 
     if (g_failed != 0)
     {

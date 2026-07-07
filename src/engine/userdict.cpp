@@ -108,41 +108,29 @@ bool UserDict::hasEntryStartingWithPrefix(const std::string &prefix) const
     return false;
 }
 
-void UserDict::appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const
+void UserDict::appendCandidatesForPrefix(const std::string &code, CandidatePayload &out) const
 {
-    if (prefix.empty())
+    if (code.empty())
     {
         return;
     }
 
-    std::vector<std::string> keys;
-    keys.reserve(userEntries_.size());
-    for (const auto &kv : userEntries_)
+    const auto it = userEntries_.find(code);
+    if (it == userEntries_.end())
     {
-        const std::string &key = kv.first;
-        if (key.size() < prefix.size() || key.compare(0, prefix.size(), prefix) != 0)
-        {
-            continue;
-        }
-        keys.push_back(key);
+        return;
     }
-    std::sort(keys.begin(), keys.end());
-    for (const std::string &key : keys)
+
+    // 同一编码可对应多条 UserWord，需全部追加到候选列表
+    const std::vector<std::string> &texts = it->second;
+    for (const std::string &text : texts)
     {
-        const auto it = userEntries_.find(key);
-        if (it == userEntries_.end())
+        if (text.empty())
         {
             continue;
         }
-        for (const std::string &text : it->second)
-        {
-            if (text.empty())
-            {
-                continue;
-            }
-            out.texts.push_back(text);
-            out.fullCodes.push_back(key);
-        }
+        out.texts.push_back(text);
+        out.fullCodes.push_back(code);
     }
 }
 
