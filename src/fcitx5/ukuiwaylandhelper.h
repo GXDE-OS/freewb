@@ -23,6 +23,7 @@ struct OutputInfo
     wayland::kde_output_device_v2_t device;
     std::vector<wayland::kde_output_device_mode_v2_t> modes;
     double scale = 1.0;
+    bool enabled = true;
     uint32_t registry_name = 0;
 };
 

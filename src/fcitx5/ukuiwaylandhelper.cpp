@@ -250,6 +250,17 @@ void UkuiWaylandHelper::setupOutputListeners(OutputInfo &output)
         }
         entry->scale = factor;
     };
+
+    output.device.on_enabled() = [this, registry_name](int32_t enabled)
+    {
+        std::lock_guard lock(state_mutex_);
+        OutputInfo *entry = findOutput(registry_name);
+        if (entry == nullptr)
+        {
+            return;
+        }
+        entry->enabled = enabled != 0;
+    };
 }
 
 void UkuiWaylandHelper::setupWindowListeners(WindowInfo &info)
@@ -333,7 +344,7 @@ double UkuiWaylandHelper::maxScreenScaleFactor() const
     double max_scale = 1.0;
     for (const auto &output : outputs_)
     {
-        if (output.scale <= 0.0)
+        if (!output.enabled || output.scale <= 0.0)
         {
             continue;
         }
