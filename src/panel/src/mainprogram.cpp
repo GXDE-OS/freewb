@@ -296,8 +296,8 @@ void MainProgram::connectSettingsDBus()
     connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_mark_auto_pairs_flg, this,
             []()
             {
-                const bool enabled = !settings::instance().get_smartMark();
-                settings::instance().set_smartMark(enabled);
+                const bool enabled = !settings::instance().get_puncAutoPair();
+                settings::instance().set_puncAutoPair(enabled);
                 settings::instance().save();
                 g_settingsNotifier.notifySettingDataChangedToLocal();
             });

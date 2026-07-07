@@ -261,7 +261,7 @@ void ToolbarWin::slot_load_setting_data()
     update_char_set_ico();
 
     s_charWidthMode = settings::instance().get_fullWidthFlg() ? WIDTH_FULL : WIDTH_HALF;
-    s_markMode = settings::instance().get_chinesePuncFlg() ? MARK_CN : MARK_EN;
+    s_markMode = settings::instance().get_chinesePunc() ? MARK_CN : MARK_EN;
     slot_update_char_width_mode_ico();
     update_mark_mode_ico();
 
@@ -1009,7 +1009,7 @@ void ToolbarWin::reset()
     set_input_mode(QString::fromStdString(settings::instance().get_inputMode()));
     s_charSetMode = static_cast<CharSetMode>(settings::instance().get_charSet());
     s_charWidthMode = settings::instance().get_fullWidthFlg() ? WIDTH_FULL : WIDTH_HALF;
-    s_markMode = settings::instance().get_chinesePuncFlg() ? MARK_CN : MARK_EN;
+    s_markMode = settings::instance().get_chinesePunc() ? MARK_CN : MARK_EN;
     s_capsFlg = Keyboard::get_caps_flg();
 
     set_traditional_mode(settings::instance().get_simpTradFlg());

@@ -43,9 +43,9 @@ Punc::Punc(Freewb *freewb) : freewb_(freewb)
 
 void Punc::loadSettings()
 {
-    smartMarkEnabled_ = settings::instance().get_smartMark();
-    autoHalfMarkAfterNum_ = settings::instance().get_autoToHalfMarkFlg();
-    chinesePuncEnabled_ = settings::instance().get_chinesePuncFlg();
+    puncAutoPairEnabled_ = settings::instance().get_puncAutoPair();
+    autoHalfMarkAfterNum_ = settings::instance().get_autoToHalfPuncAfterNumber();
+    chinesePuncEnabled_ = settings::instance().get_chinesePunc();
 }
 
 const char *Punc::name() const
@@ -79,7 +79,7 @@ void Punc::changeAvailable()
 
 void Punc::toggleAutoPair()
 {
-    smartMarkEnabled_ = !smartMarkEnabled_;
+    puncAutoPairEnabled_ = !puncAutoPairEnabled_;
 }
 
 bool Punc::isAsciiSymbolKey(FreewbKeySym sym)
@@ -166,7 +166,7 @@ PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
         if (useChinesePunc)
         {
             const PuncMapEntry *mapEntry = lookupMap(static_cast<char>(sym));
-            skipPair = mapEntry != nullptr && mapEntry->variantCount > 1 && !(smartMarkEnabled_ && opening);
+            skipPair = mapEntry != nullptr && mapEntry->variantCount > 1 && !(puncAutoPairEnabled_ && opening);
         }
 
         if (!skipPair)
@@ -174,7 +174,7 @@ PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
             const char *left = useChinesePunc ? pair->chineseLeft : pair->asciiLeft;
             const char *right = useChinesePunc ? pair->chineseRight : pair->asciiRight;
 
-            if (smartMarkEnabled_)
+            if (puncAutoPairEnabled_)
             {
                 lastPuncStack_.erase(pairKey[0]);
                 return opening ? PuncPushResult{left, right} : PuncPushResult{{}, right};

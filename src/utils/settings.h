@@ -68,7 +68,6 @@ enum class ValueType
     X(inputMode, Misc, String, "engine:wbzx", Misc, "")                                                                          \
     X(simpTradFlg, Misc, Bool, "false", Misc, "")                                                                                \
     X(fullWidthFlg, Misc, Bool, "false", Misc, "")                                                                               \
-    X(chinesePuncFlg, Misc, Bool, "true", Misc, "")                                                                              \
     X(vkMode, Misc, Int, "-1", Misc, "")                                                                                         \
     X(separateChar, CandidateWinUi, String, ".", CandidateWinUi, "")                                                             \
     X(cnEnSwitch, ShortcutKey, String, "KEY_SHIFT", ShortcutKey, "")                                                             \
@@ -105,7 +104,9 @@ enum class ValueType
     X(codeRemind, Common, Bool, "true", Common, "")                                                                              \
     X(spaceFullWhenCharHalf, Common, Bool, "false", Common, "")                                                                  \
     X(wordThink, Common, Bool, "false", Common, "")                                                                              \
-    X(smartMark, Common, Bool, "true", Common, "")                                                                               \
+    X(puncAutoPair, Punctuation, Bool, "true", Punctuation, "Automatic punctuation pairing")                                     \
+    X(chinesePunc, Punctuation, Bool, "true", Punctuation, "Chinese punctuation")                                                \
+    X(autoToHalfPuncAfterNumber, Punctuation, Bool, "false", Punctuation, "Auto convert half punctuation after number")          \
     X(remindExistWord, Common, Bool, "false", Common, "")                                                                        \
     X(alertWhenEmptyCode, Common, Bool, "false", Common, "")                                                                     \
     X(autoAdjustFreq, Common, Bool, "false", Common, "")                                                                         \
@@ -115,7 +116,6 @@ enum class ValueType
     X(recodeCalib, Advanced, Bool, "false", Advanced, "")                                                                        \
     X(autoPhrase, Advanced, Bool, "true", Advanced, "")                                                                          \
     X(autoToEnStr, Others, String, "www. ftp: http mail. bbs.", Others, "")                                                      \
-    X(autoToHalfMarkFlg, Others, Bool, "false", Others, "")                                                                      \
     X(curSkinId, Ui, String, "default", Ui, "")                                                                                  \
     X(toolbarAutoLocate, Ui, Bool, "true", Ui, "")                                                                               \
     X(toolbarAutoExpand, Ui, Bool, "false", Ui, "")                                                                              \

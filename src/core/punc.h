@@ -73,7 +73,7 @@ private:
 
     Freewb *freewb_;
     bool chinesePuncEnabled_ = true;
-    bool smartMarkEnabled_ = true;
+    bool puncAutoPairEnabled_ = true;
     bool autoHalfMarkAfterNum_ = false;
     std::unordered_map<char, char> lastPuncStack_;
 };

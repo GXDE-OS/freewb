@@ -847,7 +847,7 @@ void SettingWin::init_common_page()
     ui->ckbCodeRemind->setChecked(settings::instance().get_codeRemind());
     ui->ckbSpaceFullWhenCharHalf->setChecked(settings::instance().get_spaceFullWhenCharHalf());
     ui->ckbWordThink->setChecked(settings::instance().get_wordThink());
-    ui->ckbSmartMark->setChecked(settings::instance().get_smartMark());
+    ui->ckbSmartMark->setChecked(settings::instance().get_puncAutoPair());
     ui->ckbRemindExistWord->setChecked(settings::instance().get_remindExistWord());
     ui->ckbAlertWhenEmptyCode->setChecked(settings::instance().get_alertWhenEmptyCode());
     ui->ckbUseAudioFile->setChecked(useAudioFile());
@@ -872,7 +872,7 @@ void SettingWin::init_others_page()
     ui->ledtAutoToEnStr->setText(toQStringUtf8(settings::instance().get_autoToEnStr()));
     // ui->ledtAutoToHalf->setText( settings::instance().get_CoustomMark() );
     ui->ledtAutoToHalf->hide();
-    ui->ckbAutoHalfMarkAfterNum->setChecked(settings::instance().get_autoToHalfMarkFlg());
+    ui->ckbAutoHalfMarkAfterNum->setChecked(settings::instance().get_autoToHalfPuncAfterNumber());
 }
 
 // 初始化快捷键设置页
@@ -1294,11 +1294,11 @@ void SettingWin::on_ckbSmartMark_stateChanged(int arg1)
 {
     if (arg1 == Qt::Checked)
     {
-        settings::instance().set_smartMark(true);
+        settings::instance().set_puncAutoPair(true);
     }
     else if (arg1 == Qt::Unchecked)
     {
-        settings::instance().set_smartMark(false);
+        settings::instance().set_puncAutoPair(false);
     }
 }
 
@@ -1366,7 +1366,7 @@ void SettingWin::on_ledtAutoToHalf_textChanged(const QString &arg1)
 
 void SettingWin::on_ckbAutoHalfMarkAfterNum_toggled(bool checked)
 {
-    settings::instance().set_autoToHalfMarkFlg(checked);
+    settings::instance().set_autoToHalfPuncAfterNumber(checked);
 }
 
 void SettingWin::on_cmbFunction_activated(int index)
