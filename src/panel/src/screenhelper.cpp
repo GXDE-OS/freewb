@@ -53,4 +53,26 @@ QPoint ScreenHelper::clampTopLeft(const QPoint &topLeft, const QSize &windowSize
     return clamped;
 }
 
+QPoint ScreenHelper::clampTopLeftToUnitedDesktop(const QPoint &topLeft, const QSize &windowSize)
+{
+    const QRect bounds = unitedAvailableGeometry();
+    if (bounds.isNull() || !windowSize.isValid())
+    {
+        return topLeft;
+    }
+
+    const int maxX = bounds.x() + bounds.width() - windowSize.width();
+    const int maxY = bounds.y() + bounds.height() - windowSize.height();
+    QPoint clamped = topLeft;
+    if (maxX >= bounds.x())
+    {
+        clamped.setX(qBound(bounds.x(), topLeft.x(), maxX));
+    }
+    if (maxY >= bounds.y())
+    {
+        clamped.setY(qBound(bounds.y(), topLeft.y(), maxY));
+    }
+    return clamped;
+}
+
 } // namespace freewb

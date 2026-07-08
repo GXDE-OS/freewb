@@ -44,7 +44,6 @@ protected slots:
     // 右键菜单按钮点击执行函数
     void on_action3_clicked();
     void on_action11_clicked();
-    void on_action12_clicked();
     void on_action13_clicked();
     void on_action14_clicked();
     void on_action15_clicked();
@@ -70,7 +69,6 @@ private:
 
     // 二级菜单
     QAction m_action11; // 图形设置模式
-    QAction m_action12; // 专家设置模式
     QAction m_action13; // 类王码设置
     QAction m_action14; // 极点输入模式
     QAction m_action15; // 恢复默认设置

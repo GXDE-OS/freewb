@@ -18,7 +18,6 @@
 
 // 二级菜单
 #define STR_ACTION11 _("Graphical settings mode")
-#define STR_ACTION12 _("Expert settings mode")
 #define STR_ACTION13 _("Class Wangma settings")
 #define STR_ACTION14 _("Freewb input mode")
 #define STR_ACTION15 _("Restore default settings")
@@ -72,12 +71,10 @@ ContextMenu::ContextMenu(QWidget *parent) : QMenu(parent)
 
     // 二级菜单
     m_action11.setText(STR_ACTION11);
-    m_action12.setText(STR_ACTION12);
     m_action13.setText(STR_ACTION13);
     m_action14.setText(STR_ACTION14);
     m_action15.setText(STR_ACTION15);
     m_menu1.addAction(&m_action11);
-    m_menu1.addAction(&m_action12);
     m_menu1.addAction(&m_action15);
 
     m_action21.setText(STR_ACTION21);
@@ -109,7 +106,6 @@ ContextMenu::ContextMenu(QWidget *parent) : QMenu(parent)
 
     connect(&m_action3, SIGNAL(triggered()), this, SLOT(on_action3_clicked()));
     connect(&m_action11, SIGNAL(triggered()), this, SLOT(on_action11_clicked()));
-    connect(&m_action12, SIGNAL(triggered()), this, SLOT(on_action12_clicked()));
     connect(&m_action13, SIGNAL(triggered()), this, SLOT(on_action13_clicked()));
     connect(&m_action14, SIGNAL(triggered()), this, SLOT(on_action14_clicked()));
     connect(&m_action15, SIGNAL(triggered()), this, SLOT(on_action15_clicked()));
@@ -163,12 +159,6 @@ void ContextMenu::on_action11_clicked()
 {
     close();
     emit signal_open_setting_win();
-}
-
-void ContextMenu::on_action12_clicked()
-{
-    close();
-    emit signal_open_textEdit_win(TEM_SETTING_FILE);
 }
 
 void ContextMenu::on_action13_clicked()
@@ -242,7 +232,6 @@ void ContextMenu::on_action32_clicked()
                               "kk.    打开软键盘\n"
                               "mm.    切换字符集\n"
                               "oo.    进入图形模式设置\n"
-                              "pp.    进入专家模式设置\n"
                               "uu.    编辑用户码表\n"
                               "uw.    编辑五笔码表\n"
                               "up.    编辑拼音码表\n "

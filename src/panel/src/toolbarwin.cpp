@@ -522,7 +522,7 @@ void ToolbarWin::show_keyboard_menu()
 
 void ToolbarWin::move_toolbar(QPoint targetPos)
 {
-    move(freewb::ScreenHelper::clampTopLeft(targetPos, size()));
+    move(freewb::ScreenHelper::clampTopLeftToUnitedDesktop(targetPos, size()));
 }
 
 void ToolbarWin::install_evt_filter()
