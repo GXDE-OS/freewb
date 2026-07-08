@@ -14,6 +14,9 @@
 
 FreewbIMModule::FreewbIMModule(fcitx::Instance *instance) : instance_(instance)
 {
+    bindtextdomain(FREEWB_TEXT_DOMAIN, FREEWB_INSTALL_LOCALEDIR);
+    bind_textdomain_codeset(FREEWB_TEXT_DOMAIN, "UTF-8");
+
     freewb_ = std::make_unique<freewb::Freewb>(dynamic_cast<freewb::ipc::IDBus *>(
                                                    new freewb::ipc::SDBusProxy(instance->eventLoop().nativeHandle())),
                                                [this](const std::string &text) { commitString(text); });
@@ -156,7 +159,7 @@ void FreewbIMModule::commitString(const std::string &text) const
 
 void FreewbIMModule::initActions()
 {
-    actions_["about"].setShortText(_("About"));
+    actions_["about"].setShortText(dgettext(FREEWB_TEXT_DOMAIN, "About"));
     actions_["about"].connect<fcitx::SimpleAction::Activated>(
         [this](fcitx::InputContext *ic)
         {
@@ -164,7 +167,7 @@ void FreewbIMModule::initActions()
             freewb_->dbusProxy()->callShowVersionInfoMethod();
         });
 
-    actions_["settings"].setShortText(_("Settings"));
+    actions_["settings"].setShortText(dgettext(FREEWB_TEXT_DOMAIN, "Settings"));
     actions_["settings"].connect<fcitx::SimpleAction::Activated>(
         [this](fcitx::InputContext *ic)
         {

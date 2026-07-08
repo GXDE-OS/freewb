@@ -458,6 +458,7 @@ void SettingWin::setUiTexts()
     ui->ckbInputStatistic->setText(_("Enable input statistics"));
     ui->labelOthers->setText(_("Other settings"));
     ui->label_4->setText(_("Auto-switch to English strings"));
+    ui->label_5->setText(_("Character"));
     ui->labelAutoEnPrompt->setText(_("Freewb switches to English when you type these strings; Enter returns to Chinese.\n"
                                      "Up to four characters, separated by spaces. Useful for browsing."));
     ui->labelAutoMarkPrompt->setText(
