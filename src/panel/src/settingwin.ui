@@ -3622,7 +3622,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        </font>
       </property>
       <property name="text">
-       <string>'</string>
+       <string>&apos;</string>
       </property>
       <property name="maxLength">
        <number>1</number>

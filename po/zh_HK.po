@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freewb v4.0 2026.04.22\n"
 "Report-Msgid-Bugs-To: freewb\n"
-"POT-Creation-Date: 2026-07-08 16:02+0800\n"
+"POT-Creation-Date: 2026-07-08 16:41+0800\n"
 "PO-Revision-Date: 2026-04-22 15:30+0800\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -20,12 +20,12 @@ msgstr ""
 msgid "Open input method settings"
 msgstr ""
 
-#: src/fcitx4/module.cpp:286 src/fcitx5/module.cpp:178
+#: src/fcitx4/module.cpp:286 src/fcitx5/module.cpp:170
 #: src/panel/src/settingwin.cpp:399 src/panel/src/settingwin.cpp:502
 msgid "Settings"
 msgstr ""
 
-#: src/fcitx4/module.cpp:288 src/fcitx5/module.cpp:170
+#: src/fcitx4/module.cpp:288 src/fcitx5/module.cpp:162
 msgid "About"
 msgstr ""
 
@@ -142,7 +142,7 @@ msgstr ""
 msgid "Lexicon tool"
 msgstr ""
 
-#: src/panel/src/contextmenu.cpp:28 src/panel/src/settingwin.cpp:545
+#: src/panel/src/contextmenu.cpp:28 src/panel/src/settingwin.cpp:546
 msgid "Switch lexicon"
 msgstr ""
 
@@ -155,7 +155,7 @@ msgid "Shortcut command"
 msgstr ""
 
 #: src/panel/src/contextmenu.cpp:32 src/panel/src/settingwin.cpp:524
-#: src/panel/src/settingwin.cpp:814 src/panel/src/settingwin.cpp:838
+#: src/panel/src/settingwin.cpp:817 src/panel/src/settingwin.cpp:841
 msgid "Version information"
 msgstr ""
 
@@ -181,17 +181,17 @@ msgstr ""
 
 #: src/panel/src/contextmenu.cpp:181 src/panel/src/dictquerywin.cpp:275
 #: src/panel/src/dictquerywin.cpp:319 src/panel/src/lexicontoolwin.cpp:295
-#: src/panel/src/lexicontoolwin.cpp:545 src/panel/src/settingwin.cpp:1424
-#: src/panel/src/settingwin.cpp:1474 src/panel/src/settingwin.cpp:1832
-#: src/panel/src/settingwin.cpp:1870
+#: src/panel/src/lexicontoolwin.cpp:545 src/panel/src/settingwin.cpp:1433
+#: src/panel/src/settingwin.cpp:1483 src/panel/src/settingwin.cpp:1841
+#: src/panel/src/settingwin.cpp:1879
 msgid "Yes(&Y)"
 msgstr ""
 
 #: src/panel/src/contextmenu.cpp:183 src/panel/src/dictquerywin.cpp:277
 #: src/panel/src/dictquerywin.cpp:321 src/panel/src/lexicontoolwin.cpp:297
-#: src/panel/src/lexicontoolwin.cpp:547 src/panel/src/settingwin.cpp:1426
-#: src/panel/src/settingwin.cpp:1476 src/panel/src/settingwin.cpp:1834
-#: src/panel/src/settingwin.cpp:1872
+#: src/panel/src/lexicontoolwin.cpp:547 src/panel/src/settingwin.cpp:1435
+#: src/panel/src/settingwin.cpp:1485 src/panel/src/settingwin.cpp:1843
+#: src/panel/src/settingwin.cpp:1881
 msgid "No(&N)"
 msgstr ""
 
@@ -550,7 +550,7 @@ msgstr ""
 msgid "delete"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:445 src/panel/src/settingwin.cpp:827
+#: src/panel/src/settingwin.cpp:445 src/panel/src/settingwin.cpp:830
 msgid "Common options"
 msgstr ""
 
@@ -586,7 +586,7 @@ msgstr ""
 msgid "Use sound files"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:454 src/panel/src/settingwin.cpp:828
+#: src/panel/src/settingwin.cpp:454 src/panel/src/settingwin.cpp:831
 msgid "Advanced options"
 msgstr ""
 
@@ -606,7 +606,7 @@ msgstr ""
 msgid "Enable input statistics"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:459 src/panel/src/settingwin.cpp:829
+#: src/panel/src/settingwin.cpp:459 src/panel/src/settingwin.cpp:832
 msgid "Other settings"
 msgstr ""
 
@@ -635,7 +635,7 @@ msgstr ""
 msgid "Half-width punctuation after digits"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:467 src/panel/src/settingwin.cpp:831
+#: src/panel/src/settingwin.cpp:467 src/panel/src/settingwin.cpp:834
 msgid "Interface settings"
 msgstr ""
 
@@ -663,7 +663,7 @@ msgstr ""
 msgid "Show realtime help"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:474 src/panel/src/settingwin.cpp:529
+#: src/panel/src/settingwin.cpp:474 src/panel/src/settingwin.cpp:530
 msgid "Hide toolbar"
 msgstr ""
 
@@ -671,7 +671,7 @@ msgstr ""
 msgid "Toolbar transparency"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:476 src/panel/src/settingwin.cpp:832
+#: src/panel/src/settingwin.cpp:476 src/panel/src/settingwin.cpp:835
 msgid "Candidate window interface"
 msgstr ""
 
@@ -739,12 +739,12 @@ msgstr ""
 msgid "Prompt text"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:494 src/panel/src/settingwin.cpp:1052
-#: src/panel/src/settingwin.cpp:1073
+#: src/panel/src/settingwin.cpp:494 src/panel/src/settingwin.cpp:1056
+#: src/panel/src/settingwin.cpp:1077
 msgid "Background color"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:495 src/panel/src/settingwin.cpp:833
+#: src/panel/src/settingwin.cpp:495 src/panel/src/settingwin.cpp:836
 msgid "Candidate window options"
 msgstr ""
 
@@ -848,7 +848,7 @@ msgstr ""
 msgid "Click the soft keyboard character to edit"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:522 src/panel/src/settingwin.cpp:837
+#: src/panel/src/settingwin.cpp:522 src/panel/src/settingwin.cpp:840
 msgid "Custom punctuation"
 msgstr ""
 
@@ -864,413 +864,423 @@ msgstr ""
 msgid "Auto phrase options"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:530
-msgid "Top-left of desktop"
+#: src/panel/src/settingwin.cpp:529
+msgid "ZZ special encoding symbols"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:531
-msgid "Top-right of desktop"
+msgid "Top-left of desktop"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:532
-msgid "Bottom-left of desktop"
+msgid "Top-right of desktop"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:533
-msgid "Bottom-right of desktop"
+msgid "Bottom-left of desktop"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:534
-msgid "Single row"
+msgid "Bottom-right of desktop"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:535
-msgid "Multi row"
+msgid "Single row"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:536
-msgid "Reverse code lookup"
+msgid "Multi row"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:537
-msgid "Add word online"
+msgid "Reverse code lookup"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:538
-msgid "Delete word online"
+msgid "Add word online"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:539
-msgid "Toggle virtual keyboard"
+msgid "Delete word online"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:540
-msgid "Switch character set"
+msgid "Toggle virtual keyboard"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:541
-msgid "Switch input mode"
+msgid "Switch character set"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:542
-msgid "Toggle simplified/traditional output"
+msgid "Switch input mode"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:543
-msgid "Open system settings"
+msgid "Toggle simplified/traditional output"
 msgstr ""
 
 #: src/panel/src/settingwin.cpp:544
+msgid "Open system settings"
+msgstr ""
+
+#: src/panel/src/settingwin.cpp:545
 msgid "Show/hide status bar"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:546
+#: src/panel/src/settingwin.cpp:547
 msgid "Switch skin"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:547
+#: src/panel/src/settingwin.cpp:548
 msgid "Quick delete committed item"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:548
+#: src/panel/src/settingwin.cpp:549
 msgid "Auto-pair punctuation"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:549 src/panel/src/toolbarwin.cpp:444
+#: src/panel/src/settingwin.cpp:550 src/panel/src/toolbarwin.cpp:444
 msgid "None"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:550
+#: src/panel/src/settingwin.cpp:551
 msgid "Shift"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:551
+#: src/panel/src/settingwin.cpp:552
 msgid "Ctrl"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:561
+#: src/panel/src/settingwin.cpp:562
 msgid ""
 "When you enter code 'a', besides the character for 'a', candidates starting "
 "with 'a' are also shown, e.g. entries like '式a 节b'."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:564
+#: src/panel/src/settingwin.cpp:565
 msgid ""
 "When editing Word documents, paragraph indents of two Chinese characters can "
 "be entered conveniently with this option."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:566
+#: src/panel/src/settingwin.cpp:567
 msgid ""
 "When enabled, after typing '中', related phrases such as '中国' and '中国共产"
 "党' are listed for selection."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:568
+#: src/panel/src/settingwin.cpp:569
 msgid ""
 "When enabled, paired punctuation can be entered with the opening mark; e.g. "
 "'(' outputs '()' and places the cursor inside. Press Enter to finish."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:571
+#: src/panel/src/settingwin.cpp:572
 msgid ""
 "When enabled, if a phrase exists in the lexicon but you type it character by "
 "character, you are prompted. If ignored repeatedly, the phrase may be hidden "
 "depending on Advanced settings."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:574
+#: src/panel/src/settingwin.cpp:575
 msgid ""
 "When enabled, an alert sounds when the code is empty or has duplicate "
 "candidates."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:575
+#: src/panel/src/settingwin.cpp:576
 msgid "When enabled, alerts use sound files in the Freewb sound directory."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:577
+#: src/panel/src/settingwin.cpp:578
 msgid ""
 "The selected duplicate candidate is moved to the first position.\n"
 "Note: single characters are not adjusted this way; use Ctrl+number instead."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:581
+#: src/panel/src/settingwin.cpp:582
 msgid ""
 "When enabled, Shift+letter outputs the letter directly; otherwise temporary "
 "English mode is used and Enter commits the text."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:583
+#: src/panel/src/settingwin.cpp:584
 msgid "When enabled, typing speed is tracked in real time."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:584
+#: src/panel/src/settingwin.cpp:585
 msgid "Your computer behaves like a typewriter (useful for Wubi beginners)."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:585
+#: src/panel/src/settingwin.cpp:586
 msgid ""
 "When enabled, duplicate or empty codes output the first two candidates or "
 "codes for batch proofreading."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:587
+#: src/panel/src/settingwin.cpp:588
 msgid ""
 "When enabled, consecutive single-character commits form auto phrases; "
 "selected auto phrases are saved to the auto phrase lexicon."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:590
+#: src/panel/src/settingwin.cpp:591
+msgid ""
+"When enabled, the Wubi engine loads zz special encoding symbols from the mb "
+"table."
+msgstr "啓用該功能時，五筆字型引擎會從碼表文件中加載zz特殊編碼符號"
+
+#: src/panel/src/settingwin.cpp:593
 msgid ""
 "When typing URLs such as 'www.freewb.org', entering 'www.' switches to "
 "English so browser autocomplete can be used."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:592
+#: src/panel/src/settingwin.cpp:595
 msgid ""
 "For numbers like '12,345.9', enter half-width ',.' here to input grouped "
 "numbers without wrong full-width punctuation."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:595
+#: src/panel/src/settingwin.cpp:598
 msgid "Shows installed skins; select one to change the appearance."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:596
+#: src/panel/src/settingwin.cpp:599
 msgid ""
 "When enabled, the toolbar is placed at the top-right of the active window. "
 "Drag it elsewhere if you prefer another corner."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:598
+#: src/panel/src/settingwin.cpp:601
 msgid "Opens a drop-down menu."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:599
+#: src/panel/src/settingwin.cpp:602
 msgid ""
 "When enabled, hidden toolbar buttons expand on mouse hover and collapse when "
 "the pointer leaves."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:601
+#: src/panel/src/settingwin.cpp:604
 msgid "When enabled, toolbar and candidate window actions play sound effects."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:602
+#: src/panel/src/settingwin.cpp:605
 msgid "When enabled, brief help is shown when hovering toolbar buttons."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:603
+#: src/panel/src/settingwin.cpp:606
 msgid "Hide the toolbar in games or fullscreen apps to reduce distraction."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:604
+#: src/panel/src/settingwin.cpp:607
 msgid "Adjust toolbar transparency."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:606
+#: src/panel/src/settingwin.cpp:609
 msgid "Choose single-row, double-row, or multi-row candidate window layout."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:607
+#: src/panel/src/settingwin.cpp:610
 msgid "Change the separator between index and candidate text."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:608
+#: src/panel/src/settingwin.cpp:611
 msgid "Use a gradient background for the candidate window."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:609
+#: src/panel/src/settingwin.cpp:612
 msgid "Use an image as the candidate window background."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:610
+#: src/panel/src/settingwin.cpp:613
 msgid "Tile the background image; otherwise stretch it to fill the window."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:611
+#: src/panel/src/settingwin.cpp:614
 msgid "Set the corner radius of the candidate window."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:612
+#: src/panel/src/settingwin.cpp:615
 msgid "Set candidate window transparency."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:614
+#: src/panel/src/settingwin.cpp:617
 msgid ""
 "Number of candidates shown; larger values mean fewer page turns (balance "
 "with appearance)."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:615
+#: src/panel/src/settingwin.cpp:618
 msgid ""
 "Maximum characters per candidate; very small values show '...' for hidden "
 "text."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:617
+#: src/panel/src/settingwin.cpp:620
 msgid "Open font settings for candidate text."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:618
+#: src/panel/src/settingwin.cpp:621
 msgid "Set candidate window background color or image."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:619
+#: src/panel/src/settingwin.cpp:622
 msgid "Set the gradient start color."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:620
+#: src/panel/src/settingwin.cpp:623
 msgid "Set the gradient end color."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:621
+#: src/panel/src/settingwin.cpp:624
 msgid "Set the candidate window border color."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:622
+#: src/panel/src/settingwin.cpp:625
 msgid "Set the color for auto-generated brief codes."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:623
+#: src/panel/src/settingwin.cpp:626
 msgid "Set the candidate window prompt text color."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:625
+#: src/panel/src/settingwin.cpp:628
 msgid "Key to select the 2nd candidate, e.g. ',' for users who prefer comma."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:626
+#: src/panel/src/settingwin.cpp:629
 msgid "Key to select the 3rd candidate, e.g. '.' for users who prefer period."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:627
+#: src/panel/src/settingwin.cpp:630
 msgid ""
 "When enabled, the candidate window follows the caret; otherwise it stays at "
 "the bottom (or drag it anywhere)."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:629
+#: src/panel/src/settingwin.cpp:632
 msgid ""
 "Show operation hints at the bottom of the multi-row candidate window, e.g. "
 "'Ctrl+= add word online'."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:632
+#: src/panel/src/settingwin.cpp:635
 msgid ""
 "When enabled, Left Shift selects the 2nd candidate and Right Shift the 3rd. "
 "Swap in Expert settings if needed."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:634
+#: src/panel/src/settingwin.cpp:637
 msgid "Previous page key, e.g. ',' if you prefer comma and period for paging."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:635
+#: src/panel/src/settingwin.cpp:638
 msgid "Next page key, e.g. '.' if you prefer comma and period for paging."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:636
+#: src/panel/src/settingwin.cpp:639
 msgid "Keys for selecting 2nd and 3rd duplicate candidates."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:637
+#: src/panel/src/settingwin.cpp:640
 msgid "Keys for candidate paging."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:638
+#: src/panel/src/settingwin.cpp:641
 msgid "Show dictionary lookup when hovering candidates."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:640
+#: src/panel/src/settingwin.cpp:643
 msgid ""
 "Select a Freewb function such as reverse lookup or online word creation."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:641
+#: src/panel/src/settingwin.cpp:644
 msgid "Shortcut for the function selected above."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:642
+#: src/panel/src/settingwin.cpp:645
 msgid ""
 "Disable all Freewb shortcuts to avoid conflicts with other applications."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:644
+#: src/panel/src/settingwin.cpp:647
 msgid ""
 "Shift+Space is the default full/half width shortcut in Fcitx; enable this to "
 "disable it."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:645
+#: src/panel/src/settingwin.cpp:648
 msgid ""
 "For short English input (e.g. email), press this key then type English and "
 "press Enter to return to Chinese. Also used as a lead key for advanced "
 "features."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:647
+#: src/panel/src/settingwin.cpp:650
 msgid ""
 "Press this key, then a letter to output a predefined phrase.\n"
 "Custom rules: %1\n"
 "(Right-click toolbar → Management tools → Edit shortcut table)."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:650
+#: src/panel/src/settingwin.cpp:653
 msgid ""
 "When in Wubi mode, press this key for temporary Pinyin input of unknown "
 "characters, then return to Wubi. With code already typed, toggles rare-"
 "character mode."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:652
+#: src/panel/src/settingwin.cpp:655
 msgid ""
 "Choose a key to switch Chinese/English without closing or switching the "
 "input method."
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:835
+#: src/panel/src/settingwin.cpp:838
 msgid "Setting shortcut keys"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:836
+#: src/panel/src/settingwin.cpp:839
 msgid "Define soft keyboard"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:1065
+#: src/panel/src/settingwin.cpp:1069
 msgid "Background image"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:1421 src/panel/src/settingwin.cpp:1867
+#: src/panel/src/settingwin.cpp:1430 src/panel/src/settingwin.cpp:1876
 msgid ""
 "The shortcut key you set will conflict with the second and third recode "
 "selection key, confirm setting?"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:1471
+#: src/panel/src/settingwin.cpp:1480
 msgid "Confirm to restore all shortcut keys to the default key value?"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:1494
+#: src/panel/src/settingwin.cpp:1503
 msgid "Set keyboard characters"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:1505
+#: src/panel/src/settingwin.cpp:1514
 msgid "Set keyboard punctuation"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:1672
+#: src/panel/src/settingwin.cpp:1681
 msgid "Select background image"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:1818
+#: src/panel/src/settingwin.cpp:1827
 msgid ""
 "The shortcut key you set will conflict with the up and down page key, "
 "confirm setting?"
 msgstr ""
 
-#: src/panel/src/settingwin.cpp:1822
+#: src/panel/src/settingwin.cpp:1831
 msgid ""
 "The shortcut key you set will conflict with the Chinese/English switch key, "
 "confirm setting?"

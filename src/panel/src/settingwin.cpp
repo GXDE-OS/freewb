@@ -588,7 +588,7 @@ void SettingWin::init_mouse_hover_tips()
     ui->ckbAutoPhrase->setToolTip(_("When enabled, consecutive single-character commits form auto phrases; selected auto phrases "
                                     "are saved to the auto phrase lexicon."));
     ui->ckbZzSpecialEncodingSymbols->setToolTip(
-        _("When enabled, the Wubi engine loads zz special encoding symbols from the zzSpecialEncodingSymbols.mb table."));
+        _("When enabled, the Wubi engine loads zz special encoding symbols from the mb table."));
 
     ui->ledtAutoToEnStr->setToolTip(_("When typing URLs such as 'www.freewb.org', entering 'www.' switches to English so browser "
                                       "autocomplete can be used."));
