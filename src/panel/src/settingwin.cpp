@@ -526,6 +526,7 @@ void SettingWin::setUiTexts()
     ui->btnOk->setText(_("OK"));
     ui->btnCancel->setText(_("Cancel"));
     ui->ckbAutoPhrase->setText(_("Auto phrase options"));
+    ui->ckbZzSpecialEncodingSymbols->setText(_("ZZ special encoding symbols"));
     ui->cmbWhenLossLocation->setItemText(0, _("Hide toolbar"));
     ui->cmbWhenLossLocation->setItemText(1, _("Top-left of desktop"));
     ui->cmbWhenLossLocation->setItemText(2, _("Top-right of desktop"));
@@ -586,6 +587,8 @@ void SettingWin::init_mouse_hover_tips()
                                      "proofreading."));
     ui->ckbAutoPhrase->setToolTip(_("When enabled, consecutive single-character commits form auto phrases; selected auto phrases "
                                     "are saved to the auto phrase lexicon."));
+    ui->ckbZzSpecialEncodingSymbols->setToolTip(
+        _("When enabled, the Wubi engine loads zz special encoding symbols from the zzSpecialEncodingSymbols.mb table."));
 
     ui->ledtAutoToEnStr->setToolTip(_("When typing URLs such as 'www.freewb.org', entering 'www.' switches to English so browser "
                                       "autocomplete can be used."));
@@ -865,6 +868,7 @@ void SettingWin::init_advance_page()
     ui->ckbTypeEffect->setChecked(settings::instance().get_typeEffect());
     ui->ckbRepeatCalib->setChecked(settings::instance().get_recodeCalib());
     ui->ckbAutoPhrase->setChecked(settings::instance().get_autoPhrase());
+    ui->ckbZzSpecialEncodingSymbols->setChecked(settings::instance().get_zzSpecialEncodingSymbols());
 }
 
 // 初始化其它选项设置页面
@@ -1353,6 +1357,11 @@ void SettingWin::on_ckbTypeEffect_toggled(bool checked)
 void SettingWin::on_ckbAutoPhrase_toggled(bool checked)
 {
     settings::instance().set_autoPhrase(checked);
+}
+
+void SettingWin::on_ckbZzSpecialEncodingSymbols_toggled(bool checked)
+{
+    settings::instance().set_zzSpecialEncodingSymbols(checked);
 }
 
 void SettingWin::on_ledtAutoToEnStr_textChanged(const QString &arg1)

@@ -467,7 +467,14 @@ bool WbzxEngine::deleteUserWord(const std::string &code, const std::string &text
 
 bool WbzxEngine::shouldProcessKey(const char *key) const
 {
-    return mbTable_.strInputCode().find(key) != std::string::npos;
+    if (strncmp(key, "z", 1) == 0)
+    {
+        return settings::instance().get_zzSpecialEncodingSymbols();
+    }
+    else
+    {
+        return mbTable_.strInputCode().find(key) != std::string::npos;
+    }
 }
 
 bool WbzxEngine::isExactDictionaryKey(const std::string &preedit) const

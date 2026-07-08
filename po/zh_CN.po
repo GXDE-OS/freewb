@@ -614,6 +614,15 @@ msgid "Enable input statistics"
 msgstr "启用输入统计功能"
 
 #: src/panel/src/settingwin.cpp:459 src/panel/src/settingwin.cpp:829
+#: src/panel/src/settingwin.cpp:530
+msgid "Auto phrase options"
+msgstr "自动词组选项"
+
+#: src/panel/src/settingwin.cpp:528
+msgid "ZZ special encoding symbols"
+msgstr "ZZ 特殊编码符号"
+
+#: src/panel/src/settingwin.cpp:473 src/panel/src/settingwin.cpp:843
 msgid "Other settings"
 msgstr "其它设置"
 

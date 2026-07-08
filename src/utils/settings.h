@@ -110,6 +110,8 @@ enum class ValueType
     X(remindExistWord, Common, Bool, "false", Common, "")                                                                        \
     X(alertWhenEmptyCode, Common, Bool, "false", Common, "")                                                                     \
     X(autoAdjustFreq, Common, Bool, "false", Common, "")                                                                         \
+    X(zzSpecialEncodingSymbols, Advanced, Bool, "true", Advanced,                                                                \
+      "Symbols corresponding to zz encoding, Only applicable to the Wubi input method code table.")                              \
     X(shiftCommitChar, Advanced, Bool, "true", Advanced, "")                                                                     \
     X(inputStatistic, Advanced, Bool, "false", Advanced, "")                                                                     \
     X(typeEffect, Advanced, Bool, "false", Advanced, "")                                                                         \

@@ -51,7 +51,7 @@
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="pageCommon">
      <widget class="QLabel" name="labelCommon">
@@ -1477,6 +1477,29 @@
       </property>
       <property name="text">
        <string>Auto phrase options</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="ckbZzSpecialEncodingSymbols">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>130</y>
+        <width>280</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>ZZ special encoding symbols</string>
       </property>
      </widget>
     </widget>
@@ -3279,6 +3302,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        <property name="font">
         <font>
          <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
@@ -3306,6 +3331,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        <property name="font">
         <font>
          <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
@@ -3333,6 +3360,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        <property name="font">
         <font>
          <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
@@ -3360,6 +3389,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        <property name="font">
         <font>
          <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
@@ -3384,6 +3415,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        <property name="font">
         <font>
          <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
@@ -3408,6 +3441,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        <property name="font">
         <font>
          <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
@@ -3435,6 +3470,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        <property name="font">
         <font>
          <pointsize>11</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
@@ -3585,7 +3622,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        </font>
       </property>
       <property name="text">
-       <string>&apos;</string>
+       <string>'</string>
       </property>
       <property name="maxLength">
        <number>1</number>
