@@ -1,6 +1,6 @@
 [UserWord]
-date=$Y年$M月$D日
 date=$y年$m月$d日
+date=$Y年$M月$D日
 day=$D日
 day=$d日
 hour=$H时
