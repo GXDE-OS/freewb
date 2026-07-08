@@ -146,7 +146,7 @@ void handleCommand(DemoState &s, const std::string &cmd)
                       << "  add <flg> <wordText> <wordCode>\n"
                       << "  del <flg> <wordText> <wordCode>\n"
                       << "  switch_input_mode <imState>\n"
-                      << "  switch_skin | switch_vk <flg>\n"
+                      << "  switch_vk <flg>\n"
                       << "  switch_smart_punc | switch_charset\n"
                       << "  switch_recode_proof | switch_uncommon <wordText> <flg>\n"
                       << "  switch_chttrans | switch_cap_state\n"
@@ -179,8 +179,6 @@ void handleCommand(DemoState &s, const std::string &cmd)
             proxy.callDeleteUsrParseMethod(toInt(tokens[2]), tokens[4], tokens[3]);
         else if (action == "switch_input_mode" && tokens.size() >= 3)
             proxy.callPanelSwitchInputModeMethod(tokens[2]);
-        else if (action == "switch_skin")
-            proxy.callSwitchSkinMethod();
         else if (action == "switch_vk" && tokens.size() >= 3)
             proxy.callSwitchVirtualKeyboardModeMethod(toInt(tokens[2]));
         else if (action == "switch_charset")
@@ -322,7 +320,6 @@ void handleCommand(DemoState &s, const std::string &cmd)
     else if (cmd == "7")
     {
         // settings no-arg methods smoke test
-        proxy.callSwitchSkinMethod();
         proxy.callPanelSwitchCharSetMethod();
         proxy.callOpenUiSettingMethod();
         proxy.callShowVersionInfoMethod();
