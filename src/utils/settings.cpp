@@ -1,10 +1,13 @@
 #include "settings.h"
 
-#include <array>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#include <cerrno>
 #include <cstdlib>
 #include <string>
-#include <utility>
-#include <vector>
+
+#include "utils.h"
 
 namespace settings
 {
@@ -14,10 +17,7 @@ const char kDefaultCoustomChar[] =
 const char kDefaultCoustomMark[] =
     u8R"cc( ）  ！  ·  #  ￥  %  …  —  *  （                                                     ` ~ － — ＝ + [ { ] } 、 ｜ ； ： ’  ，  。  、 ？ )cc";
 
-namespace
-{
-
-void applyOneEntryToIni(CSimpleIniA &ini, const ConfigEntry &e)
+void Settings::applyOneEntryToIni(CSimpleIniA &ini, const ConfigEntry &e)
 {
     switch (e.type)
     {
@@ -33,7 +33,25 @@ void applyOneEntryToIni(CSimpleIniA &ini, const ConfigEntry &e)
     }
 }
 
-} // namespace
+bool Settings::ensureDir(const std::string &dir)
+{
+    if (dir.empty())
+        return true;
+
+    std::string partial;
+    partial.reserve(dir.size());
+    for (std::size_t i = 0; i <= dir.size(); ++i)
+    {
+        if (i == dir.size() || dir[i] == '/')
+        {
+            if (!partial.empty() && ::mkdir(partial.c_str(), 0755) != 0 && errno != EEXIST)
+                return false;
+        }
+        if (i < dir.size())
+            partial.push_back(dir[i]);
+    }
+    return true;
+}
 
 ConfigEntry::ValueSlots Settings::makeValueSlots(ValueType type, const char *text)
 {
@@ -55,11 +73,8 @@ ConfigEntry::ValueSlots Settings::makeValueSlots(ValueType type, const char *tex
 
 Settings::Settings()
 {
-    const char *home = std::getenv("HOME");
-    std::string prefix = home ? home : "";
-    if (!prefix.empty() && prefix.back() != '/')
-        prefix += '/';
-    ini_path_ = prefix + ".local/freewb/config/config.ini";
+    const std::string userRoot = freewb::userFreewbPath();
+    ini_path_ = userRoot.empty() ? ".local/freewb/config/config.ini" : userRoot + "/config/config.ini";
     appendEntriesFromDef();
     load();
 }
@@ -68,28 +83,24 @@ void Settings::load()
 {
     CSimpleIniA ini(true, false, false);
     const SI_Error e = ini.LoadFile(ini_path_.c_str());
-    if (e < 0 && e != SI_FILE)
+    if (e != SI_OK)
         return;
     for (auto &kv : entries_)
     {
-        ConfigEntry &e = kv.second;
-        switch (e.type)
+        ConfigEntry &entry = kv.second;
+        switch (entry.type)
         {
         case ValueType::Bool:
-        {
-            e.value.boolValue = ini.GetBoolValue(e.section, e.uniquename, e.defaultValue.boolValue);
+            entry.value.boolValue = ini.GetBoolValue(entry.section, entry.uniquename, entry.defaultValue.boolValue);
             break;
-        }
         case ValueType::Int:
-        {
-            e.value.intValue =
-                static_cast<int>(ini.GetLongValue(e.section, e.uniquename, static_cast<long>(e.defaultValue.intValue)));
+            entry.value.intValue = static_cast<int>(
+                ini.GetLongValue(entry.section, entry.uniquename, static_cast<long>(entry.defaultValue.intValue)));
             break;
-        }
         case ValueType::String:
         {
-            const char *v = ini.GetValue(e.section, e.uniquename, e.defaultValue.stringValue.c_str(), nullptr);
-            e.value.stringValue = v ? std::string(v) : e.defaultValue.stringValue;
+            const char *v = ini.GetValue(entry.section, entry.uniquename, entry.defaultValue.stringValue.c_str(), nullptr);
+            entry.value.stringValue = v ? std::string(v) : entry.defaultValue.stringValue;
             break;
         }
         }
@@ -106,6 +117,17 @@ ConfigEntry *Settings::findEntryByName(const std::string &uniquename)
 
 void Settings::persistEntry(const ConfigEntry &entry)
 {
+    struct stat st
+    {
+    };
+
+    if (::stat(ini_path_.c_str(), &st) != 0)
+    {
+        const auto pos = ini_path_.rfind('/');
+        if (pos == std::string::npos || !ensureDir(ini_path_.substr(0, pos)))
+            return;
+    }
+
     CSimpleIniA ini(true, false, false);
     const SI_Error err = ini.LoadFile(ini_path_.c_str());
     if (err < 0 && err != SI_FILE)
@@ -178,6 +200,17 @@ void Settings::restoreAllDefaults()
 
 bool Settings::save()
 {
+    struct stat st
+    {
+    };
+
+    if (::stat(ini_path_.c_str(), &st) != 0)
+    {
+        const auto pos = ini_path_.rfind('/');
+        if (pos == std::string::npos || !ensureDir(ini_path_.substr(0, pos)))
+            return false;
+    }
+
     CSimpleIniA ini(true, false, false);
     (void)ini.LoadFile(ini_path_.c_str());
     for (const auto &kv : entries_)

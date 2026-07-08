@@ -170,8 +170,8 @@ struct ConfigEntry
 };
 
 /**
- * 配置对象（主类型）：固定使用 $HOME/.local/freewb/config/config.ini，
- * 生成 entries_（默认已写入 value），再读取 ini 覆盖 value。
+ * 配置对象（主类型）：读写 $HOME/.local/freewb/config/config.ini；
+ * 构造时以代码默认值填充 entries_，用户 ini 存在则覆盖 value；保存时若目录或文件不存在则创建。
  */
 class Settings
 {
@@ -210,7 +210,9 @@ private:
     void writeInt(const std::string &uniquename, int value);
     void writeString(const std::string &uniquename, const std::string &value);
 
-private:
+    static void applyOneEntryToIni(CSimpleIniA &ini, const ConfigEntry &entry);
+    static bool ensureDir(const std::string &dir);
+
     std::string ini_path_;
     std::unordered_map<std::string, ConfigEntry> entries_;
 };
