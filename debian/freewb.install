@@ -1,5 +1,6 @@
 usr/bin/
 etc/xdg/autostart/org.freewb.desktop
+usr/share/dbus-1/services/
 usr/lib/*/freewb/
 usr/share/freewb/
 usr/share/locale/*/LC_MESSAGES/freewb.mo
