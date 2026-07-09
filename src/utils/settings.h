@@ -70,7 +70,7 @@ enum class ValueType
     X(fullWidthFlg, Misc, Bool, "false", Misc, "")                                                                               \
     X(vkMode, Misc, Int, "-1", Misc, "")                                                                                         \
     X(separateChar, CandidateWinUi, String, ".", CandidateWinUi, "")                                                             \
-    X(cnEnSwitch, ShortcutKey, String, "KEY_SHIFT", ShortcutKey, "")                                                             \
+    X(cnEnSwitch, ShortcutKey, String, "KEY_LEFT_SHIFT", ShortcutKey, "")                                                        \
     X(curUsedLexicon, Misc, String, "default", Misc, "")                                                                         \
     X(CoustomChar, Misc, String, kDefaultCoustomChar, Misc, "")                                                                  \
     X(CoustomMark, Misc, String, kDefaultCoustomMark, Misc, "")                                                                  \

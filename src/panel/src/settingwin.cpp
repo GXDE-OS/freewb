@@ -210,26 +210,18 @@ void swBuildSingleShortcutCombo(QComboBox *combo, const std::string &selected, c
     combo->setCurrentIndex(pos >= 0 ? pos : 0);
 }
 
-/* 中英切换的"KEY_SHIFT"/"KEY_CTRL" 聚合项等价覆盖左右两个物理键；单键/空返回自身。 */
-std::pair<std::string, std::string> cnEnSwitchCoverKeys(const std::string &token)
+/* 设置页：两 KEY_* token 是否映射到同一 keysym。 */
+bool tokensSharePhysicalKey(const std::string &lhs, const std::string &rhs)
 {
-    if (token == "KEY_SHIFT")
-        return {"KEY_LEFT_SHIFT", "KEY_RIGHT_SHIFT"};
-    if (token == "KEY_CTRL")
-        return {"KEY_LEFT_CTRL", "KEY_RIGHT_CTRL"};
-    return {token, std::string()};
-}
-
-bool keyTokenHit(const std::string &x, const std::string &a, const std::string &b)
-{
-    if (x.empty() || x == "KEY_NONE")
+    if (lhs.empty() || rhs.empty() || lhs == "KEY_NONE" || rhs == "KEY_NONE")
         return false;
-    return x == a || x == b;
-}
-
-bool pairIntersects(const std::string &a1, const std::string &a2, const std::string &b1, const std::string &b2)
-{
-    return keyTokenHit(b1, a1, a2) || keyTokenHit(b2, a1, a2);
+    if (lhs == rhs)
+        return true;
+    const FreewbKeySym lhsSym = freewb::Key::keySymFromUniqueName(lhs.c_str());
+    const FreewbKeySym rhsSym = freewb::Key::keySymFromUniqueName(rhs.c_str());
+    if (lhsSym == FreewbKey_None || rhsSym == FreewbKey_None)
+        return false;
+    return lhsSym == rhsSym;
 }
 
 /* 键对预设通用结构：两个 KEY_* token，显示时合成 "name1/name2"。*/
@@ -548,8 +540,10 @@ void SettingWin::setUiTexts()
     ui->cmbFunction->setItemText(11, _("Quick delete committed item"));
     ui->cmbFunction->setItemText(12, _("Auto-pair punctuation"));
     ui->cmbSwitchCnEn->setItemText(0, _("None"));
-    ui->cmbSwitchCnEn->setItemText(1, _("Shift"));
-    ui->cmbSwitchCnEn->setItemText(2, _("Ctrl"));
+    ui->cmbSwitchCnEn->setItemText(1, _("Left Shift"));
+    ui->cmbSwitchCnEn->setItemText(2, _("Right Shift"));
+    ui->cmbSwitchCnEn->setItemText(3, _("Left Ctrl"));
+    ui->cmbSwitchCnEn->setItemText(4, _("Right Ctrl"));
 }
 
 void SettingWin::init_mouse_hover_tips()
@@ -1418,11 +1412,11 @@ void SettingWin::on_cmbSwitchCnEn_activated(int index)
     const auto &presets = freewb_cn_en_switch_presets();
     if (index < 0 || static_cast<size_t>(index) >= presets.size())
         return;
-    const auto cover = cnEnSwitchCoverKeys(presets[static_cast<size_t>(index)].token);
+    const std::string &cnEnToken = presets[static_cast<size_t>(index)].token;
     const std::string sec = settings::instance().get_secondRecodeKey();
     const std::string thi = settings::instance().get_thirdRecodeKey();
 
-    if (pairIntersects(cover.first, cover.second, sec, thi))
+    if (tokensSharePhysicalKey(cnEnToken, sec) || tokensSharePhysicalKey(cnEnToken, thi))
     {
         m_msgBox = new QMessageBox(this);
         m_msgBox->setIcon(QMessageBox::Warning);
@@ -1819,14 +1813,15 @@ void SettingWin::on_cmb23RecodeSelect_activated(int index)
     const auto &p = presets[static_cast<size_t>(presetIdx)];
     const std::string prev = settings::instance().get_prevPageKey();
     const std::string next = settings::instance().get_nextPageKey();
-    const auto cessk = cnEnSwitchCoverKeys(settings::instance().get_cnEnSwitch());
+    const std::string &cnEnToken = settings::instance().get_cnEnSwitch();
 
     QString conflictInfo;
-    if (pairIntersects(p.first, p.second, prev, next))
+    if (tokensSharePhysicalKey(p.first, prev) || tokensSharePhysicalKey(p.first, next) ||
+        tokensSharePhysicalKey(p.second, prev) || tokensSharePhysicalKey(p.second, next))
     {
         conflictInfo = _("The shortcut key you set will conflict with the up and down page key, confirm setting?");
     }
-    else if (pairIntersects(p.first, p.second, cessk.first, cessk.second))
+    else if (tokensSharePhysicalKey(cnEnToken, p.first) || tokensSharePhysicalKey(cnEnToken, p.second))
     {
         conflictInfo = _("The shortcut key you set will conflict with the Chinese/English switch key, confirm setting?");
     }
@@ -1868,7 +1863,8 @@ void SettingWin::on_cmbPrevNextPage_activated(int index)
     const std::string sec = settings::instance().get_secondRecodeKey();
     const std::string thi = settings::instance().get_thirdRecodeKey();
 
-    if (pairIntersects(p.first, p.second, sec, thi))
+    if (tokensSharePhysicalKey(p.first, sec) || tokensSharePhysicalKey(p.first, thi) || tokensSharePhysicalKey(p.second, sec) ||
+        tokensSharePhysicalKey(p.second, thi))
     {
         m_msgBox = new QMessageBox(this);
         m_msgBox->setIcon(QMessageBox::Warning);

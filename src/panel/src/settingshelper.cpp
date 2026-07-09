@@ -22,12 +22,14 @@ UiRuntimeState g_uiRuntimeState;
 
 } // namespace
 
-const std::array<CnEnSwitchPreset, 3> &freewb_cn_en_switch_presets()
+const std::array<CnEnSwitchPreset, 5> &freewb_cn_en_switch_presets()
 {
-    static const std::array<CnEnSwitchPreset, 3> k = {{
+    static const std::array<CnEnSwitchPreset, 5> k = {{
         {"KEY_NONE", ""},
-        {"KEY_SHIFT", "Shift"},
-        {"KEY_CTRL", "Ctrl"},
+        {"KEY_LEFT_SHIFT", "Shift_L"},
+        {"KEY_RIGHT_SHIFT", "Shift_R"},
+        {"KEY_LEFT_CTRL", "Ctrl_L"},
+        {"KEY_RIGHT_CTRL", "Ctrl_R"},
     }};
     return k;
 }

@@ -98,6 +98,25 @@ bool test_roundTrip()
     return true;
 }
 
+bool test_cnEnSwitchKeyMatch()
+{
+    std::cout << "\n== cnEn switch key match (keySymFromUniqueName) ==\n";
+
+    CHECK(freewb::Key::keySymFromUniqueName("KEY_NONE") == FreewbKey_None, "KEY_NONE -> None");
+    CHECK(freewb::Key::keySymFromUniqueName(nullptr) == FreewbKey_None, "null token -> None");
+
+    CHECK(freewb::Key::keySymFromUniqueName("KEY_LEFT_SHIFT") == FreewbKey_Shift_L, "left shift token");
+    CHECK(FreewbKey_Shift_L == freewb::Key::keySymFromUniqueName("KEY_LEFT_SHIFT"), "left shift match");
+    CHECK(FreewbKey_Shift_R != freewb::Key::keySymFromUniqueName("KEY_LEFT_SHIFT"), "right shift not left");
+
+    CHECK(freewb::Key::keySymFromUniqueName("KEY_RIGHT_CTRL") == FreewbKey_Control_R, "right ctrl token");
+    CHECK(freewb::Key::keySymFromUniqueName("KEY_SHIFT") == FreewbKey_None, "removed KEY_SHIFT token");
+    CHECK(FreewbKey_a != freewb::Key::keySymFromUniqueName("KEY_LEFT_SHIFT"), "non-modifier no match");
+
+    std::cout << "  cnEn switch key match: finished\n";
+    return true;
+}
+
 } // namespace
 
 int main()
@@ -107,14 +126,15 @@ int main()
     const bool a = test_keySymFromString();
     const bool b = test_keySymToString();
     const bool c = test_roundTrip();
+    const bool d = test_cnEnSwitchKeyMatch();
 
-    if (a && b && c)
+    if (a && b && c && d)
     {
         std::cout << "\nkey_test: all passed\n";
         return 0;
     }
 
     std::cerr << "\nkey_test: failed (keySymFromString=" << (a ? "ok" : "FAIL") << ", keySymToString=" << (b ? "ok" : "FAIL")
-              << ", roundTrip=" << (c ? "ok" : "FAIL") << ")\n";
+              << ", roundTrip=" << (c ? "ok" : "FAIL") << ", cnEnSwitchKeyMatch=" << (d ? "ok" : "FAIL") << ")\n";
     return 1;
 }

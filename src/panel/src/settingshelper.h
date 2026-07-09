@@ -104,7 +104,7 @@ struct CustomKeyValue
 };
 
 // ─── 中英切换键预设（inputwin + settingwin 共用）─────────────────────────────────────
-// 下标对齐 settingwin.ui 中 cmbSwitchCnEn 顺序（None / Shift / Ctrl）
+// 下标对齐 settingwin.ui 中 cmbSwitchCnEn 顺序（None / 左Shift / 右Shift / 左Ctrl / 右Ctrl）
 struct CnEnSwitchPreset
 {
     const char *token;
@@ -139,7 +139,7 @@ std::string freewb_separate_char_to_string(char ch);
 // 中英切换键预设查询
 // ═════════════════════════════════════════════════════════════════════════════════════
 
-const std::array<CnEnSwitchPreset, 3> &freewb_cn_en_switch_presets();
+const std::array<CnEnSwitchPreset, 5> &freewb_cn_en_switch_presets();
 
 /** token → 预设下标反查（未命中返回 -1），用于 init 选中 / 展示 displayName。 */
 int freewb_cn_en_switch_preset_index(const std::string &token);

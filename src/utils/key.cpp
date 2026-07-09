@@ -77,21 +77,6 @@ bool Key::isModifierKeySym(FreewbKeySym sym)
     }
 }
 
-FreewbKeyState Key::modifierStateFromKeySym(FreewbKeySym sym)
-{
-    switch (sym)
-    {
-    case FreewbKey_Shift_L:
-    case FreewbKey_Shift_R:
-        return FreewbKeyState_Shift;
-    case FreewbKey_Control_L:
-    case FreewbKey_Control_R:
-        return FreewbKeyState_Ctrl;
-    default:
-        return FreewbKeyState_None;
-    }
-}
-
 bool Key::isKeyAZ(FreewbKeySym sym, FreewbKeyState state)
 {
     return (!state && sym >= FreewbKey_A && sym <= FreewbKey_Z);

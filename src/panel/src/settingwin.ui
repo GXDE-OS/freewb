@@ -4680,12 +4680,22 @@ rare characters</string>
       </item>
       <item>
        <property name="text">
-        <string>Shift</string>
+        <string>Left Shift</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Ctrl</string>
+        <string>Right Shift</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Left Ctrl</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Right Ctrl</string>
        </property>
       </item>
      </widget>

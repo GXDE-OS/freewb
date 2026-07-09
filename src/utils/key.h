@@ -13,7 +13,6 @@ public:
     static const char *keySymToUniqueName(FreewbKeySym sym);
 
     static bool isModifierKeySym(FreewbKeySym sym);
-    static FreewbKeyState modifierStateFromKeySym(FreewbKeySym sym);
     static bool isKeyAZ(FreewbKeySym sym, FreewbKeyState state);
     static bool isKeyaz(FreewbKeySym sym, FreewbKeyState state);
     static bool isKey09(FreewbKeySym sym, FreewbKeyState state);

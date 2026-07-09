@@ -173,9 +173,8 @@ bool Freewb::processKeyRelease(FreewbKeySym keysym, FreewbKeyState state)
 {
     (void)state;
 
-    const FreewbKeyState switchMod =
-        Key::modifierStateFromKeySym(Key::keySymFromUniqueName(settings::instance().get_cnEnSwitch().c_str()));
-    if (switchMod == FreewbKeyState_None || Key::modifierStateFromKeySym(keysym) != switchMod || !cnEnSwitchKeyPending_)
+    const std::string &switchToken = settings::instance().get_cnEnSwitch();
+    if (keysym != Key::keySymFromUniqueName(switchToken.c_str()) || !cnEnSwitchKeyPending_)
     {
         cnEnSwitchKeyPending_ = false;
         return false;
@@ -387,16 +386,14 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
 
 bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
 {
-    const FreewbKeyState switchMod =
-        Key::modifierStateFromKeySym(Key::keySymFromUniqueName(settings::instance().get_cnEnSwitch().c_str()));
-    if (switchMod != FreewbKeyState_None)
+    const std::string &switchToken = settings::instance().get_cnEnSwitch();
+    if (!switchToken.empty() && switchToken != "KEY_NONE")
     {
-        const FreewbKeyState keyMod = Key::modifierStateFromKeySym(keysym);
         if (!Key::isModifierKeySym(keysym))
         {
             cnEnSwitchKeyPending_ = false;
         }
-        else if (keyMod == switchMod && state == FreewbKeyState_None)
+        else if (keysym == Key::keySymFromUniqueName(switchToken.c_str()) && state == FreewbKeyState_None)
         {
             cnEnSwitchKeyPending_ = true;
         }
