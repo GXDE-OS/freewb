@@ -74,7 +74,7 @@ ConfigEntry::ValueSlots Settings::makeValueSlots(ValueType type, const char *tex
 Settings::Settings()
 {
     const std::string userRoot = freewb::userFreewbPath();
-    ini_path_ = userRoot.empty() ? ".local/freewb/config/config.ini" : userRoot + "/config/config.ini";
+    ini_path_ = userRoot.empty() ? ".local/freewb/config.ini" : userRoot + "/config.ini";
     appendEntriesFromDef();
     load();
 }
