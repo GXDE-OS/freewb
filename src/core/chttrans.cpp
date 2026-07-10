@@ -9,7 +9,7 @@ namespace freewb
 
 void Chttrans::loadPair(const std::string &s2tProfile, const std::string &t2sProfile)
 {
-    const std::string s2tPath = s2tProfile.empty() ? std::string(FREEWB_INSTALL_PKGDATADIR "/data/s2t/s2t.json") : s2tProfile;
+    const std::string s2tPath = s2tProfile.empty() ? std::string(FREEWB_INSTALL_PKGDATADIR "/s2t/s2t.json") : s2tProfile;
     try
     {
         s2t_ = std::make_unique<opencc::SimpleConverter>(s2tPath);

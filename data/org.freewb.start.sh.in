@@ -3,9 +3,7 @@ if [ ! -d $HOME/.local/freewb ];then
 	mkdir $HOME/.local/freewb -p
 fi
 
-if [ ! -d $HOME/.local/freewb/data ];then
-	cp @CMAKE_INSTALL_PREFIX@/share/freewb/data $HOME/.local/freewb/ -r
-fi
+cp @CMAKE_INSTALL_PREFIX@/share/freewb/data $HOME/.local/freewb/ -r
 
 # run freewb
 
