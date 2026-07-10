@@ -1,20 +1,18 @@
 #ifndef _LOG_H_
 #define _LOG_H_
 
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
-
 #include <atomic>
 #include <iostream>
 #include <memory>
 
-#include <spdlog/spdlog.h>
+#include "spdlog/spdlog.h"
 
 #define FREEWB_DEBUG(...)                                                                                                        \
     do                                                                                                                           \
     {                                                                                                                            \
         if (auto *logger = FreewbLog::activeLogger())                                                                            \
         {                                                                                                                        \
-            SPDLOG_LOGGER_DEBUG(logger, __VA_ARGS__);                                                                            \
+            SPDLOG_LOGGER_CALL(logger, spdlog::level::debug, __VA_ARGS__);                                                       \
         }                                                                                                                        \
     } while (0)
 
