@@ -5,7 +5,7 @@
 #include <string>
 
 #include "ifreewb.h"
-#include "opencc.h"
+#include "opencc/opencc.h"
 
 namespace freewb
 {
