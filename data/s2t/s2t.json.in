@@ -4,7 +4,7 @@
     "type": "mmseg",
     "dict": {
       "type": "ocd2",
-      "file": "@FREEWB_INSTALL_PKGDATADIR@/data/s2t/STPhrases.ocd2"
+      "file": "@FREEWB_INSTALL_PKGDATADIR@/s2t/STPhrases.ocd2"
     }
   },
   "conversion_chain": [
@@ -14,11 +14,11 @@
         "dicts": [
           {
             "type": "ocd2",
-            "file": "@FREEWB_INSTALL_PKGDATADIR@/data/s2t/STPhrases.ocd2"
+            "file": "@FREEWB_INSTALL_PKGDATADIR@/s2t/STPhrases.ocd2"
           },
           {
             "type": "ocd2",
-            "file": "@FREEWB_INSTALL_PKGDATADIR@/data/s2t/STCharacters.ocd2"
+            "file": "@FREEWB_INSTALL_PKGDATADIR@/s2t/STCharacters.ocd2"
           }
         ]
       }
