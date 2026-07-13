@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 #include "config.h"
+#include "log.h"
 #include "settings.h"
 
 const char *Sound::s_soundData[6] = {
@@ -25,6 +26,9 @@ void Sound::play(SoundType soundType)
 #if defined(__LINUX__)
     char cmd[128] = {0};
     sprintf(cmd, "aplay %s%s%s > /dev/null 2>&1 &", FREEWB_INSTALL_PKGDATADIR "/sound", "/", s_soundData[soundType]);
-    system(cmd);
+    if (system(cmd) == -1)
+    {
+        FREEWB_ERROR("Failed to play sound: {}", cmd);
+    }
 #endif
 }
