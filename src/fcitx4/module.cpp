@@ -151,6 +151,9 @@ void *FreewbIMCreate(FcitxInstance *instance)
         return nullptr;
     }
 
+    bindtextdomain(FREEWB_TEXT_DOMAIN, FREEWB_INSTALL_LOCALEDIR);
+    bind_textdomain_codeset(FREEWB_TEXT_DOMAIN, "UTF-8");
+
     DBusConnection *dbusConnection = FcitxDBusGetConnection(instance);
     freewb_fcitx4_imclass *imclass = static_cast<freewb_fcitx4_imclass *>(fcitx_utils_malloc0(sizeof(freewb_fcitx4_imclass)));
     imclass->freewb_ = nullptr;
@@ -283,9 +286,11 @@ static void setFreewbStatusVisible(FcitxInstance *instance, boolean visible)
 
 static void registerTrayMenu(FcitxInstance *instance, freewb_fcitx4_imclass *imclass)
 {
-    FcitxUIRegisterStatus(instance, imclass, "freewb-settings", _("Settings"), _("Open input method settings"),
-                          freewbSettingsStatusToggle, freewbStatusGetInactive);
-    FcitxUIRegisterStatus(instance, imclass, "freewb-about", _("About"), _("Show version information"), freewbAboutStatusToggle,
+    FcitxUIRegisterStatus(instance, imclass, "freewb-settings", dgettext(FREEWB_TEXT_DOMAIN, "Settings"),
+                          dgettext(FREEWB_TEXT_DOMAIN, "Open input method settings"), freewbSettingsStatusToggle,
+                          freewbStatusGetInactive);
+    FcitxUIRegisterStatus(instance, imclass, "freewb-about", dgettext(FREEWB_TEXT_DOMAIN, "About"),
+                          dgettext(FREEWB_TEXT_DOMAIN, "Show version information"), freewbAboutStatusToggle,
                           freewbStatusGetInactive);
     setFreewbStatusVisible(instance, false);
 }
