@@ -1,0 +1,8 @@
+/* Hide spdlog symbols to avoid ABI conflicts with other DSOs
+ * that embed a different spdlog version in the same process. */
+{
+  global:
+    *;
+  local:
+    *spdlog*;
+};

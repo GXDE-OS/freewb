@@ -60,6 +60,11 @@ if (${OS_TYPE} STREQUAL "Linux")
     include(FindPkgConfig)
     include(GNUInstallDirs)
     include(ECMUninstallTarget)
+
+    # Hide spdlog symbols in shared libraries to avoid ABI conflicts when another
+    # DSO embeds a different spdlog version in the same process.
+    set(CMAKE_SHARED_LINKER_FLAGS
+        "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/cmake/hide-spdlog-exports.map")
 endif()
 
 set(FREEWB_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})

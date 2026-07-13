@@ -1,5 +1,8 @@
 message(STATUS "will build test cases")
 
+# log.h pulls spdlog; prefer freewb bundled headers over system spdlog/fmt in /usr/include.
+include_directories(BEFORE "${CMAKE_SOURCE_DIR}/include")
+
 if (ENABLE_FCITX5)
     find_package(Fcitx5Utils REQUIRED)
     add_executable(freewb-sdbus-proxy-test sdbus_proxy_test.cpp)
