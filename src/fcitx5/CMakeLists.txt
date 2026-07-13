@@ -21,7 +21,7 @@ message(NOTICE "FCITX_INSTALL_CMAKECONFIG_DIR: [${FCITX_INSTALL_CMAKECONFIG_DIR}
 
 add_library(${PROJECT_NAME}-fcitx5 SHARED module.cpp)
 
-target_link_libraries("${PROJECT_NAME}-fcitx5" Fcitx5::Core ${PROJECT_NAME}-utils ${PROJECT_NAME}-core ${PROJECT_NAME}-ipc)
+target_link_libraries("${PROJECT_NAME}-fcitx5" Fcitx5::Core ${PROJECT_NAME}-utils ${PROJECT_NAME}-core ${PROJECT_NAME}-ipc pthread)
 
 target_compile_definitions(${PROJECT_NAME}-fcitx5 PRIVATE __FCITX5_MAJOR_VERSION__=${FCITX5_MAJOR_VERSION})
 target_compile_definitions(${PROJECT_NAME}-fcitx5 PRIVATE __FCITX5_MINOR_VERSION__=${FCITX5_MINOR_VERSION})
