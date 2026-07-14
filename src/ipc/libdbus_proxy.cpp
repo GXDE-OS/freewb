@@ -100,17 +100,6 @@ bool appendSetCandidateBody(DBusMessage *msg, const freewb::CandidatePayload &pa
 namespace freewb::ipc
 {
 
-std::string LibDbusProxy::toolbarPayloadToPropertyLine(const ::freewb::ToolbarPropertiesPayload &p)
-{
-    if (p.uniqueName == "fullwidth" || p.uniqueName == "punc")
-    {
-        const std::string st = p.active ? "active" : "inactive";
-        return "/Fcitx/" + p.uniqueName + ":" + p.shortDescription + ":fcitx-" + p.uniqueName + "-" + st + ":" +
-               p.longDescription;
-    }
-    return "/Fcitx/im:" + p.uniqueName + ":" + p.name;
-}
-
 LibDbusProxy::LibDbusProxy(void *dbus_connection) : conn_(static_cast<DBusConnection *>(dbus_connection))
 {
     FREEWB_DEBUG("LibDbusProxy: dbus_connection={}", static_cast<const void *>(conn_));
@@ -163,17 +152,21 @@ bool LibDbusProxy::bindDBusSignalCallback(DBusSignalCallback callback)
 
 void LibDbusProxy::callPanelUpdateProperties(const ::freewb::ToolbarPropertiesPayload &payload)
 {
-    sendPanelRegisterProperties({toolbarPayloadToPropertyLine(payload)});
+    const char *engineName = payload.engineName.c_str();
+    const dbus_int32_t charSet = static_cast<dbus_int32_t>(payload.charSet);
+    // sbibb: engineName, traditional, charSet, fullWidth, chinesePunc
+    sendPanelMethod("UpdateProperties", "sbibb", engineName, payload.traditional ? 1 : 0, charSet, payload.fullWidth ? 1 : 0,
+                    payload.chinesePunc ? 1 : 0);
 }
 
 void LibDbusProxy::callPanelShowToolbar()
 {
-    sendPanelMethod("UpdateProperty", "s", "/Fcitx/im:Freewb");
+    sendPanelMethod("ShowToolbar", "");
 }
 
 void LibDbusProxy::callPanelHideToolbar()
 {
-    sendPanelMethod("UpdateProperty", "s", "/Fcitx/im:us");
+    sendPanelMethod("HideToolbar", "");
 }
 
 void LibDbusProxy::callPanelUpdateSpotRect(const ::freewb::SpotRectPayload &payload)
@@ -464,30 +457,6 @@ void LibDbusProxy::sendPanelMethod(const char *member, const char *types, ...) c
             return;
         }
         va_end(ap);
-    }
-    dbus_uint32_t serial = 0;
-    dbus_connection_send(conn_, msg, &serial);
-    dbus_message_unref(msg);
-}
-
-void LibDbusProxy::sendPanelRegisterProperties(const std::vector<std::string> &props) const
-{
-    if (!conn_ || !available_)
-    {
-        return;
-    }
-    DBusMessage *msg = dbus_message_new_method_call(FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH,
-                                                    FREEWUBI_PANEL_INTERFACE, "RegisterProperties");
-    if (!msg)
-    {
-        return;
-    }
-    DBusMessageIter args;
-    dbus_message_iter_init_append(msg, &args);
-    if (!appendStringArray(&args, props))
-    {
-        dbus_message_unref(msg);
-        return;
     }
     dbus_uint32_t serial = 0;
     dbus_connection_send(conn_, msg, &serial);

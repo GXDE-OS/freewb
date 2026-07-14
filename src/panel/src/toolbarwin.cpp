@@ -139,8 +139,11 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_mouseMoveFlag = false;
 
     set_input_mode(QString::fromStdString(settings::instance().get_inputMode()));
+    // 简繁/GB/全半角/中英标点为运行态：仅启动时读一次配置初值，之后由引擎 Sync/Show 与本地切换维护。
     s_isTraditionalMode = settings::instance().get_simpTradFlg();
     s_charSetMode = static_cast<CharSetMode>(settings::instance().get_charSet());
+    s_charWidthMode = settings::instance().get_fullWidthFlg() ? WIDTH_FULL : WIDTH_HALF;
+    s_markMode = settings::instance().get_chinesePunc() ? MARK_CN : MARK_EN;
 
     // 初始化虚拟键盘的输入模式选择菜单
     m_keyboardMenu.setStyleSheet(QSS_MENU);
@@ -203,12 +206,9 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_tooltipsLabel = new QLabel(&m_tooltipsWin);
     m_tooltipsLabel->setStyleSheet(QSS_TOOL_TIPS);
 
-    m_hideDelayTimer.setSingleShot(true);
-    connect(&m_hideDelayTimer, &QTimer::timeout, this, &ToolbarWin::slot_hide_toolbar);
-
-    m_kimPropertyDebounceTimer.setSingleShot(true);
-    m_kimPropertyDebounceTimer.setInterval(80);
-    connect(&m_kimPropertyDebounceTimer, &QTimer::timeout, this, &ToolbarWin::slot_apply_pending_kim_property);
+    m_toolbarCmdDebounceTimer.setSingleShot(true);
+    m_toolbarCmdDebounceTimer.setInterval(80);
+    connect(&m_toolbarCmdDebounceTimer, &QTimer::timeout, this, &ToolbarWin::slot_apply_pending_toolbar_cmd);
 
     connect(&m_keyboardMenu, &QMenu::aboutToShow, this, [this]() { m_keyboardMenuVisible = true; });
     connect(&m_keyboardMenu, &QMenu::aboutToHide, this, [this]() { m_keyboardMenuVisible = false; });
@@ -255,15 +255,6 @@ void ToolbarWin::slot_load_setting_data()
     setWindowOpacity(1 - m_transparency / 100.0);
 
     update_mouse_hover_tips();
-
-    set_traditional_mode(settings::instance().get_simpTradFlg());
-    s_charSetMode = static_cast<CharSetMode>(settings::instance().get_charSet());
-    update_char_set_ico();
-
-    s_charWidthMode = settings::instance().get_fullWidthFlg() ? WIDTH_FULL : WIDTH_HALF;
-    s_markMode = settings::instance().get_chinesePunc() ? MARK_CN : MARK_EN;
-    slot_update_char_width_mode_ico();
-    update_mark_mode_ico();
 
     // 载入皮肤
     const QString curSkinId = toQStringUtf8(settings::instance().get_curSkinId());
@@ -974,12 +965,34 @@ void ToolbarWin::slot_kim_RegisterProperties(const QStringList &prop)
     }
 }
 
-// prop: 切换输入法时提示的输入法本身描述信息
-void ToolbarWin::slot_kim_UpdateProperty(const QString &prop)
+void ToolbarWin::slot_update_toolbar_properties(const QString &engineName, bool traditional, int charSet, bool fullWidth,
+                                                bool chinesePunc)
 {
-    FREEWB_DEBUG("ToolbarWin::slot_kim_UpdateProperty: prop={} (debounced)", prop.toUtf8().constData());
-    m_pendingKimProperty = prop;
-    m_kimPropertyDebounceTimer.start();
+    if (!engineName.isEmpty())
+    {
+        set_input_mode(engineName);
+    }
+    s_isTraditionalMode = traditional;
+    s_charSetMode = (charSet == 0) ? CHAR_GB : CHAR_GBK;
+    set_char_width_mode(fullWidth ? WIDTH_FULL : WIDTH_HALF);
+    set_mark_mode(chinesePunc ? MARK_CN : MARK_EN);
+
+    update_char_font_ico();
+    update_char_set_ico();
+    slot_update_char_width_mode_ico();
+    slot_update_input_mode_ico();
+}
+
+void ToolbarWin::slot_show_toolbar()
+{
+    m_pendingToolbarVisible = true;
+    m_toolbarCmdDebounceTimer.start();
+}
+
+void ToolbarWin::slot_hide_toolbar()
+{
+    m_pendingToolbarVisible = false;
+    m_toolbarCmdDebounceTimer.start();
 }
 
 void ToolbarWin::set_context_menu(ContextMenu *contextMenu)
@@ -999,56 +1012,28 @@ bool ToolbarWin::is_panel_menu_visible() const
 
 void ToolbarWin::hide()
 {
-    m_kimPropertyDebounceTimer.stop();
-    m_pendingKimProperty.clear();
+    m_toolbarCmdDebounceTimer.stop();
     QWidget::hide();
 }
 
-void ToolbarWin::reset()
+void ToolbarWin::slot_apply_pending_toolbar_cmd()
 {
-    set_input_mode(QString::fromStdString(settings::instance().get_inputMode()));
-    s_charSetMode = static_cast<CharSetMode>(settings::instance().get_charSet());
-    s_charWidthMode = settings::instance().get_fullWidthFlg() ? WIDTH_FULL : WIDTH_HALF;
-    s_markMode = settings::instance().get_chinesePunc() ? MARK_CN : MARK_EN;
-    s_capsFlg = Keyboard::get_caps_flg();
-
-    set_traditional_mode(settings::instance().get_simpTradFlg());
-    update_char_set_ico();
-
-    if (s_charWidthMode == WIDTH_FULL)
-    {
-        ui->btnCharWidth->setStyleSheet(QSS_FULL_WIDTH);
-    }
-    else
-    {
-        ui->btnCharWidth->setStyleSheet(QSS_HALF_WIDTH);
-    }
-
-    update_mark_mode_ico();
-}
-
-void ToolbarWin::slot_apply_pending_kim_property()
-{
-    const QString &prop = m_pendingKimProperty;
-    FREEWB_DEBUG("ToolbarWin::slot_apply_pending_kim_property: prop={}", prop.toUtf8().constData());
-    FREEWB_DEBUG("switch ime: {}", prop.toUtf8().constData());
-    if (prop.contains("/Fcitx/im:Freewb") || prop.contains("/Fcitx/im:极点五笔"))
-    {
-        if (!settings::instance().get_hideToolbar())
-        {
-            FREEWB_DEBUG("show toolbar for freewb im");
-            show();
-        }
-    }
-    else if (prop.contains("/Fcitx/im:"))
+    if (!m_pendingToolbarVisible)
     {
         if (is_panel_menu_visible())
         {
             FREEWB_DEBUG("skip hide toolbar while panel menu is visible");
             return;
         }
-        FREEWB_DEBUG("hide toolbar for non-freewb im");
+        FREEWB_DEBUG("hide toolbar");
         hide();
+        return;
+    }
+
+    if (!settings::instance().get_hideToolbar())
+    {
+        FREEWB_DEBUG("show toolbar");
+        show();
     }
 }
 
@@ -1061,11 +1046,6 @@ void ToolbarWin::slot_kb_caps_changed(int capsFlag)
 {
     s_capsFlg = capsFlag;
     slot_update_input_mode_ico();
-}
-
-void ToolbarWin::slot_hide_toolbar()
-{
-    hide();
 }
 
 void ToolbarWin::slot_vk_mode_triggered(QAction *action)

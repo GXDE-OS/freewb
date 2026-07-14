@@ -423,4 +423,14 @@ void EngineManager::toggleCharset()
     }
 }
 
+int EngineManager::charSet() const
+{
+    auto *wbzx = dynamic_cast<WbzxEngine *>(findEngineByName("engine:wbzx"));
+    if (wbzx == nullptr)
+    {
+        return 0;
+    }
+    return wbzx->charSet();
+}
+
 } // namespace freewb

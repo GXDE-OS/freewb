@@ -2,6 +2,7 @@
 
 #include <cerrno>
 #include <cstdarg>
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -80,17 +81,6 @@ static int appendSetCandidateBody(sd_bus_message *m, const CandidatePayload &pay
 
 } // namespace
 
-std::string SDBusProxy::toolbarPayloadToPropertyLine(const ToolbarPropertiesPayload &p)
-{
-    if (p.uniqueName == "fullwidth" || p.uniqueName == "punc")
-    {
-        const std::string st = p.active ? "active" : "inactive";
-        return "/Fcitx/" + p.uniqueName + ":" + p.shortDescription + ":fcitx-" + p.uniqueName + "-" + st + ":" +
-               p.longDescription;
-    }
-    return "/Fcitx/im:" + p.uniqueName + ":" + p.name;
-}
-
 SDBusProxy::SDBusProxy(void *sd_event_handle, int priority)
 {
     if (sd_bus_open_user(&bus_) < 0)
@@ -157,17 +147,21 @@ bool SDBusProxy::bindDBusSignalCallback(DBusSignalCallback callback)
 
 void SDBusProxy::callPanelUpdateProperties(const ToolbarPropertiesPayload &payload)
 {
-    sendPanelRegisterProperties({toolbarPayloadToPropertyLine(payload)});
+    const char *engineName = payload.engineName.c_str();
+    const int32_t charSet = static_cast<int32_t>(payload.charSet);
+    // sbibb: engineName, traditional, charSet, fullWidth, chinesePunc
+    sendPanelMethod("UpdateProperties", "sbibb", engineName, payload.traditional ? 1 : 0, charSet, payload.fullWidth ? 1 : 0,
+                    payload.chinesePunc ? 1 : 0);
 }
 
 void SDBusProxy::callPanelShowToolbar()
 {
-    sendPanelMethod("UpdateProperty", "s", "/Fcitx/im:Freewb");
+    sendPanelMethod("ShowToolbar", "");
 }
 
 void SDBusProxy::callPanelHideToolbar()
 {
-    sendPanelMethod("UpdateProperty", "s", "/Fcitx/im:us");
+    sendPanelMethod("HideToolbar", "");
 }
 
 void SDBusProxy::callPanelUpdateSpotRect(const SpotRectPayload &payload)
@@ -442,28 +436,6 @@ void SDBusProxy::sendPanelMethod(const char *member, const char *types, ...) con
             sd_bus_message_unref(m);
             return;
         }
-    }
-    sd_bus_send(bus_, m, nullptr);
-    sd_bus_message_unref(m);
-}
-
-void SDBusProxy::sendPanelRegisterProperties(const std::vector<std::string> &props) const
-{
-    if (!bus_ || !available_)
-    {
-        return;
-    }
-    sd_bus_message *m = nullptr;
-    if (sd_bus_message_new_method_call(bus_, &m, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE,
-                                       "RegisterProperties") < 0)
-    {
-        return;
-    }
-    std::vector<char *> strv;
-    if (sd_bus_message_append_strv(m, makeStrv(props, strv)) < 0)
-    {
-        sd_bus_message_unref(m);
-        return;
     }
     sd_bus_send(bus_, m, nullptr);
     sd_bus_message_unref(m);

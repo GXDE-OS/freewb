@@ -39,6 +39,8 @@ const PuncMapEntry Punc::kPuncMap[] = {
 
 Punc::Punc(Freewb *freewb) : freewb_(freewb)
 {
+    // chinesePuncEnabled_ 为运行态，仅构造时初始化
+    chinesePuncEnabled_ = settings::instance().get_chinesePunc();
     loadSettings();
 }
 
@@ -46,7 +48,6 @@ void Punc::loadSettings()
 {
     puncAutoPairEnabled_ = settings::instance().get_puncAutoPair();
     autoHalfMarkAfterNum_ = settings::instance().get_autoToHalfPuncAfterNumber();
-    chinesePuncEnabled_ = settings::instance().get_chinesePunc();
 }
 
 const char *Punc::name() const

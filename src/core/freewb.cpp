@@ -73,6 +73,17 @@ Freewb::~Freewb()
 
 void Freewb::activate()
 {
+    ToolbarPropertiesPayload props;
+    const char *engineName = engineManager_->currentEngineName();
+    if (engineName != nullptr)
+    {
+        props.engineName = engineName;
+    }
+    props.traditional = chttrans_->available();
+    props.charSet = engineManager_->charSet();
+    props.fullWidth = charWidth_->available();
+    props.chinesePunc = punc_->available();
+    dbusProxy_->callPanelUpdateProperties(props);
     dbusProxy_->callPanelShowToolbar();
 }
 
@@ -206,9 +217,9 @@ void Freewb::reloadConfig()
 
     committer_->loadSettings();
     candidateList_->loadSettings();
+    // 全半角 / 中英标点为运行态，loadSettings 不覆盖对应开关；简繁仅构造时初始化。
     charWidth_->loadSettings();
     punc_->loadSettings();
-    chttrans_->loadSettings();
 
     updateCandidateAndPreeditToUI();
 }

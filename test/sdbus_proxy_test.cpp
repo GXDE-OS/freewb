@@ -259,63 +259,42 @@ void handleCommand(DemoState &s, const std::string &cmd)
     }
     else if (cmd == "3")
     {
+        freewb::ToolbarPropertiesPayload props;
+        props.engineName = "engine:wbzx";
+        props.traditional = false;
+        props.charSet = 0;
+        props.fullWidth = false;
+        props.chinesePunc = true;
+        proxy.callPanelUpdateProperties(props);
         proxy.callPanelShowToolbar();
-        FREEWB_WARN("cmd=3 emitShowToolbar");
-        std::cout << "UpdateProperty Freewb\n";
+        FREEWB_WARN("cmd=3 UpdateProperties + ShowToolbar");
+        std::cout << "UpdateProperties+ShowToolbar\n";
     }
     else if (cmd == "4")
     {
         proxy.callPanelHideToolbar();
         FREEWB_WARN("cmd=4 emitHideToolbar");
-        std::cout << "UpdateProperty us\n";
+        std::cout << "HideToolbar\n";
     }
     else if (cmd == "5")
     {
-        freewb::ToolbarPropertiesPayload im;
-        im.uniqueName = "Freewb";
-        im.name = "freewb-test";
-        proxy.callPanelUpdateProperties(im);
-
-        freewb::ToolbarPropertiesPayload fw;
-        fw.uniqueName = "fullwidth";
-        fw.shortDescription = "Half";
-        fw.longDescription = "Half width";
-        fw.active = false;
-        proxy.callPanelUpdateProperties(fw);
-
-        freewb::ToolbarPropertiesPayload punc;
-        punc.uniqueName = "punc";
-        punc.shortDescription = "EN";
-        punc.longDescription = "English punctuation";
-        punc.active = false;
-        proxy.callPanelUpdateProperties(punc);
-
-        FREEWB_WARN("cmd=5 emitUpdateProperties x3 (half/EN punct)");
-        std::cout << "three RegisterProperties signals sent\n";
+        freewb::ToolbarPropertiesPayload props;
+        props.engineName = "engine:wbzx";
+        props.fullWidth = false;
+        props.chinesePunc = false;
+        proxy.callPanelUpdateProperties(props);
+        FREEWB_WARN("cmd=5 UpdateProperties (half/EN punct)");
+        std::cout << "UpdateProperties half/EN\n";
     }
     else if (cmd == "6")
     {
-        freewb::ToolbarPropertiesPayload im;
-        im.uniqueName = "Freewb";
-        im.name = "freewb-test";
-        proxy.callPanelUpdateProperties(im);
-
-        freewb::ToolbarPropertiesPayload fw;
-        fw.uniqueName = "fullwidth";
-        fw.shortDescription = "Full";
-        fw.longDescription = "Full width";
-        fw.active = true;
-        proxy.callPanelUpdateProperties(fw);
-
-        freewb::ToolbarPropertiesPayload punc;
-        punc.uniqueName = "punc";
-        punc.shortDescription = "CN";
-        punc.longDescription = "Chinese punctuation";
-        punc.active = true;
-        proxy.callPanelUpdateProperties(punc);
-
-        FREEWB_WARN("cmd=6 emitUpdateProperties x3 (full/CN punct)");
-        std::cout << "three RegisterProperties signals sent\n";
+        freewb::ToolbarPropertiesPayload props;
+        props.engineName = "engine:wbzx";
+        props.fullWidth = true;
+        props.chinesePunc = true;
+        proxy.callPanelUpdateProperties(props);
+        FREEWB_WARN("cmd=6 UpdateProperties (full/CN punct)");
+        std::cout << "UpdateProperties full/CN\n";
     }
     else if (cmd == "7")
     {

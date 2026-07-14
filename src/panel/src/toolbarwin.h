@@ -83,8 +83,12 @@ public slots:
     void slot_update_mark_mode_ico();
     void slot_set_traditional_mode(bool isTraditional);
 
-    void slot_kim_UpdateProperty(const QString &prop);
     void slot_kim_RegisterProperties(const QStringList &prop);
+    /** 引擎同步工具条运行态。 */
+    void slot_update_toolbar_properties(const QString &engineName, bool traditional, int charSet, bool fullWidth,
+                                        bool chinesePunc);
+    void slot_show_toolbar();
+    void slot_hide_toolbar();
 
     void slot_vk_mode_changed(VirtualKeyboardMode vkMode);
     void slot_kb_caps_changed(int capsFlag);
@@ -101,7 +105,6 @@ public:
     void update_mark_mode_ico();
     void update_char_font_ico();
     void set_context_menu(ContextMenu *contextMenu);
-    void reset();
     void hide();
 
 public:
@@ -140,7 +143,6 @@ protected:
     bool is_panel_menu_visible() const;
 
 protected slots:
-    void slot_hide_toolbar();
     void slot_vk_mode_triggered(QAction *action);
 
 private slots:
@@ -153,7 +155,7 @@ private slots:
     void on_btnSetting_clicked();
     void on_btnCharFont_clicked();
     void on_btnCharSet_clicked();
-    void slot_apply_pending_kim_property();
+    void slot_apply_pending_toolbar_cmd();
 
 private:
     // 静态数据成员
@@ -177,10 +179,8 @@ private:
     // 扩展菜单是否打开
     bool m_extendMenuOpenState;
 
-    QTimer m_hideDelayTimer;
-    /** UpdateProperty 防抖：焦点切换时可能连发多条，合并后再决定工具条显隐。 */
-    QTimer m_kimPropertyDebounceTimer;
-    QString m_pendingKimProperty;
+    QTimer m_toolbarCmdDebounceTimer;
+    bool m_pendingToolbarVisible = false;
     bool m_contextMenuVisible = false;
     bool m_keyboardMenuVisible = false;
 

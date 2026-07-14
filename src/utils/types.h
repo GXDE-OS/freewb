@@ -58,12 +58,11 @@ struct CandidateAuxPayload
 
 struct ToolbarPropertiesPayload
 {
-    std::string uniqueName;
-    std::string name;
-    std::string shortDescription;
-    std::string longDescription;
-
-    bool active = false;
+    std::string engineName;
+    bool traditional = false; // true=繁体
+    int charSet = 0;          // 0=GB, 1=GBK
+    bool fullWidth = false;   // true=全角
+    bool chinesePunc = true;  // true=中文标点
 };
 
 struct PanelSignalEvent

@@ -72,10 +72,12 @@ void MainProgram::connectPanelDBus()
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_UpdateAux, m_inputWin, &InputWin::slot_kim_UpdateAux);
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_SetSpotLocation, m_inputWin,
             &InputWin::slot_kim_SetSpotLocation);
-    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_UpdateProperty, m_toolbar,
-            &ToolbarWin::slot_kim_UpdateProperty);
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_RegisterProperties, m_toolbar,
             &ToolbarWin::slot_kim_RegisterProperties);
+    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_UpdateProperties, m_toolbar,
+            &ToolbarWin::slot_update_toolbar_properties);
+    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_ShowToolbar, m_toolbar, &ToolbarWin::slot_show_toolbar);
+    connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_HideToolbar, m_toolbar, &ToolbarWin::slot_hide_toolbar);
 
     connect(m_panelDBusService, &freewb::ipc::QDBusPanelService::signal_switch_input_mode, this,
             [this](const QString &inputMode)
@@ -361,9 +363,8 @@ void MainProgram::initFcitxServiceWatcher()
                 }
                 if (!oldOwner.isEmpty() && newOwner.isEmpty())
                 {
-                    FREEWB_ERROR("fcitx service lost (name: {}, oldOwner: {}, newOwner: {}), reset and hide panel ui",
+                    FREEWB_ERROR("fcitx service lost (name: {}, oldOwner: {}, newOwner: {}), hide panel ui",
                                  serviceName.toUtf8().constData(), oldOwner.toUtf8().constData(), newOwner.toUtf8().constData());
-                    m_toolbar->reset();
                     m_toolbar->hide();
                     m_inputWin->reset();
                     m_inputWin->hide();

@@ -56,6 +56,11 @@ public Q_SLOTS:
     Q_SCRIPTABLE void SwitchSimpOrTrad();
     Q_SCRIPTABLE void SwitchCharWidth();
     Q_SCRIPTABLE void SwitchPunctuationMode();
+    /** 仅同步工具条运行态（绝对值）。签名 sbibb。 */
+    Q_SCRIPTABLE void UpdateProperties(const QString &engineName, bool traditional, int charSet, bool fullWidth,
+                                       bool chinesePunc);
+    Q_SCRIPTABLE void ShowToolbar();
+    Q_SCRIPTABLE void HideToolbar();
 
 Q_SIGNALS:
     // UI内部信号
@@ -73,6 +78,9 @@ Q_SIGNALS:
     void signal_switch_simp_or_trad();
     void signal_switch_char_width();
     void signal_switch_punctuation_mode();
+    void signal_UpdateProperties(const QString &engineName, bool traditional, int charSet, bool fullWidth, bool chinesePunc);
+    void signal_ShowToolbar();
+    void signal_HideToolbar();
 
 private:
     void unRegisterQDBusService();

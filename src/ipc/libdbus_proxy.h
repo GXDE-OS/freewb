@@ -62,10 +62,7 @@ public:
     std::string callGetClipboardMethod() override;
 
 private:
-    static std::string toolbarPayloadToPropertyLine(const ::freewb::ToolbarPropertiesPayload &p);
-
     void sendPanelMethod(const char *member, const char *types, ...) const;
-    void sendPanelRegisterProperties(const std::vector<std::string> &props) const;
     void callSettingsMethod(const char *member, const char *types, ...) const;
     std::string callSettingsMethodReplyString(const char *member) const;
 

@@ -106,6 +106,22 @@ void QDBusPanelService::SwitchPunctuationMode()
     emit signal_switch_punctuation_mode();
 }
 
+void QDBusPanelService::UpdateProperties(const QString &engineName, bool traditional, int charSet, bool fullWidth,
+                                         bool chinesePunc)
+{
+    emit signal_UpdateProperties(engineName, traditional, charSet, fullWidth, chinesePunc);
+}
+
+void QDBusPanelService::ShowToolbar()
+{
+    emit signal_ShowToolbar();
+}
+
+void QDBusPanelService::HideToolbar()
+{
+    emit signal_HideToolbar();
+}
+
 void QDBusPanelService::commitUserWordAdd(const QString &wordCode, const QString &wordText)
 {
     emit CommitUserWordAdd(wordCode, wordText);

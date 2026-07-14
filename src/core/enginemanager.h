@@ -38,6 +38,8 @@ public:
     void reloadDictionaries(int mask);
 
     void toggleCharset();
+    /** 当前字符集：0=GB, 1=GBK；无五笔引擎时默认 0。 */
+    int charSet() const;
 
     bool isCurrentPreeditExactDictionaryKey(const std::string &preedit) const;
     /** 按五笔码表造词规则计算词组编码；失败返回空串。 */

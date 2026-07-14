@@ -20,7 +20,6 @@ public:
     bool available() const override;
     void changeAvailable() override;
 
-    void loadSettings();
     void simpToTrad(std::string &text) const;
 
 private:

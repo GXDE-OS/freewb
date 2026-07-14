@@ -43,6 +43,11 @@ void WbzxEngine::toggleCharset()
     gb2312Filter_.changeAvailable();
 }
 
+int WbzxEngine::charSet() const
+{
+    return gb2312Filter_.available() ? 0 : 1;
+}
+
 void WbzxEngine::fillCandidatePayloadPrompts(const std::string &preedit, CandidatePayload &payload) const
 {
     const std::size_t n = payload.texts.size();

@@ -38,6 +38,8 @@ public:
     std::string calculateWubiPhraseCode(const std::string &phrase) const;
 
     void toggleCharset();
+    /** 0=GB（启用 GB2312 过滤）, 1=GBK。 */
+    int charSet() const;
 
     void reloadMainDictionary();
     void reloadUserDictionary();

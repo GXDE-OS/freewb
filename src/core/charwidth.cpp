@@ -17,13 +17,14 @@ static constexpr int kCornerTransCount = static_cast<int>(sizeof(kCornerTrans) /
 
 CharWidth::CharWidth()
 {
+    // available_（全/半角）为运行态，仅构造时初始化
+    available_ = settings::instance().get_fullWidthFlg();
     loadSettings();
 }
 
 void CharWidth::loadSettings()
 {
     spaceFullWhenCharHalf_ = settings::instance().get_spaceFullWhenCharHalf();
-    available_ = settings::instance().get_fullWidthFlg();
 }
 
 const char *CharWidth::name() const
