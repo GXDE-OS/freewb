@@ -1,0 +1,14 @@
+#!/bin/sh
+#set -e
+
+case "$1" in
+    install|upgrade)
+        if command -v pkill >/dev/null 2>&1; then
+            pkill -x freewb-panel 2>/dev/null || true
+        elif command -v killall >/dev/null 2>&1; then
+            killall freewb-panel 2>/dev/null || true
+        fi
+        ;;
+esac
+
+exit 0
