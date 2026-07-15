@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.6)
 
 project(freewb)
+
 string(TIMESTAMP FREEWB_VERSION "v4.0 %Y.%m.%d" UTC)
+message(STATUS "FREEWB_VERSION: ${FREEWB_VERSION}")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(OS_TYPE "Linux")
