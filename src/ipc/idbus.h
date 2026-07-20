@@ -16,7 +16,7 @@ public:
     virtual bool bindDBusSignalCallback(DBusSignalCallback callback) = 0;
 
     // Panel UI
-    virtual void callPanelUpdateProperties(const ::freewb::ToolbarPropertiesPayload &payload) = 0;
+    virtual void callPanelUpdateProperties(const ::freewb::ToolbarPropertys &props) = 0;
     virtual void callPanelShowToolbar() = 0;
     virtual void callPanelHideToolbar() = 0;
     virtual void callPanelUpdateSpotRect(const ::freewb::SpotRectPayload &payload) = 0;

@@ -3,6 +3,8 @@
 #include <cstring>
 #include <string>
 
+#include "freewb.h"
+#include "idbus.h"
 #include "ifreewb.h"
 #include "key.h"
 #include "log.h"
@@ -12,11 +14,31 @@
 namespace freewb
 {
 
-EngineManager::EngineManager(CandidateList *candidateList, Committer *committer)
-    : candidateList_(candidateList), committer_(committer)
+EngineManager::EngineManager(Freewb *freewb, CandidateList *candidateList, Committer *committer)
+    : freewb_(freewb), candidateList_(candidateList), committer_(committer)
 {
     initAllEngines();
     loadDefaultEngines();
+    notifyToolbarProperty();
+}
+
+void EngineManager::notifyToolbarProperty() const
+{
+    if (freewb_ == nullptr || freewb_->dbusProxy() == nullptr)
+    {
+        return;
+    }
+
+    ToolbarPropertys props;
+    const char *engineName = currentEngineName();
+    if (engineName != nullptr && engineName[0] != '\0')
+    {
+        props.emplace_back(engineName);
+    }
+    const auto *wbzx = dynamic_cast<WbzxEngine *>(findEngineByName("engine:wbzx"));
+    const int charSet = (wbzx != nullptr) ? wbzx->charSet() : 0;
+    props.emplace_back(charSet == 0 ? "charset:gb" : "charset:gbk");
+    freewb_->dbusProxy()->callPanelUpdateProperties(props);
 }
 
 EngineManager::~EngineManager() = default;
@@ -421,16 +443,6 @@ void EngineManager::toggleCharset()
     {
         wbzx->toggleCharset();
     }
-}
-
-int EngineManager::charSet() const
-{
-    auto *wbzx = dynamic_cast<WbzxEngine *>(findEngineByName("engine:wbzx"));
-    if (wbzx == nullptr)
-    {
-        return 0;
-    }
-    return wbzx->charSet();
 }
 
 } // namespace freewb

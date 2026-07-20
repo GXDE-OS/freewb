@@ -150,13 +150,28 @@ bool LibDbusProxy::bindDBusSignalCallback(DBusSignalCallback callback)
     return registerPanelMatches();
 }
 
-void LibDbusProxy::callPanelUpdateProperties(const ::freewb::ToolbarPropertiesPayload &payload)
+void LibDbusProxy::callPanelUpdateProperties(const ::freewb::ToolbarPropertys &props)
 {
-    const char *engineName = payload.engineName.c_str();
-    const dbus_int32_t charSet = static_cast<dbus_int32_t>(payload.charSet);
-    // sbibb: engineName, traditional, charSet, fullWidth, chinesePunc
-    sendPanelMethod("UpdateProperties", "sbibb", engineName, payload.traditional ? 1 : 0, charSet, payload.fullWidth ? 1 : 0,
-                    payload.chinesePunc ? 1 : 0);
+    if (!conn_ || !available_)
+    {
+        return;
+    }
+    DBusMessage *msg = dbus_message_new_method_call(FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH,
+                                                    FREEWUBI_PANEL_INTERFACE, "UpdateProperties");
+    if (!msg)
+    {
+        return;
+    }
+    DBusMessageIter args;
+    dbus_message_iter_init_append(msg, &args);
+    if (!appendStringArray(&args, props))
+    {
+        dbus_message_unref(msg);
+        return;
+    }
+    dbus_uint32_t serial = 0;
+    dbus_connection_send(conn_, msg, &serial);
+    dbus_message_unref(msg);
 }
 
 void LibDbusProxy::callPanelShowToolbar()

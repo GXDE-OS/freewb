@@ -9,10 +9,12 @@
 namespace freewb
 {
 
+class Freewb;
+
 class CharWidth final : public IFreewb
 {
 public:
-    CharWidth();
+    explicit CharWidth(Freewb *freewb = nullptr);
     ~CharWidth() override = default;
 
     const char *name() const override;
@@ -27,8 +29,10 @@ public:
 private:
     static const char *fullWidthForAscii(unsigned char ch);
     const char *fullWidthIfEnabled(unsigned char ch) const;
+    void notifyToolbarProperty() const;
 
 private:
+    Freewb *freewb_ = nullptr;
     bool available_ = false;
     bool spaceFullWhenCharHalf_ = false;
 };

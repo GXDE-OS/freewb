@@ -25,7 +25,7 @@ public:
 
     bool bindDBusSignalCallback(DBusSignalCallback callback) override;
 
-    void callPanelUpdateProperties(const ::freewb::ToolbarPropertiesPayload &payload) override;
+    void callPanelUpdateProperties(const ::freewb::ToolbarPropertys &props) override;
     void callPanelShowToolbar() override;
     void callPanelHideToolbar() override;
     void callPanelUpdateSpotRect(const ::freewb::SpotRectPayload &payload) override;

@@ -56,14 +56,7 @@ struct CandidateAuxPayload
     std::string text;
 };
 
-struct ToolbarPropertiesPayload
-{
-    std::string engineName;
-    bool traditional = false; // true=繁体
-    int charSet = 0;          // 0=GB, 1=GBK
-    bool fullWidth = false;   // true=全角
-    bool chinesePunc = true;  // true=中文标点
-};
+using ToolbarPropertys = std::vector<std::string>;
 
 struct PanelSignalEvent
 {

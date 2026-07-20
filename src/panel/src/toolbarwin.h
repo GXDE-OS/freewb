@@ -11,6 +11,7 @@
 #include <QPoint>
 #include <QScreen>
 #include <QSettings>
+#include <QStringList>
 #include <QTimer>
 #include <QWidget>
 
@@ -79,14 +80,11 @@ public slots:
     void slot_load_setting_data();
     void slot_load_skin(const QString &skinId);
     void slot_update_input_mode_ico();
-    void slot_update_char_width_mode_ico();
-    void slot_update_mark_mode_ico();
     void slot_set_traditional_mode(bool isTraditional);
 
     void slot_kim_RegisterProperties(const QStringList &prop);
     /** 引擎同步工具条运行态。 */
-    void slot_update_toolbar_properties(const QString &engineName, bool traditional, int charSet, bool fullWidth,
-                                        bool chinesePunc);
+    void slot_update_toolbar_properties(const QStringList &props);
     void slot_show_toolbar();
     void slot_hide_toolbar();
 
@@ -101,8 +99,10 @@ public slots:
 public:
     void switch_char_set();
     void set_traditional_mode(bool isTraditional);
-    void update_char_width_mode_ico(CharWidthMode charWidth);
-    void update_mark_mode_ico();
+    void refresh_char_width_mode_ico();
+    void toggle_char_width_mode();
+    void refresh_mark_mode_ico();
+    void toggle_mark_mode();
     void update_char_font_ico();
     void set_context_menu(ContextMenu *contextMenu);
     void hide();

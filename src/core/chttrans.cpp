@@ -1,6 +1,8 @@
 #include "chttrans.h"
 
 #include "config.h"
+#include "freewb.h"
+#include "idbus.h"
 #include "log.h"
 #include "settings.h"
 
@@ -21,11 +23,21 @@ void Chttrans::loadPair(const std::string &s2tProfile, const std::string &t2sPro
     }
 }
 
-Chttrans::Chttrans()
+Chttrans::Chttrans(Freewb *freewb) : freewb_(freewb)
 {
     loadPair(std::string(), std::string());
     // available_（简繁）为运行态，仅构造时初始化
     available_ = settings::instance().get_simpTradFlg();
+    notifyToolbarProperty();
+}
+
+void Chttrans::notifyToolbarProperty() const
+{
+    if (freewb_ == nullptr || freewb_->dbusProxy() == nullptr)
+    {
+        return;
+    }
+    freewb_->dbusProxy()->callPanelUpdateProperties({available_ ? "chttrans:active" : "chttrans:inactive"});
 }
 
 const char *Chttrans::name() const

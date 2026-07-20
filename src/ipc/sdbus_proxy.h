@@ -25,7 +25,7 @@ public:
 
     bool bindDBusSignalCallback(DBusSignalCallback callback) override;
 
-    void callPanelUpdateProperties(const ToolbarPropertiesPayload &payload) override;
+    void callPanelUpdateProperties(const ToolbarPropertys &props) override;
     void callPanelShowToolbar() override;
     void callPanelHideToolbar() override;
     void callPanelUpdateSpotRect(const SpotRectPayload &payload) override;

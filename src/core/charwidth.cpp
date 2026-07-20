@@ -1,5 +1,7 @@
 #include "charwidth.h"
 
+#include "freewb.h"
+#include "idbus.h"
 #include "settings.h"
 
 namespace freewb
@@ -15,11 +17,21 @@ static const char *const kCornerTrans[] = {
 
 static constexpr int kCornerTransCount = static_cast<int>(sizeof(kCornerTrans) / sizeof(kCornerTrans[0]));
 
-CharWidth::CharWidth()
+CharWidth::CharWidth(Freewb *freewb) : freewb_(freewb)
 {
     // available_（全/半角）为运行态，仅构造时初始化
     available_ = settings::instance().get_fullWidthFlg();
     loadSettings();
+    notifyToolbarProperty();
+}
+
+void CharWidth::notifyToolbarProperty() const
+{
+    if (freewb_ == nullptr || freewb_->dbusProxy() == nullptr)
+    {
+        return;
+    }
+    freewb_->dbusProxy()->callPanelUpdateProperties({available_ ? "fullwidth:active" : "fullwidth:inactive"});
 }
 
 void CharWidth::loadSettings()

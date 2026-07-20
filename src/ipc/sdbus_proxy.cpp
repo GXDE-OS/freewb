@@ -145,13 +145,32 @@ bool SDBusProxy::bindDBusSignalCallback(DBusSignalCallback callback)
     return registerPanelMatches();
 }
 
-void SDBusProxy::callPanelUpdateProperties(const ToolbarPropertiesPayload &payload)
+void SDBusProxy::callPanelUpdateProperties(const ToolbarPropertys &props)
 {
-    const char *engineName = payload.engineName.c_str();
-    const int32_t charSet = static_cast<int32_t>(payload.charSet);
-    // sbibb: engineName, traditional, charSet, fullWidth, chinesePunc
-    sendPanelMethod("UpdateProperties", "sbibb", engineName, payload.traditional ? 1 : 0, charSet, payload.fullWidth ? 1 : 0,
-                    payload.chinesePunc ? 1 : 0);
+    if (!bus_ || !available_)
+    {
+        return;
+    }
+    sd_bus_message *m = nullptr;
+    if (sd_bus_message_new_method_call(bus_, &m, FREEWUBI_PANEL_SERVICENAME, FREEWUBI_PANEL_OBJECTPATH, FREEWUBI_PANEL_INTERFACE,
+                                       "UpdateProperties") < 0)
+    {
+        return;
+    }
+    std::vector<char *> scratch;
+    char **strv = makeStrv(props, scratch);
+    if (strv == nullptr)
+    {
+        scratch.push_back(nullptr);
+        strv = scratch.data();
+    }
+    if (sd_bus_message_append_strv(m, strv) < 0)
+    {
+        sd_bus_message_unref(m);
+        return;
+    }
+    sd_bus_send(bus_, m, nullptr);
+    sd_bus_message_unref(m);
 }
 
 void SDBusProxy::callPanelShowToolbar()

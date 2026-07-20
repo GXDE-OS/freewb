@@ -5,6 +5,7 @@
 
 #include "charwidth.h"
 #include "freewb.h"
+#include "idbus.h"
 #include "key.h"
 #include "settings.h"
 
@@ -42,6 +43,16 @@ Punc::Punc(Freewb *freewb) : freewb_(freewb)
     // chinesePuncEnabled_ 为运行态，仅构造时初始化
     chinesePuncEnabled_ = settings::instance().get_chinesePunc();
     loadSettings();
+    notifyToolbarProperty();
+}
+
+void Punc::notifyToolbarProperty() const
+{
+    if (freewb_ == nullptr || freewb_->dbusProxy() == nullptr)
+    {
+        return;
+    }
+    freewb_->dbusProxy()->callPanelUpdateProperties({chinesePuncEnabled_ ? "punc:active" : "punc:inactive"});
 }
 
 void Punc::loadSettings()

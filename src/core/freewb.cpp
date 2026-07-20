@@ -16,13 +16,13 @@ namespace freewb
 
 Freewb::Freewb(ipc::IDBus *dbusProxy, CommitCallback commitCallback) : log_("/tmp/freewb-engine.log"), dbusProxy_(dbusProxy)
 {
-    charWidth_ = new CharWidth();
+    charWidth_ = new CharWidth(this);
     punc_ = new Punc(this);
     special_ = new Special();
-    chttrans_ = new Chttrans();
+    chttrans_ = new Chttrans(this);
     candidateList_ = new CandidateList(this);
     committer_ = new Committer(std::move(commitCallback), this);
-    engineManager_ = new EngineManager(candidateList_, committer_);
+    engineManager_ = new EngineManager(this, candidateList_, committer_);
     stateManager_ = new StateManager(this);
     connectDBusCallback();
 }
@@ -73,17 +73,6 @@ Freewb::~Freewb()
 
 void Freewb::activate()
 {
-    ToolbarPropertiesPayload props;
-    const char *engineName = engineManager_->currentEngineName();
-    if (engineName != nullptr)
-    {
-        props.engineName = engineName;
-    }
-    props.traditional = chttrans_->available();
-    props.charSet = engineManager_->charSet();
-    props.fullWidth = charWidth_->available();
-    props.chinesePunc = punc_->available();
-    dbusProxy_->callPanelUpdateProperties(props);
     dbusProxy_->callPanelShowToolbar();
 }
 

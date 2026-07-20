@@ -10,10 +10,12 @@
 namespace freewb
 {
 
+class Freewb;
+
 class Chttrans final : public IFreewb
 {
 public:
-    Chttrans();
+    explicit Chttrans(Freewb *freewb = nullptr);
     ~Chttrans() override = default;
 
     const char *name() const override;
@@ -24,8 +26,10 @@ public:
 
 private:
     void loadPair(const std::string &s2tProfile, const std::string &t2sProfile);
+    void notifyToolbarProperty() const;
 
 private:
+    Freewb *freewb_ = nullptr;
     std::unique_ptr<opencc::SimpleConverter> s2t_;
     bool available_ = true;
 };

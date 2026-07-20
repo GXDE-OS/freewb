@@ -259,12 +259,7 @@ void handleCommand(DemoState &s, const std::string &cmd)
     }
     else if (cmd == "3")
     {
-        freewb::ToolbarPropertiesPayload props;
-        props.engineName = "engine:wbzx";
-        props.traditional = false;
-        props.charSet = 0;
-        props.fullWidth = false;
-        props.chinesePunc = true;
+        freewb::ToolbarPropertys props = {"engine:wbzx", "chttrans:inactive", "charset:gb", "fullwidth:inactive", "punc:active"};
         proxy.callPanelUpdateProperties(props);
         proxy.callPanelShowToolbar();
         FREEWB_WARN("cmd=3 UpdateProperties + ShowToolbar");
@@ -278,20 +273,14 @@ void handleCommand(DemoState &s, const std::string &cmd)
     }
     else if (cmd == "5")
     {
-        freewb::ToolbarPropertiesPayload props;
-        props.engineName = "engine:wbzx";
-        props.fullWidth = false;
-        props.chinesePunc = false;
+        freewb::ToolbarPropertys props = {"engine:wbzx", "fullwidth:inactive", "punc:inactive"};
         proxy.callPanelUpdateProperties(props);
         FREEWB_WARN("cmd=5 UpdateProperties (half/EN punct)");
         std::cout << "UpdateProperties half/EN\n";
     }
     else if (cmd == "6")
     {
-        freewb::ToolbarPropertiesPayload props;
-        props.engineName = "engine:wbzx";
-        props.fullWidth = true;
-        props.chinesePunc = true;
+        freewb::ToolbarPropertys props = {"engine:wbzx", "fullwidth:active", "punc:active"};
         proxy.callPanelUpdateProperties(props);
         FREEWB_WARN("cmd=6 UpdateProperties (full/CN punct)");
         std::cout << "UpdateProperties full/CN\n";

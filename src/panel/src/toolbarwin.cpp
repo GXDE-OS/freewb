@@ -316,7 +316,7 @@ void ToolbarWin::update_skin()
     if (Skin::instance().toolbar().stbFullHalfBtn.isExist)
     {
         ui->btnCharWidth->setGeometry(Skin::instance().toolbar().stbFullHalfBtn.rect);
-        slot_update_char_width_mode_ico();
+        refresh_char_width_mode_ico();
     }
     else
     {
@@ -327,7 +327,7 @@ void ToolbarWin::update_skin()
     if (Skin::instance().toolbar().stbCnEnMarkBtn.isExist)
     {
         ui->btnMark->setGeometry(Skin::instance().toolbar().stbCnEnMarkBtn.rect);
-        update_mark_mode_ico();
+        refresh_mark_mode_ico();
     }
     else
     {
@@ -687,11 +687,11 @@ void ToolbarWin::slot_update_input_mode_ico()
     const qreal dpr = qMax(1.0, ui->btnMode->devicePixelRatioF());
     ui->btnMode->setIcon(freewb_icon_from_skin_path(iconPath, iconSize, dpr));
     ui->btnMode->setIconSize(iconSize);
-    update_mark_mode_ico();
+    refresh_mark_mode_ico();
 }
 
-// 更新工具条上的全半角指示图标
-void ToolbarWin::slot_update_char_width_mode_ico()
+// 刷新工具条上的全半角指示图标（不改变状态）
+void ToolbarWin::refresh_char_width_mode_ico()
 {
     if (get_char_width_mode() == WIDTH_FULL)
     {
@@ -711,16 +711,18 @@ void ToolbarWin::slot_set_traditional_mode(bool isTraditional)
     emit signal_switch_chttrans();
 }
 
-void ToolbarWin::slot_update_mark_mode_ico()
+// 翻转中英文标点状态并刷新图标
+void ToolbarWin::toggle_mark_mode()
 {
     if (s_inputMode != kEngineEn)
     {
         s_markMode = (s_markMode == MARK_CN) ? MARK_EN : MARK_CN;
     }
-    update_mark_mode_ico();
+    refresh_mark_mode_ico();
 }
 
-void ToolbarWin::update_mark_mode_ico()
+// 刷新中英文标点指示图标（不改变状态）
+void ToolbarWin::refresh_mark_mode_ico()
 {
     if (effective_mark_mode() == MARK_CN)
     {
@@ -833,7 +835,7 @@ void ToolbarWin::fcitx_charWidth_updated(const QString &param)
         set_char_width_mode(WIDTH_HALF);
     }
 
-    slot_update_char_width_mode_ico();
+    refresh_char_width_mode_ico();
 }
 
 void ToolbarWin::fcitx_charMark_updated(const QString &param)
@@ -848,7 +850,7 @@ void ToolbarWin::fcitx_charMark_updated(const QString &param)
         set_mark_mode(MARK_CN);
     }
 
-    update_mark_mode_ico();
+    refresh_mark_mode_ico();
 }
 
 void ToolbarWin::on_btnGenerate_clicked()
@@ -866,25 +868,14 @@ void ToolbarWin::on_btnSearch_clicked()
 void ToolbarWin::on_btnCharWidth_clicked()
 {
     Sound::play(SOUND_LETTER);
-    update_char_width_mode_ico(s_charWidthMode);
+    toggle_char_width_mode();
     emit signal_fcitx_switch_char_width("/Fcitx/fullwidth");
 }
 
-void ToolbarWin::update_char_width_mode_ico(CharWidthMode charWidth)
+void ToolbarWin::toggle_char_width_mode()
 {
-    // puts("width full half");
-    s_charWidthMode = s_charWidthMode == WIDTH_FULL ? s_charWidthMode = WIDTH_HALF : s_charWidthMode = WIDTH_FULL;
-
-    if (s_charWidthMode == WIDTH_FULL)
-    {
-        ui->btnCharWidth->setStyleSheet(QSS_FULL_WIDTH);
-    }
-    else
-    {
-        ui->btnCharWidth->setStyleSheet(QSS_HALF_WIDTH);
-    }
-
-    emit signal_btn_charWidth_clicked();
+    s_charWidthMode = (s_charWidthMode == WIDTH_FULL) ? WIDTH_HALF : WIDTH_FULL;
+    refresh_char_width_mode_ico();
 }
 
 void ToolbarWin::on_btnMark_clicked()
@@ -896,8 +887,7 @@ void ToolbarWin::on_btnMark_clicked()
 
     Sound::play(SOUND_LETTER);
 
-    s_markMode = (s_markMode == MARK_CN) ? MARK_EN : MARK_CN;
-    update_mark_mode_ico();
+    toggle_mark_mode();
     emit signal_fcitx_switch_mark("/Fcitx/punc");
 }
 
@@ -965,21 +955,52 @@ void ToolbarWin::slot_kim_RegisterProperties(const QStringList &prop)
     }
 }
 
-void ToolbarWin::slot_update_toolbar_properties(const QString &engineName, bool traditional, int charSet, bool fullWidth,
-                                                bool chinesePunc)
+void ToolbarWin::slot_update_toolbar_properties(const QStringList &props)
 {
-    if (!engineName.isEmpty())
+    for (const QString &prop : props)
     {
-        set_input_mode(engineName);
+        if (prop.startsWith(QLatin1String("engine:")))
+        {
+            set_input_mode(prop);
+        }
+        else if (prop == QLatin1String("chttrans:active"))
+        {
+            s_isTraditionalMode = true;
+        }
+        else if (prop == QLatin1String("chttrans:inactive"))
+        {
+            s_isTraditionalMode = false;
+        }
+        else if (prop == QLatin1String("charset:gb"))
+        {
+            s_charSetMode = CHAR_GB;
+        }
+        else if (prop == QLatin1String("charset:gbk"))
+        {
+            s_charSetMode = CHAR_GBK;
+        }
+        else if (prop == QLatin1String("fullwidth:active"))
+        {
+            set_char_width_mode(WIDTH_FULL);
+        }
+        else if (prop == QLatin1String("fullwidth:inactive"))
+        {
+            set_char_width_mode(WIDTH_HALF);
+        }
+        else if (prop == QLatin1String("punc:active"))
+        {
+            set_mark_mode(MARK_CN);
+        }
+        else if (prop == QLatin1String("punc:inactive"))
+        {
+            set_mark_mode(MARK_EN);
+        }
     }
-    s_isTraditionalMode = traditional;
-    s_charSetMode = (charSet == 0) ? CHAR_GB : CHAR_GBK;
-    set_char_width_mode(fullWidth ? WIDTH_FULL : WIDTH_HALF);
-    set_mark_mode(chinesePunc ? MARK_CN : MARK_EN);
 
     update_char_font_ico();
     update_char_set_ico();
-    slot_update_char_width_mode_ico();
+    refresh_char_width_mode_ico();
+    refresh_mark_mode_ico();
     slot_update_input_mode_ico();
 }
 

@@ -19,10 +19,12 @@
 namespace freewb
 {
 
+class Freewb;
+
 class EngineManager
 {
 public:
-    explicit EngineManager(CandidateList *candidateList = nullptr, Committer *committer = nullptr);
+    explicit EngineManager(Freewb *freewb = nullptr, CandidateList *candidateList = nullptr, Committer *committer = nullptr);
     ~EngineManager();
 
     void nextEngine();
@@ -38,8 +40,6 @@ public:
     void reloadDictionaries(int mask);
 
     void toggleCharset();
-    /** 当前字符集：0=GB, 1=GBK；无五笔引擎时默认 0。 */
-    int charSet() const;
 
     bool isCurrentPreeditExactDictionaryKey(const std::string &preedit) const;
     /** 按五笔码表造词规则计算词组编码；失败返回空串。 */
@@ -55,6 +55,7 @@ private:
     void initAllEngines();
     void loadDefaultEngines();
     IFreewbEngine *findEngineByName(const char *name) const;
+    void notifyToolbarProperty() const;
 
     void restoreLastEngine();
 
@@ -62,6 +63,7 @@ private:
     void tryExactDictionarySingleCandidateCommit();
 
 private:
+    Freewb *freewb_ = nullptr;
     std::unique_ptr<WbzxEngine> wbzxEngine_ = nullptr;
     std::unique_ptr<Wbpy> wbpyEngine_ = nullptr;
     std::unique_ptr<PyEngine> pyEngine_ = nullptr;

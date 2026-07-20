@@ -66,6 +66,7 @@ private:
     static bool isDigitChar(const std::string &textChar);
     static const PuncPairEntry *lookupPair(FreewbKeySym sym, char pairKey[2]);
     static const PuncMapEntry *lookupMap(char ascii);
+    void notifyToolbarProperty() const;
 
 private:
     static const PuncPairEntry kAutoPairList[];
