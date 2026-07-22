@@ -358,6 +358,7 @@ SettingWin::SettingWin(QWidget *parent) : QWidget(parent), ui(new Ui::SettingWin
     ui->ckbAutoLocate->hide();
     ui->cmbWhenLossLocation->hide();
     ui->labelLossLocate->hide();
+    ui->label_42->hide();
 }
 
 SettingWin::~SettingWin()
@@ -491,7 +492,6 @@ void SettingWin::setUiTexts()
     ui->label_39->setText(_("Page up/down keys"));
     ui->label_40->setText(_("Previous page"));
     ui->label_41->setText(_("Previous page"));
-    ui->label_42->setText(_("Settings"));
     ui->ckbCursorFollow->setText(_("Candidate window follows caret"));
     ui->ckbDispOpPrompt->setText(_("Show operation hints"));
     ui->ckbShiftSelectRecode->setText(_("Use Shift to select duplicates"));

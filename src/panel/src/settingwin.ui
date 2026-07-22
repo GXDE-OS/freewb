@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>780</width>
-    <height>489</height>
+    <height>530</height>
    </rect>
   </property>
   <property name="font">
@@ -29,7 +29,7 @@
      <x>0</x>
      <y>0</y>
      <width>780</width>
-     <height>510</height>
+     <height>530</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -44,7 +44,7 @@
       <x>250</x>
       <y>20</y>
       <width>491</width>
-      <height>391</height>
+      <height>432</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -3511,14 +3511,14 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_36">
-      <property name="geometry">
-       <rect>
-        <x>260</x>
-        <y>110</y>
-        <width>111</width>
-        <height>21</height>
-       </rect>
-      </property>
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>80</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
       <property name="font">
        <font>
         <pointsize>11</pointsize>
@@ -3629,14 +3629,14 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_39">
-      <property name="geometry">
-       <rect>
-        <x>260</x>
-        <y>180</y>
-        <width>111</width>
-        <height>21</height>
-       </rect>
-      </property>
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>140</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
       <property name="font">
        <font>
         <pointsize>11</pointsize>
@@ -3770,7 +3770,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>110</y>
+        <y>80</y>
         <width>161</width>
         <height>21</height>
        </rect>
@@ -3890,7 +3890,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>260</y>
+        <y>140</y>
         <width>161</width>
         <height>21</height>
        </rect>
@@ -4124,7 +4124,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       <property name="geometry">
        <rect>
         <x>260</x>
-        <y>140</y>
+        <y>110</y>
         <width>141</width>
         <height>24</height>
        </rect>
@@ -4144,7 +4144,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       <property name="geometry">
        <rect>
         <x>260</x>
-        <y>210</y>
+        <y>170</y>
         <width>141</width>
         <height>24</height>
        </rect>
@@ -4164,7 +4164,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>210</y>
+        <y>110</y>
         <width>171</width>
         <height>21</height>
        </rect>
@@ -5045,7 +5045,7 @@ switch</string>
       <x>20</x>
       <y>20</y>
       <width>221</width>
-      <height>391</height>
+      <height>432</height>
      </rect>
     </property>
     <property name="font">
@@ -5066,7 +5066,7 @@ switch</string>
     <property name="geometry">
      <rect>
       <x>402</x>
-      <y>430</y>
+      <y>471</y>
       <width>100</width>
       <height>31</height>
      </rect>
@@ -5089,7 +5089,7 @@ switch</string>
     <property name="geometry">
      <rect>
       <x>552</x>
-      <y>430</y>
+      <y>471</y>
       <width>100</width>
       <height>31</height>
      </rect>
