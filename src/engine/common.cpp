@@ -1,6 +1,5 @@
 #include "common.h"
 
-#include <algorithm>
 #include <vector>
 
 #include "log.h"
@@ -9,52 +8,66 @@ namespace freewb
 {
 const uint32_t kMaxHzFieldBytes = 7U * 30U;
 
-void MbDictionaryTable::collectCandidateItemsForPrefix(const std::string &prefix,
-                                                       const std::unordered_map<std::string, std::vector<std::string>> &dict,
-                                                       CandidatePayload &out) const
+void MbDictionaryTable::collectPrefixKeys(const std::string &prefix,
+                                          const std::unordered_map<std::string, std::vector<std::string>> &dict,
+                                          std::set<std::string> &keys)
+{
+    for (const auto &kv : dict)
+    {
+        const std::string &key = kv.first;
+        if (key.size() >= prefix.size() && key.compare(0, prefix.size(), prefix) == 0)
+        {
+            keys.insert(key);
+        }
+    }
+}
+
+void MbDictionaryTable::appendTextsForCode(const std::unordered_map<std::string, std::vector<std::string>> &dict,
+                                           const std::string &code, CandidatePayload &out) const
 {
     if (out.texts.size() >= maxCandidatesPages_)
     {
         return;
     }
-    std::vector<std::string> keys;
-    keys.reserve(dict.size());
-    for (const auto &kv : dict)
+    const auto it = dict.find(code);
+    if (it == dict.end())
     {
-        const std::string &key = kv.first;
-        if (key.size() < prefix.size())
+        return;
+    }
+    for (const std::string &hz : it->second)
+    {
+        if (hz.empty())
         {
             continue;
         }
-        if (key.compare(0, prefix.size(), prefix) == 0)
-        {
-            keys.push_back(key);
-        }
-    }
-    std::sort(keys.begin(), keys.end());
-    for (const std::string &k : keys)
-    {
+        out.texts.push_back(hz);
+        out.fullCodes.push_back(code);
         if (out.texts.size() >= maxCandidatesPages_)
         {
             return;
         }
-        const auto it = dict.find(k);
-        if (it == dict.end())
+    }
+}
+
+void MbDictionaryTable::appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const
+{
+    if (out.texts.size() >= maxCandidatesPages_)
+    {
+        return;
+    }
+
+    /* 分别收集编码键，再按字典序统一输出； */
+    std::set<std::string> keys;
+    collectPrefixKeys(prefix, singleChardict_, keys);
+    collectPrefixKeys(prefix, multiChardict_, keys);
+
+    for (const std::string &code : keys)
+    {
+        appendTextsForCode(singleChardict_, code, out);
+        appendTextsForCode(multiChardict_, code, out);
+        if (out.texts.size() >= maxCandidatesPages_)
         {
-            continue;
-        }
-        for (const std::string &hz : it->second)
-        {
-            if (hz.empty())
-            {
-                continue;
-            }
-            out.texts.push_back(hz);
-            out.fullCodes.push_back(k);
-            if (out.texts.size() >= maxCandidatesPages_)
-            {
-                return;
-            }
+            return;
         }
     }
 }
@@ -212,12 +225,6 @@ bool MbDictionaryTable::loadFromStream(std::ifstream &in, const char *linePrefix
                  p, tableName_, tableInfo_, tableCreateTime_, strEndKeys_, strSpecialKeys_, strCodeType_, strStraightUPKeys_,
                  inputCodeLen, cWildChar_, bRule_, iCodeLength_, recordCount_);
     return true;
-}
-
-void MbDictionaryTable::appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const
-{
-    collectCandidateItemsForPrefix(prefix, singleChardict_, out);
-    collectCandidateItemsForPrefix(prefix, multiChardict_, out);
 }
 
 const std::string &MbDictionaryTable::strInputCode() const

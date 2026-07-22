@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <fstream>
+#include <set>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -38,7 +39,7 @@ public:
                      const std::string &endKeys, const std::string &specialKeys, const std::string &codeType,
                      const std::string &straightUpKeys, const std::string &inputCode, uint8_t wildChar, uint8_t hasRule,
                      const std::vector<EngineRuleBlock> &rules);
-    /** 向 @p out 追加候选：与 texts 同步写入 fullCodes（完整编码键）。 */
+    /** 向 @p out 追加候选：与 texts 同步写入 fullCodes（完整编码键）。单字/词组按编码字典序混排。 */
     void appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const;
     const std::string &strInputCode() const;
     bool hasExactCode(const std::string &code) const;
@@ -120,9 +121,14 @@ public:
     }
 
 private:
-    void collectCandidateItemsForPrefix(const std::string &prefix,
-                                        const std::unordered_map<std::string, std::vector<std::string>> &dict,
-                                        CandidatePayload &out) const;
+    /** 将 @p dict 中匹配 @p prefix 的编码键并入 @p keys（有序去重由 set 保证）。 */
+    static void collectPrefixKeys(const std::string &prefix,
+                                  const std::unordered_map<std::string, std::vector<std::string>> &dict,
+                                  std::set<std::string> &keys);
+    /** 将 @p dict 中 @p code 下的非空词条追加到 @p out；满员则停止。 */
+    void appendTextsForCode(const std::unordered_map<std::string, std::vector<std::string>> &dict, const std::string &code,
+                            CandidatePayload &out) const;
+
     bool readNulTerminatedField(std::ifstream &in, std::string &out);
     bool readU32(std::ifstream &in, uint32_t &out);
     bool readExact(std::ifstream &in, void *dst, std::streamsize len);
