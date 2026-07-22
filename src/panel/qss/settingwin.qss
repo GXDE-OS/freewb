@@ -55,9 +55,40 @@ QWidget:!enabled
     background-color: #C4DDF6;
 }
 
-#stackedWidget
+#stackedWidget,
+#scrollCommon,
+#scrollUi,
+#scrollShortcut,
+#scrollAdvance,
+#scrollVersion,
+#scrollCommonContents,
+#scrollUiContents,
+#scrollShortcutContents,
+#scrollAdvanceContents,
+#scrollVersionContents
 {
     background-color: rgb(255, 255, 255);
+}
+
+QLabel[sectionHeader="true"]
+{
+    color: rgb(0, 0, 0);
+}
+
+QFrame[sectionLine="true"]
+{
+    background-color: rgb(210, 210, 210);
+    border: none;
+    max-height: 1px;
+    margin-top: 1px;
+}
+
+QComboBox
+{
+    min-height: 24px;
+    max-height: 26px;
+    padding-top: 1px;
+    padding-bottom: 1px;
 }
 
 QComboBox::selected

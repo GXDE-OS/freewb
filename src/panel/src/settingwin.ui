@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>780</width>
-    <height>530</height>
+    <width>700</width>
+    <height>510</height>
    </rect>
   </property>
   <property name="font">
@@ -28,8 +28,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>780</width>
-     <height>530</height>
+     <width>700</width>
+     <height>510</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -38,13 +38,13 @@
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <widget class="QStackedWidget" name="stackedWidget">
+      <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>172</x>
       <y>20</y>
-      <width>491</width>
-      <height>432</height>
+      <width>508</width>
+      <height>412</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -53,1303 +53,94 @@
     <property name="currentIndex">
      <number>0</number>
     </property>
-    <widget class="QWidget" name="pageCommon">
-     <widget class="QLabel" name="labelCommon">
+    <widget class="QScrollArea" name="scrollCommon">
+     <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+     <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+     <property name="widgetResizable"><bool>true</bool></property>
+     <widget class="QWidget" name="scrollCommonContents">
       <property name="geometry">
-       <rect>
-        <x>25</x>
-        <y>25</y>
-        <width>100</width>
-        <height>31</height>
-       </rect>
+       <rect><x>0</x><y>0</y><width>480</width><height>800</height></rect>
       </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
-      </property>
-      <property name="text">
-       <string>Common options</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbCodeRemind">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>80</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active/>
-        <inactive/>
-        <disabled/>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Enable incremental code hints</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbWordThink">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>130</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Enable phrase association</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbRemindExistWord">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>180</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Remind when phrase exists in lexicon</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbAutoAdjustFreq">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>230</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Enable automatic frequency adjustment</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbSpaceFullWhenCharHalf">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>230</x>
-        <y>80</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Full-width space when characters are half-width</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbSmartMark">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>230</x>
-        <y>130</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Enable smart punctuation</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbAlertWhenEmptyCode">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>230</x>
-        <y>180</y>
-        <width>181</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Sound alert on duplicate or empty code</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelUseAudioFile">
+      <layout class="QVBoxLayout" name="layoutScrollCommon">
+       <property name="spacing"><number>6</number></property>
+       <property name="leftMargin"><number>12</number></property>
+       <property name="topMargin"><number>4</number></property>
+       <property name="rightMargin"><number>12</number></property>
+       <property name="bottomMargin"><number>8</number></property>
+       <item>
+            <widget class="QWidget" name="pageCommon">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <layout class="QGridLayout" name="gridCommonOptions">
+        <property name="leftMargin"><number>28</number></property>
+        <property name="topMargin"><number>20</number></property>
+        <property name="rightMargin"><number>28</number></property>
+        <property name="bottomMargin"><number>12</number></property>
+        <property name="horizontalSpacing"><number>48</number></property>
+        <property name="verticalSpacing"><number>22</number></property>
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="ckbCodeRemind">
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <property name="text"><string>Enable incremental code hints</string></property>
+          <property name="checked"><bool>true</bool></property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QCheckBox" name="ckbSpaceFullWhenCharHalf">
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <property name="text"><string>Full-width space when characters are half-width</string></property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QCheckBox" name="ckbWordThink">
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <property name="text"><string>Enable phrase association</string></property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QCheckBox" name="ckbSmartMark">
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <property name="text"><string>Enable smart punctuation</string></property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QCheckBox" name="ckbRemindExistWord">
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <property name="text"><string>Remind when phrase exists in lexicon</string></property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QCheckBox" name="ckbAlertWhenEmptyCode">
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <property name="text"><string>Sound alert on duplicate or empty code</string></property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="ckbAutoAdjustFreq">
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <property name="text"><string>Enable automatic frequency adjustment</string></property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+       </item>
+       <item>
+        <spacer name="spacerCommonBottom">
+         <property name="orientation"><enum>Qt::Vertical</enum></property>
+         <property name="sizeHint"><size><width>20</width><height>40</height></size></property>
+        </spacer>
+       </item>
+       <item>
+      <widget class="QWidget" name="hiddenLegacyWidgets">
+       <property name="visible"><bool>false</bool></property>
+<widget class="QCheckBox" name="ckbInputStatistic">
+         <property name="visible"><bool>false</bool></property>
       <property name="enabled">
        <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>254</x>
-        <y>206</y>
-        <width>101</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Ubuntu Mono</family>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Use sound files</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbUseAudioFile">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>348</x>
-        <y>209</y>
-        <width>21</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="pageAdvance">
-     <widget class="QLabel" name="labelAdvance">
-      <property name="geometry">
-       <rect>
-        <x>25</x>
-        <y>25</y>
-        <width>100</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Ubuntu</family>
-        <pointsize>11</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Advanced options</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbRepeatCalib">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>180</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Duplicate commit proofreading mode</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbTypeEffect">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>130</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Enable typing sound effects</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbShiftCommitChar">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>80</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Shift+letter commits directly</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbInputStatistic">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>230</x>
-        <y>130</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
       </property>
       <property name="palette">
        <palette>
@@ -1456,202 +247,10 @@
        <string>Enable input statistics</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="ckbAutoPhrase">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>230</x>
-        <y>80</y>
-        <width>220</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Auto phrase options</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbZzSpecialEncodingSymbols">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>230</x>
-        <y>130</y>
-        <width>280</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>ZZ special encoding symbols</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="pageOthers">
-     <widget class="QLabel" name="labelOthers">
-      <property name="geometry">
-       <rect>
-        <x>25</x>
-        <y>25</y>
-        <width>591</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Other settings</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_4">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>80</y>
-        <width>131</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Auto-switch to English strings</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelAutoEnPrompt">
+<widget class="QCheckBox" name="ckbUseAudioFile">
+         <property name="visible"><bool>false</bool></property>
       <property name="enabled">
        <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>140</y>
-        <width>391</width>
-        <height>81</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Freewb switches to English when you type these strings; Enter returns to Chinese.
-Up to four characters, separated by spaces. Useful for browsing.</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelAutoMarkPrompt">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>280</y>
-        <width>381</width>
-        <height>71</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>In Chinese mode, commas and periods after digits become half-width (useful for finance).</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QWidget" name="layoutWidget">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>107</y>
-        <width>381</width>
-        <height>39</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QLabel" name="label_5">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Character</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="ledtAutoToEnStr">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QCheckBox" name="ckbAutoHalfMarkAfterNum">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>250</y>
-        <width>241</width>
-        <height>21</height>
-       </rect>
       </property>
       <property name="palette">
        <palette>
@@ -1755,20 +354,342 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>Half-width punctuation after digits</string>
+       <string/>
       </property>
      </widget>
-     <widget class="QLineEdit" name="ledtAutoToHalf">
+<widget class="QLabel" name="labelUseAudioFile">
+         <property name="visible"><bool>false</bool></property>
       <property name="enabled">
        <bool>false</bool>
       </property>
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>360</y>
-        <width>142</width>
-        <height>27</height>
-       </rect>
+      <property name="font">
+       <font>
+        <family>Ubuntu Mono</family>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Use sound files</string>
+      </property>
+     </widget>
+<widget class="QLabel" name="labelCommon">
+         <property name="visible"><bool>false</bool></property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="text">
+       <string>Common options</string>
+      </property>
+     </widget>
+<widget class="QLabel" name="labelAdvance">
+         <property name="visible"><bool>false</bool></property>
+      <property name="font">
+       <font>
+        <family>Ubuntu</family>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Advanced options</string>
+      </property>
+     </widget>
+<widget class="QCheckBox" name="ckbShiftSelectRecode">
+         <property name="visible"><bool>false</bool></property>
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </disabled>
+       </palette>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Use Shift to select duplicates</string>
+      </property>
+     </widget>
+<widget class="QLabel" name="labelCandidateWinOption">
+         <property name="visible"><bool>false</bool></property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Candidate window options</string>
+      </property>
+     </widget>
+<widget class="QLabel" name="label_37">
+         <property name="visible"><bool>false</bool></property>
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>2nd duplicate key</string>
+      </property>
+     </widget>
+<widget class="QLabel" name="label_38">
+         <property name="visible"><bool>false</bool></property>
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>3rd duplicate key</string>
+      </property>
+     </widget>
+<widget class="QLabel" name="label_40">
+         <property name="visible"><bool>false</bool></property>
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Previous page</string>
+      </property>
+     </widget>
+<widget class="QLabel" name="label_41">
+         <property name="visible"><bool>false</bool></property>
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Previous page</string>
+      </property>
+     </widget>
+<widget class="QLabel" name="label_42">
+         <property name="visible"><bool>false</bool></property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Settings</string>
+      </property>
+     </widget>
+<widget class="QLineEdit" name="ledt2ndRecode">
+         <property name="visible"><bool>false</bool></property>
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>;</string>
+      </property>
+      <property name="maxLength">
+       <number>1</number>
+      </property>
+     </widget>
+<widget class="QLineEdit" name="ledt3rdRecode">
+         <property name="visible"><bool>false</bool></property>
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>&apos;</string>
+      </property>
+      <property name="maxLength">
+       <number>1</number>
+      </property>
+     </widget>
+<widget class="QLineEdit" name="ledtPrecPage">
+         <property name="visible"><bool>false</bool></property>
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="maxLength">
+       <number>1</number>
+      </property>
+     </widget>
+<widget class="QLineEdit" name="ledtNextPage">
+         <property name="visible"><bool>false</bool></property>
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="maxLength">
+       <number>1</number>
+      </property>
+     </widget>
+<widget class="QLineEdit" name="ledtAutoToHalf">
+         <property name="visible"><bool>false</bool></property>
+      <property name="enabled">
+       <bool>false</bool>
       </property>
       <property name="font">
        <font>
@@ -1781,15 +702,154 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        <string/>
       </property>
      </widget>
+<widget class="QLabel" name="labelOthers">
+         <property name="visible"><bool>false</bool></property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Other settings</string>
+      </property>
+     </widget>
+       <!-- leftover shortcut labels -->
+<widget class="QLabel" name="labelShortcutKey">
+         <property name="visible"><bool>false</bool></property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Shortcut settings</string>
+      </property>
+     </widget>
+<widget class="QLabel" name="labelCustom">
+         <property name="visible"><bool>false</bool></property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Custom shortcuts</string>
+      </property>
+     </widget>
+<widget class="QLabel" name="labelEasy">
+         <property name="visible"><bool>false</bool></property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Convenience shortcuts</string>
+      </property>
+     </widget>
+<widget class="QLabel" name="labelTwo">
+         <property name="visible"><bool>false</bool></property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Double-tap convenience key for symbol</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+      </widget>
+       </item>
+      </layout>
+
+     </widget>
     </widget>
-    <widget class="QWidget" name="pageUi">
+    <widget class="QScrollArea" name="scrollUi">
+     <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+     <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+     <property name="widgetResizable"><bool>true</bool></property>
+     <widget class="QWidget" name="scrollUiContents">
+      <property name="geometry">
+       <rect><x>0</x><y>0</y><width>480</width><height>800</height></rect>
+      </property>
+      <layout class="QVBoxLayout" name="layoutScrollUi">
+       <property name="spacing"><number>6</number></property>
+       <property name="leftMargin"><number>12</number></property>
+       <property name="topMargin"><number>4</number></property>
+       <property name="rightMargin"><number>12</number></property>
+       <property name="bottomMargin"><number>8</number></property>
+       <item>
+        <layout class="QHBoxLayout" name="layoutHeader_labelSectionStatus">
+         <property name="spacing"><number>8</number></property>
+         <property name="leftMargin"><number>0</number></property>
+         <property name="topMargin"><number>4</number></property>
+         <property name="rightMargin"><number>0</number></property>
+         <property name="bottomMargin"><number>2</number></property>
+         <item>
+          <widget class="QLabel" name="labelSectionStatus">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text"><string>Status bar</string></property>
+           <property name="sectionHeader" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="lineSectionStatus">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize"><size><width>0</width><height>1</height></size></property>
+           <property name="maximumSize"><size><width>16777215</width><height>1</height></size></property>
+           <property name="frameShape"><enum>QFrame::HLine</enum></property>
+           <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+           <property name="sectionLine" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+<widget class="QWidget" name="pageUi">
      <widget class="QLabel" name="labelUi">
+      <property name="visible"><bool>false</bool></property>
       <property name="geometry">
        <rect>
-        <x>25</x>
-        <y>25</y>
-        <width>591</width>
-        <height>31</height>
+        <x>0</x>
+        <y>0</y>
+        <width>1</width>
+        <height>1</height>
        </rect>
       </property>
       <property name="font">
@@ -1807,12 +867,13 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_24">
+      <property name="visible"><bool>false</bool></property>
       <property name="geometry">
        <rect>
-        <x>230</x>
-        <y>80</y>
-        <width>111</width>
-        <height>17</height>
+        <x>0</x>
+        <y>0</y>
+        <width>1</width>
+        <height>1</height>
        </rect>
       </property>
       <property name="font">
@@ -1827,15 +888,16 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="ckbAutoLocate">
+      <property name="visible"><bool>false</bool></property>
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>303</y>
-        <width>161</width>
-        <height>21</height>
+        <x>0</x>
+        <y>0</y>
+        <width>1</width>
+        <height>1</height>
        </rect>
       </property>
       <property name="palette">
@@ -1944,15 +1006,16 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
      </widget>
      <widget class="QComboBox" name="cmbWhenLossLocation">
+      <property name="visible"><bool>false</bool></property>
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>330</y>
-        <width>81</width>
-        <height>24</height>
+        <x>0</x>
+        <y>0</y>
+        <width>1</width>
+        <height>1</height>
        </rect>
       </property>
       <property name="font">
@@ -1989,15 +1052,16 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </item>
      </widget>
      <widget class="QLabel" name="labelLossLocate">
+      <property name="visible"><bool>false</bool></property>
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
-        <x>31</x>
-        <y>330</y>
-        <width>121</width>
-        <height>23</height>
+        <x>0</x>
+        <y>0</y>
+        <width>1</width>
+        <height>1</height>
        </rect>
       </property>
       <property name="font">
@@ -2018,7 +1082,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       <property name="geometry">
        <rect>
         <x>230</x>
-        <y>111</y>
+        <y>56</y>
         <width>161</width>
         <height>21</height>
        </rect>
@@ -2135,7 +1199,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       <property name="geometry">
        <rect>
         <x>230</x>
-        <y>141</y>
+        <y>86</y>
         <width>161</width>
         <height>21</height>
        </rect>
@@ -2252,7 +1316,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       <property name="geometry">
        <rect>
         <x>230</x>
-        <y>171</y>
+        <y>116</y>
         <width>161</width>
         <height>21</height>
        </rect>
@@ -2369,7 +1433,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       <property name="geometry">
        <rect>
         <x>230</x>
-        <y>201</y>
+        <y>146</y>
         <width>161</width>
         <height>21</height>
        </rect>
@@ -2486,7 +1550,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       <property name="geometry">
        <rect>
         <x>231</x>
-        <y>230</y>
+        <y>175</y>
         <width>101</width>
         <height>23</height>
        </rect>
@@ -2509,7 +1573,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       <property name="geometry">
        <rect>
         <x>332</x>
-        <y>230</y>
+        <y>175</y>
         <width>61</width>
         <height>26</height>
        </rect>
@@ -2526,9 +1590,9 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       <property name="geometry">
        <rect>
         <x>28</x>
-        <y>230</y>
-        <width>175</width>
-        <height>25</height>
+        <y>175</y>
+        <width>160</width>
+        <height>26</height>
        </rect>
       </property>
       <property name="font">
@@ -2543,7 +1607,7 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>80</y>
+        <y>25</y>
         <width>171</width>
         <height>141</height>
        </rect>
@@ -2589,14 +1653,414 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </layout>
      </widget>
     </widget>
-    <widget class="QWidget" name="pageCandidateWinUi">
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="layoutHeader_labelSectionCandidate">
+         <property name="spacing"><number>8</number></property>
+         <property name="leftMargin"><number>0</number></property>
+         <property name="topMargin"><number>4</number></property>
+         <property name="rightMargin"><number>0</number></property>
+         <property name="bottomMargin"><number>2</number></property>
+         <item>
+          <widget class="QLabel" name="labelSectionCandidate">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text"><string>Candidate window</string></property>
+           <property name="sectionHeader" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="lineSectionCandidate">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize"><size><width>0</width><height>1</height></size></property>
+           <property name="maximumSize"><size><width>16777215</width><height>1</height></size></property>
+           <property name="frameShape"><enum>QFrame::HLine</enum></property>
+           <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+           <property name="sectionLine" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+      <widget class="QWidget" name="pageCandidateWinOption">
+       <layout class="QVBoxLayout" name="layoutCandiOpt">
+        <property name="spacing"><number>8</number></property>
+        <property name="leftMargin"><number>20</number></property>
+        <property name="topMargin"><number>4</number></property>
+        <property name="rightMargin"><number>12</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <property name="spacing"><number>16</number></property>
+          <item><widget class="QCheckBox" name="ckbCursorFollow">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </disabled>
+       </palette>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Candidate window follows caret</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget></item>
+          <item><widget class="QCheckBox" name="ckbDispOpDict">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </disabled>
+       </palette>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Live dictionary on candidates</string>
+      </property>
+     </widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property>
+            <property name="sizeHint"><size><width>40</width><height>20</height></size></property></spacer></item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QCheckBox" name="ckbDispOpPrompt">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </disabled>
+       </palette>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Show operation hints</string>
+      </property>
+     </widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property>
+            <property name="sizeHint"><size><width>40</width><height>20</height></size></property></spacer></item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+       </item>
+       <item>
+<widget class="QWidget" name="pageCandidateWinUi">
      <widget class="QLabel" name="labelCandidateWinUi">
+      <property name="visible"><bool>false</bool></property>
       <property name="geometry">
        <rect>
-        <x>25</x>
-        <y>25</y>
-        <width>591</width>
-        <height>31</height>
+        <x>0</x>
+        <y>0</y>
+        <width>1</width>
+        <height>1</height>
        </rect>
       </property>
       <property name="font">
@@ -2616,8 +2080,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
      <widget class="QLabel" name="label_28">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>70</y>
+        <x>30</x>
+        <y>15</y>
         <width>111</width>
         <height>21</height>
        </rect>
@@ -2636,8 +2100,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
      <widget class="QLabel" name="label_29">
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>70</y>
+        <x>230</x>
+        <y>15</y>
         <width>111</width>
         <height>21</height>
        </rect>
@@ -2656,10 +2120,10 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
      <widget class="QComboBox" name="cmbCandiWinMode">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>100</y>
-        <width>154</width>
-        <height>25</height>
+        <x>30</x>
+        <y>45</y>
+        <width>160</width>
+        <height>26</height>
        </rect>
       </property>
       <property name="font">
@@ -2686,8 +2150,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>136</y>
+        <x>30</x>
+        <y>81</y>
         <width>131</width>
         <height>21</height>
        </rect>
@@ -2709,8 +2173,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>181</x>
-        <y>136</y>
+        <x>161</x>
+        <y>81</y>
         <width>31</width>
         <height>21</height>
        </rect>
@@ -2732,8 +2196,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>170</y>
+        <x>30</x>
+        <y>115</y>
         <width>151</width>
         <height>21</height>
        </rect>
@@ -2849,8 +2313,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>152</x>
-        <y>201</y>
+        <x>132</x>
+        <y>146</y>
         <width>61</width>
         <height>21</height>
        </rect>
@@ -2966,8 +2430,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>200</y>
+        <x>30</x>
+        <y>145</y>
         <width>101</width>
         <height>21</height>
        </rect>
@@ -3083,8 +2547,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>100</y>
+        <x>230</x>
+        <y>45</y>
         <width>71</width>
         <height>21</height>
        </rect>
@@ -3106,8 +2570,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>135</y>
+        <x>230</x>
+        <y>80</y>
         <width>71</width>
         <height>21</height>
        </rect>
@@ -3126,8 +2590,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
      <widget class="QLabel" name="label_33">
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>170</y>
+        <x>230</x>
+        <y>115</y>
         <width>71</width>
         <height>21</height>
        </rect>
@@ -3149,8 +2613,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>205</y>
+        <x>230</x>
+        <y>150</y>
         <width>71</width>
         <height>21</height>
        </rect>
@@ -3172,8 +2636,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>331</x>
-        <y>99</y>
+        <x>301</x>
+        <y>44</y>
         <width>61</width>
         <height>26</height>
        </rect>
@@ -3192,8 +2656,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>330</x>
-        <y>133</y>
+        <x>300</x>
+        <y>78</y>
         <width>61</width>
         <height>26</height>
        </rect>
@@ -3212,8 +2676,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
      <widget class="QSpinBox" name="spbCandiItemNum">
       <property name="geometry">
        <rect>
-        <x>330</x>
-        <y>169</y>
+        <x>300</x>
+        <y>114</y>
         <width>61</width>
         <height>26</height>
        </rect>
@@ -3238,8 +2702,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>330</x>
-        <y>203</y>
+        <x>300</x>
+        <y>148</y>
         <width>61</width>
         <height>26</height>
        </rect>
@@ -3255,8 +2719,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
      <widget class="QLabel" name="label_35">
       <property name="geometry">
        <rect>
-        <x>48</x>
-        <y>250</y>
+        <x>28</x>
+        <y>195</y>
         <width>451</width>
         <height>21</height>
        </rect>
@@ -3275,8 +2739,8 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
      <widget class="QFrame" name="framCandidateWin">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>280</y>
+        <x>30</x>
+        <y>225</y>
         <width>371</width>
         <height>91</height>
        </rect>
@@ -3486,848 +2950,81 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="pageCandidateWinOption">
-     <widget class="QLabel" name="labelCandidateWinOption">
-      <property name="geometry">
-       <rect>
-        <x>25</x>
-        <y>25</y>
-        <width>591</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Candidate window options</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_36">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>80</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>2nd/3rd duplicate keys</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_37">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>237</x>
-        <y>290</y>
-        <width>91</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>2nd duplicate key</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_38">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>237</x>
-        <y>310</y>
-        <width>91</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>3rd duplicate key</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="ledt2ndRecode">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>330</x>
-        <y>290</y>
-        <width>31</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>;</string>
-      </property>
-      <property name="maxLength">
-       <number>1</number>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="ledt3rdRecode">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>330</x>
-        <y>310</y>
-        <width>31</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>&apos;</string>
-      </property>
-      <property name="maxLength">
-       <number>1</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_39">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>140</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Page up/down keys</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="ledtPrecPage">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>332</y>
-        <width>41</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="maxLength">
-       <number>1</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_40">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>239</x>
-        <y>330</y>
-        <width>51</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Previous page</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_41">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>239</x>
-        <y>355</y>
-        <width>51</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Previous page</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="ledtNextPage">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>357</y>
-        <width>41</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="maxLength">
-       <number>1</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_42">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>70</y>
-        <width>111</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Settings</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbCursorFollow">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>80</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Candidate window follows caret</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbDispOpPrompt">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>140</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Show operation hints</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbShiftSelectRecode">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>240</x>
-        <y>270</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Use Shift to select duplicates</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="cmb23RecodeSelect">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>260</x>
-        <y>110</y>
-        <width>141</width>
-        <height>24</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="cmbPrevNextPage">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>260</x>
-        <y>170</y>
-        <width>141</width>
-        <height>24</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbDispOpDict">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>110</y>
-        <width>171</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Live dictionary on candidates</string>
-      </property>
+       </item>
+      </layout>
+
      </widget>
     </widget>
-    <widget class="QWidget" name="pageShortcutKey">
-     <widget class="QLabel" name="labelShortcutKey">
+    <widget class="QScrollArea" name="scrollShortcut">
+     <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+     <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+     <property name="widgetResizable"><bool>true</bool></property>
+     <widget class="QWidget" name="scrollShortcutContents">
       <property name="geometry">
-       <rect>
-        <x>5</x>
-        <y>25</y>
-        <width>591</width>
-        <height>31</height>
-       </rect>
+       <rect><x>0</x><y>0</y><width>480</width><height>800</height></rect>
       </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Shortcut settings</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelCustom">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>80</y>
-        <width>111</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Custom shortcuts</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_11">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>110</y>
-        <width>31</width>
-        <height>21</height>
-       </rect>
-      </property>
+      <layout class="QVBoxLayout" name="layoutScrollShortcut">
+       <property name="spacing"><number>6</number></property>
+       <property name="leftMargin"><number>12</number></property>
+       <property name="topMargin"><number>4</number></property>
+       <property name="rightMargin"><number>12</number></property>
+       <property name="bottomMargin"><number>8</number></property>
+       <item>
+        <layout class="QHBoxLayout" name="layoutHeader_labelSectionCustom">
+         <property name="spacing"><number>8</number></property>
+         <property name="leftMargin"><number>0</number></property>
+         <property name="topMargin"><number>4</number></property>
+         <property name="rightMargin"><number>0</number></property>
+         <property name="bottomMargin"><number>2</number></property>
+         <item>
+          <widget class="QLabel" name="labelSectionCustom">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text"><string>Custom</string></property>
+           <property name="sectionHeader" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="lineSectionCustom">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize"><size><width>0</width><height>1</height></size></property>
+           <property name="maximumSize"><size><width>16777215</width><height>1</height></size></property>
+           <property name="frameShape"><enum>QFrame::HLine</enum></property>
+           <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+           <property name="sectionLine" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+      <widget class="QWidget" name="pageShortcutCustom">
+       <layout class="QVBoxLayout" name="layoutShortcutCustom">
+        <property name="spacing"><number>6</number></property>
+        <property name="leftMargin"><number>20</number></property>
+        <property name="topMargin"><number>4</number></property>
+        <property name="rightMargin"><number>12</number></property>
+        <property name="bottomMargin"><number>8</number></property>
+         <item>
+          <layout class="QHBoxLayout">
+           <property name="spacing"><number>12</number></property>
+           <item>
+<widget class="QLabel" name="label_11">
       <property name="font">
        <font>
         <pointsize>11</pointsize>
@@ -4339,35 +3036,11 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        <string>Function</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_12">
-      <property name="geometry">
-       <rect>
-        <x>19</x>
-        <y>151</y>
-        <width>51</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Shortcut</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="cmbFunction">
-      <property name="geometry">
-       <rect>
-        <x>70</x>
-        <y>110</y>
-        <width>151</width>
-        <height>25</height>
-       </rect>
-      </property>
+           </item>
+           <item>
+<widget class="QComboBox" name="cmbFunction">
+      <property name="minimumSize"><size><width>180</width><height>26</height></size></property>
+      <property name="maximumSize"><size><width>180</width><height>26</height></size></property>
       <property name="font">
        <font>
         <pointsize>11</pointsize>
@@ -4441,35 +3114,17 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        </property>
       </item>
      </widget>
-     <widget class="QComboBox" name="cmbShortcutKey">
-      <property name="geometry">
-       <rect>
-        <x>70</x>
-        <y>150</y>
-        <width>101</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbDisableAllShortcutKey">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>70</x>
-        <y>182</y>
-        <width>141</width>
-        <height>23</height>
-       </rect>
-      </property>
+           </item>
+           <item>
+            <spacer><property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint"><size><width>40</width><height>20</height></size></property></spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout">
+           <property name="spacing"><number>8</number></property>
+           <item><widget class="QLabel" name="label_12">
       <property name="font">
        <font>
         <pointsize>11</pointsize>
@@ -4478,21 +3133,12 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
        </font>
       </property>
       <property name="text">
-       <string>Disable all shortcuts</string>
+       <string>Shortcut</string>
       </property>
-     </widget>
-     <widget class="QCheckBox" name="ckbDisableFullHalfKey">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>70</x>
-        <y>210</y>
-        <width>151</width>
-        <height>23</height>
-       </rect>
-      </property>
+     </widget></item>
+           <item><widget class="QComboBox" name="cmbShortcutKey">
+      <property name="minimumSize"><size><width>120</width><height>26</height></size></property>
+      <property name="maximumSize"><size><width>120</width><height>26</height></size></property>
       <property name="font">
        <font>
         <pointsize>11</pointsize>
@@ -4500,305 +3146,10 @@ Up to four characters, separated by spaces. Useful for browsing.</string>
         <bold>false</bold>
        </font>
       </property>
-      <property name="text">
-       <string>Disable full/half width shortcut</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_13">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>265</x>
-        <y>151</y>
-        <width>71</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Shortcut input</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelEasy">
-      <property name="geometry">
-       <rect>
-        <x>265</x>
-        <y>80</y>
-        <width>111</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Convenience shortcuts</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="cmbShortcutInput">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>330</x>
-        <y>148</y>
-        <width>111</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="cmbTmpEnglish">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>330</x>
-        <y>108</y>
-        <width>111</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_15">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>265</x>
-        <y>110</y>
-        <width>71</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Temporary English</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="cmbTmpPinyin">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>330</x>
-        <y>190</y>
-        <width>111</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_16">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>265</x>
-        <y>194</y>
-        <width>71</width>
-        <height>42</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Temporary Pinyin
-rare characters</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="cmbSwitchCnEn">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>330</x>
-        <y>254</y>
-        <width>111</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <item>
-       <property name="text">
-        <string>None</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Left Shift</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Right Shift</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Left Ctrl</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Right Ctrl</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QLabel" name="labelCnEn">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>265</x>
-        <y>258</y>
-        <width>71</width>
-        <height>42</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Chinese/English
-switch</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelTwo">
-      <property name="geometry">
-       <rect>
-        <x>265</x>
-        <y>310</y>
-        <width>176</width>
-        <height>42</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Double-tap convenience key for symbol</string>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="btnRestoreShortcutKey">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>336</y>
-        <width>151</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Restore default shortcuts</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="cmbCtrl">
+     </widget></item>
+           <item><widget class="QLabel" name="labelCtrlShif">
       <property name="enabled">
        <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>209</x>
-        <y>141</y>
-        <width>21</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="checkable">
-       <bool>true</bool>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelCtrlShif">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>170</x>
-        <y>150</y>
-        <width>35</width>
-        <height>20</height>
-       </rect>
       </property>
       <property name="font">
        <font>
@@ -4813,16 +3164,346 @@ switch</string>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+     </widget></item>
+           <item><widget class="QCheckBox" name="cmbCtrl">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget></item>
+           <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint"><size><width>40</width><height>20</height></size></property></spacer></item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout">
+           <item><widget class="QCheckBox" name="ckbDisableAllShortcutKey">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Disable all shortcuts</string>
+      </property>
+     </widget></item>
+           <item><widget class="QCheckBox" name="ckbDisableFullHalfKey">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Disable full/half width shortcut</string>
+      </property>
+     </widget></item>
+           <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint"><size><width>40</width><height>20</height></size></property></spacer></item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout">
+           <item><widget class="QPushButton" name="btnRestoreShortcutKey">
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Restore default shortcuts</string>
+      </property>
+     </widget></item>
+           <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint"><size><width>40</width><height>20</height></size></property></spacer></item>
+          </layout>
+         </item>
+       </layout>
+      </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="layoutHeader_labelSectionEasy">
+         <property name="spacing"><number>8</number></property>
+         <property name="leftMargin"><number>0</number></property>
+         <property name="topMargin"><number>4</number></property>
+         <property name="rightMargin"><number>0</number></property>
+         <property name="bottomMargin"><number>2</number></property>
+         <item>
+          <widget class="QLabel" name="labelSectionEasy">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text"><string>Convenience features</string></property>
+           <property name="sectionHeader" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="lineSectionEasy">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize"><size><width>0</width><height>1</height></size></property>
+           <property name="maximumSize"><size><width>16777215</width><height>1</height></size></property>
+           <property name="frameShape"><enum>QFrame::HLine</enum></property>
+           <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+           <property name="sectionLine" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+      <widget class="QWidget" name="pageShortcutEasy">
+       <layout class="QGridLayout" name="layoutShortcutEasy">
+        <property name="horizontalSpacing"><number>12</number></property>
+        <property name="verticalSpacing"><number>6</number></property>
+        <property name="leftMargin"><number>20</number></property>
+        <property name="topMargin"><number>4</number></property>
+        <property name="rightMargin"><number>12</number></property>
+        <property name="bottomMargin"><number>8</number></property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_15">
+          <property name="enabled"><bool>true</bool></property>
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <property name="text"><string>Temporary English</string></property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <spacer name="spacerEasy0">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <property name="sizeType"><enum>QSizePolicy::Expanding</enum></property>
+          <property name="sizeHint"><size><width>40</width><height>20</height></size></property>
+         </spacer>
+        </item>
+        <item row="0" column="2">
+         <widget class="QComboBox" name="cmbTmpEnglish">
+          <property name="minimumSize"><size><width>160</width><height>26</height></size></property>
+          <property name="maximumSize"><size><width>160</width><height>26</height></size></property>
+          <property name="enabled"><bool>true</bool></property>
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_13">
+          <property name="enabled"><bool>true</bool></property>
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <property name="text"><string>Shortcut input</string></property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <spacer name="spacerEasy1">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <property name="sizeType"><enum>QSizePolicy::Expanding</enum></property>
+          <property name="sizeHint"><size><width>40</width><height>20</height></size></property>
+         </spacer>
+        </item>
+        <item row="1" column="2">
+         <widget class="QComboBox" name="cmbShortcutInput">
+          <property name="minimumSize"><size><width>160</width><height>26</height></size></property>
+          <property name="maximumSize"><size><width>160</width><height>26</height></size></property>
+          <property name="enabled"><bool>true</bool></property>
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_16">
+          <property name="enabled"><bool>true</bool></property>
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <property name="text"><string>Temporary Pinyin / rare characters</string></property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <spacer name="spacerEasy2">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <property name="sizeType"><enum>QSizePolicy::Expanding</enum></property>
+          <property name="sizeHint"><size><width>40</width><height>20</height></size></property>
+         </spacer>
+        </item>
+        <item row="2" column="2">
+         <widget class="QComboBox" name="cmbTmpPinyin">
+          <property name="minimumSize"><size><width>160</width><height>26</height></size></property>
+          <property name="maximumSize"><size><width>160</width><height>26</height></size></property>
+          <property name="enabled"><bool>true</bool></property>
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="labelCnEn">
+          <property name="enabled"><bool>true</bool></property>
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <property name="text"><string>Chinese/English switch</string></property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <spacer name="spacerEasy3">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <property name="sizeType"><enum>QSizePolicy::Expanding</enum></property>
+          <property name="sizeHint"><size><width>40</width><height>20</height></size></property>
+         </spacer>
+        </item>
+        <item row="3" column="2">
+         <widget class="QComboBox" name="cmbSwitchCnEn">
+          <property name="minimumSize"><size><width>160</width><height>26</height></size></property>
+          <property name="maximumSize"><size><width>160</width><height>26</height></size></property>
+          <property name="enabled"><bool>true</bool></property>
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <item><property name="text"><string>None</string></property></item>
+          <item><property name="text"><string>Left Shift</string></property></item>
+          <item><property name="text"><string>Right Shift</string></property></item>
+          <item><property name="text"><string>Left Ctrl</string></property></item>
+          <item><property name="text"><string>Right Ctrl</string></property></item>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_36">
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <property name="text"><string>2nd/3rd duplicate keys</string></property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <spacer name="spacerEasy4">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <property name="sizeType"><enum>QSizePolicy::Expanding</enum></property>
+          <property name="sizeHint"><size><width>40</width><height>20</height></size></property>
+         </spacer>
+        </item>
+        <item row="4" column="2">
+         <widget class="QComboBox" name="cmb23RecodeSelect">
+          <property name="minimumSize"><size><width>160</width><height>26</height></size></property>
+          <property name="maximumSize"><size><width>160</width><height>26</height></size></property>
+          <property name="enabled"><bool>true</bool></property>
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_39">
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+          <property name="text"><string>Page up/down keys</string></property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <spacer name="spacerEasy5">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <property name="sizeType"><enum>QSizePolicy::Expanding</enum></property>
+          <property name="sizeHint"><size><width>40</width><height>20</height></size></property>
+         </spacer>
+        </item>
+        <item row="5" column="2">
+         <widget class="QComboBox" name="cmbPrevNextPage">
+          <property name="minimumSize"><size><width>160</width><height>26</height></size></property>
+          <property name="maximumSize"><size><width>160</width><height>26</height></size></property>
+          <property name="enabled"><bool>true</bool></property>
+          <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+       </item>
+      </layout>
+
      </widget>
     </widget>
-    <widget class="QWidget" name="pageCustomKeyChar">
+    <widget class="QScrollArea" name="scrollAdvance">
+     <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+     <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+     <property name="widgetResizable"><bool>true</bool></property>
+     <widget class="QWidget" name="scrollAdvanceContents">
+      <property name="geometry">
+       <rect><x>0</x><y>0</y><width>480</width><height>800</height></rect>
+      </property>
+      <layout class="QVBoxLayout" name="layoutScrollAdvance">
+       <property name="spacing"><number>6</number></property>
+       <property name="leftMargin"><number>12</number></property>
+       <property name="topMargin"><number>4</number></property>
+       <property name="rightMargin"><number>12</number></property>
+       <property name="bottomMargin"><number>8</number></property>
+       <item>
+        <layout class="QHBoxLayout" name="layoutHeader_labelSectionSoftKb">
+         <property name="spacing"><number>8</number></property>
+         <property name="leftMargin"><number>0</number></property>
+         <property name="topMargin"><number>4</number></property>
+         <property name="rightMargin"><number>0</number></property>
+         <property name="bottomMargin"><number>2</number></property>
+         <item>
+          <widget class="QLabel" name="labelSectionSoftKb">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text"><string>Soft keyboard</string></property>
+           <property name="sectionHeader" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="lineSectionSoftKb">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize"><size><width>0</width><height>1</height></size></property>
+           <property name="maximumSize"><size><width>16777215</width><height>1</height></size></property>
+           <property name="frameShape"><enum>QFrame::HLine</enum></property>
+           <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+           <property name="sectionLine" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+<widget class="QWidget" name="pageCustomKeyChar">
+     <property name="minimumSize">
+      <size><width>470</width><height>210</height></size>
+     </property>
      <widget class="QLabel" name="labelCustomKeyChar">
+      <property name="visible"><bool>false</bool></property>
       <property name="geometry">
        <rect>
-        <x>25</x>
-        <y>25</y>
-        <width>591</width>
-        <height>31</height>
+        <x>0</x>
+        <y>0</y>
+        <width>1</width>
+        <height>1</height>
        </rect>
       </property>
       <property name="font">
@@ -4843,8 +3524,8 @@ switch</string>
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>80</y>
-        <width>211</width>
+        <y>8</y>
+        <width>280</width>
         <height>21</height>
        </rect>
       </property>
@@ -4860,14 +3541,63 @@ switch</string>
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="pageCustomKeyMark">
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="layoutHeader_labelSectionMark">
+         <property name="spacing"><number>8</number></property>
+         <property name="leftMargin"><number>0</number></property>
+         <property name="topMargin"><number>4</number></property>
+         <property name="rightMargin"><number>0</number></property>
+         <property name="bottomMargin"><number>2</number></property>
+         <item>
+          <widget class="QLabel" name="labelSectionMark">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text"><string>Custom punctuation</string></property>
+           <property name="sectionHeader" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="lineSectionMark">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize"><size><width>0</width><height>1</height></size></property>
+           <property name="maximumSize"><size><width>16777215</width><height>1</height></size></property>
+           <property name="frameShape"><enum>QFrame::HLine</enum></property>
+           <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+           <property name="sectionLine" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+<widget class="QWidget" name="pageCustomKeyMark">
+     <property name="minimumSize">
+      <size><width>470</width><height>210</height></size>
+     </property>
      <widget class="QLabel" name="labelCustomKeyMark">
+      <property name="visible"><bool>false</bool></property>
       <property name="geometry">
        <rect>
-        <x>25</x>
-        <y>25</y>
-        <width>591</width>
-        <height>31</height>
+        <x>0</x>
+        <y>0</y>
+        <width>1</width>
+        <height>1</height>
        </rect>
       </property>
       <property name="font">
@@ -4888,8 +3618,8 @@ switch</string>
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>80</y>
-        <width>181</width>
+        <y>8</y>
+        <width>280</width>
         <height>21</height>
        </rect>
       </property>
@@ -4905,130 +3635,151 @@ switch</string>
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="pageVersionInfo">
-     <widget class="QLabel" name="labelVersionInfo">
-      <property name="geometry">
-       <rect>
-        <x>25</x>
-        <y>25</y>
-        <width>359</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Version information</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_2">
-      <property name="geometry">
-       <rect>
-        <x>70</x>
-        <y>87</y>
-        <width>60</width>
-        <height>60</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelVersion">
-      <property name="geometry">
-       <rect>
-        <x>152</x>
-        <y>80</y>
-        <width>241</width>
-        <height>51</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Freewb Input Method</string>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelVersionNum">
-      <property name="geometry">
-       <rect>
-        <x>152</x>
-        <y>120</y>
-        <width>261</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>version:</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelCopyright1">
-      <property name="geometry">
-       <rect>
-        <x>25</x>
-        <y>180</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelCopyright2">
-      <property name="geometry">
-       <rect>
-        <x>62</x>
-        <y>220</y>
-        <width>361</width>
-        <height>151</height>
-       </rect>
-      </property>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="layoutHeader_labelSectionOthers">
+         <property name="spacing"><number>8</number></property>
+         <property name="leftMargin"><number>0</number></property>
+         <property name="topMargin"><number>4</number></property>
+         <property name="rightMargin"><number>0</number></property>
+         <property name="bottomMargin"><number>2</number></property>
+         <item>
+          <widget class="QLabel" name="labelSectionOthers">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text"><string>Other settings</string></property>
+           <property name="sectionHeader" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="lineSectionOthers">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize"><size><width>0</width><height>1</height></size></property>
+           <property name="maximumSize"><size><width>16777215</width><height>1</height></size></property>
+           <property name="frameShape"><enum>QFrame::HLine</enum></property>
+           <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+           <property name="sectionLine" stdset="0"><bool>true</bool></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+      <widget class="QWidget" name="pageOthers">
+       <layout class="QVBoxLayout" name="layoutOthers">
+        <property name="spacing"><number>8</number></property>
+        <property name="leftMargin"><number>20</number></property>
+        <property name="topMargin"><number>4</number></property>
+        <property name="rightMargin"><number>12</number></property>
+        <property name="bottomMargin"><number>8</number></property>
+        <item>
+         <layout class="QGridLayout" name="gridOthersAdvanced">
+          <property name="horizontalSpacing"><number>32</number></property>
+          <property name="verticalSpacing"><number>8</number></property>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="ckbShiftCommitChar">
+            <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+            <property name="text"><string>Shift+letter commits directly</string></property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="ckbAutoPhrase">
+            <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+            <property name="text"><string>Auto phrase options</string></property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="ckbTypeEffect">
+            <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+            <property name="text"><string>Enable typing sound effects</string></property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="ckbZzSpecialEncodingSymbols">
+            <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+            <property name="text"><string>ZZ special encoding symbols</string></property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="ckbRepeatCalib">
+            <property name="font"><font><pointsize>11</pointsize><weight>50</weight><bold>false</bold></font></property>
+            <property name="text"><string>Duplicate commit proofreading mode</string></property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+<item><widget class="QLabel" name="label_4">
       <property name="font">
        <font>
         <pointsize>11</pointsize>
         <weight>50</weight>
         <bold>false</bold>
        </font>
+      </property>
+      <property name="text">
+       <string>Auto-switch to English strings</string>
+      </property>
+     </widget></item>
+        <item><widget class="QWidget" name="layoutWidget">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Character</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="ledtAutoToEnStr">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget></item>
+        <item><widget class="QLabel" name="labelAutoEnPrompt">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Freewb switches to English when you type these strings; Enter returns to Chinese.
+Up to four characters, separated by spaces. Useful for browsing.</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -5036,6 +3787,245 @@ switch</string>
       <property name="wordWrap">
        <bool>true</bool>
       </property>
+     </widget></item>
+        <item>
+         <spacer name="spacerOthersMid">
+          <property name="orientation"><enum>Qt::Vertical</enum></property>
+          <property name="sizeType"><enum>QSizePolicy::Fixed</enum></property>
+          <property name="sizeHint"><size><width>20</width><height>6</height></size></property>
+         </spacer>
+        </item>
+        <item><widget class="QCheckBox" name="ckbAutoHalfMarkAfterNum">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Window">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </disabled>
+       </palette>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Half-width punctuation after digits</string>
+      </property>
+     </widget></item>
+        <item><widget class="QLabel" name="labelAutoMarkPrompt">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>In Chinese mode, commas and periods after digits become half-width (useful for finance).</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget></item>
+       </layout>
+      </widget>
+       </item>
+      </layout>
+
+     </widget>
+    </widget>
+    <widget class="QScrollArea" name="scrollVersion">
+     <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+     <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+     <property name="widgetResizable"><bool>true</bool></property>
+     <widget class="QWidget" name="scrollVersionContents">
+      <property name="geometry">
+       <rect><x>0</x><y>0</y><width>480</width><height>800</height></rect>
+      </property>
+      <layout class="QVBoxLayout" name="layoutScrollVersion">
+       <property name="spacing"><number>0</number></property>
+       <property name="leftMargin"><number>12</number></property>
+       <property name="topMargin"><number>0</number></property>
+       <property name="rightMargin"><number>12</number></property>
+       <property name="bottomMargin"><number>0</number></property>
+       <item>
+        <spacer name="spacerVersionTop">
+         <property name="orientation"><enum>Qt::Vertical</enum></property>
+         <property name="sizeHint"><size><width>20</width><height>40</height></size></property>
+        </spacer>
+       </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QWidget" name="pageVersionInfo">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <layout class="QHBoxLayout" name="layoutVersionInfo">
+          <property name="spacing"><number>16</number></property>
+          <property name="leftMargin"><number>0</number></property>
+          <property name="topMargin"><number>0</number></property>
+          <property name="rightMargin"><number>0</number></property>
+          <property name="bottomMargin"><number>0</number></property>
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="minimumSize"><size><width>60</width><height>60</height></size></property>
+            <property name="maximumSize"><size><width>60</width><height>60</height></size></property>
+            <property name="styleSheet"><string notr="true"/></property>
+            <property name="text"><string/></property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="layoutVersionText">
+            <property name="spacing"><number>6</number></property>
+            <item>
+             <widget class="QLabel" name="labelVersion">
+              <property name="font">
+               <font>
+                <pointsize>11</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text"><string>Freewb Input Method</string></property>
+              <property name="alignment"><set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="labelVersionNum">
+              <property name="font">
+               <font>
+                <pointsize>11</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="styleSheet"><string notr="true"/></property>
+              <property name="text"><string>version:</string></property>
+              <property name="alignment"><set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set></property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+         <widget class="QLabel" name="labelVersionInfo">
+          <property name="visible"><bool>false</bool></property>
+          <property name="geometry"><rect><x>0</x><y>0</y><width>1</width><height>1</height></rect></property>
+          <property name="text"><string>Version information</string></property>
+         </widget>
+         <widget class="QLabel" name="labelCopyright1">
+          <property name="visible"><bool>false</bool></property>
+          <property name="geometry"><rect><x>0</x><y>0</y><width>1</width><height>1</height></rect></property>
+         </widget>
+         <widget class="QLabel" name="labelCopyright2">
+          <property name="visible"><bool>false</bool></property>
+          <property name="geometry"><rect><x>0</x><y>0</y><width>1</width><height>1</height></rect></property>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <spacer name="spacerVersionBottom">
+         <property name="orientation"><enum>Qt::Vertical</enum></property>
+         <property name="sizeHint"><size><width>20</width><height>40</height></size></property>
+        </spacer>
+       </item>
+      </layout>
+
      </widget>
     </widget>
    </widget>
@@ -5044,8 +4034,8 @@ switch</string>
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>221</width>
-      <height>432</height>
+      <width>140</width>
+      <height>412</height>
      </rect>
     </property>
     <property name="font">
@@ -5065,8 +4055,8 @@ switch</string>
    <widget class="QPushButton" name="btnOk">
     <property name="geometry">
      <rect>
-      <x>402</x>
-      <y>471</y>
+      <x>460</x>
+      <y>451</y>
       <width>100</width>
       <height>31</height>
      </rect>
@@ -5088,8 +4078,8 @@ switch</string>
    <widget class="QPushButton" name="btnCancel">
     <property name="geometry">
      <rect>
-      <x>552</x>
-      <y>471</y>
+      <x>580</x>
+      <y>451</y>
       <width>100</width>
       <height>31</height>
      </rect>

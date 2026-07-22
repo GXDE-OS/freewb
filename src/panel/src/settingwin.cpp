@@ -1,10 +1,16 @@
 #include "settingwin.h"
 
 #include <array>
+#include <limits>
 #include <vector>
 
 #include <QDateTime>
 #include <QFont>
+#include <QFrame>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QVBoxLayout>
 
 #include "config.h"
 #include "inputwin.h"
@@ -328,9 +334,6 @@ void swBuildKeyPairCombo(QComboBox *combo, const std::array<Preset, N> &presets,
 #define QSS_BTN_CLOSE1 "border-image: url(:/image/setting/close1.png);"
 #define QSS_BTN_CLOSE2 "border-image: url(:/image/setting/close2.png);"
 
-// 设置组子分组图标
-#define ICO_SETTING_GROUP ":/image/setting/group.png"
-
 SettingWin::SettingWin(QWidget *parent) : QWidget(parent), ui(new Ui::SettingWin)
 {
     ui->setupUi(this);
@@ -359,6 +362,30 @@ SettingWin::SettingWin(QWidget *parent) : QWidget(parent), ui(new Ui::SettingWin
     ui->cmbWhenLossLocation->hide();
     ui->labelLossLocate->hide();
     ui->label_42->hide();
+    ui->labelUseAudioFile->hide();
+    ui->ckbUseAudioFile->hide();
+
+    ui->pageUi->setFixedHeight(210);
+    ui->pageCandidateWinUi->setFixedHeight(360);
+    ui->pageCustomKeyChar->setFixedHeight(210);
+    ui->pageCustomKeyMark->setFixedHeight(210);
+    for (auto *cmb : findChildren<QComboBox *>())
+    {
+        cmb->setFixedHeight(26);
+    }
+    for (auto *cmb : {ui->cmbTmpEnglish, ui->cmbShortcutInput, ui->cmbTmpPinyin, ui->cmbSwitchCnEn, ui->cmb23RecodeSelect,
+                      ui->cmbPrevNextPage, ui->cmbSkinSelect, ui->cmbCandiWinMode})
+    {
+        cmb->setFixedWidth(160);
+    }
+    ui->cmbFunction->setFixedWidth(180);
+    ui->cmbShortcutKey->setFixedWidth(120);
+    if (auto *grid = qobject_cast<QGridLayout *>(ui->pageShortcutEasy->layout()))
+    {
+        grid->setColumnStretch(1, 1);
+    }
+
+    ui->stackedWidget->setCurrentWidget(ui->scrollCommon);
 }
 
 SettingWin::~SettingWin()
@@ -417,10 +444,10 @@ void SettingWin::init_member_data()
 
     // 初始化设置界面的软键盘
     m_kbCustomKeyChar = new Keyboard(VKM_CUSTOM_CHAR, ui->pageCustomKeyChar);
-    m_kbCustomKeyChar->move(40, 120);
+    m_kbCustomKeyChar->move(40, 36);
 
     m_kbCustomKeyMark = new Keyboard(VKM_CUSTOM_MARK, ui->pageCustomKeyMark);
-    m_kbCustomKeyMark->move(40, 120);
+    m_kbCustomKeyMark->move(40, 36);
 
     // 自定义软键盘点击
     connect(m_kbCustomKeyChar, SIGNAL(signal_custom_key_clicked(SymbolKeyIdx, const QString &, const CustomKeyValue &)), this,
@@ -497,18 +524,25 @@ void SettingWin::setUiTexts()
     ui->ckbShiftSelectRecode->setText(_("Use Shift to select duplicates"));
     ui->ckbDispOpDict->setText(_("Live dictionary on candidates"));
     ui->labelShortcutKey->setText(_("Shortcut settings"));
-    ui->labelCustom->setText(_("Custom shortcuts"));
+    ui->labelCustom->setText(_("Custom"));
     ui->label_11->setText(_("Function"));
     ui->label_12->setText(_("Shortcut"));
     ui->ckbDisableAllShortcutKey->setText(_("Disable all shortcuts"));
     ui->ckbDisableFullHalfKey->setText(_("Disable full/half width shortcut"));
     ui->label_13->setText(_("Shortcut input"));
-    ui->labelEasy->setText(_("Convenience shortcuts"));
+    ui->labelEasy->setText(_("Convenience features"));
     ui->label_15->setText(_("Temporary English"));
-    ui->label_16->setText(_("Temporary Pinyin\nrare characters"));
-    ui->labelCnEn->setText(_("Chinese/English\nswitch"));
+    ui->label_16->setText(_("Temporary Pinyin / rare characters"));
+    ui->labelCnEn->setText(_("Chinese/English switch"));
     ui->labelTwo->setText(_("Double-tap convenience key for symbol"));
     ui->btnRestoreShortcutKey->setText(_("Restore default shortcuts"));
+    ui->labelSectionStatus->setText(_("Status bar"));
+    ui->labelSectionCandidate->setText(_("Candidate window"));
+    ui->labelSectionCustom->setText(_("Custom"));
+    ui->labelSectionEasy->setText(_("Convenience features"));
+    ui->labelSectionSoftKb->setText(_("Soft keyboard"));
+    ui->labelSectionMark->setText(_("Custom punctuation"));
+    ui->labelSectionOthers->setText(_("Other settings"));
     ui->labelCustomKeyChar->setText(_("Custom soft keyboard"));
     ui->labelPrompt_1->setText(_("Click the soft keyboard character to edit"));
     ui->labelCustomKeyMark->setText(_("Custom punctuation"));
@@ -784,7 +818,10 @@ void SettingWin::slot_open_win()
     activateWindow();
 
     ui->listWidget->setCurrentRow(0);
-    ui->stackedWidget->setCurrentIndex(0);
+    if (ui->scrollCommon != nullptr)
+    {
+        ui->stackedWidget->setCurrentWidget(ui->scrollCommon);
+    }
 }
 
 void SettingWin::slot_init_all_setting_page()
@@ -808,12 +845,16 @@ void SettingWin::slot_show_version_info()
 
     for (int i = 0; i < ui->listWidget->count(); i++)
     {
-        if (ui->listWidget->item(i)->text() == _("Version information"))
+        if (ui->listWidget->item(i) == m_listItemVersionInfo)
         {
             ui->listWidget->setCurrentRow(i);
+            break;
         }
     }
-    ui->stackedWidget->setCurrentWidget(ui->pageVersionInfo);
+    if (ui->scrollVersion != nullptr)
+    {
+        ui->stackedWidget->setCurrentWidget(ui->scrollVersion);
+    }
 }
 
 // 更新设置界面左侧的设置选项组
@@ -822,20 +863,15 @@ void SettingWin::update_listwidget_item()
     ui->listWidget->clear();
 
     m_listItemCommon = new QListWidgetItem(_("Common options"), ui->listWidget);
-    m_listItemAdvance = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Advanced options"), ui->listWidget);
-    m_listItemOthers = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Other settings"), ui->listWidget);
-
     m_listItemUi = new QListWidgetItem(_("Interface settings"), ui->listWidget);
-    m_listItemCandidateWinUi = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Candidate window interface"), ui->listWidget);
-    m_listItemCandidateWinOption = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Candidate window options"), ui->listWidget);
-
-    m_listItemShortcutKey = new QListWidgetItem(_("Setting shortcut keys"), ui->listWidget);
-    m_listItemCustomKeyChar = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Define soft keyboard"), ui->listWidget);
-    m_listItemCustomKeyMark = new QListWidgetItem(QIcon(ICO_SETTING_GROUP), _("Custom punctuation"), ui->listWidget);
+    m_listItemShortcut = new QListWidgetItem(_("Shortcut"), ui->listWidget);
+    m_listItemAdvance = new QListWidgetItem(_("Advanced options"), ui->listWidget);
     m_listItemVersionInfo = new QListWidgetItem(_("Version information"), ui->listWidget);
-    // m_listItemBug = new QListWidgetItem( "问题反馈", ui->listWidget );
 
-    ui->stackedWidget->setCurrentWidget(ui->pageCommon);
+    if (ui->scrollCommon != nullptr)
+    {
+        ui->stackedWidget->setCurrentWidget(ui->scrollCommon);
+    }
     ui->listWidget->setCurrentRow(0);
 }
 
@@ -1199,49 +1235,31 @@ void SettingWin::on_listWidget_currentItemChanged(QListWidgetItem *current, QLis
 
     if (current == m_listItemCommon)
     {
-        ui->stackedWidget->setCurrentWidget(ui->pageCommon);
-    }
-    else if (current == m_listItemAdvance)
-    {
-        ui->stackedWidget->setCurrentWidget(ui->pageAdvance);
-    }
-    else if (current == m_listItemOthers)
-    {
-        ui->stackedWidget->setCurrentWidget(ui->pageOthers);
+        ui->stackedWidget->setCurrentWidget(ui->scrollCommon);
     }
     else if (current == m_listItemUi)
     {
-        ui->stackedWidget->setCurrentWidget(ui->pageUi);
+        ui->stackedWidget->setCurrentWidget(ui->scrollUi);
     }
-    else if (current == m_listItemCandidateWinUi)
+    else if (current == m_listItemShortcut)
     {
-        ui->stackedWidget->setCurrentWidget(ui->pageCandidateWinUi);
+        ui->stackedWidget->setCurrentWidget(ui->scrollShortcut);
     }
-    else if (current == m_listItemCandidateWinOption)
+    else if (current == m_listItemAdvance)
     {
-        ui->stackedWidget->setCurrentWidget(ui->pageCandidateWinOption);
-    }
-    else if (current == m_listItemShortcutKey)
-    {
-        ui->stackedWidget->setCurrentWidget(ui->pageShortcutKey);
-    }
-    else if (current == m_listItemCustomKeyChar)
-    {
-        m_kbCustomKeyChar->update_keyboard_button(); // 初始化虚拟键盘按钮上显示的自定义符号
-        ui->stackedWidget->setCurrentWidget(ui->pageCustomKeyChar);
-    }
-    else if (current == m_listItemCustomKeyMark)
-    {
-        m_kbCustomKeyMark->update_keyboard_button(); // 初始化虚拟键盘按钮上显示的自定义符号
-        ui->stackedWidget->setCurrentWidget(ui->pageCustomKeyMark);
+        if (m_kbCustomKeyChar != nullptr)
+        {
+            m_kbCustomKeyChar->update_keyboard_button();
+        }
+        if (m_kbCustomKeyMark != nullptr)
+        {
+            m_kbCustomKeyMark->update_keyboard_button();
+        }
+        ui->stackedWidget->setCurrentWidget(ui->scrollAdvance);
     }
     else if (current == m_listItemVersionInfo)
     {
-        ui->stackedWidget->setCurrentWidget(ui->pageVersionInfo);
-    }
-    else if (current == m_listItemBug)
-    {
-        // QDesktopServices::openUrl( QUrl("http://www.freewb.org") );
+        ui->stackedWidget->setCurrentWidget(ui->scrollVersion);
     }
 }
 
@@ -1490,7 +1508,7 @@ void SettingWin::on_btnRestoreShortcutKey_clicked()
 
 void SettingWin::slot_custom_keyboard_char_clicked(SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue)
 {
-
+    m_editingCustomCharKey = true;
     m_curSymbolKeyIdx = keyIdx;
     m_curCustomKeyValue = keyValue;
 
@@ -1501,7 +1519,7 @@ void SettingWin::slot_custom_keyboard_char_clicked(SymbolKeyIdx keyIdx, const QS
 
 void SettingWin::slot_custom_keyboard_mark_clicked(SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue)
 {
-
+    m_editingCustomCharKey = false;
     m_curSymbolKeyIdx = keyIdx;
     m_curCustomKeyValue = keyValue;
 
@@ -1512,8 +1530,7 @@ void SettingWin::slot_custom_keyboard_mark_clicked(SymbolKeyIdx keyIdx, const QS
 
 void SettingWin::slot_custom_btn_ok_clicked(const QString &commSymbol, const QString &shiftSymbol)
 {
-
-    if (ui->stackedWidget->currentWidget() == ui->pageCustomKeyChar)
+    if (m_editingCustomCharKey)
     {
         m_curCustomKeyValue.commChar = commSymbol;
         m_curCustomKeyValue.shiftChar = shiftSymbol;

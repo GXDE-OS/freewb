@@ -1,6 +1,8 @@
 #ifndef SETTINGWIN_H
 #define SETTINGWIN_H
 
+#include <utility>
+
 #include <QColorDialog>
 #include <QDateTime>
 #include <QDesktopServices>
@@ -9,10 +11,14 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QFontDialog>
+#include <QLabel>
 #include <QListWidgetItem>
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QPoint>
+#include <QScrollArea>
+#include <QString>
+#include <QVector>
 #include <QWidget>
 
 #include "customkeydialog.h"
@@ -169,17 +175,11 @@ private:
     QLabel *m_tooltipsLabel;
     bool m_tooltipsWinShowFlg;
 
-    QListWidgetItem *m_listItemCommon;             // 常用选项
-    QListWidgetItem *m_listItemAdvance;            // 高级选项
-    QListWidgetItem *m_listItemOthers;             // 其他设置
-    QListWidgetItem *m_listItemUi;                 // 界面设置
-    QListWidgetItem *m_listItemCandidateWinUi;     // 候选窗界面
-    QListWidgetItem *m_listItemCandidateWinOption; // 候选窗选项
-    QListWidgetItem *m_listItemShortcutKey;        // 快捷键设置
-    QListWidgetItem *m_listItemCustomKeyChar;      // 定义软键盘
-    QListWidgetItem *m_listItemCustomKeyMark;      // 自定义标点
-    QListWidgetItem *m_listItemVersionInfo;        // 输入法版本信息
-    QListWidgetItem *m_listItemBug;                // Bug信息反馈
+    QListWidgetItem *m_listItemCommon = nullptr;      // 常用选项
+    QListWidgetItem *m_listItemUi = nullptr;          // 界面设置
+    QListWidgetItem *m_listItemShortcut = nullptr;    // 快捷键
+    QListWidgetItem *m_listItemAdvance = nullptr;     // 高级选项
+    QListWidgetItem *m_listItemVersionInfo = nullptr; // 版本信息
 
     Keyboard *m_kbCustomKeyChar;        // 自定义按键字符设置页面的键盘
     Keyboard *m_kbCustomKeyMark;        // 自定义按键标点设置页面的键盘
@@ -187,6 +187,7 @@ private:
 
     SymbolKeyIdx m_curSymbolKeyIdx;     // 当前正在自定义的按键
     CustomKeyValue m_curCustomKeyValue; // 当前正在自定义的按键值
+    bool m_editingCustomCharKey = true;
 };
 
 #endif
