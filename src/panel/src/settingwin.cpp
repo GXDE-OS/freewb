@@ -4,6 +4,7 @@
 #include <limits>
 #include <vector>
 
+#include <QButtonGroup>
 #include <QDateTime>
 #include <QFont>
 #include <QFrame>
@@ -365,7 +366,7 @@ SettingWin::SettingWin(QWidget *parent) : QWidget(parent), ui(new Ui::SettingWin
     ui->labelUseAudioFile->hide();
     ui->ckbUseAudioFile->hide();
 
-    ui->pageUi->setFixedHeight(210);
+    ui->pageUi->setFixedHeight(160);
     ui->pageCandidateWinUi->setFixedHeight(360);
     ui->pageCustomKeyChar->setFixedHeight(210);
     ui->pageCustomKeyMark->setFixedHeight(210);
@@ -384,6 +385,27 @@ SettingWin::SettingWin(QWidget *parent) : QWidget(parent), ui(new Ui::SettingWin
     {
         grid->setColumnStretch(1, 1);
     }
+    if (auto *grid = qobject_cast<QGridLayout *>(ui->gridDefaultStateOptions))
+    {
+        grid->setColumnStretch(4, 1);
+    }
+
+    /* 默认设置多组单选互斥；同属 pageDefaultState 时需手动分组 */
+    for (auto *rdo : {ui->rdoDefaultSimplified, ui->rdoDefaultTraditional, ui->rdoDefaultGb2312, ui->rdoDefaultGb18030,
+                      ui->rdoDefaultWbzx, ui->rdoDefaultWbpy, ui->rdoDefaultPy})
+    {
+        rdo->setAutoExclusive(false);
+    }
+    auto *simpTradGroup = new QButtonGroup(this);
+    simpTradGroup->addButton(ui->rdoDefaultSimplified);
+    simpTradGroup->addButton(ui->rdoDefaultTraditional);
+    auto *charSetGroup = new QButtonGroup(this);
+    charSetGroup->addButton(ui->rdoDefaultGb2312);
+    charSetGroup->addButton(ui->rdoDefaultGb18030);
+    auto *inputModeGroup = new QButtonGroup(this);
+    inputModeGroup->addButton(ui->rdoDefaultWbzx);
+    inputModeGroup->addButton(ui->rdoDefaultPy);
+    inputModeGroup->addButton(ui->rdoDefaultWbpy);
 
     ui->stackedWidget->setCurrentWidget(ui->scrollCommon);
 }
@@ -463,6 +485,19 @@ void SettingWin::init_member_data()
 void SettingWin::setUiTexts()
 {
     ui->labelCommon->setText(_("Common options"));
+    ui->labelSectionDefault->setText(_("Default settings"));
+    ui->labelSectionInput->setText(_("Input settings"));
+    ui->labelDefaultStateHint->setText(_("(Default settings take effect after restart)"));
+    ui->labelDefaultSimpTrad->setText(_("Simplified/Traditional"));
+    ui->rdoDefaultSimplified->setText(_("Simplified"));
+    ui->rdoDefaultTraditional->setText(_("Traditional"));
+    ui->labelDefaultCharSet->setText(_("Character set"));
+    ui->rdoDefaultGb2312->setText(_("GB2312"));
+    ui->rdoDefaultGb18030->setText(_("GB18030"));
+    ui->labelDefaultInputMode->setText(_("Input mode"));
+    ui->rdoDefaultWbzx->setText(_("Wubi"));
+    ui->rdoDefaultPy->setText(_("Pinyin input"));
+    ui->rdoDefaultWbpy->setText(_("Wubi+Pinyin"));
     ui->ckbCodeRemind->setText(_("Enable incremental code hints"));
     ui->ckbWordThink->setText(_("Enable phrase association"));
     ui->ckbRemindExistWord->setText(_("Remind when phrase exists in lexicon"));
@@ -589,6 +624,13 @@ void SettingWin::init_mouse_hover_tips()
 
     ui->ckbCodeRemind->setToolTip(_("When you enter code 'a', besides the character for 'a', candidates starting with 'a' "
                                     "are also shown, e.g. entries like '式a 节b'."));
+    ui->rdoDefaultSimplified->setToolTip(_("Output Simplified Chinese characters."));
+    ui->rdoDefaultTraditional->setToolTip(_("Output Traditional Chinese characters."));
+    ui->rdoDefaultGb2312->setToolTip(_("Use the GB2312 character set; status bar displays GB."));
+    ui->rdoDefaultGb18030->setToolTip(_("Use the GB18030 character set; status bar displays GBK."));
+    ui->rdoDefaultWbzx->setToolTip(_("Type with Wubi codes."));
+    ui->rdoDefaultPy->setToolTip(_("Type with Pinyin."));
+    ui->rdoDefaultWbpy->setToolTip(_("Combine Wubi and Pinyin input."));
     ui->ckbSpaceFullWhenCharHalf->setToolTip(
         _("When editing Word documents, paragraph indents of two Chinese characters can be entered "
           "conveniently with this option."));
@@ -878,6 +920,21 @@ void SettingWin::update_listwidget_item()
 // 初始化常用选项设置页面
 void SettingWin::init_common_page()
 {
+    /* 默认设置：只写盘，不通知引擎；重启后由引擎/工具栏构造读取生效 */
+    const bool traditional = settings::instance().get_simpTradFlg();
+    ui->rdoDefaultTraditional->setChecked(traditional);
+    ui->rdoDefaultSimplified->setChecked(!traditional);
+
+    const bool gb2312 = settings::instance().get_charSet() == 0;
+    ui->rdoDefaultGb2312->setChecked(gb2312);
+    ui->rdoDefaultGb18030->setChecked(!gb2312);
+
+    const QString inputMode = QString::fromStdString(settings::instance().get_inputMode());
+    ui->rdoDefaultWbzx->setChecked(inputMode == QLatin1String("engine:wbzx") || inputMode.isEmpty() ||
+                                   inputMode == QLatin1String("engine:en"));
+    ui->rdoDefaultWbpy->setChecked(inputMode == QLatin1String("engine:wbpy"));
+    ui->rdoDefaultPy->setChecked(inputMode == QLatin1String("engine:py"));
+
     ui->ckbCodeRemind->setChecked(settings::instance().get_codeRemind());
     ui->ckbSpaceFullWhenCharHalf->setChecked(settings::instance().get_spaceFullWhenCharHalf());
     ui->ckbWordThink->setChecked(settings::instance().get_wordThink());
@@ -1295,6 +1352,48 @@ void SettingWin::on_ckbCodeRemind_stateChanged(int arg1)
     {
         settings::instance().set_codeRemind(false);
     }
+}
+
+void SettingWin::on_rdoDefaultSimplified_toggled(bool checked)
+{
+    if (checked)
+        settings::instance().set_simpTradFlg(false);
+}
+
+void SettingWin::on_rdoDefaultTraditional_toggled(bool checked)
+{
+    if (checked)
+        settings::instance().set_simpTradFlg(true);
+}
+
+void SettingWin::on_rdoDefaultGb2312_toggled(bool checked)
+{
+    if (checked)
+        settings::instance().set_charSet(0);
+}
+
+void SettingWin::on_rdoDefaultGb18030_toggled(bool checked)
+{
+    if (checked)
+        settings::instance().set_charSet(1);
+}
+
+void SettingWin::on_rdoDefaultWbzx_toggled(bool checked)
+{
+    if (checked)
+        settings::instance().set_inputMode("engine:wbzx");
+}
+
+void SettingWin::on_rdoDefaultWbpy_toggled(bool checked)
+{
+    if (checked)
+        settings::instance().set_inputMode("engine:wbpy");
+}
+
+void SettingWin::on_rdoDefaultPy_toggled(bool checked)
+{
+    if (checked)
+        settings::instance().set_inputMode("engine:py");
 }
 
 void SettingWin::on_ckbSpaceFullWhenCharHalf_toggled(bool checked)

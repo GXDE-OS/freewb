@@ -28,7 +28,7 @@ QWidget:!enabled
     color: rgb(0, 0, 0);
 }
 
-
+#labelDefaultStateHint,
 #labelAutoEnPrompt,
 #labelAutoMarkPrompt
 {
@@ -70,9 +70,11 @@ QWidget:!enabled
     background-color: rgb(255, 255, 255);
 }
 
-QLabel[sectionHeader="true"]
+QLabel[sectionHeader="true"],
+#labelSectionInput
 {
-    color: rgb(0, 0, 0);
+    color: rgba(56, 56, 56, 180);
+    font-weight: normal;
 }
 
 QFrame[sectionLine="true"]

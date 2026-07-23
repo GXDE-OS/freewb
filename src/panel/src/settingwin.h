@@ -86,6 +86,13 @@ private slots:
     void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 
     /****************** 常用选项界面 ***************/
+    void on_rdoDefaultSimplified_toggled(bool checked);
+    void on_rdoDefaultTraditional_toggled(bool checked);
+    void on_rdoDefaultGb2312_toggled(bool checked);
+    void on_rdoDefaultGb18030_toggled(bool checked);
+    void on_rdoDefaultWbzx_toggled(bool checked);
+    void on_rdoDefaultWbpy_toggled(bool checked);
+    void on_rdoDefaultPy_toggled(bool checked);
     void on_ckbCodeRemind_stateChanged(int arg1);
     void on_ckbSpaceFullWhenCharHalf_toggled(bool checked);
     void on_ckbWordThink_toggled(bool checked);
