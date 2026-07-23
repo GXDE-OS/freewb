@@ -93,7 +93,7 @@ enum class ValueType
     X(enableTiled, CandidateWinUi, Bool, "false", CandidateWinUi, "")                                                            \
     X(useGradientColor, CandidateWinUi, Bool, "false", CandidateWinUi, "")                                                       \
     X(useBgImage, CandidateWinUi, Bool, "false", CandidateWinUi, "")                                                             \
-    X(showCandDictInfo, CandidateWinUi, Bool, "true", CandidateWinUi, "")                                                        \
+    X(showCandDictInfo, CandidateWinUi, Bool, "false", CandidateWinUi, "")                                                       \
     X(cursorFollow, CandidateWinOptions, Bool, "true", CandidateWinOptions, "")                                                  \
     X(showOpRemindInfo, CandidateWinOptions, Bool, "true", CandidateWinOptions, "")                                              \
     X(shiftSelectRecode, CandidateWinOptions, Bool, "false", CandidateWinOptions, "")                                            \
