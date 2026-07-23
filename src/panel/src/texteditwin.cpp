@@ -264,25 +264,53 @@ bool TextEditWin::save_text_to_file()
 
     if (m_textEditMode == TEM_USER_WORD)
     {
-        QStringList tmp = ui->plainTextEdit->toPlainText().split('\n');
-        if (tmp.length())
+        QStringList userLines;
+        QStringList deletedLines;
+        bool inDeleted = false;
+        const QStringList lines = ui->plainTextEdit->toPlainText().split('\n');
+        for (QString line : lines)
         {
-            tmp.removeFirst();
-            tmp.removeDuplicates();
-            // tmp.sort(Qt::CaseInsensitive);
-            std::sort(tmp.begin(), tmp.end(),
-                      [](const QString &a, const QString &b) { return QString::compare(a, b, Qt::CaseInsensitive) < 0; });
-
-            tmp.insert(0, "[UserWord]");
-            foreach(QString str, tmp)
+            line = line.trimmed();
+            if (line.isEmpty() || line.startsWith('#'))
             {
-                // puts(str.toUtf8().constData());
-
-                if (!str.isEmpty())
-                {
-                    textStream << str + "\n";
-                }
+                continue;
             }
+            if (line == "[UserWord]")
+            {
+                inDeleted = false;
+                continue;
+            }
+            if (line == "[DeletedWord]")
+            {
+                inDeleted = true;
+                continue;
+            }
+            if (inDeleted)
+            {
+                deletedLines << line;
+            }
+            else
+            {
+                userLines << line;
+            }
+        }
+
+        userLines.removeDuplicates();
+        deletedLines.removeDuplicates();
+        auto caseInsensitiveLess = [](const QString &a, const QString &b)
+        { return QString::compare(a, b, Qt::CaseInsensitive) < 0; };
+        std::sort(userLines.begin(), userLines.end(), caseInsensitiveLess);
+        std::sort(deletedLines.begin(), deletedLines.end(), caseInsensitiveLess);
+
+        textStream << "[UserWord]\n";
+        foreach(const QString &str, userLines)
+        {
+            textStream << str << "\n";
+        }
+        textStream << "[DeletedWord]\n";
+        foreach(const QString &str, deletedLines)
+        {
+            textStream << str << "\n";
         }
         textStream.flush();
         textFile.close();

@@ -594,15 +594,58 @@ void LexiconToolWin::add_del_user_word_from_file(int op, const QString &fileName
             {
                 return;
             }
-            QStringList userWordList = userWordStream.readAll().split('\n');
+            QStringList userLines;
+            QStringList deletedLines;
+            bool inDeleted = false;
+            const QStringList existingLines = userWordStream.readAll().split('\n');
+            for (QString existing : existingLines)
+            {
+                existing = existing.trimmed();
+                if (existing.isEmpty() || existing.startsWith('#'))
+                {
+                    continue;
+                }
+                if (existing == "[UserWord]")
+                {
+                    inDeleted = false;
+                    continue;
+                }
+                if (existing == "[DeletedWord]")
+                {
+                    inDeleted = true;
+                    continue;
+                }
+                if (inDeleted)
+                {
+                    deletedLines << existing;
+                }
+                else
+                {
+                    userLines << existing;
+                }
+            }
 
+            bool skipOpLine = false;
             foreach(QString line, opWordLines)
             {
                 QString str, code;
                 QStringList tempList, valueList;
 
                 line = line.trimmed();
-                if (line.startsWith('#'))
+                if (line.isEmpty() || line.startsWith('#'))
+                    continue;
+                if (line == "[UserWord]")
+                {
+                    skipOpLine = false;
+                    continue;
+                }
+                if (line == "[DeletedWord]")
+                {
+                    // DeletedWord 仅由引擎维护，批量加/删不处理该段
+                    skipOpLine = true;
+                    continue;
+                }
+                if (skipOpLine)
                     continue;
 
                 if (line.contains('='))
@@ -659,39 +702,46 @@ void LexiconToolWin::add_del_user_word_from_file(int op, const QString &fileName
                         // 删词
                         if (!op)
                         {
-                            int pos = userWordList.indexOf(str);
+                            int pos = userLines.indexOf(str);
                             if (pos >= 0)
                             {
-                                userWordList.removeAt(pos);
+                                userLines.removeAt(pos);
                                 count++;
                             }
                         }
                         // 加词
                         else
                         {
-                            userWordList << str;
+                            userLines << str;
                             count++;
                         }
                     }
                 }
             }
 
-            if (op) // 加词
-            {
-                userWordList.removeFirst();
-                userWordList.removeDuplicates();
-                userWordList.sort();
-                userWordList.insert(0, "[UserWord]");
-            }
-
             if (count)
             {
+                if (op)
+                {
+                    userLines.removeDuplicates();
+                    userLines.sort();
+                }
+
                 userWordFile.resize(0);
-                foreach(QString str, userWordList)
+                userWordStream << "[UserWord]\n";
+                foreach(const QString &str, userLines)
                 {
                     if (!str.isEmpty())
                     {
-                        userWordStream << str + "\n";
+                        userWordStream << str << "\n";
+                    }
+                }
+                userWordStream << "[DeletedWord]\n";
+                foreach(const QString &str, deletedLines)
+                {
+                    if (!str.isEmpty())
+                    {
+                        userWordStream << str << "\n";
                     }
                 }
                 userWordStream.flush();
