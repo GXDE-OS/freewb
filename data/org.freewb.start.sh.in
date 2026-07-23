@@ -3,7 +3,13 @@ if [ ! -d $HOME/.local/freewb ];then
 	mkdir $HOME/.local/freewb -p
 fi
 
-cp @CMAKE_INSTALL_PREFIX@/share/freewb/data $HOME/.local/freewb/ -r
+if [ ! -d "$HOME/.local/freewb/data" ]; then
+	cp -r @CMAKE_INSTALL_PREFIX@/share/freewb/data "$HOME/.local/freewb/"
+elif [ ! -f "$HOME/.local/freewb/data/mb/default/pinyin.mb" ]; then
+	cp -r @CMAKE_INSTALL_PREFIX@/share/freewb/data "$HOME/.local/freewb/"
+elif [ ! -f "$HOME/.local/freewb/data/mb/default/wbzx.mb" ]; then
+	cp -r @CMAKE_INSTALL_PREFIX@/share/freewb/data "$HOME/.local/freewb/"
+fi
 
 # run freewb
 
