@@ -8,7 +8,6 @@
 #include "freewb.h"
 #include "key.h"
 #include "log.h"
-#include "punc.h"
 #include "settings.h"
 
 namespace freewb
@@ -39,6 +38,12 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return false;
     }
 
+    // 以下上屏按键均要求不带修饰键
+    if (!Key::hasNoModifier(state))
+    {
+        return false;
+    }
+
     // 数字键支持上屏
     if (Key::isKey09(keysym, state))
     {
@@ -46,8 +51,7 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     // 二三重码上屏
-    if ((keysym == secondRecodeKey_ && state == FreewbKeyState_None) ||
-        (keysym == thirdRecodeKey_ && state == FreewbKeyState_None))
+    if (keysym == secondRecodeKey_ || keysym == thirdRecodeKey_)
     {
         const int idx = keysym == secondRecodeKey_ ? 1 : 2;
         if (freewb_->candidateList()->size() <= idx)
@@ -59,7 +63,7 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     // 空格上屏
-    if (keysym == FreewbKey_space && state == FreewbKeyState_None)
+    if (keysym == FreewbKey_space)
     {
         if (candidates->size() > 0)
         {
@@ -73,26 +77,13 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     // 回车上屏
-    if (keysym == FreewbKey_Return && state == FreewbKeyState_None)
+    if (keysym == FreewbKey_Return)
     {
         commit(freewb_->candidateList()->preeditText());
         return true;
     }
 
-    // 顶字上屏,上屏效果与普通上屏不同。如："你好,"
-    {
-        Punc *punc = freewb_->punc();
-        if (!punc->shouldProcessKey(keysym, state))
-        {
-            return false;
-        }
-
-        const std::string visible = candidates->firstVisibleCandidateOrPreedit();
-        const std::string code = candidates->firstVisibleCandidateFullCode();
-        const PuncPushResult symbolPush = punc->convert(keysym, state);
-        commit(symbolPush.before + visible + symbolPush.after, code);
-        return true;
-    }
+    return false;
 }
 
 const std::string &Committer::lastCommitString() const

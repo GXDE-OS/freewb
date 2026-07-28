@@ -12,6 +12,11 @@ public:
     static const char *keySymToName(FreewbKeySym sym);
     static const char *keySymToUniqueName(FreewbKeySym sym);
 
+    static FreewbKeyState modifiers(FreewbKeyState state);
+    static bool hasNoModifier(FreewbKeyState state);
+    static bool hasOnlyShiftModifier(FreewbKeyState state);
+    static bool isSameKeySymbol(FreewbKeySym lhs, FreewbKeySym rhs);
+
     static bool isModifierKeySym(FreewbKeySym sym);
     static bool isKeyAZ(FreewbKeySym sym, FreewbKeyState state);
     static bool isKeyaz(FreewbKeySym sym, FreewbKeyState state);

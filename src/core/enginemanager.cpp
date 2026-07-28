@@ -255,6 +255,12 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return false;
     }
 
+    // 编码输入不带修饰键；Ctrl+C 之类的按键必须交还给应用，不能当作编码吃掉
+    if (!Key::hasNoModifier(state))
+    {
+        return false;
+    }
+
     const char *key = Key::keySymToName(keysym);
     if (key == nullptr || key[0] == '\0')
     {

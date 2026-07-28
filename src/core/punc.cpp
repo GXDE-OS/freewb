@@ -152,6 +152,49 @@ const PuncPairEntry *Punc::lookupPair(FreewbKeySym sym, char pairKey[2])
     return nullptr;
 }
 
+bool Punc::processKey(FreewbKeySym keysym, FreewbKeyState state)
+{
+    Committer *const committer = freewb_->committer();
+    CandidateList *const candidates = freewb_->candidateList();
+    if (committer == nullptr || candidates == nullptr)
+    {
+        return false;
+    }
+
+    const bool hasCandidate = candidates->size() != 0 || !candidates->preeditText().empty();
+
+    // 全角模式下数字须由输入法转换后送出，交给应用只会得到半角；
+    // 半角模式下字面结果相同，但可使数字进入上屏历史，供“数字后自动半角标点”判断
+    if (!hasCandidate && Key::isKey09(keysym, state))
+    {
+        committer->commit(std::string(1, static_cast<char>(keysym)));
+        return true;
+    }
+
+    if (!shouldProcessKey(keysym, state))
+    {
+        return false;
+    }
+
+    const PuncPushResult result = convert(keysym, state);
+    if (result.empty())
+    {
+        return false;
+    }
+
+    // 顶字上屏：先送出当前候选，再补上标点。如："你好，"
+    if (hasCandidate)
+    {
+        const std::string visible = candidates->firstVisibleCandidateOrPreedit();
+        const std::string code = candidates->firstVisibleCandidateFullCode();
+        committer->commit(result.before + visible + result.after, code);
+        return true;
+    }
+
+    committer->commit(result.joined());
+    return true;
+}
+
 PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
 {
     const FreewbKeySym sym = Key::normalizedKeySymbol(keysym, state);
@@ -238,10 +281,6 @@ PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
 bool Punc::shouldProcessKey(FreewbKeySym keysym, FreewbKeyState state) const
 {
     const FreewbKeySym sym = Key::normalizedKeySymbol(keysym, state);
-    if (sym == FreewbKey_None)
-    {
-        return false;
-    }
 
     CharWidth *const charWidth = freewb_->charWidth();
     if (sym == FreewbKey_backslash && charWidth != nullptr && charWidth->available())

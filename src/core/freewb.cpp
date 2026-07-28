@@ -129,6 +129,8 @@ bool Freewb::processKeyPress(FreewbKeySym keysym, FreewbKeyState state)
 {
     FREEWB_DEBUG("keysym: {}, state: {}", static_cast<int>(keysym), static_cast<int>(state));
 
+    updateCnEnSwitchPending(keysym, state);
+
     bool processed = false;
     processed = stateManager_->processKey(keysym, state);
     if (processed)
@@ -154,13 +156,13 @@ bool Freewb::processKeyPress(FreewbKeySym keysym, FreewbKeyState state)
         return true;
     }
 
-    processed = handleDirectSymbolKey(keysym, state);
+    processed = committer_->processKey(keysym, state);
     if (processed)
     {
         return true;
     }
 
-    processed = committer_->processKey(keysym, state);
+    processed = punc_->processKey(keysym, state);
     if (processed)
     {
         return true;
@@ -174,7 +176,7 @@ bool Freewb::processKeyRelease(FreewbKeySym keysym, FreewbKeyState state)
     (void)state;
 
     const std::string &switchToken = settings::instance().get_cnEnSwitch();
-    if (keysym != Key::keySymFromUniqueName(switchToken.c_str()) || !cnEnSwitchKeyPending_)
+    if (!Key::isSameKeySymbol(keysym, Key::keySymFromUniqueName(switchToken.c_str())) || !cnEnSwitchKeyPending_)
     {
         cnEnSwitchKeyPending_ = false;
         return false;
@@ -220,14 +222,16 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
         return false;
     }
 
-    if (!settings::instance().get_disableFullHalfSwitch() && keysym == FreewbKey_space && state == FreewbKeyState_Shift)
+    const FreewbKeyState mods = Key::modifiers(state);
+
+    if (!settings::instance().get_disableFullHalfSwitch() && keysym == FreewbKey_space && mods == FreewbKeyState_Shift)
     {
         charWidth_->changeAvailable();
         dbusProxy_->callPanelSwitchCharWidthMethod();
         return true;
     }
 
-    if (keysym == FreewbKey_period && state == FreewbKeyState_Ctrl)
+    if (keysym == FreewbKey_period && mods == FreewbKeyState_Ctrl)
     {
         const char *engineName = engineManager_->currentEngineName();
         if (engineName != nullptr && std::strcmp(engineName, "engine:en") == 0)
@@ -242,7 +246,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         const char *keyString = Key::readKeyString(settings::instance().get_backFindCode().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
-        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == FreewbKeyState_Ctrl)
         {
             dbusProxy_->callDictQueryMethod(committer_->lastCommitString());
             return true;
@@ -252,7 +256,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
         const char *keyString = Key::readKeyString(settings::instance().get_backFindCode().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         const FreewbKeyState wantState = static_cast<FreewbKeyState>(FreewbKeyState_Ctrl | FreewbKeyState_Alt);
-        if (keysym == keySym && state == wantState)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == wantState)
         {
             // 查询剪贴板文本
             const std::string clipText = dbusProxy_->callGetClipboardMethod();
@@ -266,7 +270,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         const char *keyString = Key::readKeyString(settings::instance().get_markAutoPair().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
-        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == FreewbKeyState_Ctrl)
         {
             punc_->toggleAutoPair();
             dbusProxy_->callSwitchMarkAutoPairsFlgMethod();
@@ -277,7 +281,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
 
         const char *keyString = Key::readKeyString(settings::instance().get_onlineAddWord().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
-        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == FreewbKeyState_Ctrl)
         {
             // 在线造词，使用历史上屏的文本
             return stateManager_->enterAddPhraseState(false);
@@ -287,7 +291,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
         const char *keyString = Key::readKeyString(settings::instance().get_onlineAddWord().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
         const FreewbKeyState wantState = static_cast<FreewbKeyState>(FreewbKeyState_Ctrl | FreewbKeyState_Alt);
-        if (keysym == keySym && state == wantState)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == wantState)
         {
             // 在线造词，使用剪贴板的文本
             return stateManager_->enterAddPhraseState(true);
@@ -296,7 +300,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         const char *keyString = Key::readKeyString(settings::instance().get_onlineDelWord().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
-        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == FreewbKeyState_Ctrl)
         {
             // 在线删词
             const std::string &delText = committer_->lastCommitString();
@@ -307,7 +311,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         const char *keyString = Key::readKeyString(settings::instance().get_quickDelScreenItem().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
-        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == FreewbKeyState_Ctrl)
         {
             // 暂时不实现
             return true;
@@ -316,7 +320,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         const char *keyString = Key::readKeyString(settings::instance().get_setupOption().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
-        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == FreewbKeyState_Ctrl)
         {
             dbusProxy_->callOpenUiSettingMethod();
             return true;
@@ -325,7 +329,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         const char *keyString = Key::readKeyString(settings::instance().get_switchCharSet().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
-        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == FreewbKeyState_Ctrl)
         {
             engineManager_->toggleCharset();
             dbusProxy_->callPanelSwitchCharSetMethod();
@@ -335,7 +339,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         const char *keyString = Key::readKeyString(settings::instance().get_switchChttrans().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
-        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == FreewbKeyState_Ctrl)
         {
             chttrans_->changeAvailable();
             dbusProxy_->callPanelSwitchChttransMethod();
@@ -345,7 +349,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         const char *keyString = Key::readKeyString(settings::instance().get_switchInputMode().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
-        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == FreewbKeyState_Ctrl)
         {
             engineManager_->nextEngine();
             const char *nextEngine = engineManager_->currentEngineName();
@@ -356,7 +360,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         const char *keyString = Key::readKeyString(settings::instance().get_switchLexicon().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
-        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == FreewbKeyState_Ctrl)
         {
             dbusProxy_->callSwitchTableMethod();
             return true;
@@ -365,7 +369,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         const char *keyString = Key::readKeyString(settings::instance().get_switchVKb().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
-        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == FreewbKeyState_Ctrl)
         {
             dbusProxy_->callSwitchVirtualKeyboardModeMethod(0);
             return true;
@@ -374,7 +378,7 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         const char *keyString = Key::readKeyString(settings::instance().get_showHideToolbar().c_str());
         const FreewbKeySym keySym = Key::keySymFromUniqueName(keyString);
-        if (keysym == keySym && state == FreewbKeyState_Ctrl)
+        if (Key::isSameKeySymbol(keysym, keySym) && mods == FreewbKeyState_Ctrl)
         {
             dbusProxy_->callSwitchToolbarHideFlgMethod();
             return true;
@@ -384,22 +388,23 @@ bool Freewb::handleComboKey(FreewbKeySym keysym, FreewbKeyState state)
     return false;
 }
 
-bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
+void Freewb::updateCnEnSwitchPending(FreewbKeySym keysym, FreewbKeyState state)
 {
     const std::string &switchToken = settings::instance().get_cnEnSwitch();
-    if (!switchToken.empty() && switchToken != "KEY_NONE")
+    if (switchToken.empty() || switchToken == "KEY_NONE")
     {
-        if (!Key::isModifierKeySym(keysym))
-        {
-            cnEnSwitchKeyPending_ = false;
-        }
-        else if (keysym == Key::keySymFromUniqueName(switchToken.c_str()) && state == FreewbKeyState_None)
-        {
-            cnEnSwitchKeyPending_ = true;
-        }
+        cnEnSwitchKeyPending_ = false;
+        return;
     }
 
-    if (state != FreewbKeyState_None)
+    // 只有切换键单独按下才保持待切换；按下任何其它键都说明它被用作了组合键
+    cnEnSwitchKeyPending_ =
+        Key::isSameKeySymbol(keysym, Key::keySymFromUniqueName(switchToken.c_str())) && Key::hasNoModifier(state);
+}
+
+bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
+{
+    if (!Key::hasNoModifier(state))
     {
         return false;
     }
@@ -411,7 +416,7 @@ bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     const FreewbKeySym prevPageKey = Key::keySymFromUniqueName(settings::instance().get_prevPageKey().c_str());
-    if (keysym == prevPageKey)
+    if (Key::isSameKeySymbol(keysym, prevPageKey))
     {
         if (!candidateList_->hasPrev())
         {
@@ -422,7 +427,7 @@ bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     const FreewbKeySym nextPageKey = Key::keySymFromUniqueName(settings::instance().get_nextPageKey().c_str());
-    if (keysym == nextPageKey)
+    if (Key::isSameKeySymbol(keysym, nextPageKey))
     {
         if (!candidateList_->hasNext())
         {
@@ -448,7 +453,7 @@ bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         const char *keyString = Key::readKeyString(settings::instance().get_tempEnglish().c_str());
         const FreewbKeySym tempEnglishKey = Key::keySymFromUniqueName(keyString);
-        if (keysym == tempEnglishKey)
+        if (Key::isSameKeySymbol(keysym, tempEnglishKey))
         {
             const char *const commandPrefix = Key::keySymToName(keysym);
             return stateManager_->enterTempEnglishState(commandPrefix != nullptr ? std::string(commandPrefix) : std::string());
@@ -456,36 +461,6 @@ bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     return false;
-}
-
-bool Freewb::handleDirectSymbolKey(FreewbKeySym keysym, FreewbKeyState state)
-{
-    CandidateList *candidates = candidateList_;
-    if (candidates->size() != 0 || !candidates->preeditText().empty())
-    {
-        return false;
-    }
-
-    if (Key::isKey09(keysym, state))
-    {
-        committer_->commit(std::string(1, static_cast<char>(keysym)));
-        return true;
-    }
-
-    const FreewbKeySym sym = Key::normalizedKeySymbol(keysym, state);
-    if (sym == FreewbKey_None)
-    {
-        return false;
-    }
-
-    const PuncPushResult result = punc_->convert(keysym, state);
-    if (result.empty())
-    {
-        return false;
-    }
-
-    committer_->commit(result.joined());
-    return true;
 }
 
 void Freewb::connectDBusCallback()

@@ -280,7 +280,7 @@ bool AddUserPhraseState::processKey(FreewbKeySym keysym, FreewbKeyState state)
     {
     case FreewbKey_Left:
         // 左移：增加词组长度
-        if (state == FreewbKeyState_None)
+        if (Key::hasNoModifier(state))
         {
             const int maxChars = sourceCharCount_;
             if (phraseLen_ < maxChars && phraseLen_ < kPhraseMaxLength - 1)
@@ -293,7 +293,7 @@ bool AddUserPhraseState::processKey(FreewbKeySym keysym, FreewbKeyState state)
         break;
     case FreewbKey_Right:
         // 右移：减少词组长度
-        if (state == FreewbKeyState_None && phraseLen_ > kDefaultPhraseLen)
+        if (Key::hasNoModifier(state) && phraseLen_ > kDefaultPhraseLen)
         {
             --phraseLen_;
             refreshPhrase();
@@ -301,12 +301,12 @@ bool AddUserPhraseState::processKey(FreewbKeySym keysym, FreewbKeyState state)
         }
         break;
     case FreewbKey_Return:
-        if (state & FreewbKeyState_Ctrl)
+        if (Key::modifiers(state) & FreewbKeyState_Ctrl)
         {
             freewb_->dbusProxy()->callAddUsrParseMethod(3, wordCode_, wordText_);
             break;
         }
-        if (state == FreewbKeyState_None)
+        if (Key::hasNoModifier(state))
         {
             if (freewb_->engineManager() != nullptr)
             {
@@ -382,7 +382,7 @@ bool DeleteUserPhraseState::processKey(FreewbKeySym keysym, FreewbKeyState state
         return true;
     }
 
-    if (keysym == FreewbKey_Return && state == FreewbKeyState_None)
+    if (keysym == FreewbKey_Return && Key::hasNoModifier(state))
     {
         if (freewb_->engineManager() != nullptr)
         {
@@ -659,7 +659,7 @@ bool TempEnglishState::processKey(FreewbKeySym keysym, FreewbKeyState state)
     const std::size_t candidateCount = candidates->totalCandidateCount();
     Committer *const committer = freewb_->committer();
     // 有足够候选时在此直接上屏；否则按键落入下方逻辑写入预编辑
-    if (state == FreewbKeyState_None && committer != nullptr &&
+    if (Key::hasNoModifier(state) && committer != nullptr &&
         ((keysym == secondRecodeKey_ && candidateCount > 1) || (keysym == thirdRecodeKey_ && candidateCount > 2)))
     {
         const int idx = keysym == secondRecodeKey_ ? 1 : 2;
@@ -676,7 +676,7 @@ bool TempEnglishState::processKey(FreewbKeySym keysym, FreewbKeyState state)
     {
     // 删除字符
     case FreewbKey_BackSpace:
-        if (state != FreewbKeyState_None)
+        if (!Key::hasNoModifier(state))
         {
             return true;
         }
@@ -693,7 +693,7 @@ bool TempEnglishState::processKey(FreewbKeySym keysym, FreewbKeyState state)
 
     // 空格上屏
     case FreewbKey_space:
-        if (state != FreewbKeyState_None)
+        if (!Key::hasNoModifier(state))
         {
             return true;
         }
@@ -713,7 +713,7 @@ bool TempEnglishState::processKey(FreewbKeySym keysym, FreewbKeyState state)
 
     // 回车上屏
     case FreewbKey_Return:
-        if (state != FreewbKeyState_None)
+        if (!Key::hasNoModifier(state))
         {
             return true;
         }
@@ -727,6 +727,12 @@ bool TempEnglishState::processKey(FreewbKeySym keysym, FreewbKeyState state)
     case FreewbKey_period:
     default:
         break;
+    }
+
+    // 带修饰键的按键不是临时英文的输入内容
+    if (!Key::hasOnlyShiftModifier(state))
+    {
+        return true;
     }
 
     const char *const key = Key::keySymToName(keysym);
@@ -757,7 +763,7 @@ bool StateManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return false;
     }
 
-    if (keysym == FreewbKey_Escape && state == FreewbKeyState_None)
+    if (keysym == FreewbKey_Escape && Key::hasNoModifier(state))
     {
         return false;
     }

@@ -56,6 +56,8 @@ public:
     void loadSettings();
     void toggleAutoPair();
 
+    // 标点按键统一入口：有候选时顶字上屏，无候选时直接上屏
+    bool processKey(FreewbKeySym keysym, FreewbKeyState state);
     PuncPushResult convert(FreewbKeySym keysym, FreewbKeyState state);
     bool shouldProcessKey(FreewbKeySym keysym, FreewbKeyState state) const;
     void reset();

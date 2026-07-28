@@ -5,6 +5,42 @@
 
 namespace freewb
 {
+
+FreewbKeySym toUpperKeySymbol(FreewbKeySym sym)
+{
+    if (sym >= FreewbKey_a && sym <= FreewbKey_z)
+    {
+        return static_cast<FreewbKeySym>(sym - FreewbKey_a + FreewbKey_A);
+    }
+    return sym;
+}
+
+FreewbKeyState Key::modifiers(FreewbKeyState state)
+{
+    unsigned int value = static_cast<unsigned int>(state);
+    if ((value & static_cast<unsigned int>(FreewbKeyState_Super2)) != 0U)
+    {
+        value = (value & ~static_cast<unsigned int>(FreewbKeyState_Super2)) | static_cast<unsigned int>(FreewbKeyState_Super);
+    }
+    return static_cast<FreewbKeyState>(value & static_cast<unsigned int>(FreewbKeyState_SimpleMask));
+}
+
+bool Key::hasNoModifier(FreewbKeyState state)
+{
+    return modifiers(state) == FreewbKeyState_None;
+}
+
+bool Key::hasOnlyShiftModifier(FreewbKeyState state)
+{
+    const unsigned int mods = static_cast<unsigned int>(modifiers(state));
+    return (mods & ~static_cast<unsigned int>(FreewbKeyState_Shift)) == 0U;
+}
+
+bool Key::isSameKeySymbol(FreewbKeySym lhs, FreewbKeySym rhs)
+{
+    return toUpperKeySymbol(lhs) == toUpperKeySymbol(rhs);
+}
+
 FreewbKeySym Key::keySymFromUniqueName(const char *uniqueName)
 {
     if (!uniqueName)
@@ -79,17 +115,17 @@ bool Key::isModifierKeySym(FreewbKeySym sym)
 
 bool Key::isKeyAZ(FreewbKeySym sym, FreewbKeyState state)
 {
-    return (!state && sym >= FreewbKey_A && sym <= FreewbKey_Z);
+    return hasNoModifier(state) && sym >= FreewbKey_A && sym <= FreewbKey_Z;
 }
 
 bool Key::isKeyaz(FreewbKeySym sym, FreewbKeyState state)
 {
-    return (!state && sym >= FreewbKey_a && sym <= FreewbKey_z);
+    return hasNoModifier(state) && sym >= FreewbKey_a && sym <= FreewbKey_z;
 }
 
 bool Key::isKey09(FreewbKeySym sym, FreewbKeyState state)
 {
-    return !state && ((sym >= FreewbKey_0 && sym <= FreewbKey_9) || (state && sym >= FreewbKey_KP_0 && sym <= FreewbKey_KP_9));
+    return hasNoModifier(state) && sym >= FreewbKey_0 && sym <= FreewbKey_9;
 }
 
 const char *Key::readKeyString(const char *str)
@@ -179,13 +215,12 @@ FreewbKeySym Key::normalizedKeySymbol(FreewbKeySym sym, FreewbKeyState state)
         isKey09(sym, FreewbKeyState_None) || isKeyAZ(sym, FreewbKeyState_None) || isKeyaz(sym, FreewbKeyState_None);
     const bool isPrintableAscii = sym >= FreewbKey_space && sym <= static_cast<FreewbKeySym>(0x007e);
 
-    if (state == FreewbKeyState_None)
+    if (hasNoModifier(state))
     {
         return isPrintableAscii ? sym : FreewbKey_None;
     }
 
-    constexpr FreewbKeyState kShiftCaps = static_cast<FreewbKeyState>(FreewbKeyState_Shift | FreewbKeyState_CapsLock);
-    if ((state & ~kShiftCaps) != FreewbKeyState_None)
+    if (!hasOnlyShiftModifier(state))
     {
         return FreewbKey_None;
     }
