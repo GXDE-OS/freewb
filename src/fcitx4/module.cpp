@@ -76,15 +76,12 @@ static INPUT_RETURN_VALUE FreewbIMDoInput(void *arg, FcitxKeySym sym, unsigned i
         return IRV_TO_PROCESS;
     }
 
+    const bool processed = imclass->freewb_->processKeyPress(static_cast<FreewbKeySym>(sym), static_cast<FreewbKeyState>(state));
+
+    imclass->freewb_->updateCandidateAndPreeditToUI();
     updateCursorPosition(imclass);
 
-    const bool processed = imclass->freewb_->processKeyPress(static_cast<FreewbKeySym>(sym), static_cast<FreewbKeyState>(state));
-    if (processed)
-    {
-        imclass->freewb_->updateCandidateAndPreeditToUI();
-        return IRV_DO_NOTHING;
-    }
-    return IRV_TO_PROCESS;
+    return processed ? IRV_DO_NOTHING : IRV_TO_PROCESS;
 }
 
 static INPUT_RETURN_VALUE FreewbIMDoReleaseInput(void *arg, FcitxKeySym sym, unsigned int state)
