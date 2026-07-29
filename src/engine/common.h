@@ -4,7 +4,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <fstream>
-#include <set>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -121,13 +120,13 @@ public:
     }
 
 private:
-    /** 将 @p dict 中匹配 @p prefix 的编码键并入 @p keys（有序去重由 set 保证）。 */
-    static void collectPrefixKeys(const std::string &prefix,
-                                  const std::unordered_map<std::string, std::vector<std::string>> &dict,
-                                  std::set<std::string> &keys);
-    /** 将 @p dict 中 @p code 下的非空词条追加到 @p out。 */
-    void appendTextsForCode(const std::unordered_map<std::string, std::vector<std::string>> &dict, const std::string &code,
-                            CandidatePayload &out) const;
+    /** 将 @p dict 中 @p code 下的非空词条追加到 @p out；达到 @p maxCandidates 时停止并返回 false。 */
+    bool appendTextsForCode(const std::unordered_map<std::string, std::vector<std::string>> &dict, const std::string &code,
+                            CandidatePayload &out, std::size_t maxCandidates) const;
+    /** 由单字/词组 map 重建有序编码键索引（加载完成后调用）。 */
+    void rebuildSortedCodeIndex();
+    /** 将编码键按序插入 sortedCodes_（已存在则忽略）。 */
+    void insertSortedCode(const std::string &code);
 
     bool readNulTerminatedField(std::ifstream &in, std::string &out);
     bool readU32(std::ifstream &in, uint32_t &out);
@@ -140,6 +139,8 @@ private:
 private:
     std::unordered_map<std::string, std::vector<std::string>> singleChardict_;
     std::unordered_map<std::string, std::vector<std::string>> multiChardict_;
+    /** 单字+词组编码键的有序去重列表，供前缀区间查询。 */
+    std::vector<std::string> sortedCodes_;
 
     std::string tableName_;
     std::string tableInfo_;
@@ -155,6 +156,9 @@ private:
     std::vector<EngineRuleBlock> rules_;
     std::vector<std::pair<std::string, std::string>> records_;
     uint32_t recordCount_ = 0;
+
+    /** 单次前缀查询最多物化的候选条数（软上限）。 */
+    static const std::size_t kMaxCandidatesPerQuery = 1000;
 };
 
 } // namespace freewb

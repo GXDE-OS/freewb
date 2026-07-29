@@ -1,5 +1,6 @@
 #include "common.h"
 
+#include <algorithm>
 #include <vector>
 
 #include "log.h"
@@ -8,27 +9,17 @@ namespace freewb
 {
 const uint32_t kMaxHzFieldBytes = 7U * 30U;
 
-void MbDictionaryTable::collectPrefixKeys(const std::string &prefix,
-                                          const std::unordered_map<std::string, std::vector<std::string>> &dict,
-                                          std::set<std::string> &keys)
+bool MbDictionaryTable::appendTextsForCode(const std::unordered_map<std::string, std::vector<std::string>> &dict,
+                                           const std::string &code, CandidatePayload &out, std::size_t maxCandidates) const
 {
-    for (const auto &kv : dict)
+    if (out.texts.size() >= maxCandidates)
     {
-        const std::string &key = kv.first;
-        if (key.size() >= prefix.size() && key.compare(0, prefix.size(), prefix) == 0)
-        {
-            keys.insert(key);
-        }
+        return false;
     }
-}
-
-void MbDictionaryTable::appendTextsForCode(const std::unordered_map<std::string, std::vector<std::string>> &dict,
-                                           const std::string &code, CandidatePayload &out) const
-{
     const auto it = dict.find(code);
     if (it == dict.end())
     {
-        return;
+        return true;
     }
     for (const std::string &hz : it->second)
     {
@@ -38,27 +29,84 @@ void MbDictionaryTable::appendTextsForCode(const std::unordered_map<std::string,
         }
         out.texts.push_back(hz);
         out.fullCodes.push_back(code);
+        if (out.texts.size() >= maxCandidates)
+        {
+            return false;
+        }
     }
+    return true;
 }
 
 void MbDictionaryTable::appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const
 {
-    /* 分别收集编码键，再按字典序统一输出； */
-    std::set<std::string> keys;
-    collectPrefixKeys(prefix, singleChardict_, keys);
-    collectPrefixKeys(prefix, multiChardict_, keys);
-
-    for (const std::string &code : keys)
+    if (prefix.empty())
     {
-        appendTextsForCode(singleChardict_, code, out);
-        appendTextsForCode(multiChardict_, code, out);
+        return;
     }
+
+    const auto begin = std::lower_bound(sortedCodes_.begin(), sortedCodes_.end(), prefix);
+    for (auto it = begin; it != sortedCodes_.end(); ++it)
+    {
+        const std::string &code = *it;
+        if (code.size() < prefix.size() || code.compare(0, prefix.size(), prefix) != 0)
+        {
+            break;
+        }
+        if (!appendTextsForCode(singleChardict_, code, out, kMaxCandidatesPerQuery))
+        {
+            return;
+        }
+        if (!appendTextsForCode(multiChardict_, code, out, kMaxCandidatesPerQuery))
+        {
+            return;
+        }
+    }
+}
+
+void MbDictionaryTable::rebuildSortedCodeIndex()
+{
+    sortedCodes_.clear();
+    sortedCodes_.reserve(singleChardict_.size() + multiChardict_.size());
+    for (const auto &kv : singleChardict_)
+    {
+        sortedCodes_.push_back(kv.first);
+    }
+    for (const auto &kv : multiChardict_)
+    {
+        sortedCodes_.push_back(kv.first);
+    }
+    std::sort(sortedCodes_.begin(), sortedCodes_.end());
+    sortedCodes_.erase(std::unique(sortedCodes_.begin(), sortedCodes_.end()), sortedCodes_.end());
+}
+
+void MbDictionaryTable::insertSortedCode(const std::string &code)
+{
+    if (code.empty())
+    {
+        return;
+    }
+    if (sortedCodes_.empty() || sortedCodes_.back() < code)
+    {
+        sortedCodes_.push_back(code);
+        return;
+    }
+    if (sortedCodes_.back() == code)
+    {
+        return;
+    }
+    const auto it = std::lower_bound(sortedCodes_.begin(), sortedCodes_.end(), code);
+    if (it != sortedCodes_.end() && *it == code)
+    {
+        return;
+    }
+    sortedCodes_.insert(it, code);
 }
 
 void MbDictionaryTable::clear()
 {
     singleChardict_.clear();
     multiChardict_.clear();
+    sortedCodes_.clear();
     records_.clear();
     tableName_.clear();
     tableInfo_.clear();
@@ -203,6 +251,8 @@ bool MbDictionaryTable::loadFromStream(std::ifstream &in, const char *linePrefix
         rebuildLexiconFromRecord(strCode, hz);
     }
 
+    rebuildSortedCodeIndex();
+
     FREEWB_DEBUG("{}tableName={}\ntableInfo={}\ntableCreateTime={}\nstrEndKeys={}\nstrSpecialKeys={}\nstrCodeType={}"
                  "\nstrStraightUPKeys={}\ninputCodeLen={}\ncWildChar={}\nbRule={}\niCodeLength={}\nrecordCount={}",
                  p, tableName_, tableInfo_, tableCreateTime_, strEndKeys_, strSpecialKeys_, strCodeType_, strStraightUPKeys_,
@@ -275,26 +325,21 @@ bool MbDictionaryTable::hasCandidateForPrefix(const std::string &prefix) const
     {
         return false;
     }
-    const auto scan = [&prefix](const std::unordered_map<std::string, std::vector<std::string>> &dict) -> bool
+
+    const auto begin = std::lower_bound(sortedCodes_.begin(), sortedCodes_.end(), prefix);
+    for (auto it = begin; it != sortedCodes_.end(); ++it)
     {
-        for (const auto &kv : dict)
+        const std::string &code = *it;
+        if (code.size() < prefix.size() || code.compare(0, prefix.size(), prefix) != 0)
         {
-            const std::string &key = kv.first;
-            if (key.size() < prefix.size() || key.compare(0, prefix.size(), prefix) != 0)
-            {
-                continue;
-            }
-            for (const std::string &hz : kv.second)
-            {
-                if (!hz.empty())
-                {
-                    return true;
-                }
-            }
+            break;
         }
-        return false;
-    };
-    return scan(singleChardict_) || scan(multiChardict_);
+        if (hasExactCode(code))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool MbDictionaryTable::saveToStream(std::ofstream &out) const
@@ -418,6 +463,7 @@ bool MbDictionaryTable::appendSortedRecord(const std::string &code, const std::s
 
     records_.emplace_back(code, text);
     rebuildLexiconFromRecord(code, text);
+    insertSortedCode(code);
     recordCount_ = static_cast<uint32_t>(records_.size());
     return true;
 }
@@ -438,6 +484,7 @@ bool MbDictionaryTable::insertRecord(const std::string &code, const std::string 
                          [](const std::pair<std::string, std::string> &rec, const std::string &c) { return rec.first < c; });
     records_.insert(it, {code, text});
     rebuildLexiconFromRecord(code, text);
+    insertSortedCode(code);
     recordCount_ = static_cast<uint32_t>(records_.size());
     return true;
 }

@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <string>
+#include <unordered_map>
 
 #include "ifreewb.h"
 
@@ -37,6 +38,8 @@ private:
 private:
     iconv_t conv_ = reinterpret_cast<iconv_t>(-1);
     bool available_ = true;
+    /** 单字 UTF-8 → 是否属于 GB2312；避免短码下反复 iconv。 */
+    mutable std::unordered_map<std::string, bool> gb2312Cache_;
 };
 
 } // namespace freewb

@@ -67,6 +67,12 @@ bool Gb2312Filter::isGb2312(const std::string &utf8Char) const
         return true;
     }
 
+    const auto cached = gb2312Cache_.find(utf8Char);
+    if (cached != gb2312Cache_.end())
+    {
+        return cached->second;
+    }
+
     iconv(conv_, nullptr, nullptr, nullptr, nullptr);
 
     char *inbuf = const_cast<char *>(utf8Char.data());
@@ -76,11 +82,9 @@ bool Gb2312Filter::isGb2312(const std::string &utf8Char) const
     std::size_t outbytes = sizeof(outbuf);
 
     const std::size_t rc = iconv(conv_, &inbuf, &inbytes, &outptr, &outbytes);
-    if (rc == static_cast<std::size_t>(-1))
-    {
-        return false;
-    }
-    return inbytes == 0;
+    const bool ok = rc != static_cast<std::size_t>(-1) && inbytes == 0;
+    gb2312Cache_.emplace(utf8Char, ok);
+    return ok;
 }
 
 } // namespace freewb

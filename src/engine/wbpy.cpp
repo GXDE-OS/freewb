@@ -1,6 +1,7 @@
 #include "wbpy.h"
 
 #include <algorithm>
+#include <unordered_set>
 
 namespace freewb
 {
@@ -52,6 +53,9 @@ void Wbpy::putKey(const char *strCode)
     result_.fullCodes.reserve(wb.texts.size() + py.texts.size());
     result_.prompts.reserve(wb.texts.size() + py.texts.size());
 
+    std::unordered_set<std::string> seen;
+    seen.reserve(wb.texts.size() + py.texts.size());
+
     for (std::size_t i = 0; i < wb.texts.size(); ++i)
     {
         if (wb.texts[i].empty())
@@ -61,29 +65,19 @@ void Wbpy::putKey(const char *strCode)
         result_.texts.push_back(wb.texts[i]);
         result_.fullCodes.push_back(i < wb.fullCodes.size() ? wb.fullCodes[i] : std::string{});
         result_.prompts.push_back(i < wb.prompts.size() ? wb.prompts[i] : std::string{});
+        seen.insert(wb.texts[i]);
     }
     for (std::size_t i = 0; i < py.texts.size(); ++i)
     {
         const std::string &t = py.texts[i];
-        if (t.empty())
+        if (t.empty() || seen.count(t) != 0U)
         {
             continue;
         }
-        bool duplicate = false;
-        for (const std::string &existing : result_.texts)
-        {
-            if (existing == t)
-            {
-                duplicate = true;
-                break;
-            }
-        }
-        if (!duplicate)
-        {
-            result_.texts.push_back(t);
-            result_.fullCodes.push_back(i < py.fullCodes.size() ? py.fullCodes[i] : std::string{});
-            result_.prompts.push_back(i < py.prompts.size() ? py.prompts[i] : std::string{});
-        }
+        seen.insert(t);
+        result_.texts.push_back(t);
+        result_.fullCodes.push_back(i < py.fullCodes.size() ? py.fullCodes[i] : std::string{});
+        result_.prompts.push_back(i < py.prompts.size() ? py.prompts[i] : std::string{});
     }
 }
 
