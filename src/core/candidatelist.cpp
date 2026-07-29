@@ -210,6 +210,48 @@ const std::string &CandidateList::selectCandidateFullCode(int index) const
     return allFullCodes_[static_cast<std::size_t>(globalIndex)];
 }
 
+const std::string &CandidateList::firstCandidateTextForFullCode(const std::string &code) const
+{
+    static const std::string kEmpty;
+    const std::size_t count = std::min(allTexts_.size(), allFullCodes_.size());
+    for (std::size_t i = 0; i < count; ++i)
+    {
+        if (allFullCodes_[i] == code && !allTexts_[i].empty())
+        {
+            return allTexts_[i];
+        }
+    }
+    return kEmpty;
+}
+
+bool CandidateList::isTerminalExactCode(const std::string &code) const
+{
+    if (code.empty())
+    {
+        return false;
+    }
+
+    bool hasExact = false;
+    const std::size_t count = std::min(allTexts_.size(), allFullCodes_.size());
+    for (std::size_t i = 0; i < count; ++i)
+    {
+        const std::string &fullCode = allFullCodes_[i];
+        if (fullCode == code)
+        {
+            if (!allTexts_[i].empty())
+            {
+                hasExact = true;
+            }
+            continue;
+        }
+        if (fullCode.size() > code.size() && fullCode.compare(0, code.size(), code) == 0)
+        {
+            return false;
+        }
+    }
+    return hasExact;
+}
+
 const std::string &CandidateList::firstVisibleCandidateFullCode() const
 {
     if (size() > 0)

@@ -125,7 +125,7 @@ private:
     static void collectPrefixKeys(const std::string &prefix,
                                   const std::unordered_map<std::string, std::vector<std::string>> &dict,
                                   std::set<std::string> &keys);
-    /** 将 @p dict 中 @p code 下的非空词条追加到 @p out；满员则停止。 */
+    /** 将 @p dict 中 @p code 下的非空词条追加到 @p out。 */
     void appendTextsForCode(const std::unordered_map<std::string, std::vector<std::string>> &dict, const std::string &code,
                             CandidatePayload &out) const;
 
@@ -155,8 +155,6 @@ private:
     std::vector<EngineRuleBlock> rules_;
     std::vector<std::pair<std::string, std::string>> records_;
     uint32_t recordCount_ = 0;
-
-    static const std::size_t maxCandidatesPages_ = 20;
 };
 
 } // namespace freewb

@@ -32,6 +32,13 @@ public:
     void setCandidates(std::vector<std::string> texts, std::vector<std::string> prompts, std::vector<std::string> fullCodes = {});
     const std::string &selectCandidateText(int index) const;
     const std::string &selectCandidateFullCode(int index) const;
+    /** 返回完整编码与 @p code 一致的首个候选文本；没有匹配时返回空串。 */
+    const std::string &firstCandidateTextForFullCode(const std::string &code) const;
+    /**
+     * 当前候选中是否可将 @p code 视为已输完的全码：存在精确匹配，且没有以 @p code 为前缀的更长编码。
+     * 用于避免拼音 qing→qingw 被误顶屏。
+     */
+    bool isTerminalExactCode(const std::string &code) const;
     const std::string &firstVisibleCandidateFullCode() const;
     const std::string &firstVisibleCandidateOrPreedit() const;
     std::vector<std::string> candidateTexts() const;

@@ -41,7 +41,6 @@ public:
 
     void toggleCharset();
 
-    bool isCurrentPreeditExactDictionaryKey(const std::string &preedit) const;
     /** 按五笔码表造词规则计算词组编码；失败返回空串。 */
     std::string calculateWubiPhraseCode(const std::string &phrase) const;
 
@@ -58,9 +57,8 @@ private:
     void notifyToolbarProperty() const;
 
     void restoreLastEngine();
-
-    void commitPreeditOverflow(const std::string &prefix);
-    void tryExactDictionarySingleCandidateCommit();
+    /** 预编辑与某候选全码完全一致时上屏该候选；成功返回 true。 */
+    bool tryCommitExactCandidate(const std::string &code);
 
 private:
     Freewb *freewb_ = nullptr;

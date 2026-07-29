@@ -25,10 +25,6 @@ void MbDictionaryTable::collectPrefixKeys(const std::string &prefix,
 void MbDictionaryTable::appendTextsForCode(const std::unordered_map<std::string, std::vector<std::string>> &dict,
                                            const std::string &code, CandidatePayload &out) const
 {
-    if (out.texts.size() >= maxCandidatesPages_)
-    {
-        return;
-    }
     const auto it = dict.find(code);
     if (it == dict.end())
     {
@@ -42,20 +38,11 @@ void MbDictionaryTable::appendTextsForCode(const std::unordered_map<std::string,
         }
         out.texts.push_back(hz);
         out.fullCodes.push_back(code);
-        if (out.texts.size() >= maxCandidatesPages_)
-        {
-            return;
-        }
     }
 }
 
 void MbDictionaryTable::appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const
 {
-    if (out.texts.size() >= maxCandidatesPages_)
-    {
-        return;
-    }
-
     /* 分别收集编码键，再按字典序统一输出； */
     std::set<std::string> keys;
     collectPrefixKeys(prefix, singleChardict_, keys);
@@ -65,10 +52,6 @@ void MbDictionaryTable::appendCandidatesForPrefix(const std::string &prefix, Can
     {
         appendTextsForCode(singleChardict_, code, out);
         appendTextsForCode(multiChardict_, code, out);
-        if (out.texts.size() >= maxCandidatesPages_)
-        {
-            return;
-        }
     }
 }
 

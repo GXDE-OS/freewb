@@ -215,38 +215,6 @@ const char *EngineManager::currentEngineName() const
     return engine->name();
 }
 
-void EngineManager::commitPreeditOverflow(const std::string &prefix)
-{
-    candidateList_->setPreeditText(prefix);
-    refreshEngineResult();
-
-    if (committer_ == nullptr || candidateList_->size() == 0)
-    {
-        reset();
-        candidateList_->clear();
-    }
-    else
-    {
-        committer_->commit(candidateList_->selectCandidateText(0), candidateList_->selectCandidateFullCode(0));
-    }
-}
-
-void EngineManager::tryExactDictionarySingleCandidateCommit()
-{
-    if (committer_ == nullptr || candidateList_->size() == 0)
-    {
-        return;
-    }
-
-    const std::string &pre = candidateList_->preeditText();
-    if (candidateList_->totalCandidateCount() != 1 || !isCurrentPreeditExactDictionaryKey(pre))
-    {
-        return;
-    }
-
-    committer_->commit(candidateList_->selectCandidateText(0), candidateList_->selectCandidateFullCode(0));
-}
-
 bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
 {
     auto *engine = dynamic_cast<IFreewbEngine *>(currentEngine_);
@@ -278,21 +246,37 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     const std::string pre = candidateList_->preeditText();
-    const std::string full = pre + key;
+    const bool hasCandidates = candidateList_->totalCandidateCount() > 0;
 
-    if (!pre.empty() && engine->isPreeditOverflow(full))
+    // 无候选时，下一码清空预编辑并重新开始
+    if (!hasCandidates && !pre.empty())
     {
-        commitPreeditOverflow(pre);
+        candidateList_->clear();
+        reset();
         candidateList_->setPreeditText(key);
-    }
-    else
-    {
-        candidateList_->setPreeditText(full);
+        refreshEngineResult();
+        return true;
     }
 
+    // 最少四码：仅当预编辑已是「终码」（精确命中且无更长续码）时，再输入才顶屏并开启新预编辑
+    // 避免拼音 qing + w 被当成全码顶出「请」而无法继续打出 qingw/请问
+    // 不足四码不自动上屏，只能空格/数字键等经 Committer 上屏
+    if (hasCandidates && pre.size() >= 4U && candidateList_->isTerminalExactCode(pre) && tryCommitExactCandidate(pre))
+    {
+        candidateList_->setPreeditText(key);
+        refreshEngineResult();
+        return true;
+    }
+
+    candidateList_->setPreeditText(pre + key);
     refreshEngineResult();
 
-    tryExactDictionarySingleCandidateCommit();
+    // 满四码、唯一候选且已是终码：本键结束后立即上屏（如 GB 字集下 fjfh→韩）
+    const std::string &now = candidateList_->preeditText();
+    if (now.size() >= 4U && candidateList_->totalCandidateCount() == 1 && candidateList_->isTerminalExactCode(now))
+    {
+        tryCommitExactCandidate(now);
+    }
 
     return true;
 }
@@ -329,16 +313,6 @@ void EngineManager::reset()
         return;
     }
     engine->reset();
-}
-
-bool EngineManager::isCurrentPreeditExactDictionaryKey(const std::string &preedit) const
-{
-    const auto *engine = dynamic_cast<const IFreewbEngine *>(currentEngine_);
-    if (engine == nullptr)
-    {
-        return false;
-    }
-    return engine->isExactDictionaryKey(preedit);
 }
 
 std::string EngineManager::calculateWubiPhraseCode(const std::string &phrase) const
@@ -449,6 +423,23 @@ void EngineManager::toggleCharset()
     {
         wbzx->toggleCharset();
     }
+}
+
+bool EngineManager::tryCommitExactCandidate(const std::string &code)
+{
+    if (committer_ == nullptr || candidateList_ == nullptr || code.empty())
+    {
+        return false;
+    }
+
+    const std::string candidate = candidateList_->firstCandidateTextForFullCode(code);
+    if (candidate.empty())
+    {
+        return false;
+    }
+
+    committer_->commit(candidate, code);
+    return true;
 }
 
 } // namespace freewb
