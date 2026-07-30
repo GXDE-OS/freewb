@@ -38,7 +38,8 @@ public:
                      const std::string &endKeys, const std::string &specialKeys, const std::string &codeType,
                      const std::string &straightUpKeys, const std::string &inputCode, uint8_t wildChar, uint8_t hasRule,
                      const std::vector<EngineRuleBlock> &rules);
-    /** 向 @p out 追加候选：与 texts 同步写入 fullCodes（完整编码键）。单字/词组按编码字典序混排。 */
+    /** 向 @p out 追加候选：与 texts 同步写入 fullCodes（完整编码键）。
+     * 编码按字典序；同码内按码表 records_ 写入顺序（单字/词组混排，不拆分）。 */
     void appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const;
     const std::string &strInputCode() const;
     bool hasExactCode(const std::string &code) const;
@@ -120,9 +121,6 @@ public:
     }
 
 private:
-    /** 将 @p dict 中 @p code 下的非空词条追加到 @p out；达到 @p maxCandidates 时停止并返回 false。 */
-    bool appendTextsForCode(const std::unordered_map<std::string, std::vector<std::string>> &dict, const std::string &code,
-                            CandidatePayload &out, std::size_t maxCandidates) const;
     /** 由单字/词组 map 重建有序编码键索引（加载完成后调用）。 */
     void rebuildSortedCodeIndex();
     /** 将编码键按序插入 sortedCodes_（已存在则忽略）。 */

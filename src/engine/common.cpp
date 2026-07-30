@@ -9,34 +9,6 @@ namespace freewb
 {
 const uint32_t kMaxHzFieldBytes = 7U * 30U;
 
-bool MbDictionaryTable::appendTextsForCode(const std::unordered_map<std::string, std::vector<std::string>> &dict,
-                                           const std::string &code, CandidatePayload &out, std::size_t maxCandidates) const
-{
-    if (out.texts.size() >= maxCandidates)
-    {
-        return false;
-    }
-    const auto it = dict.find(code);
-    if (it == dict.end())
-    {
-        return true;
-    }
-    for (const std::string &hz : it->second)
-    {
-        if (hz.empty())
-        {
-            continue;
-        }
-        out.texts.push_back(hz);
-        out.fullCodes.push_back(code);
-        if (out.texts.size() >= maxCandidates)
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
 void MbDictionaryTable::appendCandidatesForPrefix(const std::string &prefix, CandidatePayload &out) const
 {
     if (prefix.empty())
@@ -44,19 +16,24 @@ void MbDictionaryTable::appendCandidatesForPrefix(const std::string &prefix, Can
         return;
     }
 
-    const auto begin = std::lower_bound(sortedCodes_.begin(), sortedCodes_.end(), prefix);
-    for (auto it = begin; it != sortedCodes_.end(); ++it)
+    /* records_ 按编码有序，前缀匹配码是连续区间：一次 lower_bound 后顺序扫描即可。 */
+    const auto begin =
+        std::lower_bound(records_.begin(), records_.end(), prefix,
+                         [](const std::pair<std::string, std::string> &rec, const std::string &p) { return rec.first < p; });
+    for (auto it = begin; it != records_.end(); ++it)
     {
-        const std::string &code = *it;
+        const std::string &code = it->first;
         if (code.size() < prefix.size() || code.compare(0, prefix.size(), prefix) != 0)
         {
             break;
         }
-        if (!appendTextsForCode(singleChardict_, code, out, kMaxCandidatesPerQuery))
+        if (it->second.empty())
         {
-            return;
+            continue;
         }
-        if (!appendTextsForCode(multiChardict_, code, out, kMaxCandidatesPerQuery))
+        out.texts.push_back(it->second);
+        out.fullCodes.push_back(code);
+        if (out.texts.size() >= kMaxCandidatesPerQuery)
         {
             return;
         }
