@@ -46,10 +46,4 @@ bool En::isExactDictionaryKey(const std::string &preedit) const
     (void)preedit;
     return false;
 }
-
-bool En::isPreeditOverflow(const std::string &full) const
-{
-    (void)full;
-    return false;
-}
 } // namespace freewb

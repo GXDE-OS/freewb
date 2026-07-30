@@ -65,16 +65,6 @@ void PyEngine::fillCandidatePayloadPrompts(const std::string &preedit, Candidate
     }
 }
 
-bool PyEngine::isPreeditOverflow(const std::string &full) const
-{
-    if (full.empty())
-    {
-        return false;
-    }
-
-    return !mbTable_.hasCandidateForPrefix(full);
-}
-
 void PyEngine::setWubiPrimaryCodeLookupCallback(WubiPrimaryCodeLookupCallback callback)
 {
     wubiPrimaryCodeLookupCallback_ = std::move(callback);

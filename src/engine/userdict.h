@@ -24,8 +24,6 @@ public:
     bool hasUserEntry(const std::string &code, const std::string &text) const;
     bool isDeleted(const std::string &code, const std::string &text) const;
 
-    /** 某词条编码 key 以 @p prefix 为前缀或等于 prefix（超长拆码 bhasMatch）。 */
-    bool hasEntryStartingWithPrefix(const std::string &prefix) const;
     /** 将编码与 @p code 完全一致的 UserWord 追加到候选列表。 */
     void appendCandidatesForPrefix(const std::string &code, CandidatePayload &out) const;
 

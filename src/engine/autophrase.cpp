@@ -187,30 +187,6 @@ bool AutoPhrase::hasExactCode(const std::string &code) const
     return enabled() && !code.empty() && (table_.hasExactCode(code) || phraseIndexByCode_.count(code) != 0U);
 }
 
-bool AutoPhrase::hasEntryStartingWithPrefix(const std::string &prefix) const
-{
-    if (!enabled() || prefix.empty())
-    {
-        return false;
-    }
-
-    if (table_.hasCandidateForPrefix(prefix))
-    {
-        return true;
-    }
-
-    for (const auto &entry : phraseIndexByCode_)
-    {
-        const std::string &code = entry.first;
-        if (code.size() >= prefix.size() && code.compare(0, prefix.size(), prefix) == 0)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 bool AutoPhrase::hzKnownInTables(const std::string &hz) const
 {
     if (hz.empty())

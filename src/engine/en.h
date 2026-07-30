@@ -24,7 +24,6 @@ public:
 
     bool shouldProcessKey(const char *key) const override;
     bool isExactDictionaryKey(const std::string &preedit) const override;
-    bool isPreeditOverflow(const std::string &full) const override;
 
 private:
     bool available_ = true;

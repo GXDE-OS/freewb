@@ -36,8 +36,6 @@ public:
     void reloadDictionary();
 
     bool hasExactCode(const std::string &code) const;
-    /** preedit 是否为自动词组形码的前缀（含整码完全匹配）。 */
-    bool hasEntryStartingWithPrefix(const std::string &prefix) const;
     /** preedit 与编码键完全一致时追加候选（非前缀续码）。 */
     void appendCandidatesForExactCode(const std::string &code, CandidatePayload &out) const;
 

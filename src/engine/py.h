@@ -31,7 +31,6 @@ public:
 
     bool shouldProcessKey(const char *key) const override;
     bool isExactDictionaryKey(const std::string &preedit) const override;
-    bool isPreeditOverflow(const std::string &full) const override;
 
     /** 单字五笔首选码查询 */
     void setWubiPrimaryCodeLookupCallback(WubiPrimaryCodeLookupCallback callback);

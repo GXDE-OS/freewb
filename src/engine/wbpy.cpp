@@ -107,14 +107,4 @@ bool Wbpy::isExactDictionaryKey(const std::string &preedit) const
     return wbzxEngine_->isExactDictionaryKey(preedit) || pyEngine_->isExactDictionaryKey(preedit);
 }
 
-bool Wbpy::isPreeditOverflow(const std::string &full) const
-{
-    if (wbzxEngine_ == nullptr || pyEngine_ == nullptr)
-    {
-        return false;
-    }
-
-    return wbzxEngine_->isPreeditOverflow(full) && pyEngine_->isPreeditOverflow(full);
-}
-
 } // namespace freewb

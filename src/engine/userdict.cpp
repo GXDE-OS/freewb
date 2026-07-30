@@ -76,38 +76,6 @@ bool UserDict::isDeleted(const std::string &code, const std::string &text) const
     return std::find(it->second.begin(), it->second.end(), text) != it->second.end();
 }
 
-bool UserDict::hasEntryStartingWithPrefix(const std::string &prefix) const
-{
-    if (prefix.empty())
-    {
-        return false;
-    }
-    if (contains(prefix))
-    {
-        return true;
-    }
-    for (const auto &kv : userEntries_)
-    {
-        const std::string &key = kv.first;
-        if (key.size() < prefix.size())
-        {
-            continue;
-        }
-        if (key.compare(0, prefix.size(), prefix) != 0)
-        {
-            continue;
-        }
-        for (const auto &hz : kv.second)
-        {
-            if (!hz.empty())
-            {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
 void UserDict::appendCandidatesForPrefix(const std::string &code, CandidatePayload &out) const
 {
     if (code.empty())

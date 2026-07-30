@@ -45,8 +45,6 @@ public:
     bool hasExactCode(const std::string &code) const;
     /** 主码表是否含 code=text 条目（精确匹配）。 */
     bool hasEntry(const std::string &code, const std::string &text) const;
-    /** 是否与 appendCandidatesForPrefix 至少产出一条一致（非空 hz）；供引擎续码判断 */
-    bool hasCandidateForPrefix(const std::string &prefix) const;
 
     /** 单字码表（code → 若干 hz）；供五笔引擎构建单字→首选码索引等。 */
     const std::unordered_map<std::string, std::vector<std::string>> &singleCharLexicon() const
@@ -121,11 +119,6 @@ public:
     }
 
 private:
-    /** 由单字/词组 map 重建有序编码键索引（加载完成后调用）。 */
-    void rebuildSortedCodeIndex();
-    /** 将编码键按序插入 sortedCodes_（已存在则忽略）。 */
-    void insertSortedCode(const std::string &code);
-
     bool readNulTerminatedField(std::ifstream &in, std::string &out);
     bool readU32(std::ifstream &in, uint32_t &out);
     bool readExact(std::ifstream &in, void *dst, std::streamsize len);
@@ -137,8 +130,6 @@ private:
 private:
     std::unordered_map<std::string, std::vector<std::string>> singleChardict_;
     std::unordered_map<std::string, std::vector<std::string>> multiChardict_;
-    /** 单字+词组编码键的有序去重列表，供前缀区间查询。 */
-    std::vector<std::string> sortedCodes_;
 
     std::string tableName_;
     std::string tableInfo_;

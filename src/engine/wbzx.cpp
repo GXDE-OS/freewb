@@ -68,17 +68,6 @@ void WbzxEngine::fillCandidatePayloadPrompts(const std::string &preedit, Candida
     }
 }
 
-bool WbzxEngine::isPreeditOverflow(const std::string &full) const
-{
-    if (full.empty())
-    {
-        return false;
-    }
-
-    return !hasVisibleMainDictCandidate(full) && !userDict_.hasEntryStartingWithPrefix(full) &&
-           !autoPhrase_.hasEntryStartingWithPrefix(full);
-}
-
 void WbzxEngine::putKey(const char *strCode)
 {
     result_.clearRows();
@@ -341,36 +330,6 @@ void WbzxEngine::filterMainDictCandidates(CandidatePayload &payload, const std::
     payload.texts = std::move(filtered.texts);
     payload.fullCodes = std::move(filtered.fullCodes);
     payload.prompts = std::move(filtered.prompts);
-}
-
-bool WbzxEngine::hasVisibleMainDictCandidate(const std::string &prefix) const
-{
-    if (prefix.empty())
-    {
-        return false;
-    }
-
-    const auto scanPrefix = [this, &prefix](const std::unordered_map<std::string, std::vector<std::string>> &dict) -> bool
-    {
-        for (const auto &kv : dict)
-        {
-            const std::string &key = kv.first;
-            if (key.size() < prefix.size() || key.compare(0, prefix.size(), prefix) != 0)
-            {
-                continue;
-            }
-            for (const std::string &hz : kv.second)
-            {
-                if (!gb2312Filter_.needFilt(hz) && !userDict_.isDeleted(key, hz))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    };
-
-    return scanPrefix(mbTable_.singleCharLexicon()) || scanPrefix(mbTable_.multiCharLexicon());
 }
 
 bool WbzxEngine::addUserWord(const std::string &code, const std::string &text)
