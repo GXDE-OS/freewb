@@ -42,6 +42,7 @@ private:
 
 private:
     fcitx::Instance *instance_;
+    fcitx::InputContext *activeInputContext_ = nullptr;
     std::unique_ptr<freewb::Freewb> freewb_;
     std::map<std::string, fcitx::SimpleAction> actions_;
 #if defined(__HAS_WAYLAND__)

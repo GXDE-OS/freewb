@@ -37,6 +37,7 @@ void FreewbIMModule::keyEvent(const fcitx::InputMethodEntry &entry, fcitx::KeyEv
     bool processed = false;
     const auto keysym = static_cast<FreewbKeySym>(keyEvent.rawKey().sym());
     const auto state = static_cast<FreewbKeyState>(keyEvent.rawKey().states().toInteger());
+    activeInputContext_ = keyEvent.inputContext();
 
     if (keyEvent.isRelease())
     {
@@ -69,7 +70,10 @@ void FreewbIMModule::activate(const fcitx::InputMethodEntry &entry, fcitx::Input
 void FreewbIMModule::deactivate(const fcitx::InputMethodEntry &entry, fcitx::InputContextEvent &event)
 {
     FCITX_UNUSED(entry);
-    FCITX_UNUSED(event);
+    if (event.inputContext() == activeInputContext_)
+    {
+        activeInputContext_ = nullptr;
+    }
     freewb_->deactivate();
 }
 
@@ -80,7 +84,10 @@ void FreewbIMModule::reloadConfig()
 void FreewbIMModule::reset(const fcitx::InputMethodEntry &entry, fcitx::InputContextEvent &event)
 {
     FCITX_UNUSED(entry);
-    FCITX_UNUSED(event);
+    if (event.inputContext() == activeInputContext_)
+    {
+        activeInputContext_ = nullptr;
+    }
     freewb_->reset();
 }
 
@@ -95,7 +102,8 @@ void FreewbIMModule::updateCursorPosition()
     double scaleFactorFromFcitx = 1.0;
     double compositorScale = 1.0;
 
-    fcitx::InputContext *inputContext = instance_->lastFocusedInputContext();
+    fcitx::InputContext *inputContext =
+        activeInputContext_ != nullptr ? activeInputContext_ : instance_->lastFocusedInputContext();
     if (inputContext == nullptr)
     {
         freewb_->dbusProxy()->callPanelUpdateSpotRect(spotRect);
@@ -147,13 +155,17 @@ void FreewbIMModule::updateCursorPosition()
 
 void FreewbIMModule::commitString(const std::string &text) const
 {
-    fcitx::InputContext *inputContext = instance_->lastFocusedInputContext();
+    const bool useActive = activeInputContext_ != nullptr;
+    fcitx::InputContext *inputContext = useActive ? activeInputContext_ : instance_->lastFocusedInputContext();
     if (inputContext == nullptr)
     {
+        FREEWB_ERROR("commitString skipped: no input context, text={}", text);
         return;
     }
 
-    FREEWB_DEBUG("will commit string: {}", text);
+    FREEWB_DEBUG("will commit string: {} via {} ic display={} program={} hasFocus={}", text,
+                 useActive ? "activeInputContext" : "lastFocusedInputContext", inputContext->display(), inputContext->program(),
+                 inputContext->hasFocus());
     inputContext->commitString(text.c_str());
 }
 
