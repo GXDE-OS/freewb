@@ -8,6 +8,7 @@
 #include "chttrans.h"
 #include "key.h"
 #include "settings.h"
+#include "sound.h"
 #include "special.h"
 #include "statemanager.h"
 
@@ -129,6 +130,7 @@ bool Freewb::processKeyPress(FreewbKeySym keysym, FreewbKeyState state)
 {
     FREEWB_DEBUG("keysym: {}, state: {}", static_cast<int>(keysym), static_cast<int>(state));
 
+    playTypingSound(keysym);
     updateCnEnSwitchPending(keysym, state);
 
     bool processed = false;
@@ -169,6 +171,29 @@ bool Freewb::processKeyPress(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     return false;
+}
+
+void Freewb::playTypingSound(FreewbKeySym keysym) const
+{
+    if (keysym == FreewbKey_space)
+    {
+        Sound::play(SOUND_SAPCE, SoundScene::Typing);
+        return;
+    }
+    if (keysym == FreewbKey_Return)
+    {
+        Sound::play(SOUND_ENTER, SoundScene::Typing);
+        return;
+    }
+    if (keysym == FreewbKey_BackSpace)
+    {
+        Sound::play(SOUND_BACK, SoundScene::Typing);
+        return;
+    }
+    if (Key::isKeyaz(keysym, FreewbKeyState_None) || Key::isKeyAZ(keysym, FreewbKeyState_None))
+    {
+        Sound::play(SOUND_LETTER, SoundScene::Typing);
+    }
 }
 
 bool Freewb::processKeyRelease(FreewbKeySym keysym, FreewbKeyState state)

@@ -45,6 +45,7 @@ private:
     void updateCnEnSwitchPending(FreewbKeySym keysym, FreewbKeyState state);
     bool handleSingleKey(FreewbKeySym keysym, FreewbKeyState state);
     bool handleComboKey(FreewbKeySym keysym, FreewbKeyState state);
+    void playTypingSound(FreewbKeySym keysym) const;
     void connectDBusCallback();
 
 private:

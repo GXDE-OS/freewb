@@ -16,9 +16,11 @@ const char *Sound::s_soundData[6] = {
     "empty.wav"   // SOUND_EMPTY
 };
 
-void Sound::play(SoundType soundType)
+void Sound::play(SoundType soundType, SoundScene scene)
 {
-    if (settings::instance().get_uiAudioEffect() == false)
+    const bool enabled =
+        (scene == SoundScene::Typing) ? settings::instance().get_typeEffect() : settings::instance().get_uiAudioEffect();
+    if (!enabled)
     {
         return;
     }
