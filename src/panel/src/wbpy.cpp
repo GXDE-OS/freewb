@@ -7120,7 +7120,7 @@ static const char *g_wbpyTable[] = {
     "槎:suda;chá,zhà",
     "槏:suvo;lián,qiǎn,xiàn",
     "槐:srqc,srq;huái",
-    "槑:kkss;méi",
+    "槑:ksks;méi",
     "槒:syxl;xù",
     "槓:samy;gàng,gāng",
     "槔:srdf,srd;gāo",
