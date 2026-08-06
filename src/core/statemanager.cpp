@@ -12,6 +12,7 @@
 #include "idbus.h"
 #include "key.h"
 #include "log.h"
+#include "punc.h"
 #include "settings.h"
 #include "special.h"
 
@@ -672,6 +673,29 @@ bool TempEnglishState::processKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         return false;
     }
+
+    // 再次按下临时英文引导键：回 idle，标点由 punc::convert 按中/英规则转换后上屏
+    {
+        const char *const tempEnglishKeyString = Key::readKeyString(settings::instance().get_tempEnglish().c_str());
+        const FreewbKeySym tempEnglishKey = Key::keySymFromUniqueName(tempEnglishKeyString);
+        Punc *const punc = freewb_->punc();
+
+        if (Key::hasNoModifier(state) && Key::isSameKeySymbol(keysym, tempEnglishKey))
+        {
+            if (committer != nullptr && punc != nullptr)
+            {
+                const PuncPushResult result = punc->convert(keysym, state);
+                if (!result.empty())
+                {
+                    committer->commit(result.joined());
+                }
+            }
+
+            manager_->reset();
+            return true;
+        }
+    }
+
     switch (keysym)
     {
     // 删除字符
