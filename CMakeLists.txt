@@ -55,6 +55,7 @@ endif()
 option(ENABLE_FCITX4 "enable support fcitx4" Off)
 option(ENABLE_FCITX5 "enable support fcitx5" Off)
 option(ENABLE_TEST "enable freewb test cases" Off)
+option(ENABLE_UKUI "enable support ukui" Off)
 
 if (${OS_TYPE} STREQUAL "Linux")
     find_package(ECM REQUIRED 1.0.0)
