@@ -14,6 +14,7 @@ Build-Depends:
  libfcitx5config-dev,
  libfcitx5core-dev,
  libfcitx5utils-dev,
+ libibus-1.0-dev,
  libsystemd-dev,
  libqt5svg5-dev,
  libwayland-dev,
@@ -53,3 +54,12 @@ Depends:
  ${misc:Depends},
  ${shlibs:Depends},
 Description: Freewb input method for fcitx5.
+
+Package: freewb-ibus
+Architecture: any
+Depends:
+ freewb (= ${source:Version}),
+ ibus,
+ ${misc:Depends},
+ ${shlibs:Depends},
+Description: Freewb input method for IBus.

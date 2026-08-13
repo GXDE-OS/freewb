@@ -17,3 +17,7 @@ endif()
 if("${OS_TYPE}" STREQUAL "Linux" AND ENABLE_FCITX5)
     add_subdirectory(fcitx5)
 endif()
+
+if("${OS_TYPE}" STREQUAL "Linux" AND ENABLE_IBUS)
+    add_subdirectory(ibus)
+endif()

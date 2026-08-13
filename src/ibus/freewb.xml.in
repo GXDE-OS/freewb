@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component>
+    <name>org.freedesktop.IBus.Freewb</name>
+    <description>Freewb Input Method</description>
+    <exec>@FREEWB_IBUS_ENGINE_PATH@ --ibus</exec>
+    <version>@FREEWB_VERSION@</version>
+    <author>Freewb Authors</author>
+    <license>GPL</license>
+    <homepage>https://gitee.com/openkylin/freewb</homepage>
+    <textdomain>@FREEWB_TEXT_DOMAIN@</textdomain>
+    <engines>
+        <engine>
+            <name>freewb</name>
+            <language>zh_CN</language>
+            <license>GPL</license>
+            <author>Freewb Authors</author>
+            <icon>freewb</icon>
+            <layout>default</layout>
+            <longname>Freewb Input Method</longname>
+            <description>Freewb Input Method</description>
+            <rank>99</rank>
+            <symbol>极</symbol>
+        </engine>
+    </engines>
+</component>
