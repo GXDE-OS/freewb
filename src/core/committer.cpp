@@ -44,10 +44,11 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return false;
     }
 
-    // 数字键支持上屏
+    // 数字键支持上屏：1-9 对应第 1-9 个候选，0 对应第 10 个
     if (Key::isKey09(keysym, state))
     {
-        return selectCandidate(static_cast<int>(keysym - FreewbKey_1));
+        const int index = (keysym == FreewbKey_0) ? 9 : static_cast<int>(keysym - FreewbKey_1);
+        return selectCandidate(index);
     }
 
     // 二三重码上屏
