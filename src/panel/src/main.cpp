@@ -31,9 +31,17 @@ int main(int argc, char *argv[])
     app.setQuitOnLastWindowClosed(false);
 
     QTranslator qtTranslator;
-    if (qtTranslator.load("qtbase_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+    const QString qtTrPath = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    const QString localeName = QLocale::system().name();
+    // Qt 5.15+ 拆分为 qtbase_*.qm；Qt 5.12简体中文仍在 qt_zh_CN.qm，无 qtbase_zh_CN.qm
+    if (qtTranslator.load("qtbase_" + localeName, qtTrPath) || qtTranslator.load("qt_" + localeName, qtTrPath))
     {
+        FREEWB_DEBUG("loaded qt translator: %s", localeName.toStdString().c_str());
         app.installTranslator(&qtTranslator);
+    }
+    else
+    {
+        FREEWB_WARN("failed to load qt translator: %s", localeName.toStdString().c_str());
     }
 
     settings::instance().reload();
