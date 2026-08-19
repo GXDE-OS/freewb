@@ -26,6 +26,9 @@ public:
     bool spaceFullWhenCharHalf() const;
     void convertString(std::string &text) const;
 
+    /** 全角开启且引擎未占用该字母时，经 commit 上屏以触发全角转换。 */
+    bool processKey(FreewbKeySym keysym, FreewbKeyState state);
+
 private:
     static const char *fullWidthForAscii(unsigned char ch);
     const char *fullWidthIfEnabled(unsigned char ch) const;

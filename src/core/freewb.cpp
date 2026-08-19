@@ -164,6 +164,12 @@ bool Freewb::processKeyPress(FreewbKeySym keysym, FreewbKeyState state)
         return true;
     }
 
+    processed = charWidth_->processKey(keysym, state);
+    if (processed)
+    {
+        return true;
+    }
+
     processed = punc_->processKey(keysym, state);
     if (processed)
     {

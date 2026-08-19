@@ -1,7 +1,9 @@
 #include "charwidth.h"
 
+#include "committer.h"
 #include "freewb.h"
 #include "idbus.h"
+#include "key.h"
 #include "settings.h"
 
 namespace freewb
@@ -52,6 +54,37 @@ bool CharWidth::available() const
 void CharWidth::changeAvailable()
 {
     available_ = !available_;
+}
+
+bool CharWidth::processKey(FreewbKeySym keysym, FreewbKeyState state)
+{
+    if (!available_ || freewb_ == nullptr)
+    {
+        return false;
+    }
+
+    CandidateList *const candidates = freewb_->candidateList();
+    Committer *const committer = freewb_->committer();
+    if (candidates == nullptr || committer == nullptr)
+    {
+        return false;
+    }
+    if (candidates->size() != 0 || !candidates->preeditText().empty())
+    {
+        return false;
+    }
+
+    if (!Key::hasNoModifier(state) && !Key::hasOnlyShiftModifier(state))
+    {
+        return false;
+    }
+    if (!Key::isKeyaz(keysym, FreewbKeyState_None) && !Key::isKeyAZ(keysym, FreewbKeyState_None))
+    {
+        return false;
+    }
+
+    committer->commit(std::string(1, static_cast<char>(keysym)));
+    return true;
 }
 
 bool CharWidth::spaceFullWhenCharHalf() const
