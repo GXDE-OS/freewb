@@ -22,8 +22,6 @@ Build-Depends:
  libxext-dev,
  libxtst-dev,
  qtbase5-dev,
- wayland-scanner++,
- waylandpp-dev,
 Standards-Version: 4.6.2
 Rules-Requires-Root: no
 Homepage: https://gitee.com/openkylin/freewb
