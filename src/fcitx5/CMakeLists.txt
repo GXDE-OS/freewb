@@ -28,11 +28,11 @@ target_compile_definitions(${PROJECT_NAME}-fcitx5 PRIVATE __FCITX5_MINOR_VERSION
 target_compile_definitions(${PROJECT_NAME}-fcitx5 PRIVATE __FCITX5_PATCH_VERSION__=${FCITX5_PATCH_VERSION})
 
 #
-# Wayland 协议：编译时用当前系统的 wayland-scanner++ 生成 C++ 绑定（输出到 build 目录）
+# Wayland 协议：编译时用 wayland-scanner 生成 C 绑定（输出到 build 目录）
 #
-pkg_check_modules(PKG_WAYLAND_CLIENTPP wayland-client++)
-if(NOT PKG_WAYLAND_CLIENTPP_FOUND)
-  message(STATUS "wayland-client++ not found, fcitx5 module will be built without wayland protocol support.")
+pkg_check_modules(PKG_WAYLAND_CLIENT wayland-client)
+if(NOT PKG_WAYLAND_CLIENT_FOUND)
+  message(STATUS "wayland-client not found, fcitx5 module will be built without wayland protocol support.")
 else()
   find_file(UKUI_WINDOW_MANAGEMENT_XML
     NAMES ukui-window-management.xml
@@ -64,55 +64,57 @@ else()
       "Please install kde-wayland-protocols or place kde-output-device-v2.xml in ${CMAKE_CURRENT_SOURCE_DIR}")
   endif()
 
-  find_program(WAYLAND_SCANNERPP NAMES wayland-scanner++)
-  if(NOT WAYLAND_SCANNERPP)
-    message(FATAL_ERROR "wayland-scanner++ not found. Please install wayland-scanner++.")
+  find_program(WAYLAND_SCANNER NAMES wayland-scanner)
+  if(NOT WAYLAND_SCANNER)
+    message(FATAL_ERROR "wayland-scanner not found. Please install wayland-scanner (libwayland-dev / wayland-devel).")
   endif()
-  message(STATUS "wayland-scanner++ FOUND: [${WAYLAND_SCANNERPP}]")
+  message(STATUS "wayland-scanner FOUND: [${WAYLAND_SCANNER}]")
 
   set(WAYLAND_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
-  set(UKUI_WINDOW_MANAGEMENT_H "${WAYLAND_GENERATED_DIR}/ukui-window-management.h")
-  set(UKUI_WINDOW_MANAGEMENT_CPP "${WAYLAND_GENERATED_DIR}/ukui-window-management.cpp")
-  set(KDE_OUTPUT_DEVICE_V2_H "${WAYLAND_GENERATED_DIR}/kde-output-device-v2.h")
-  set(KDE_OUTPUT_DEVICE_V2_CPP "${WAYLAND_GENERATED_DIR}/kde-output-device-v2.cpp")
+  set(UKUI_WINDOW_MANAGEMENT_CLIENT_H "${WAYLAND_GENERATED_DIR}/ukui-window-management-client-protocol.h")
+  set(UKUI_WINDOW_MANAGEMENT_PROTOCOL_C "${WAYLAND_GENERATED_DIR}/ukui-window-management-protocol.c")
+  set(KDE_OUTPUT_DEVICE_V2_CLIENT_H "${WAYLAND_GENERATED_DIR}/kde-output-device-v2-client-protocol.h")
+  set(KDE_OUTPUT_DEVICE_V2_PROTOCOL_C "${WAYLAND_GENERATED_DIR}/kde-output-device-v2-protocol.c")
 
   add_custom_command(
-    OUTPUT ${UKUI_WINDOW_MANAGEMENT_H} ${UKUI_WINDOW_MANAGEMENT_CPP}
+    OUTPUT ${UKUI_WINDOW_MANAGEMENT_CLIENT_H} ${UKUI_WINDOW_MANAGEMENT_PROTOCOL_C}
     COMMAND ${CMAKE_COMMAND} -E make_directory ${WAYLAND_GENERATED_DIR}
-    COMMAND ${WAYLAND_SCANNERPP} ${UKUI_WINDOW_MANAGEMENT_XML} ${UKUI_WINDOW_MANAGEMENT_H} ${UKUI_WINDOW_MANAGEMENT_CPP}
-    DEPENDS ${WAYLAND_SCANNERPP} ${UKUI_WINDOW_MANAGEMENT_XML}
-    COMMENT "Generating ukui-window-management C++ bindings"
+    COMMAND ${WAYLAND_SCANNER} client-header ${UKUI_WINDOW_MANAGEMENT_XML} ${UKUI_WINDOW_MANAGEMENT_CLIENT_H}
+    COMMAND ${WAYLAND_SCANNER} private-code ${UKUI_WINDOW_MANAGEMENT_XML} ${UKUI_WINDOW_MANAGEMENT_PROTOCOL_C}
+    DEPENDS ${WAYLAND_SCANNER} ${UKUI_WINDOW_MANAGEMENT_XML}
+    COMMENT "Generating ukui-window-management C bindings"
     VERBATIM
   )
 
   add_custom_command(
-    OUTPUT ${KDE_OUTPUT_DEVICE_V2_H} ${KDE_OUTPUT_DEVICE_V2_CPP}
+    OUTPUT ${KDE_OUTPUT_DEVICE_V2_CLIENT_H} ${KDE_OUTPUT_DEVICE_V2_PROTOCOL_C}
     COMMAND ${CMAKE_COMMAND} -E make_directory ${WAYLAND_GENERATED_DIR}
-    COMMAND ${WAYLAND_SCANNERPP} ${KDE_OUTPUT_DEVICE_V2_XML} ${KDE_OUTPUT_DEVICE_V2_H} ${KDE_OUTPUT_DEVICE_V2_CPP}
-    DEPENDS ${WAYLAND_SCANNERPP} ${KDE_OUTPUT_DEVICE_V2_XML}
-    COMMENT "Generating kde-output-device-v2 C++ bindings"
+    COMMAND ${WAYLAND_SCANNER} client-header ${KDE_OUTPUT_DEVICE_V2_XML} ${KDE_OUTPUT_DEVICE_V2_CLIENT_H}
+    COMMAND ${WAYLAND_SCANNER} private-code ${KDE_OUTPUT_DEVICE_V2_XML} ${KDE_OUTPUT_DEVICE_V2_PROTOCOL_C}
+    DEPENDS ${WAYLAND_SCANNER} ${KDE_OUTPUT_DEVICE_V2_XML}
+    COMMENT "Generating kde-output-device-v2 C bindings"
     VERBATIM
   )
 
   set_source_files_properties(
-    ${UKUI_WINDOW_MANAGEMENT_H} ${UKUI_WINDOW_MANAGEMENT_CPP}
-    ${KDE_OUTPUT_DEVICE_V2_H} ${KDE_OUTPUT_DEVICE_V2_CPP}
+    ${UKUI_WINDOW_MANAGEMENT_CLIENT_H} ${UKUI_WINDOW_MANAGEMENT_PROTOCOL_C}
+    ${KDE_OUTPUT_DEVICE_V2_CLIENT_H} ${KDE_OUTPUT_DEVICE_V2_PROTOCOL_C}
     PROPERTIES GENERATED TRUE
   )
 
   target_sources("${PROJECT_NAME}-fcitx5" PRIVATE
-    ${UKUI_WINDOW_MANAGEMENT_CPP}
-    ${KDE_OUTPUT_DEVICE_V2_CPP}
+    ${UKUI_WINDOW_MANAGEMENT_PROTOCOL_C}
+    ${KDE_OUTPUT_DEVICE_V2_PROTOCOL_C}
     ukuiwaylandhelper.cpp
   )
   target_include_directories("${PROJECT_NAME}-fcitx5" PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${WAYLAND_GENERATED_DIR}
-    ${PKG_WAYLAND_CLIENTPP_INCLUDE_DIRS}
+    ${PKG_WAYLAND_CLIENT_INCLUDE_DIRS}
   )
-  target_link_libraries("${PROJECT_NAME}-fcitx5" ${PKG_WAYLAND_CLIENTPP_LIBRARIES})
+  target_link_libraries("${PROJECT_NAME}-fcitx5" ${PKG_WAYLAND_CLIENT_LIBRARIES})
   target_compile_definitions("${PROJECT_NAME}-fcitx5" PRIVATE __HAS_WAYLAND__)
-  message(STATUS "wayland protocol support enabled (bindings generated at build time).")
+  message(STATUS "wayland protocol support enabled (C bindings generated at build time).")
 endif()
 
 install(TARGETS "${PROJECT_NAME}-fcitx5" DESTINATION "${FCITX_INSTALL_LIBDIR}/fcitx5")
