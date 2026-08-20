@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freewb v4.0 2026.04.22\n"
 "Report-Msgid-Bugs-To: freewb\n"
-"POT-Creation-Date: 2026-07-23 14:12+0800\n"
+"POT-Creation-Date: 2026-08-20 16:07+0800\n"
 "PO-Revision-Date: 2026-04-22 15:30+0800\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,20 +16,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/fcitx4/module.cpp:289 src/fcitx5/module.cpp:170
+#: src/fcitx4/module.cpp:286 src/fcitx5/module.cpp:182 src/ibus/engine.cpp:270
 #: src/panel/src/settingwin.cpp:441
 msgid "Settings"
 msgstr "设置"
 
-#: src/fcitx4/module.cpp:290
+#: src/fcitx4/module.cpp:287 src/ibus/engine.cpp:271
 msgid "Open input method settings"
 msgstr "打开输入法设置"
 
-#: src/fcitx4/module.cpp:292 src/fcitx5/module.cpp:162
+#: src/fcitx4/module.cpp:289 src/fcitx5/module.cpp:174 src/ibus/engine.cpp:276
 msgid "About"
 msgstr "关于"
 
-#: src/fcitx4/module.cpp:293
+#: src/fcitx4/module.cpp:290 src/ibus/engine.cpp:277
 msgid "Show version information"
 msgstr "显示版本信息"
 
@@ -70,7 +70,7 @@ msgstr "词库与设置恢复完成！"
 #: src/panel/src/contextmenu.cpp:250 src/panel/src/dictquerywin.cpp:292
 #: src/panel/src/dictquerywin.cpp:335 src/panel/src/lexicontoolwin.cpp:247
 #: src/panel/src/lexicontoolwin.cpp:283 src/panel/src/lexicontoolwin.cpp:394
-#: src/panel/src/lexicontoolwin.cpp:708
+#: src/panel/src/lexicontoolwin.cpp:758
 msgid "Confirm(&OK)"
 msgstr "确认(&OK)"
 
@@ -482,6 +482,10 @@ msgstr "批量删词"
 msgid "Batch add words"
 msgstr "批量加词"
 
+#: src/panel/src/lexicontoolwin.cpp:222
+msgid "Exporting lexicon..."
+msgstr "正在导出词库......"
+
 #: src/panel/src/lexicontoolwin.cpp:238
 msgid "Lexicon export completed! Number: %1"
 msgstr "词库导出完成！数目：%1"
@@ -490,6 +494,10 @@ msgstr "词库导出完成！数目：%1"
 #: src/panel/src/lexicontoolwin.cpp:347
 msgid "File open failed or format error!"
 msgstr "文件打开失败或格式错误！"
+
+#: src/panel/src/lexicontoolwin.cpp:264
+msgid "Generating lexicon..."
+msgstr "正在生成词库......"
 
 #: src/panel/src/lexicontoolwin.cpp:292
 msgid ""
@@ -543,15 +551,15 @@ msgstr "用户词库已导出至：%1/user_word.txt，是否查看？"
 msgid "Select file"
 msgstr "选择文件"
 
-#: src/panel/src/lexicontoolwin.cpp:705
+#: src/panel/src/lexicontoolwin.cpp:755
 msgid "Success %1 user word count: %2"
 msgstr "成功%1用户词组数目：%2"
 
-#: src/panel/src/lexicontoolwin.cpp:705
+#: src/panel/src/lexicontoolwin.cpp:755
 msgid "add"
 msgstr "增加"
 
-#: src/panel/src/lexicontoolwin.cpp:705
+#: src/panel/src/lexicontoolwin.cpp:755
 msgid "delete"
 msgstr "删除"
 
@@ -1672,12 +1680,6 @@ msgstr "编码:"
 
 #~ msgid "Freewb lexicon toolbox"
 #~ msgstr "极点词库工具箱"
-
-#~ msgid "Exporting lexicon..."
-#~ msgstr "正在导出词库......"
-
-#~ msgid "Generating lexicon..."
-#~ msgstr "正在生成词库......"
 
 #~ msgid "Show [all] options"
 #~ msgstr "显示【所有】选项"

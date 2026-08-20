@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: freewb v4.0 2026.07.23\n"
+"Project-Id-Version: freewb v4.0 2026.08.20\n"
 "Report-Msgid-Bugs-To: freewb\n"
-"POT-Creation-Date: 2026-07-23 14:12+0800\n"
+"POT-Creation-Date: 2026-08-20 16:07+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,20 +17,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/fcitx4/module.cpp:289 src/fcitx5/module.cpp:170
+#: src/fcitx4/module.cpp:286 src/fcitx5/module.cpp:182 src/ibus/engine.cpp:270
 #: src/panel/src/settingwin.cpp:441
 msgid "Settings"
 msgstr ""
 
-#: src/fcitx4/module.cpp:290
+#: src/fcitx4/module.cpp:287 src/ibus/engine.cpp:271
 msgid "Open input method settings"
 msgstr ""
 
-#: src/fcitx4/module.cpp:292 src/fcitx5/module.cpp:162
+#: src/fcitx4/module.cpp:289 src/fcitx5/module.cpp:174 src/ibus/engine.cpp:276
 msgid "About"
 msgstr ""
 
-#: src/fcitx4/module.cpp:293
+#: src/fcitx4/module.cpp:290 src/ibus/engine.cpp:277
 msgid "Show version information"
 msgstr ""
 
@@ -71,7 +71,7 @@ msgstr ""
 #: src/panel/src/contextmenu.cpp:250 src/panel/src/dictquerywin.cpp:292
 #: src/panel/src/dictquerywin.cpp:335 src/panel/src/lexicontoolwin.cpp:247
 #: src/panel/src/lexicontoolwin.cpp:283 src/panel/src/lexicontoolwin.cpp:394
-#: src/panel/src/lexicontoolwin.cpp:708
+#: src/panel/src/lexicontoolwin.cpp:758
 msgid "Confirm(&OK)"
 msgstr ""
 
@@ -478,6 +478,10 @@ msgstr ""
 msgid "Batch add words"
 msgstr ""
 
+#: src/panel/src/lexicontoolwin.cpp:222
+msgid "Exporting lexicon..."
+msgstr ""
+
 #: src/panel/src/lexicontoolwin.cpp:238
 msgid "Lexicon export completed! Number: %1"
 msgstr ""
@@ -485,6 +489,10 @@ msgstr ""
 #: src/panel/src/lexicontoolwin.cpp:243 src/panel/src/lexicontoolwin.cpp:280
 #: src/panel/src/lexicontoolwin.cpp:347
 msgid "File open failed or format error!"
+msgstr ""
+
+#: src/panel/src/lexicontoolwin.cpp:264
+msgid "Generating lexicon..."
 msgstr ""
 
 #: src/panel/src/lexicontoolwin.cpp:292
@@ -539,15 +547,15 @@ msgstr ""
 msgid "Select file"
 msgstr ""
 
-#: src/panel/src/lexicontoolwin.cpp:705
+#: src/panel/src/lexicontoolwin.cpp:755
 msgid "Success %1 user word count: %2"
 msgstr ""
 
-#: src/panel/src/lexicontoolwin.cpp:705
+#: src/panel/src/lexicontoolwin.cpp:755
 msgid "add"
 msgstr ""
 
-#: src/panel/src/lexicontoolwin.cpp:705
+#: src/panel/src/lexicontoolwin.cpp:755
 msgid "delete"
 msgstr ""
 

@@ -99,7 +99,7 @@ private:
     void setUiTexts();
     void startDumpLexicon(LexiconToolOp opType, const QString &txtPath, const QString &mbPath);
     int startGenLexicon(LexiconToolOp opType, const QString &txtPath, const QString &mbPath);
-    void showLexiconProgressMsgBox(QMessageBox *box, const char *textMsgid);
+    void showLexiconProgressMsgBox(QMessageBox *box, const QString &text);
     void hideLexiconProgressMsgBox(QMessageBox *box);
 
 private:

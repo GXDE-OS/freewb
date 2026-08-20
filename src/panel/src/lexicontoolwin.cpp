@@ -193,10 +193,10 @@ void LexiconToolWin::lexicon_thread_quit()
     }
 }
 
-void LexiconToolWin::showLexiconProgressMsgBox(QMessageBox *box, const char *textMsgid)
+void LexiconToolWin::showLexiconProgressMsgBox(QMessageBox *box, const QString &text)
 {
     box->setIcon(QMessageBox::NoIcon);
-    box->setText(_(textMsgid));
+    box->setText(text);
     box->setStandardButtons(QMessageBox::NoButton);
     box->show();
     QApplication::processEvents();
@@ -219,7 +219,7 @@ void LexiconToolWin::startDumpLexicon(LexiconToolOp opType, const QString &txtPa
     }
 
     QMessageBox *progressBox = new QMessageBox(this);
-    showLexiconProgressMsgBox(progressBox, "Exporting lexicon...");
+    showLexiconProgressMsgBox(progressBox, _("Exporting lexicon..."));
 
     m_lexiconThread->start();
 
@@ -261,7 +261,7 @@ int LexiconToolWin::startGenLexicon(LexiconToolOp opType, const QString &txtPath
     }
 
     QMessageBox *progressBox = new QMessageBox(this);
-    showLexiconProgressMsgBox(progressBox, "Generating lexicon...");
+    showLexiconProgressMsgBox(progressBox, _("Generating lexicon..."));
 
     m_lexiconThread->start();
 
