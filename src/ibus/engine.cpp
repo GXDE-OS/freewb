@@ -269,14 +269,14 @@ static IBusPropList *createPropList()
 
     IBusText *settingsLabel = ibus_text_new_from_string(dgettext(FREEWB_TEXT_DOMAIN, "Settings"));
     IBusText *settingsTip = ibus_text_new_from_string(dgettext(FREEWB_TEXT_DOMAIN, "Open input method settings"));
-    IBusProperty *settings =
-        ibus_property_new("settings", PROP_TYPE_NORMAL, settingsLabel, "gtk-preferences", settingsTip, TRUE, TRUE, PROP_STATE_UNCHECKED, nullptr);
+    IBusProperty *settings = ibus_property_new("settings", PROP_TYPE_NORMAL, settingsLabel, "gtk-preferences", settingsTip, TRUE,
+                                               TRUE, PROP_STATE_UNCHECKED, nullptr);
     ibus_prop_list_append(props, settings);
 
     IBusText *aboutLabel = ibus_text_new_from_string(dgettext(FREEWB_TEXT_DOMAIN, "About"));
     IBusText *aboutTip = ibus_text_new_from_string(dgettext(FREEWB_TEXT_DOMAIN, "Show version information"));
-    IBusProperty *about =
-        ibus_property_new("about", PROP_TYPE_NORMAL, aboutLabel, "gtk-about", aboutTip, TRUE, TRUE, PROP_STATE_UNCHECKED, nullptr);
+    IBusProperty *about = ibus_property_new("about", PROP_TYPE_NORMAL, aboutLabel, "gtk-about", aboutTip, TRUE, TRUE,
+                                            PROP_STATE_UNCHECKED, nullptr);
     ibus_prop_list_append(props, about);
 
     return props;

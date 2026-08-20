@@ -42,12 +42,10 @@ void initEngine()
     }
     else
     {
-        IBusComponent *component =
-            ibus_component_new("org.freedesktop.IBus.Freewb", "Freewb Input Method", FREEWB_VERSION, "GPL",
-                               "Freewb Authors", "https://gitee.com/openkylin/freewb", "", "freewb");
-        ibus_component_add_engine(component,
-                                  ibus_engine_desc_new("freewb", "Freewb Input Method", "Freewb Input Method", "zh_CN",
-                                                       "GPL", "Freewb Authors", "freewb", "us"));
+        IBusComponent *component = ibus_component_new("org.freedesktop.IBus.Freewb", "Freewb Input Method", FREEWB_VERSION, "GPL",
+                                                      "Freewb Authors", "https://gitee.com/openkylin/freewb", "", "freewb");
+        ibus_component_add_engine(component, ibus_engine_desc_new("freewb", "Freewb Input Method", "Freewb Input Method", "zh_CN",
+                                                                  "GPL", "Freewb Authors", "freewb", "us"));
         ibus_bus_register_component(bus, component);
         g_object_unref(component);
     }
