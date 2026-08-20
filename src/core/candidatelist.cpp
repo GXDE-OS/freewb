@@ -213,12 +213,19 @@ const std::string &CandidateList::selectCandidateFullCode(int index) const
 const std::string &CandidateList::firstCandidateTextForFullCode(const std::string &code) const
 {
     static const std::string kEmpty;
-    const std::size_t count = std::min(allTexts_.size(), allFullCodes_.size());
-    for (std::size_t i = 0; i < count; ++i)
+    // 顶屏取当前页上该全码的首条（含简繁等已转换文本），而非全量首选原文
+    const int pageSize = static_cast<int>(currentPageTexts_.size());
+    for (int local = 0; local < pageSize; ++local)
     {
-        if (allFullCodes_[i] == code && !allTexts_[i].empty())
+        const int globalIndex = pageIndex_ * wordCount_ + local;
+        if (globalIndex < 0 || globalIndex >= static_cast<int>(allFullCodes_.size()))
         {
-            return allTexts_[i];
+            break;
+        }
+        if (allFullCodes_[static_cast<std::size_t>(globalIndex)] == code &&
+            !currentPageTexts_[static_cast<std::size_t>(local)].empty())
+        {
+            return currentPageTexts_[static_cast<std::size_t>(local)];
         }
     }
     return kEmpty;
