@@ -9,14 +9,14 @@
 ## 编译安装
 ### 1. 配置编译环境
 ```bash
-## 安装基础依赖
-
-### fcitx4输入法插件
+### 编译fcitx输入法框架版本
 sudo apt install g++ cmake fcitx-libs-dev libgl1-mesa-dev libglu1-mesa-dev libxi-dev libxtst-dev libdbus-1-dev qtbase5-dev libqt5svg5-dev extra-cmake-modules libspdlog-dev
 
-### fcitx5输入法插件
-sudo apt install g++ cmake libfcitx5core-dev libgl1-mesa-dev libglu1-mesa-dev libxi-dev libxtst-dev libdbus-1-dev libsystemd-dev qtbase5-dev libqt5svg5-dev extra-cmake-modules libspdlog-dev wayland-scanner++ libwayland-dev waylandpp-dev
+### 编译fcitx5输入法框架版本
+sudo apt install g++ cmake libfcitx5core-dev libxi-dev libxtst-dev libdbus-1-dev libsystemd-dev qtbase5-dev libqt5svg5-dev extra-cmake-modules libspdlog-dev libwayland-dev
 
+### 编译ibus输入法框架版本
+sudo apt install g++ cmake libibus-1.0-dev libxi-dev libxtst-dev libdbus-1-dev libsystemd-dev qtbase5-dev libqt5svg5-dev extra-cmake-modules libspdlog-dev libwayland-dev
 ```
 ### 2. 编译源码
 ```bash
@@ -31,7 +31,10 @@ cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu
 ## 编译fcitx5输入法插件
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu -DENABLE_FCITX5=On
 
-make
+## 编译ibus输入法插件  
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu -DENABLE_IBUS=On
+
+make -j4
 sudo make install
 ```
 
