@@ -68,24 +68,24 @@ void CandidateList::syncVisiblePage()
         const std::size_t src = static_cast<std::size_t>(i);
         const std::size_t dst = static_cast<std::size_t>(j);
 
-        currentPageTexts_[dst] = allTexts_[src];
-        bool showTradHint = false;
-        if (chttrans != nullptr)
-        {
-            const std::string &raw = allTexts_[src];
-            chttrans->simpToTrad(currentPageTexts_[dst]);
-            showTradHint = simpTradOn && currentPageTexts_[dst] != raw;
-        }
+        std::string simpText = allTexts_[src];
         if (specialOn)
         {
-            special->format(currentPageTexts_[dst]);
+            special->format(simpText);
         }
+
+        currentPageTexts_[dst] = simpText;
+        if (chttrans != nullptr)
+        {
+            chttrans->simpToTrad(currentPageTexts_[dst]);
+        }
+        const bool showTradHint = simpTradOn && currentPageTexts_[dst] != simpText;
 
         std::string prompt;
         if (showTradHint)
         {
             prompt.push_back('(');
-            prompt.append(allTexts_[src]);
+            prompt.append(simpText);
             prompt.push_back(')');
         }
         if (codeRemind)
