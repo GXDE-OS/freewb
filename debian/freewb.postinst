@@ -1,8 +1,11 @@
 #!/bin/sh
 #set -e
 
+# postinst 在安装/升级完成后只会收到 configure，不会收到 install/upgrade
+# （install/upgrade 是 preinst 的参数）。此时新二进制已就位，杀掉旧 UI 后
+# 由桌面 autostart（X-UKUI-AutoRestart）或 D-Bus 激活拉起新进程。
 case "$1" in
-    install|upgrade)
+    configure)
         if command -v pkill >/dev/null 2>&1; then
             pkill -x freewb-panel 2>/dev/null || true
         elif command -v killall >/dev/null 2>&1; then
