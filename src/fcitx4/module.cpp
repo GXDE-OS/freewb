@@ -33,6 +33,9 @@ static void FreewbIMReset(void *arg);
 static INPUT_RETURN_VALUE FreewbIMDoInput(void *arg, FcitxKeySym sym, unsigned int state);
 static INPUT_RETURN_VALUE FreewbIMDoReleaseInput(void *arg, FcitxKeySym sym, unsigned int state);
 static void FreewbIMOnChanged(void *arg);
+static void FreewbIMOnInputFocus(void *arg);
+static void FreewbIMOnInputUnFocus(void *arg);
+static boolean isCurrentIMFreewb(freewb_fcitx4_imclass *imclass);
 
 static void updateCursorPosition(freewb_fcitx4_imclass *imclass);
 static void detachFcitxGlobalCharWidthPunc(FcitxInstance *instance, boolean detach);
@@ -66,6 +69,7 @@ static void FreewbIMReset(void *arg)
     }
 
     imclass->freewb_->reset();
+    imclass->freewb_->updateCandidateAndPreeditToUI();
 }
 
 static INPUT_RETURN_VALUE FreewbIMDoInput(void *arg, FcitxKeySym sym, unsigned int state)
@@ -100,6 +104,35 @@ static INPUT_RETURN_VALUE FreewbIMDoReleaseInput(void *arg, FcitxKeySym sym, uns
         return IRV_DO_NOTHING;
     }
     return IRV_TO_PROCESS;
+}
+
+static boolean isCurrentIMFreewb(freewb_fcitx4_imclass *imclass)
+{
+    if (imclass == nullptr || imclass->freewb_ == nullptr || imclass->fcitxInstance_ == nullptr)
+    {
+        return false;
+    }
+
+    FcitxIM *im = FcitxInstanceGetCurrentIM(imclass->fcitxInstance_);
+    return im != nullptr && im->uniqueName != nullptr && strncmp(im->uniqueName, "freewb", sizeof("freewb")) == 0;
+}
+
+static void FreewbIMOnInputFocus(void *arg)
+{
+    freewb_fcitx4_imclass *imclass = static_cast<freewb_fcitx4_imclass *>(arg);
+    if (isCurrentIMFreewb(imclass))
+    {
+        imclass->freewb_->activate();
+    }
+}
+
+static void FreewbIMOnInputUnFocus(void *arg)
+{
+    freewb_fcitx4_imclass *imclass = static_cast<freewb_fcitx4_imclass *>(arg);
+    if (isCurrentIMFreewb(imclass))
+    {
+        imclass->freewb_->deactivate();
+    }
 }
 
 static void FreewbIMOnChanged(void *arg)
@@ -169,6 +202,12 @@ void *FreewbIMCreate(FcitxInstance *instance)
 
     FcitxIMEventHook imhook = {FreewbIMOnChanged, imclass};
     FcitxInstanceRegisterIMChangedHook(instance, imhook);
+
+    FcitxIMEventHook unfocusHook = {FreewbIMOnInputUnFocus, imclass};
+    FcitxInstanceRegisterInputUnFocusHook(instance, unfocusHook);
+
+    FcitxIMEventHook focusHook = {FreewbIMOnInputFocus, imclass};
+    FcitxInstanceRegisterInputFocusHook(instance, focusHook);
 
     FcitxIMIFace iface;
     memset(&iface, 0, sizeof(FcitxIMIFace));
