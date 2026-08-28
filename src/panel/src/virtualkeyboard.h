@@ -1,5 +1,5 @@
-#ifndef KEYBOARD_H
-#define KEYBOARD_H
+#ifndef VIRTUALKEYBOARD_H
+#define VIRTUALKEYBOARD_H
 
 #include <QButtonGroup>
 #include <QChar>
@@ -13,7 +13,7 @@
 
 namespace Ui
 {
-class Keyboard;
+class VirtualKeyboard;
 }
 
 // 软键盘工作模式
@@ -45,13 +45,13 @@ typedef enum
 
 typedef QVector<QString> KeyValue;
 
-class Keyboard : public QWidget
+class VirtualKeyboard : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Keyboard(VirtualKeyboardMode mode = VKM_INPUT_PC, QWidget *parent = nullptr);
-    ~Keyboard();
+    explicit VirtualKeyboard(VirtualKeyboardMode mode = VKM_INPUT_PC, QWidget *parent = nullptr);
+    ~VirtualKeyboard();
 
 signals:
     void signal_custom_key_clicked(SymbolKeyIdx keyIdx, const QString &keName,
@@ -96,7 +96,7 @@ private slots:
     void slot_virtual_keyboard_clicked(int idx);
 
 private:
-    Ui::Keyboard *ui;
+    Ui::VirtualKeyboard *ui;
     // 用于窗口拖动计算
     bool m_mouseIsPressed;
     QPoint m_mouseLastPosition;

@@ -19,7 +19,7 @@ MainProgram::MainProgram(QObject *parent) : QObject(parent)
     m_panelDBusService = new freewb::ipc::QDBusPanelService(this);
     m_settingsDBusService = new freewb::ipc::QDBusSettingsService(this);
 
-    m_virtualKeyboard = new Keyboard;
+    m_virtualKeyboard = new VirtualKeyboard;
     m_toolbar = new ToolbarWin;
     m_inputWin = new InputWin;
     m_contextmenu = new ContextMenu;
@@ -130,13 +130,13 @@ void MainProgram::connectPanelDBus()
                     m_virtualKeyboard->closeWin();
                 }
             });
-    connect(m_toolbar, &ToolbarWin::signal_open_vk, m_virtualKeyboard, &Keyboard::slot_open_win);
+    connect(m_toolbar, &ToolbarWin::signal_open_vk, m_virtualKeyboard, &VirtualKeyboard::slot_open_win);
     connect(m_toolbar, &ToolbarWin::signal_btn_charWidth_clicked, m_inputWin, &InputWin::slot_update_charWidth_btn_ico);
     connect(m_toolbar, &ToolbarWin::signal_btn_mark_clicked, m_inputWin, &InputWin::slot_update_mark_btn_ico);
     connect(m_toolbar, &ToolbarWin::signal_open_generate_word_dialog, m_usrGenWordDialog, &UsrGenWordDialog::slot_show_dialog);
     connect(m_toolbar, &ToolbarWin::signal_open_dict_query_win, m_dictQueryWin, &DictQueryWin::slot_open_win);
 
-    connect(m_virtualKeyboard, &Keyboard::signal_kb_caps_changed, m_toolbar, &ToolbarWin::slot_kb_caps_changed);
+    connect(m_virtualKeyboard, &VirtualKeyboard::signal_kb_caps_changed, m_toolbar, &ToolbarWin::slot_kb_caps_changed);
 
     connect(m_contextmenu, &ContextMenu::signal_reload_dictionaries, m_panelDBusService,
             &freewb::ipc::QDBusPanelService::ReloadDictionaries);
@@ -151,7 +151,7 @@ void MainProgram::connectPanelDBus()
     connect(m_contextmenu, &ContextMenu::signal_restore_lexicon_and_settings, m_backupDialog,
             &BackupDialog::slot_restore_lexicon_and_settings);
 
-    connect(m_x11EventMonitor, &X11EventMonitor::signal_key_clicked, m_virtualKeyboard, &Keyboard::slot_key_clicked);
+    connect(m_x11EventMonitor, &X11EventMonitor::signal_key_clicked, m_virtualKeyboard, &VirtualKeyboard::slot_key_clicked);
 
     connect(m_usrGenWordDialog, &UsrGenWordDialog::signal_user_word_changed, m_panelDBusService,
             [this]() { m_panelDBusService->ReloadDictionaries(freewb::DictReloadUserWord); });
@@ -166,7 +166,7 @@ void MainProgram::connectPanelDBus()
     connect(m_textEditWin, &TextEditWin::signal_reload_dictionaries, m_panelDBusService,
             &freewb::ipc::QDBusPanelService::ReloadDictionaries);
     connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_toolbar, &ToolbarWin::slot_load_setting_data);
-    connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_virtualKeyboard, &Keyboard::slot_load_setting_data);
+    connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_virtualKeyboard, &VirtualKeyboard::slot_load_setting_data);
     connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_inputWin, &InputWin::slot_load_setting_data);
     connect(m_textEditWin, &TextEditWin::signal_userWord_file_saved, m_usrGenWordDialog,
             &UsrGenWordDialog::slot_userWord_file_saved);
@@ -185,7 +185,7 @@ void MainProgram::connectPanelDBus()
     connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_toolbar,
             &ToolbarWin::slot_load_setting_data);
     connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_virtualKeyboard,
-            &Keyboard::slot_load_setting_data);
+            &VirtualKeyboard::slot_load_setting_data);
     connect(&g_settingsNotifier, &SettingsNotifier::signal_setting_data_changed_to_local, m_inputWin,
             &InputWin::slot_load_setting_data);
 }
@@ -254,9 +254,9 @@ void MainProgram::connectSettingsDBus()
                 m_inputWin->hide();
             });
 
-    connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_vk, m_virtualKeyboard, &Keyboard::switch_vk);
-    connect(s, &freewb::ipc::QDBusSettingsService::signal_show_vk, m_virtualKeyboard, &Keyboard::openWin);
-    connect(s, &freewb::ipc::QDBusSettingsService::signal_hide_vk, m_virtualKeyboard, &Keyboard::closeWin);
+    connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_vk, m_virtualKeyboard, &VirtualKeyboard::switch_vk);
+    connect(s, &freewb::ipc::QDBusSettingsService::signal_show_vk, m_virtualKeyboard, &VirtualKeyboard::openWin);
+    connect(s, &freewb::ipc::QDBusSettingsService::signal_hide_vk, m_virtualKeyboard, &VirtualKeyboard::closeWin);
     connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_char_set, m_toolbar, &ToolbarWin::switch_char_set);
     connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_simp_or_trad, m_toolbar,
             [this]() { m_toolbar->set_traditional_mode(!ToolbarWin::is_traditional_mode()); });

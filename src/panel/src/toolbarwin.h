@@ -16,7 +16,7 @@
 #include <QWidget>
 
 #include "contextmenu.h"
-#include "keyboard.h"
+#include "virtualkeyboard.h"
 #include "settingshelper.h"
 #include "skin.h"
 

@@ -213,7 +213,7 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     connect(&m_keyboardMenu, &QMenu::aboutToShow, this, [this]() { m_keyboardMenuVisible = true; });
     connect(&m_keyboardMenu, &QMenu::aboutToHide, this, [this]() { m_keyboardMenuVisible = false; });
 
-    s_capsFlg = Keyboard::get_caps_flg();
+    s_capsFlg = VirtualKeyboard::get_caps_flg();
 
     freewb::UkuiWaylandHelper::applyInputPanelHints(this);
     freewb::UkuiWaylandHelper::applyInputPanelHints(&m_tooltipsWin);
@@ -660,7 +660,7 @@ void ToolbarWin::update_extend_menu_ico()
 // 更新工具条上的输入模式指示图标
 void ToolbarWin::slot_update_input_mode_ico()
 {
-    s_capsFlg = Keyboard::get_caps_flg();
+    s_capsFlg = VirtualKeyboard::get_caps_flg();
     ui->btnMode->setText(QString());
 
     const QString &inputMode = get_input_mode();
@@ -803,7 +803,7 @@ void ToolbarWin::on_btnMenuExtend_clicked()
 void ToolbarWin::on_btnMode_clicked()
 {
     Sound::play(SOUND_LETTER);
-    if (Keyboard::get_caps_flg())
+    if (VirtualKeyboard::get_caps_flg())
     {
         return;
     }

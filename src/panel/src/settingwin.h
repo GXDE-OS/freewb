@@ -22,7 +22,7 @@
 #include <QWidget>
 
 #include "customkeydialog.h"
-#include "keyboard.h"
+#include "virtualkeyboard.h"
 
 namespace Ui
 {
@@ -188,8 +188,8 @@ private:
     QListWidgetItem *m_listItemAdvance = nullptr;     // 高级选项
     QListWidgetItem *m_listItemVersionInfo = nullptr; // 版本信息
 
-    Keyboard *m_kbCustomKeyChar;        // 自定义按键字符设置页面的键盘
-    Keyboard *m_kbCustomKeyMark;        // 自定义按键标点设置页面的键盘
+    VirtualKeyboard *m_kbCustomKeyChar;        // 自定义按键字符设置页面的键盘
+    VirtualKeyboard *m_kbCustomKeyMark;        // 自定义按键标点设置页面的键盘
     CustomKeyDialog *m_customKeyDialog; // 自定义按键对话框
 
     SymbolKeyIdx m_curSymbolKeyIdx;     // 当前正在自定义的按键

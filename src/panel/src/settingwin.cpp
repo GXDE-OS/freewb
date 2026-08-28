@@ -465,10 +465,10 @@ void SettingWin::init_member_data()
     m_defaultPopPosition = QPoint((d->width() - size().width()) / 2, (d->height() - size().height()) / 2);
 
     // 初始化设置界面的软键盘
-    m_kbCustomKeyChar = new Keyboard(VKM_CUSTOM_CHAR, ui->pageCustomKeyChar);
+    m_kbCustomKeyChar = new VirtualKeyboard(VKM_CUSTOM_CHAR, ui->pageCustomKeyChar);
     m_kbCustomKeyChar->move(40, 36);
 
-    m_kbCustomKeyMark = new Keyboard(VKM_CUSTOM_MARK, ui->pageCustomKeyMark);
+    m_kbCustomKeyMark = new VirtualKeyboard(VKM_CUSTOM_MARK, ui->pageCustomKeyMark);
     m_kbCustomKeyMark->move(40, 36);
 
     // 自定义软键盘点击

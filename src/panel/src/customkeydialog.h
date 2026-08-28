@@ -6,7 +6,7 @@
 #include <QMouseEvent>
 #include <QPoint>
 
-#include "keyboard.h"
+#include "virtualkeyboard.h"
 
 namespace Ui
 {

@@ -1,4 +1,4 @@
-#include "keyboard.h"
+#include "virtualkeyboard.h"
 
 #include <QDesktopWidget>
 
@@ -7,7 +7,7 @@
 #include "settings.h"
 #include "settingshelper.h"
 #include "sound.h"
-#include "ui_keyboard.h"
+#include "ui_virtualkeyboard.h"
 
 /*
  * X11 头文件会定义 Status、Data、index、min、max 等宏，若先于 Qt 包含会破坏
@@ -81,7 +81,7 @@ static int get_caps_state()
 }
 
 /********************************************************************************************/
-Keyboard::Keyboard(VirtualKeyboardMode mode, QWidget *parent) : QWidget(parent), ui(new Ui::Keyboard)
+VirtualKeyboard::VirtualKeyboard(VirtualKeyboardMode mode, QWidget *parent) : QWidget(parent), ui(new Ui::VirtualKeyboard)
 {
     ui->setupUi(this);
     ui->frame->installEventFilter(this);
@@ -122,12 +122,12 @@ Keyboard::Keyboard(VirtualKeyboardMode mode, QWidget *parent) : QWidget(parent),
     }
 }
 
-Keyboard::~Keyboard()
+VirtualKeyboard::~VirtualKeyboard()
 {
     delete ui;
 }
 
-void Keyboard::init_keyboard_keygroup()
+void VirtualKeyboard::init_keyboard_keygroup()
 {
     ui->btnChar0->set_key_name("0");
     ui->btnChar1->set_key_name("1");
@@ -238,7 +238,7 @@ void Keyboard::init_keyboard_keygroup()
     connect(&m_btnGroup, SIGNAL(buttonClicked(int)), this, SLOT(slot_virtual_keyboard_clicked(int)));
 }
 
-void Keyboard::init_fixed_key_value()
+void VirtualKeyboard::init_fixed_key_value()
 {
     // 以下这些为控制类型按键
     m_ctrlKeyValue[KEY_BACKSAPCE - KEY_SYMBOL_NUM] = 0x08; // 退格
@@ -1514,7 +1514,7 @@ void Keyboard::init_fixed_key_value()
 }
 
 // 设置键盘的工作模式
-void Keyboard::set_work_mode(VirtualKeyboardMode mode)
+void VirtualKeyboard::set_work_mode(VirtualKeyboardMode mode)
 {
     m_vkWorkMode = mode;
 
@@ -1541,7 +1541,7 @@ void Keyboard::set_work_mode(VirtualKeyboardMode mode)
 }
 
 // 更新键盘所有按键的显示内容
-void Keyboard::update_keyboard_button()
+void VirtualKeyboard::update_keyboard_button()
 {
     KeyButton *btn;
     CustomKeyValue customKeyValue;
@@ -1639,14 +1639,14 @@ void Keyboard::update_keyboard_button()
 }
 
 // 更新当前正在自定义的按键显示内容
-void Keyboard::update_customkey_button(SymbolKeyIdx keyIdx, const QString &commChar, const QString &shiftChar)
+void VirtualKeyboard::update_customkey_button(SymbolKeyIdx keyIdx, const QString &commChar, const QString &shiftChar)
 {
     KeyButton *btn = static_cast<KeyButton *>(m_btnGroup.button(keyIdx));
     btn->set_custom_symbol(commChar, shiftChar);
     btn->update();
 }
 
-void Keyboard::switch_vk(int flg)
+void VirtualKeyboard::switch_vk(int flg)
 {
     VirtualKeyboardMode vkm = m_vkWorkMode;
 
@@ -1676,7 +1676,7 @@ void Keyboard::switch_vk(int flg)
     slot_open_win(vkm);
 }
 
-void Keyboard::switch_caps_flg(int capsFlg)
+void VirtualKeyboard::switch_caps_flg(int capsFlg)
 {
     if (capsFlg != m_capsFlag)
     {
@@ -1684,12 +1684,12 @@ void Keyboard::switch_caps_flg(int capsFlg)
     }
 }
 
-int Keyboard::get_caps_flg()
+int VirtualKeyboard::get_caps_flg()
 {
     return get_caps_state();
 }
 
-void Keyboard::mousePressEvent(QMouseEvent *event)
+void VirtualKeyboard::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
     {
@@ -1700,7 +1700,7 @@ void Keyboard::mousePressEvent(QMouseEvent *event)
     QWidget::mousePressEvent(event);
 }
 
-void Keyboard::mouseReleaseEvent(QMouseEvent *event)
+void VirtualKeyboard::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
     {
@@ -1710,7 +1710,7 @@ void Keyboard::mouseReleaseEvent(QMouseEvent *event)
     QWidget::mouseReleaseEvent(event);
 }
 
-void Keyboard::mouseMoveEvent(QMouseEvent *event)
+void VirtualKeyboard::mouseMoveEvent(QMouseEvent *event)
 {
     if (m_vkWorkMode < VKM_CUSTOM_CHAR && m_mouseIsPressed)
     {
@@ -1722,7 +1722,7 @@ void Keyboard::mouseMoveEvent(QMouseEvent *event)
     QWidget::mouseMoveEvent(event);
 }
 
-bool Keyboard::eventFilter(QObject *obj, QEvent *event)
+bool VirtualKeyboard::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == ui->frame)
     {
@@ -1741,7 +1741,7 @@ bool Keyboard::eventFilter(QObject *obj, QEvent *event)
 }
 
 // 虚拟键盘按键点击
-void Keyboard::slot_virtual_keyboard_clicked(int keyIdx)
+void VirtualKeyboard::slot_virtual_keyboard_clicked(int keyIdx)
 {
     if (keyIdx == KEY_ESC)
     {
@@ -1770,7 +1770,7 @@ void Keyboard::slot_virtual_keyboard_clicked(int keyIdx)
 }
 
 // 处理用户自定义键盘
-void Keyboard::handle_custom_keyboard_clicked(SymbolKeyIdx keyIdx, const QString &keyName)
+void VirtualKeyboard::handle_custom_keyboard_clicked(SymbolKeyIdx keyIdx, const QString &keyName)
 {
     CustomKeyValue customKeyValue;
 
@@ -1784,7 +1784,7 @@ void Keyboard::handle_custom_keyboard_clicked(SymbolKeyIdx keyIdx, const QString
     emit signal_custom_key_clicked(keyIdx, keyName, customKeyValue);
 }
 
-void Keyboard::update_caps_flg()
+void VirtualKeyboard::update_caps_flg()
 {
     bool flg = get_caps_state();
     if (flg != m_capsFlag)
@@ -1807,7 +1807,7 @@ void Keyboard::update_caps_flg()
 }
 
 // 请在获取完输入键值后再调用该函数对shift标志进行设置
-void Keyboard::update_shift_flg(int keyIdx)
+void VirtualKeyboard::update_shift_flg(int keyIdx)
 {
     if (keyIdx == KEY_SHIFT)
     {
@@ -1829,7 +1829,7 @@ void Keyboard::update_shift_flg(int keyIdx)
 }
 
 // 处理标准键盘输入
-void Keyboard::handle_fixed_keyboard_input_clicked(int keyIdx)
+void VirtualKeyboard::handle_fixed_keyboard_input_clicked(int keyIdx)
 {
     QString value("");
 
@@ -1865,7 +1865,7 @@ void Keyboard::handle_fixed_keyboard_input_clicked(int keyIdx)
 }
 
 // 处理用户自定义按键字符输入
-void Keyboard::handle_userChar_keyboard_input_clicked(int keyIdx)
+void VirtualKeyboard::handle_userChar_keyboard_input_clicked(int keyIdx)
 {
     QString stdKeyValue("");
 
@@ -1895,12 +1895,12 @@ void Keyboard::handle_userChar_keyboard_input_clicked(int keyIdx)
     }
 }
 
-void Keyboard::slot_load_setting_data()
+void VirtualKeyboard::slot_load_setting_data()
 {
     update_keyboard_button();
 }
 
-void Keyboard::slot_open_win(VirtualKeyboardMode mode)
+void VirtualKeyboard::slot_open_win(VirtualKeyboardMode mode)
 {
     if (m_vkWorkMode != mode)
     {
@@ -1911,7 +1911,7 @@ void Keyboard::slot_open_win(VirtualKeyboardMode mode)
     openWin();
 }
 
-void Keyboard::openWin()
+void VirtualKeyboard::openWin()
 {
     update_keyboard_button();
 
@@ -1926,7 +1926,7 @@ void Keyboard::openWin()
     settings::instance().set_vkMode(m_vkWorkMode);
 }
 
-void Keyboard::closeWin()
+void VirtualKeyboard::closeWin()
 {
     if (isHidden())
     {
@@ -1938,7 +1938,7 @@ void Keyboard::closeWin()
     settings::instance().set_vkMode(-1);
 }
 
-void Keyboard::slot_key_clicked(int keyCode)
+void VirtualKeyboard::slot_key_clicked(int keyCode)
 {
     if (keyCode == 66) // CAPS
     {

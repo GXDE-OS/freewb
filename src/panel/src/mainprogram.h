@@ -7,7 +7,7 @@
 #include "contextmenu.h"
 #include "dictquerywin.h"
 #include "inputwin.h"
-#include "keyboard.h"
+#include "virtualkeyboard.h"
 #include "lexicontoolwin.h"
 #include "qdbus_panel_service.h"
 #include "qdbus_settings_service.h"
@@ -36,7 +36,7 @@ private:
 
     ContextMenu *m_contextmenu = nullptr;
     ToolbarWin *m_toolbar = nullptr;
-    Keyboard *m_virtualKeyboard = nullptr;
+    VirtualKeyboard *m_virtualKeyboard = nullptr;
     InputWin *m_inputWin = nullptr;
     SettingWin *m_settingWin = nullptr;
     LexiconToolWin *m_lexicontoolWin = nullptr;
