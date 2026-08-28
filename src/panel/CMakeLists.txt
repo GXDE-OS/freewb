@@ -6,7 +6,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
  
 #匹配相关源文件与资源文件
-file(GLOB SRC_FILES "src/*.cpp" "src/fakekey/*.c" "src/sqlite3/*.c" "src/aes/*.c")
+file(GLOB SRC_FILES "src/*.cpp" "src/fakekey/*.c")
 file(GLOB UI_FILES "src/*.ui")
 file(GLOB QRC_FILES "src/*.qrc")
 
