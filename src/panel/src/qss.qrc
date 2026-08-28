@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>../qss/keyboard.qss</file>
-        <file>../qss/lexiconwin.qss</file>
-        <file>../qss/settingwin.qss</file>
-    </qresource>
-</RCC>

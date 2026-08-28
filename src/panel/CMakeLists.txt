@@ -1,4 +1,4 @@
-include_directories(${PROJECT_SOURCE_DIR}/src/panel/src)
+include_directories(${PROJECT_SOURCE_DIR}/src/panel)
 
 #Qt工程需要用到的编译开关
 set(CMAKE_AUTOMOC ON)
@@ -6,9 +6,9 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
  
 #匹配相关源文件与资源文件
-file(GLOB SRC_FILES "src/*.cpp" "src/fakekey/*.c")
-file(GLOB UI_FILES "src/*.ui")
-file(GLOB QRC_FILES "src/*.qrc")
+file(GLOB SRC_FILES "*.cpp" "fakekey/*.c")
+file(GLOB UI_FILES "*.ui")
+file(GLOB QRC_FILES "*.qrc")
 
 #寻找Qt依赖库
 find_package(QT NAMES Qt5 REQUIRED)
@@ -20,10 +20,7 @@ endif()
 
 #包含头文件路径
 include_directories(
-    ${PROJECT_SOURCE_DIR}/src/../tools
-    ${PROJECT_SOURCE_DIR}/src/../utils
     ${PROJECT_SOURCE_DIR}/src
-    ${PROJECT_SOURCE_DIR}/src/fakekey
     ${PROJECT_BINARY_DIR}
     ${PROJECT_SOURCE_DIR}/src/ipc )
 
