@@ -47,7 +47,8 @@ public:
     virtual void callModPinyinTableMethod() = 0;
     virtual void callOpenConfDirMethod() = 0;
     virtual void callSwitchVirtualKeyboardModeMethod(int flg) = 0;
-    virtual void callCloseVkBoardMethod() = 0;
+    virtual void callShowVkBoardMethod() = 0;
+    virtual void callHideVkBoardMethod() = 0;
     virtual void callSwitchTableMethod() = 0;
     virtual void callSwitchToolbarHideFlgMethod() = 0;
     virtual void callSwitchMarkAutoPairsFlgMethod() = 0;

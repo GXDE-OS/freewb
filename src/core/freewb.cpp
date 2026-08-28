@@ -442,6 +442,7 @@ bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
 
     if (keysym == FreewbKey_Escape)
     {
+        dbusProxy_->callHideVkBoardMethod();
         reset();
         return false;
     }

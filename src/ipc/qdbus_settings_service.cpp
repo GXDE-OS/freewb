@@ -74,9 +74,14 @@ void QDBusSettingsService::slot_dbus_switch_vk(int flg)
     emit signal_switch_vk(flg);
 }
 
-void QDBusSettingsService::slot_dbus_close_vk()
+void QDBusSettingsService::slot_dbus_show_vk()
 {
-    emit signal_close_vk();
+    emit signal_show_vk();
+}
+
+void QDBusSettingsService::slot_dbus_hide_vk()
+{
+    emit signal_hide_vk();
 }
 
 void QDBusSettingsService::slot_dbus_switch_char_set()

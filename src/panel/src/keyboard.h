@@ -57,16 +57,16 @@ signals:
     void signal_custom_key_clicked(SymbolKeyIdx keyIdx, const QString &keName,
                                    const CustomKeyValue &keyValue); // 用于设置界面软键盘按键自定义
     void signal_vk_mode_changed(VirtualKeyboardMode mode);
-    void signal_vk_flg_changed();
     void signal_kb_caps_changed(int capsFlg);
 
 public slots:
     void slot_load_setting_data();
-    void slot_toggle_win();
     void slot_open_win(VirtualKeyboardMode mode);
     void slot_key_clicked(int keyCode);
 
 public:
+    void openWin();  // 以当前模式打开虚拟键盘
+    void closeWin(); // 关闭虚拟键盘
     void update_keyboard_button();
     void update_customkey_button(SymbolKeyIdx keyIdx, const QString &commChar, const QString &shiftChar);
     void switch_vk(int flg);

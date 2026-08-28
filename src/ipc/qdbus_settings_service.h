@@ -25,7 +25,8 @@ Q_SIGNALS:
     void signal_delete_usr_word(int flg, const QString &wordText, const QString &wordCode);
     void signal_panel_exit();
     void signal_switch_vk(int flg);
-    void signal_close_vk();
+    void signal_show_vk();
+    void signal_hide_vk();
     void signal_switch_char_set();
     void signal_switch_simp_or_trad();
     void signal_switch_toolbar_hide_flg();
@@ -52,7 +53,8 @@ public Q_SLOTS:
     void slot_dbus_delete_usr_word(int flg, const QString &wordText, const QString &wordCode);
     void slot_dbus_panel_exit();
     void slot_dbus_switch_vk(int flg);
-    void slot_dbus_close_vk();
+    void slot_dbus_show_vk();
+    void slot_dbus_hide_vk();
     void slot_dbus_switch_char_set();
     void slot_dbus_switch_simp_or_trad();
     void slot_dbus_switch_toolbar_hide_flg();

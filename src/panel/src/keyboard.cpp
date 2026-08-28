@@ -1745,10 +1745,7 @@ void Keyboard::slot_virtual_keyboard_clicked(int keyIdx)
 {
     if (keyIdx == KEY_ESC)
     {
-        Sound::play(SOUND_BACK);
-        hide();
-        settings::instance().set_vkMode(-1);
-        emit signal_vk_flg_changed();
+        closeWin();
         return;
     }
 
@@ -1903,34 +1900,6 @@ void Keyboard::slot_load_setting_data()
     update_keyboard_button();
 }
 
-void Keyboard::slot_toggle_win()
-{
-    if (isHidden())
-    {
-        Sound::play(SOUND_ENTER);
-        move(m_vkDefaultPos);
-        update_keyboard_button();
-        show();
-        if (m_capsFlag)
-        {
-            ui->btnCaps->setStyleSheet(QSS_CAPS_SHIFT_FLG);
-        }
-        else
-        {
-            ui->btnCaps->setStyleSheet("");
-        }
-        settings::instance().set_vkMode(m_vkWorkMode);
-    }
-    else
-    {
-        Sound::play(SOUND_BACK);
-        hide();
-        settings::instance().set_vkMode(-1);
-    }
-
-    emit signal_vk_flg_changed();
-}
-
 void Keyboard::slot_open_win(VirtualKeyboardMode mode)
 {
     if (m_vkWorkMode != mode)
@@ -1939,6 +1908,11 @@ void Keyboard::slot_open_win(VirtualKeyboardMode mode)
         emit signal_vk_mode_changed(mode);
     }
 
+    openWin();
+}
+
+void Keyboard::openWin()
+{
     update_keyboard_button();
 
     if (isHidden())
@@ -1946,18 +1920,22 @@ void Keyboard::slot_open_win(VirtualKeyboardMode mode)
         Sound::play(SOUND_ENTER);
         move(m_vkDefaultPos);
         show();
-        if (m_capsFlag)
-        {
-            ui->btnCaps->setStyleSheet(QSS_CAPS_SHIFT_FLG);
-        }
-        else
-        {
-            ui->btnCaps->setStyleSheet("");
-        }
+        ui->btnCaps->setStyleSheet(m_capsFlag ? QSS_CAPS_SHIFT_FLG : "");
     }
 
     settings::instance().set_vkMode(m_vkWorkMode);
-    emit signal_vk_flg_changed();
+}
+
+void Keyboard::closeWin()
+{
+    if (isHidden())
+    {
+        return;
+    }
+
+    Sound::play(SOUND_BACK);
+    hide();
+    settings::instance().set_vkMode(-1);
 }
 
 void Keyboard::slot_key_clicked(int keyCode)

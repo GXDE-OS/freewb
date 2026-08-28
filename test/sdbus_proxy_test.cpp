@@ -152,7 +152,7 @@ void handleCommand(DemoState &s, const std::string &cmd)
                       << "  switch_chttrans | switch_cap_state\n"
                       << "  open_sys_conf | show_version | open_prof_conf\n"
                       << "  mod_quick | mod_user | mod_wubi | mod_pinyin\n"
-                      << "  open_conf_dir | close_vk | switch_table\n"
+                      << "  open_conf_dir | show_vk | hide_vk | switch_table\n"
                       << "  switch_char_width switch_punctuation\n"
                       << "  clipboard\n";
             return;
@@ -205,8 +205,10 @@ void handleCommand(DemoState &s, const std::string &cmd)
             proxy.callModPinyinTableMethod();
         else if (action == "open_conf_dir")
             proxy.callOpenConfDirMethod();
-        else if (action == "close_vk")
-            proxy.callCloseVkBoardMethod();
+        else if (action == "show_vk")
+            proxy.callShowVkBoardMethod();
+        else if (action == "hide_vk")
+            proxy.callHideVkBoardMethod();
         else if (action == "switch_table")
             proxy.callSwitchTableMethod();
         else if (action == "switch_char_width")
@@ -297,7 +299,8 @@ void handleCommand(DemoState &s, const std::string &cmd)
         proxy.callModWubiTableMethod();
         proxy.callModPinyinTableMethod();
         proxy.callOpenConfDirMethod();
-        proxy.callCloseVkBoardMethod();
+        proxy.callShowVkBoardMethod();
+        proxy.callHideVkBoardMethod();
         proxy.callSwitchTableMethod();
         proxy.callPanelToggleCapsStateMethod();
         FREEWB_WARN("cmd=7 settings no-arg smoke methods sent");

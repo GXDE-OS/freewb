@@ -328,9 +328,14 @@ void LibDbusProxy::callOpenConfDirMethod()
     callSettingsMethod("slot_dbus_open_freewb_dir", "");
 }
 
-void LibDbusProxy::callCloseVkBoardMethod()
+void LibDbusProxy::callShowVkBoardMethod()
 {
-    callSettingsMethod("slot_dbus_close_vk", "");
+    callSettingsMethod("slot_dbus_show_vk", "");
+}
+
+void LibDbusProxy::callHideVkBoardMethod()
+{
+    callSettingsMethod("slot_dbus_hide_vk", "");
 }
 
 void LibDbusProxy::callSwitchTableMethod()

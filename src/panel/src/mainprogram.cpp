@@ -118,15 +118,24 @@ void MainProgram::connectPanelDBus()
             &freewb::ipc::QDBusPanelService::SwitchCharSetMode);
     connect(m_toolbar, &ToolbarWin::signal_open_setting_win, m_settingWin, &SettingWin::slot_open_win);
     connect(m_toolbar, &ToolbarWin::signal_open_context_menu, m_contextmenu, &ContextMenu::slot_show_context_menu);
-    connect(m_toolbar, &ToolbarWin::signal_toggle_vk, m_virtualKeyboard, &Keyboard::slot_toggle_win);
+    connect(m_toolbar, &ToolbarWin::signal_toggle_vk, this,
+            [this]()
+            {
+                if (m_virtualKeyboard->isHidden())
+                {
+                    m_virtualKeyboard->openWin();
+                }
+                else
+                {
+                    m_virtualKeyboard->closeWin();
+                }
+            });
     connect(m_toolbar, &ToolbarWin::signal_open_vk, m_virtualKeyboard, &Keyboard::slot_open_win);
     connect(m_toolbar, &ToolbarWin::signal_btn_charWidth_clicked, m_inputWin, &InputWin::slot_update_charWidth_btn_ico);
     connect(m_toolbar, &ToolbarWin::signal_btn_mark_clicked, m_inputWin, &InputWin::slot_update_mark_btn_ico);
     connect(m_toolbar, &ToolbarWin::signal_open_generate_word_dialog, m_usrGenWordDialog, &UsrGenWordDialog::slot_show_dialog);
     connect(m_toolbar, &ToolbarWin::signal_open_dict_query_win, m_dictQueryWin, &DictQueryWin::slot_open_win);
 
-    connect(m_virtualKeyboard, &Keyboard::signal_vk_flg_changed, m_panelDBusService,
-            &freewb::ipc::QDBusPanelService::ReloadConfig);
     connect(m_virtualKeyboard, &Keyboard::signal_kb_caps_changed, m_toolbar, &ToolbarWin::slot_kb_caps_changed);
 
     connect(m_contextmenu, &ContextMenu::signal_reload_dictionaries, m_panelDBusService,
@@ -246,7 +255,8 @@ void MainProgram::connectSettingsDBus()
             });
 
     connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_vk, m_virtualKeyboard, &Keyboard::switch_vk);
-    connect(s, &freewb::ipc::QDBusSettingsService::signal_close_vk, m_virtualKeyboard, &Keyboard::slot_toggle_win);
+    connect(s, &freewb::ipc::QDBusSettingsService::signal_show_vk, m_virtualKeyboard, &Keyboard::openWin);
+    connect(s, &freewb::ipc::QDBusSettingsService::signal_hide_vk, m_virtualKeyboard, &Keyboard::closeWin);
     connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_char_set, m_toolbar, &ToolbarWin::switch_char_set);
     connect(s, &freewb::ipc::QDBusSettingsService::signal_switch_simp_or_trad, m_toolbar,
             [this]() { m_toolbar->set_traditional_mode(!ToolbarWin::is_traditional_mode()); });

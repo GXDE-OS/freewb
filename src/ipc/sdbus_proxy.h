@@ -55,7 +55,8 @@ public:
     void callModPinyinTableMethod() override;
     void callOpenConfDirMethod() override;
     void callSwitchVirtualKeyboardModeMethod(int flg) override;
-    void callCloseVkBoardMethod() override;
+    void callShowVkBoardMethod() override;
+    void callHideVkBoardMethod() override;
     void callSwitchTableMethod() override;
     void callSwitchToolbarHideFlgMethod() override;
     void callSwitchMarkAutoPairsFlgMethod() override;
