@@ -1,6 +1,3 @@
-#CMAKE编译标志
-add_definitions(-DBUILD_IN_CAMKE)
-
 include_directories(${PROJECT_SOURCE_DIR}/src/panel/src)
 
 #Qt工程需要用到的编译开关
