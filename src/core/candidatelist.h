@@ -36,7 +36,7 @@ public:
     const std::string &firstCandidateTextForFullCode(const std::string &code) const;
     /**
      * 当前候选中是否可将 @p code 视为已输完的全码：存在精确匹配，且没有以 @p code 为前缀的更长编码。
-     * 用于避免拼音 qing→qingw 被误顶屏。
+     * 供满四码唯一候选立刻上屏。
      */
     bool isTerminalExactCode(const std::string &code) const;
     const std::string &firstVisibleCandidateFullCode() const;
