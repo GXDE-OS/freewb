@@ -16,9 +16,9 @@
 #include <QWidget>
 
 #include "contextmenu.h"
-#include "virtualkeyboard.h"
 #include "settingshelper.h"
 #include "skin.h"
+#include "virtualkeyboard.h"
 
 namespace Ui
 {

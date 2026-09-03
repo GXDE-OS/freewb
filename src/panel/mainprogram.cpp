@@ -166,7 +166,8 @@ void MainProgram::connectPanelDBus()
     connect(m_textEditWin, &TextEditWin::signal_reload_dictionaries, m_panelDBusService,
             &freewb::ipc::QDBusPanelService::ReloadDictionaries);
     connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_toolbar, &ToolbarWin::slot_load_setting_data);
-    connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_virtualKeyboard, &VirtualKeyboard::slot_load_setting_data);
+    connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_virtualKeyboard,
+            &VirtualKeyboard::slot_load_setting_data);
     connect(m_textEditWin, &TextEditWin::signal_setting_file_changed, m_inputWin, &InputWin::slot_load_setting_data);
     connect(m_textEditWin, &TextEditWin::signal_userWord_file_saved, m_usrGenWordDialog,
             &UsrGenWordDialog::slot_userWord_file_saved);

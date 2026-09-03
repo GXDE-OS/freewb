@@ -24,13 +24,17 @@ CLANG_FORMAT="$(pick_clang_format)" || {
     exit 1
 }
 
-# 排除版本库、常见构建输出目录及第三方 sqlite3 源码，避免误处理生成文件
+# 排除版本库、常见构建输出目录及第三方源码，避免误处理生成文件
 find . -type f \( -name '*.c' -o -name '*.h' -o -name '*.cpp' \) \
     ! -path './.git/*' \
     ! -path './build/*' \
     ! -path './cmake-build-*/*' \
     ! -path './out/*' \
-    ! -path './src/panel/src/sqlite3/*' \
+    ! -name 'sqlite3.c' \
+    ! -name 'sqlite3.h' \
+    ! -name 'SimpleIni.h' \
+    ! -name 'ConvertUTF.c' \
+    ! -name 'ConvertUTF.h' \
     -print0 |
     xargs -0 "$CLANG_FORMAT" -i --style=file
 

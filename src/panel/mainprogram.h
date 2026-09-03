@@ -7,7 +7,6 @@
 #include "contextmenu.h"
 #include "dictquerywin.h"
 #include "inputwin.h"
-#include "virtualkeyboard.h"
 #include "lexicontoolwin.h"
 #include "qdbus_panel_service.h"
 #include "qdbus_settings_service.h"
@@ -15,6 +14,7 @@
 #include "texteditwin.h"
 #include "toolbarwin.h"
 #include "usrgenworddialog.h"
+#include "virtualkeyboard.h"
 #include "x11eventmonitor.h"
 
 class MainProgram : public QObject
