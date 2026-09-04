@@ -269,9 +269,10 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
     refreshEngineResult();
 
     // 顶字上屏：本键拼上去之后没有候选，把「按键前」对应编码的首选上屏，本键当作新编码重开。
-    // pre.size()>=4 是五笔满码门槛：上一截已经打满 4 码才允许顶（aaaa+b→工）；不满 4 码即使没词也不顶（tmd+b 只显示空）。
+    // minTopScreenPreeditLength：五笔/五笔拼音满码 4（aaaa+b→工；tmd+b 未满码不顶）；拼音为 0（wo+a 即可顶「我」）。
     // 例：wenti 首选「问题」，再按 p，wentip 无词 → 上屏「问题」，预编辑变成 p。qingw 仍有「请问」，不走这里。
-    if (candidateList_->totalCandidateCount() == 0 && pre.size() >= 4U && !exactFirstText.empty() && committer_ != nullptr)
+    if (candidateList_->totalCandidateCount() == 0 && pre.size() >= engine->minTopScreenPreeditLength() &&
+        !exactFirstText.empty() && committer_ != nullptr)
     {
         committer_->commit(exactFirstText, pre);
         candidateList_->setPreeditText(key);

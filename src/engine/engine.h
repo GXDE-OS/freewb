@@ -1,6 +1,7 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -35,6 +36,12 @@ public:
 
     /** @p preedit 是否与词典中某条编码键完全一致（整码）；供上屏/拆码策略查询。 */
     virtual bool isExactDictionaryKey(const std::string &preedit) const = 0;
+
+    /** 顶字上屏要求的最短预编辑长度。五笔满码默认 4；拼音无满码，由 PyEngine 返回 0。 */
+    virtual std::size_t minTopScreenPreeditLength() const
+    {
+        return 4;
+    }
 };
 
 } // namespace freewb

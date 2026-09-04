@@ -111,6 +111,11 @@ bool PyEngine::isExactDictionaryKey(const std::string &preedit) const
     return mbTable_.hasExactCode(preedit);
 }
 
+std::size_t PyEngine::minTopScreenPreeditLength() const
+{
+    return 0;
+}
+
 void PyEngine::clearMbLoadState()
 {
     mbTable_.clear();
