@@ -25,6 +25,15 @@ Standards-Version: 4.6.2
 Rules-Requires-Root: no
 Homepage: https://gitee.com/openkylin/freewb
 
+Package: gxde-freewb
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+ freewb,
+ freewb-fcitx5,
+Description: Freewb for gxde.
+
 Package: freewb
 Architecture: any
 Depends:
