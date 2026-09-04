@@ -53,6 +53,10 @@ public:
     /** 主五笔码表；供自动造词读取元数据与已有词条。 */
     const MbDictionaryTable &mainDictionaryTable() const;
 
+    /** 按 fullCode 归并追加到 @p out；相同则 first 在前。
+    其中 first 和 second 需已按 fullCode 排序。*/
+    static void mergeCandidatesInCodeOrder(CandidatePayload &out, const CandidatePayload &first, const CandidatePayload &second);
+
 private:
     void clearMbLoadState();
     void loadDictionary();
@@ -61,8 +65,6 @@ private:
     void fillCandidatePayloadPrompts(const std::string &preedit, CandidatePayload &payload) const;
     /** 按 [DeletedWord] 与 charset 过滤主码表候选（整段均为主表条目）。 */
     void filterMainDictCandidates(CandidatePayload &payload) const;
-    /** 两路候选均已按编码有序，按编码归并；编码相同则用户词在前。 */
-    void mergeCandidatesByCode(const CandidatePayload &userHits, const CandidatePayload &mainHits, CandidatePayload &out) const;
 
     MbDictionaryTable mbTable_;
     UserDict userDict_;

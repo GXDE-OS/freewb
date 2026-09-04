@@ -43,33 +43,9 @@ void Wbpy::putKey(const char *strCode)
     wbzxEngine_->putKey(strCode);
     pyEngine_->putKey(strCode);
 
-    const CandidatePayload &wb = wbzxEngine_->getResult();
-    const CandidatePayload &py = pyEngine_->getResult();
-
-    result_.texts.reserve(wb.texts.size() + py.texts.size());
-    result_.fullCodes.reserve(wb.texts.size() + py.texts.size());
-    result_.prompts.reserve(wb.texts.size() + py.texts.size());
-
-    for (std::size_t i = 0; i < wb.texts.size(); ++i)
-    {
-        if (wb.texts[i].empty())
-        {
-            continue;
-        }
-        result_.texts.push_back(wb.texts[i]);
-        result_.fullCodes.push_back(i < wb.fullCodes.size() ? wb.fullCodes[i] : std::string{});
-        result_.prompts.push_back(i < wb.prompts.size() ? wb.prompts[i] : std::string{});
-    }
-    for (std::size_t i = 0; i < py.texts.size(); ++i)
-    {
-        if (py.texts[i].empty())
-        {
-            continue;
-        }
-        result_.texts.push_back(py.texts[i]);
-        result_.fullCodes.push_back(i < py.fullCodes.size() ? py.fullCodes[i] : std::string{});
-        result_.prompts.push_back(i < py.prompts.size() ? py.prompts[i] : std::string{});
-    }
+    const CandidatePayload &wubiHits = wbzxEngine_->getResult();
+    const CandidatePayload &pinyinHits = pyEngine_->getResult();
+    WbzxEngine::mergeCandidatesInCodeOrder(result_, wubiHits, pinyinHits);
 }
 
 const CandidatePayload &Wbpy::getResult() const

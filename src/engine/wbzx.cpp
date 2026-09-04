@@ -83,7 +83,7 @@ void WbzxEngine::putKey(const char *strCode)
     userDict_.appendCandidatesForPrefix(prefix, userHits);
     mbTable_.appendCandidatesForPrefix(prefix, mainHits);
     filterMainDictCandidates(mainHits);
-    mergeCandidatesByCode(userHits, mainHits, result_);
+    mergeCandidatesInCodeOrder(result_, userHits, mainHits);
     autoPhrase_.appendCandidatesForExactCode(prefix, result_);
     fillCandidatePayloadPrompts(prefix, result_);
 }
@@ -326,36 +326,42 @@ void WbzxEngine::filterMainDictCandidates(CandidatePayload &payload) const
     payload.prompts = std::move(filtered.prompts);
 }
 
-void WbzxEngine::mergeCandidatesByCode(const CandidatePayload &userHits, const CandidatePayload &mainHits,
-                                       CandidatePayload &out) const
+void WbzxEngine::mergeCandidatesInCodeOrder(CandidatePayload &out, const CandidatePayload &first, const CandidatePayload &second)
 {
-    const std::size_t nUser = std::min(userHits.texts.size(), userHits.fullCodes.size());
-    const std::size_t nMain = std::min(mainHits.texts.size(), mainHits.fullCodes.size());
-    out.texts.reserve(out.texts.size() + nUser + nMain);
-    out.fullCodes.reserve(out.fullCodes.size() + nUser + nMain);
+    const std::size_t nFirst = std::min(first.texts.size(), first.fullCodes.size());
+    const std::size_t nSecond = std::min(second.texts.size(), second.fullCodes.size());
+    out.texts.reserve(out.texts.size() + nFirst + nSecond);
+    out.fullCodes.reserve(out.fullCodes.size() + nFirst + nSecond);
+    out.prompts.reserve(out.prompts.size() + nFirst + nSecond);
+
+    auto appendRow = [&out](const CandidatePayload &src, std::size_t k)
+    {
+        out.texts.push_back(src.texts[k]);
+        out.fullCodes.push_back(src.fullCodes[k]);
+        out.prompts.push_back(k < src.prompts.size() ? src.prompts[k] : std::string{});
+    };
 
     std::size_t i = 0;
     std::size_t j = 0;
-    while (i < nUser && j < nMain)
+    while (i < nFirst && j < nSecond)
     {
-        if (userHits.fullCodes[i] <= mainHits.fullCodes[j])
+        if (first.fullCodes[i] <= second.fullCodes[j])
         {
-            out.texts.push_back(userHits.texts[i]);
-            out.fullCodes.push_back(userHits.fullCodes[i]);
-            ++i;
+            appendRow(first, i++);
         }
         else
         {
-            out.texts.push_back(mainHits.texts[j]);
-            out.fullCodes.push_back(mainHits.fullCodes[j]);
-            ++j;
+            appendRow(second, j++);
         }
     }
-
-    out.texts.insert(out.texts.end(), userHits.texts.begin() + i, userHits.texts.begin() + nUser);
-    out.fullCodes.insert(out.fullCodes.end(), userHits.fullCodes.begin() + i, userHits.fullCodes.begin() + nUser);
-    out.texts.insert(out.texts.end(), mainHits.texts.begin() + j, mainHits.texts.begin() + nMain);
-    out.fullCodes.insert(out.fullCodes.end(), mainHits.fullCodes.begin() + j, mainHits.fullCodes.begin() + nMain);
+    while (i < nFirst)
+    {
+        appendRow(first, i++);
+    }
+    while (j < nSecond)
+    {
+        appendRow(second, j++);
+    }
 }
 
 bool WbzxEngine::addUserWord(const std::string &code, const std::string &text)
