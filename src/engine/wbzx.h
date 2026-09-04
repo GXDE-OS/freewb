@@ -59,8 +59,10 @@ private:
     /** 从 mbTable_ 单字码表构建单字→首选码（仅首字节为字母的编码参与）。 */
     void initSingleHanziPrimaryCodeFromMbTable();
     void fillCandidatePayloadPrompts(const std::string &preedit, CandidatePayload &payload) const;
-    /** 按 [DeletedWord] 与 charset 过滤 @p payload 中自 @p userCandidateCount 起的主码表候选段。 */
-    void filterMainDictCandidates(CandidatePayload &payload, std::size_t userCandidateCount) const;
+    /** 按 [DeletedWord] 与 charset 过滤主码表候选（整段均为主表条目）。 */
+    void filterMainDictCandidates(CandidatePayload &payload) const;
+    /** 两路候选均已按编码有序，按编码归并；编码相同则用户词在前。 */
+    void mergeCandidatesByCode(const CandidatePayload &userHits, const CandidatePayload &mainHits, CandidatePayload &out) const;
 
     MbDictionaryTable mbTable_;
     UserDict userDict_;

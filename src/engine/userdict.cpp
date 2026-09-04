@@ -83,22 +83,33 @@ void UserDict::appendCandidatesForPrefix(const std::string &code, CandidatePaylo
         return;
     }
 
-    const auto it = userEntries_.find(code);
-    if (it == userEntries_.end())
+    std::vector<std::string> matchedCodes;
+    for (const auto &kv : userEntries_)
     {
-        return;
+        const std::string &entryCode = kv.first;
+        if (entryCode.size() >= code.size() && entryCode.compare(0, code.size(), code) == 0)
+        {
+            matchedCodes.push_back(entryCode);
+        }
     }
+    std::sort(matchedCodes.begin(), matchedCodes.end());
 
-    // 同一编码可对应多条 UserWord，需全部追加到候选列表
-    const std::vector<std::string> &texts = it->second;
-    for (const std::string &text : texts)
+    for (const std::string &entryCode : matchedCodes)
     {
-        if (text.empty())
+        const auto it = userEntries_.find(entryCode);
+        if (it == userEntries_.end())
         {
             continue;
         }
-        out.texts.push_back(text);
-        out.fullCodes.push_back(code);
+        for (const std::string &text : it->second)
+        {
+            if (text.empty())
+            {
+                continue;
+            }
+            out.texts.push_back(text);
+            out.fullCodes.push_back(entryCode);
+        }
     }
 }
 
