@@ -74,4 +74,9 @@ bool Wbpy::isExactDictionaryKey(const std::string &preedit) const
     return wbzxEngine_->isExactDictionaryKey(preedit) || pyEngine_->isExactDictionaryKey(preedit);
 }
 
+std::size_t Wbpy::minTopScreenPreeditLength() const
+{
+    return 4;
+}
+
 } // namespace freewb

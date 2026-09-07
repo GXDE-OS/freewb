@@ -494,4 +494,9 @@ bool WbzxEngine::isExactDictionaryKey(const std::string &preedit) const
     return autoPhrase_.hasExactCode(preedit);
 }
 
+std::size_t WbzxEngine::minTopScreenPreeditLength() const
+{
+    return 4;
+}
+
 } // namespace freewb
