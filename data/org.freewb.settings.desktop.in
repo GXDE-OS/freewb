@@ -1,0 +1,20 @@
+[Desktop Entry]
+Name=Freewb Input Method Settings
+Name[zh_CN]=极点五笔输入法设置
+Name[zh_HK]=極點五筆輸入法設置
+Name[zh_TW]=極點五筆輸入法設置
+GenericName=Freewb Input Method Settings
+GenericName[zh_CN]=极点五笔输入法设置
+GenericName[zh_HK]=極點五筆輸入法設置
+GenericName[zh_TW]=極點五筆輸入法設置
+Comment=Open Freewb input method settings
+Comment[zh_CN]=打开极点五笔输入法设置
+Comment[zh_HK]=打開極點五筆輸入法設置
+Comment[zh_TW]=打開極點五筆輸入法設置
+Keywords=ime;imf;input;config;settings;freewb;
+Exec=dbus-send --session --type=method_call --dest=org.freewb.settings /org/freewb/settings org.freewb.settings.slot_dbus_open_ui_setting
+Icon=freewb
+Terminal=false
+Type=Application
+Categories=System;Utility;
+StartupNotify=false

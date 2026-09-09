@@ -8,6 +8,9 @@ install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/org.freewb.start.sh DESTINATION ${F
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/org.freewb.panel.service.in ${CMAKE_CURRENT_BINARY_DIR}/org.freewb.panel.service IMMEDIATE @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freewb.panel.service DESTINATION ${FREEWB_INSTALL_DATADIR}/dbus-1/services)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/org.freewb.settings.desktop.in ${CMAKE_CURRENT_BINARY_DIR}/org.freewb.settings.desktop IMMEDIATE @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freewb.settings.desktop DESTINATION ${FREEWB_INSTALL_DATADIR}/applications)
+
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dict DESTINATION ${FREEWB_INSTALL_PKGDATADIR}/data)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/mb DESTINATION ${FREEWB_INSTALL_PKGDATADIR}/data)
 
