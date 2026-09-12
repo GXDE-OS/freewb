@@ -258,20 +258,30 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return true;
     }
 
-    // 最少四码：仅当预编辑已是「终码」（精确命中且无更长续码）时，再输入才顶屏并开启新预编辑
-    // 避免拼音 qing + w 被当成全码顶出「请」而无法继续打出 qingw/请问
-    // 不足四码不自动上屏，只能空格/数字键等经 Committer 上屏
-    if (hasCandidates && pre.size() >= 4U && candidateList_->isTerminalExactCode(pre) && tryCommitExactCandidate(pre))
+    // 顶屏只认当前页第一条是否已是精确全码；续码词（seco→second）不能顶
+    std::string exactFirstText;
+    if (candidateList_->size() > 0 && candidateList_->selectCandidateFullCode(0) == pre)
     {
-        candidateList_->setPreeditText(key);
-        refreshEngineResult();
-        return true;
+        exactFirstText = candidateList_->selectCandidateText(0);
     }
 
     candidateList_->setPreeditText(pre + key);
     refreshEngineResult();
 
-    // 满四码、唯一候选且已是终码：本键结束后立即上屏（如 GB 字集下 fjfh→韩）
+    // 顶字上屏：本键拼上去之后没有候选，把「按键前」对应编码的首选上屏，本键当作新编码重开。
+    // minTopScreenPreeditLength：五笔/五笔拼音满码 4（aaaa+b→工；tmd+b 未满码不顶）；拼音为 0（wo+a 即可顶「我」）。
+    // 例：wenti 首选「问题」，再按 p，wentip 无词 → 上屏「问题」，预编辑变成 p。qingw 仍有「请问」，不走这里。
+    if (candidateList_->totalCandidateCount() == 0 && pre.size() >= engine->minTopScreenPreeditLength() &&
+        !exactFirstText.empty() && committer_ != nullptr)
+    {
+        committer_->commit(exactFirstText, pre);
+        candidateList_->setPreeditText(key);
+        refreshEngineResult();
+        return true;
+    }
+
+    // 候选词唯一且是终码：本键查完后，当前整串已经满 4 码、只剩 1 条且是终码，立刻上屏，不等下一键。
+    // now 是拼上本键之后的预编辑；与上面顶屏不同，这里提交的是「这一码」本身（fjfh→韩）。
     const std::string &now = candidateList_->preeditText();
     if (now.size() >= 4U && candidateList_->totalCandidateCount() == 1 && candidateList_->isTerminalExactCode(now))
     {

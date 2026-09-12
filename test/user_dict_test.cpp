@@ -258,7 +258,7 @@ void testDeletedWordSection()
     removeRecursively(home);
 }
 
-void testExactCodeMatchOnly()
+void testPrefixCodeMatch()
 {
     const std::string home = makeTempHome();
     ::setenv("HOME", home.c_str(), 1);
@@ -266,23 +266,41 @@ void testExactCodeMatchOnly()
     const std::string content = "[UserWord]\n"
                                 "date=$Y年$M月$D日\n"
                                 "date=$y年$m月$d日\n"
-                                "joke=hello\n";
+                                "joke=hello\n"
+                                "second=$S秒\n"
+                                "second=$s秒\n";
     EXPECT(prepareUserWord(home, content));
 
     freewb::UserDict dict;
 
-    EXPECT(candidatesFor(dict, "da").texts.empty());
-    EXPECT(candidatesFor(dict, "dat").texts.empty());
+    const auto daCand = candidatesFor(dict, "da");
+    EXPECT(daCand.texts.size() == 2);
+    if (daCand.texts.size() == 2)
+    {
+        EXPECT(daCand.texts[0] == "$Y年$M月$D日");
+        EXPECT(daCand.texts[1] == "$y年$m月$d日");
+        EXPECT(daCand.fullCodes[0] == "date");
+        EXPECT(daCand.fullCodes[1] == "date");
+    }
+
+    const auto secoCand = candidatesFor(dict, "seco");
+    EXPECT(secoCand.texts.size() == 2);
+    if (secoCand.texts.size() == 2)
+    {
+        EXPECT(secoCand.texts[0] == "$S秒");
+        EXPECT(secoCand.texts[1] == "$s秒");
+        EXPECT(secoCand.fullCodes[0] == "second");
+        EXPECT(secoCand.fullCodes[1] == "second");
+    }
+
+    EXPECT(candidatesFor(dict, "secx").texts.empty());
+
+    const auto sCand = candidatesFor(dict, "s");
+    EXPECT(sCand.texts.size() == 2);
+    EXPECT(candidatesFor(dict, "j").texts.size() == 1);
 
     const auto dateCand = candidatesFor(dict, "date");
     EXPECT(dateCand.texts.size() == 2);
-    if (dateCand.texts.size() == 2)
-    {
-        EXPECT(dateCand.texts[0] == "$Y年$M月$D日");
-        EXPECT(dateCand.texts[1] == "$y年$m月$d日");
-        EXPECT(dateCand.fullCodes[0] == "date");
-        EXPECT(dateCand.fullCodes[1] == "date");
-    }
 
     removeRecursively(home);
 }
@@ -296,7 +314,7 @@ int main()
     testTolerantParse();
     testReload();
     testDeletedWordSection();
-    testExactCodeMatchOnly();
+    testPrefixCodeMatch();
 
     if (g_failed != 0)
     {

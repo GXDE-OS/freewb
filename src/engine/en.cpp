@@ -46,4 +46,9 @@ bool En::isExactDictionaryKey(const std::string &preedit) const
     (void)preedit;
     return false;
 }
+
+std::size_t En::minTopScreenPreeditLength() const
+{
+    return 0;
+}
 } // namespace freewb

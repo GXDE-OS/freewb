@@ -28,6 +28,7 @@ public:
 
     bool shouldProcessKey(const char *key) const override;
     bool isExactDictionaryKey(const std::string &preedit) const override;
+    std::size_t minTopScreenPreeditLength() const override;
 
 private:
     WbzxEngine *wbzxEngine_ = nullptr;

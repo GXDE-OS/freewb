@@ -31,6 +31,7 @@ public:
 
     bool shouldProcessKey(const char *key) const override;
     bool isExactDictionaryKey(const std::string &preedit) const override;
+    std::size_t minTopScreenPreeditLength() const override;
     /** 主五笔码表单字 UTF-8 → 首选码；无索引或查无则空串。供拼音 [xxxx] 反查等。 */
     std::string primaryWubiCodeForSingleHanziUtf8(const std::string &hz) const;
     /** 按码表造词规则为 UTF-8 词组计算五笔编码；失败或非五笔引擎返回空串。 */
@@ -53,14 +54,18 @@ public:
     /** 主五笔码表；供自动造词读取元数据与已有词条。 */
     const MbDictionaryTable &mainDictionaryTable() const;
 
+    /** 按 fullCode 归并追加到 @p out；相同则 first 在前。
+    其中 first 和 second 需已按 fullCode 排序。*/
+    static void mergeCandidatesInCodeOrder(CandidatePayload &out, const CandidatePayload &first, const CandidatePayload &second);
+
 private:
     void clearMbLoadState();
     void loadDictionary();
     /** 从 mbTable_ 单字码表构建单字→首选码（仅首字节为字母的编码参与）。 */
     void initSingleHanziPrimaryCodeFromMbTable();
     void fillCandidatePayloadPrompts(const std::string &preedit, CandidatePayload &payload) const;
-    /** 按 [DeletedWord] 与 charset 过滤 @p payload 中自 @p userCandidateCount 起的主码表候选段。 */
-    void filterMainDictCandidates(CandidatePayload &payload, std::size_t userCandidateCount) const;
+    /** 按 [DeletedWord] 与 charset 过滤主码表候选（整段均为主表条目）。 */
+    void filterMainDictCandidates(CandidatePayload &payload) const;
 
     MbDictionaryTable mbTable_;
     UserDict userDict_;
