@@ -245,7 +245,7 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return false;
     }
 
-    const std::string pre = candidateList_->preeditText();
+    const std::string pre = candidateList_->inputCode();
     const bool hasCandidates = candidateList_->totalCandidateCount() > 0;
 
     // 无候选时，下一码清空预编辑并重新开始
@@ -253,7 +253,7 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
     {
         candidateList_->clear();
         reset();
-        candidateList_->setPreeditText(key);
+        candidateList_->setInputCode(key);
         refreshEngineResult();
         return true;
     }
@@ -265,7 +265,7 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
         exactFirstText = candidateList_->selectCandidateText(0);
     }
 
-    candidateList_->setPreeditText(pre + key);
+    candidateList_->setInputCode(pre + key);
     refreshEngineResult();
 
     // 顶字上屏：本键拼上去之后没有候选，把「按键前」对应编码的首选上屏，本键当作新编码重开。
@@ -275,14 +275,14 @@ bool EngineManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
         !exactFirstText.empty() && committer_ != nullptr)
     {
         committer_->commit(exactFirstText, pre);
-        candidateList_->setPreeditText(key);
+        candidateList_->setInputCode(key);
         refreshEngineResult();
         return true;
     }
 
     // 候选词唯一且是终码：本键查完后，当前整串已经满 4 码、只剩 1 条且是终码，立刻上屏，不等下一键。
     // now 是拼上本键之后的预编辑；与上面顶屏不同，这里提交的是「这一码」本身（fjfh→韩）。
-    const std::string &now = candidateList_->preeditText();
+    const std::string &now = candidateList_->inputCode();
     if (now.size() >= 4U && candidateList_->totalCandidateCount() == 1 && candidateList_->isTerminalExactCode(now))
     {
         tryCommitExactCandidate(now);
@@ -299,13 +299,13 @@ void EngineManager::refreshEngineResult()
         return;
     }
 
-    if (candidateList_->preeditText().empty())
+    if (candidateList_->inputCode().empty())
     {
         engine->reset();
         return;
     }
 
-    engine->putKey(candidateList_->preeditText().c_str());
+    engine->putKey(candidateList_->inputCode().c_str());
 
     CandidatePayload payload = engine->getResult();
     candidateList_->setCandidates(std::move(payload.texts), std::move(payload.prompts), std::move(payload.fullCodes));

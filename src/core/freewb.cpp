@@ -10,7 +10,7 @@
 #include "settings.h"
 #include "sound.h"
 #include "special.h"
-#include "statemanager.h"
+#include "state/statemanager.h"
 
 namespace freewb
 {
@@ -477,7 +477,7 @@ bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
             return false;
         }
 
-        candidateList_->popPreeditText();
+        candidateList_->popInputCode();
         engineManager_->refreshEngineResult();
         return true;
     }
@@ -489,6 +489,16 @@ bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
         {
             const char *const commandPrefix = Key::keySymToName(keysym);
             return stateManager_->enterTempEnglishState(commandPrefix != nullptr ? std::string(commandPrefix) : std::string());
+        }
+    }
+
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_tempPinyin().c_str());
+        const FreewbKeySym tempPinyinKey = Key::keySymFromUniqueName(keyString);
+        if (tempPinyinKey != FreewbKey_None && Key::isSameKeySymbol(keysym, tempPinyinKey))
+        {
+            const char *const lead = Key::keySymToName(keysym);
+            return stateManager_->enterTempPinyinState(lead != nullptr ? std::string(lead) : std::string());
         }
     }
 
@@ -511,6 +521,7 @@ void Freewb::connectDBusCallback()
             else if (std::strcmp(evt.member, "SelectCandidate") == 0)
             {
                 this->committer_->selectCandidate(evt.index);
+                this->stateManager_->reset();
             }
             else if (std::strcmp(evt.member, "LookupTablePageUp") == 0)
             {

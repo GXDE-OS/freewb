@@ -33,7 +33,7 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     CandidateList *candidates = freewb_->candidateList();
-    if (candidates->size() == 0 && candidates->preeditText().empty())
+    if (candidates->size() == 0 && candidates->inputCode().empty())
     {
         return false;
     }
@@ -72,7 +72,7 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
         }
         else
         {
-            commit(candidates->preeditText());
+            commit(candidates->inputCode());
         }
         return true;
     }
@@ -80,7 +80,7 @@ bool Committer::processKey(FreewbKeySym keysym, FreewbKeyState state)
     // 回车上屏
     if (keysym == FreewbKey_Return)
     {
-        commit(freewb_->candidateList()->preeditText());
+        commit(freewb_->candidateList()->inputCode());
         return true;
     }
 
@@ -141,8 +141,8 @@ void Committer::commit(const std::string &text, const std::string &code)
     lastCommitCode_ = code;
     appendCommittedText(output);
 
-    const std::string preedit = freewb_->candidateList()->preeditText();
-    const std::string inputCode = code.empty() ? preedit : code;
+    const std::string typedCode = freewb_->candidateList()->inputCode();
+    const std::string inputCode = code.empty() ? typedCode : code;
     commitCallback_(output);
     freewb_->engineManager()->addAutoPhrase(output, inputCode);
 
