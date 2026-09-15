@@ -189,6 +189,35 @@ int main()
         REQUIRE(cl.size() == 0, "clear");
     }
 
+    // lead + inputCode：面板用 preeditText，查词/上屏用 inputCode
+    {
+        freewb::CandidateList cl = makeList();
+        cl.setLead("`");
+        REQUIRE(cl.lead() == "`", "lead");
+        REQUIRE(cl.inputCode().empty(), "inputCode empty after setLead");
+        REQUIRE(cl.preeditText() == "`", "preedit is lead");
+        REQUIRE(!cl.preeditText().empty(), "preedit with lead only");
+
+        cl.setInputCode("ni");
+        REQUIRE(cl.inputCode() == "ni", "inputCode after set");
+        REQUIRE(cl.preeditText() == "`ni", "preedit lead+code");
+
+        cl.popInputCode();
+        REQUIRE(cl.inputCode() == "n", "popInputCode");
+        REQUIRE(cl.preeditText() == "`n", "preedit after pop");
+        cl.popInputCode();
+        REQUIRE(cl.inputCode().empty(), "inputCode empty");
+        REQUIRE(cl.lead() == "`", "lead kept when code emptied");
+        REQUIRE(cl.preeditText() == "`", "preedit lead only");
+
+        cl.setInputCode("hao");
+        REQUIRE(cl.preeditText() == "`hao", "setInputCode");
+        cl.setLead({});
+        REQUIRE(cl.lead().empty(), "clear lead");
+        REQUIRE(cl.preeditText() == "hao", "preedit code only");
+        REQUIRE(cl.firstVisibleCandidateOrPreedit() == "hao", "fallback to inputCode");
+    }
+
     std::cout << "candidate_list_test: all passed (candiWordCount=" << wc << ")\n";
     std::cout << "  (chttrans/special formatting: see freewb-chttrans-test / freewb-special-test)\n";
     return 0;
