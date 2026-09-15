@@ -9,7 +9,12 @@ add_library(${PROJECT_NAME}-core SHARED
     charwidth.cpp
     punc.cpp
     special.cpp
-    statemanager.cpp
+    state/idle.cpp
+    state/adduserphrase.cpp
+    state/deleteuserphrase.cpp
+    state/tempenglish.cpp
+    state/temppinyin.cpp
+    state/statemanager.cpp
 )
 target_include_directories(${PROJECT_NAME}-core PUBLIC
     ${CMAKE_SOURCE_DIR}/include
