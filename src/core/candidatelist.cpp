@@ -168,7 +168,8 @@ void CandidateList::clear()
     allFullCodes_.clear();
     currentPageTexts_.clear();
     currentPagePrompts_.clear();
-    preeditText_.clear();
+    lead_.clear();
+    inputCode_.clear();
     cursor_ = -1;
     pageIndex_ = 0;
 }
@@ -276,7 +277,7 @@ const std::string &CandidateList::firstVisibleCandidateOrPreedit() const
     {
         return word;
     }
-    return preeditText();
+    return inputCode_;
 }
 
 std::vector<std::string> CandidateList::candidateTexts() const
@@ -289,36 +290,48 @@ std::vector<std::string> CandidateList::candidatePrompts() const
     return currentPagePrompts_;
 }
 
-void CandidateList::setPreeditText(const std::string &text)
+void CandidateList::setLead(const std::string &lead)
 {
-    if (text.empty())
-    {
-        preeditText_.clear();
-        return;
-    }
-
-    preeditText_ = text;
-    cursor_ = static_cast<int>(preeditText_.size());
+    lead_ = lead;
+    cursor_ = static_cast<int>(lead_.size() + inputCode_.size());
 }
 
-const std::string &CandidateList::preeditText() const
+const std::string &CandidateList::lead() const
 {
-    return preeditText_;
+    return lead_;
 }
 
-void CandidateList::popPreeditText()
+void CandidateList::setInputCode(const std::string &code)
 {
-    if (preeditText_.empty())
+    inputCode_ = code;
+    cursor_ = static_cast<int>(lead_.size() + inputCode_.size());
+    if (inputCode_.empty())
+    {
+        setCandidates({}, {});
+    }
+}
+
+void CandidateList::popInputCode()
+{
+    if (inputCode_.empty())
     {
         return;
     }
-
-    preeditText_.pop_back();
-    if (preeditText_.empty())
+    inputCode_.pop_back();
+    cursor_ = static_cast<int>(lead_.size() + inputCode_.size());
+    if (inputCode_.empty())
     {
-        clear();
+        setCandidates({}, {});
     }
+}
 
-    cursor_ = static_cast<int>(preeditText_.size());
+const std::string &CandidateList::inputCode() const
+{
+    return inputCode_;
+}
+
+std::string CandidateList::preeditText() const
+{
+    return lead_ + inputCode_;
 }
 } // namespace freewb

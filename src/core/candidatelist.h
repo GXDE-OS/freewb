@@ -40,13 +40,22 @@ public:
      */
     bool isTerminalExactCode(const std::string &code) const;
     const std::string &firstVisibleCandidateFullCode() const;
+    /** 首选候选；无候选时返回 inputCode（不含引导符）。 */
     const std::string &firstVisibleCandidateOrPreedit() const;
     std::vector<std::string> candidateTexts() const;
     std::vector<std::string> candidatePrompts() const;
 
-    void setPreeditText(const std::string &text);
-    const std::string &preeditText() const;
-    void popPreeditText();
+    /** 辅助输入引导符（如 ; / `）；正常录入为空。空串即清除。 */
+    void setLead(const std::string &lead);
+    const std::string &lead() const;
+
+    /** 输入码；引擎查词与空候选上屏用此字段。 */
+    void setInputCode(const std::string &code);
+    void popInputCode();
+    const std::string &inputCode() const;
+
+    /** lead + inputCode，仅给面板；现算，不另存一份。 */
+    std::string preeditText() const;
 
 private:
     void syncVisiblePage();
@@ -61,7 +70,8 @@ private:
     int pageIndex_ = 0;
     int totalPages_ = 0;
     int wordCount_ = 5;
-    std::string preeditText_;
+    std::string lead_;
+    std::string inputCode_;
     Freewb *freewb_ = nullptr;
 };
 } // namespace freewb
