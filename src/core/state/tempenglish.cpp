@@ -8,6 +8,7 @@
 #include "idbus.h"
 #include "key.h"
 #include "log.h"
+#include "punc.h"
 #include "settings.h"
 #include "special.h"
 

@@ -52,9 +52,9 @@ bool TempPinyinState::begin(const std::string &lead)
     }
 
     const char *const prevName = engines->currentEngineName();
-    engines->changeEngine("engine:wbpy");
+    engines->changeEngine("engine:py");
     const char *const nowName = engines->currentEngineName();
-    if (nowName == nullptr || std::string(nowName) != "engine:wbpy")
+    if (nowName == nullptr || std::string(nowName) != "engine:py")
     {
         return false;
     }
@@ -110,15 +110,9 @@ bool TempPinyinState::processKey(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     const char *const key = Key::keySymToName(keysym);
-    if (key != nullptr && key[0] >= 'a' && key[0] <= 'z' && key[1] == '\0')
-    {
-        candidates->setInputCode(candidates->inputCode() + key);
-        refreshCandidates();
-        return true;
-    }
-
-    // 已有编码后再按引导键：追加进缓冲（不是退出去出标点）
-    if (key != nullptr && candidates->lead() == key && !candidates->inputCode().empty())
+    // a-z，或已有编码后再按引导键（仅 lead 再按已在 StateManager 标点上屏）
+    if (key != nullptr && key[0] != '\0' && key[1] == '\0' &&
+        ((key[0] >= 'a' && key[0] <= 'z') || candidates->lead() == key))
     {
         candidates->setInputCode(candidates->inputCode() + key);
         refreshCandidates();

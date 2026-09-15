@@ -140,7 +140,7 @@ private:
     std::unordered_map<std::string, QuickCommandHandler> quickCommands_;
 };
 
-/** 临时拼音：进入时切到五笔拼音引擎，退出时还原。 */
+/** 临时拼音：进入时切到拼音引擎，退出时还原。 */
 class TempPinyinState : public IState, public IFreewb
 {
 public:

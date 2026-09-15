@@ -52,23 +52,27 @@ bool StateManager::processKey(FreewbKeySym keysym, FreewbKeyState state)
         return false;
     }
 
-    // 仅引导符时再按 lead：对齐旧版 ChooseByIndex(0)。
-    // 旧版仅 lead 时 quick 候选即标点转换结果，故此处直接 punc 上屏并退出。
-    CandidateList *const candidates = (freewb_ != nullptr) ? freewb_->candidateList() : nullptr;
-    const char *const keyName = Key::keySymToName(keysym);
-    if (Key::hasNoModifier(state) && candidates != nullptr && candidates->inputCode().empty() && keyName != nullptr &&
-        candidates->lead() == keyName && (current_ == &tempEnglish_ || current_ == &tempPinyin_))
+    // 仅引导符（无编码）时的处理
+    CandidateList *const candidates = freewb_->candidateList();
+    if (Key::hasNoModifier(state) && !candidates->lead().empty() && candidates->inputCode().empty())
     {
-        if (freewb_->committer() != nullptr && freewb_->punc() != nullptr)
+        // 再按同一引导键：标点上屏并退出
+        if (candidates->lead() == Key::keySymToName(keysym))
         {
             const PuncPushResult result = freewb_->punc()->convert(keysym, state);
             if (!result.empty())
             {
                 freewb_->committer()->commit(result.joined());
             }
+            reset();
+            return true;
         }
-        reset();
-        return true;
+        // 回车：清空退出并吃掉按键
+        if (keysym == FreewbKey_Return)
+        {
+            reset();
+            return true;
+        }
     }
 
     return current_->processKey(keysym, state);
