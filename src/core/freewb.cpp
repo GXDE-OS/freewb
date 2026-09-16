@@ -450,23 +450,25 @@ bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
     const FreewbKeySym prevPageKey = Key::keySymFromUniqueName(settings::instance().get_prevPageKey().c_str());
     if (Key::isSameKeySymbol(keysym, prevPageKey))
     {
-        if (!candidateList_->hasPrev())
+        if (candidateList_->hasPrev())
         {
-            return false;
+            candidateList_->prev();
+            return true;
         }
-        candidateList_->prev();
-        return true;
+        // 已在首页：吞掉翻页键，避免落入引擎/标点触发顶字上屏（默认翻页键为 -/=）
+        return candidateList_->totalCandidateCount() > 0 || !candidateList_->preeditText().empty();
     }
 
     const FreewbKeySym nextPageKey = Key::keySymFromUniqueName(settings::instance().get_nextPageKey().c_str());
     if (Key::isSameKeySymbol(keysym, nextPageKey))
     {
-        if (!candidateList_->hasNext())
+        if (candidateList_->hasNext())
         {
-            return false;
+            candidateList_->next();
+            return true;
         }
-        candidateList_->next();
-        return true;
+        // 已在末页：吞掉翻页键，避免落入引擎/标点触发顶字上屏
+        return candidateList_->totalCandidateCount() > 0 || !candidateList_->preeditText().empty();
     }
 
     if (keysym == FreewbKey_BackSpace)
