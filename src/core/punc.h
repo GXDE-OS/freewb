@@ -6,6 +6,7 @@
 
 #include "ifreewb.h"
 #include "keysym.h"
+#include "vklayouts.h"
 
 namespace freewb
 {
@@ -18,13 +19,6 @@ struct PuncPairEntry
     const char *asciiRight;
     const char *chineseLeft;
     const char *chineseRight;
-};
-
-struct PuncMapEntry
-{
-    char ascii;
-    const char *variants[3];
-    int variantCount;
 };
 
 struct PuncPushResult
@@ -67,17 +61,16 @@ private:
     static bool isAsciiSymbolKey(FreewbKeySym sym);
     static bool isDigitChar(const std::string &textChar);
     static const PuncPairEntry *lookupPair(FreewbKeySym sym, char pairKey[2]);
-    static const PuncMapEntry *lookupMap(char ascii);
     void notifyToolbarProperty() const;
 
 private:
     static const PuncPairEntry kAutoPairList[];
-    static const PuncMapEntry kPuncMap[];
 
     Freewb *freewb_;
     bool chinesePuncEnabled_ = true;
     bool puncAutoPairEnabled_ = true;
     bool autoHalfMarkAfterNum_ = false;
+    VkLayout customMark_{};
     std::unordered_map<char, char> lastPuncStack_;
 };
 

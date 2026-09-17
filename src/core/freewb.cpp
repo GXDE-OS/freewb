@@ -11,6 +11,7 @@
 #include "sound.h"
 #include "special.h"
 #include "state/statemanager.h"
+#include "virtualkeyboard.h"
 
 namespace freewb
 {
@@ -24,6 +25,7 @@ Freewb::Freewb(ipc::IDBus *dbusProxy, CommitCallback commitCallback) : log_("/tm
     candidateList_ = new CandidateList(this);
     committer_ = new Committer(std::move(commitCallback), this);
     engineManager_ = new EngineManager(this, candidateList_, committer_);
+    virtualKeyboard_ = new VirtualKeyboard(this);
     stateManager_ = new StateManager(this);
     connectDBusCallback();
 }
@@ -64,6 +66,11 @@ Freewb::~Freewb()
     {
         delete special_;
         special_ = nullptr;
+    }
+    if (virtualKeyboard_ != nullptr)
+    {
+        delete virtualKeyboard_;
+        virtualKeyboard_ = nullptr;
     }
     if (stateManager_ != nullptr)
     {
@@ -126,6 +133,11 @@ Special *Freewb::special() const
     return special_;
 }
 
+VirtualKeyboard *Freewb::virtualKeyboard() const
+{
+    return virtualKeyboard_;
+}
+
 bool Freewb::processKeyPress(FreewbKeySym keysym, FreewbKeyState state)
 {
     FREEWB_DEBUG("keysym: {}, state: {}", static_cast<int>(keysym), static_cast<int>(state));
@@ -147,6 +159,12 @@ bool Freewb::processKeyPress(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     processed = handleComboKey(keysym, state);
+    if (processed)
+    {
+        return true;
+    }
+
+    processed = virtualKeyboard_->processKey(keysym, state);
     if (processed)
     {
         return true;
@@ -242,6 +260,7 @@ void Freewb::reloadConfig()
     // 全半角 / 中英标点为运行态，loadSettings 不覆盖对应开关；简繁仅构造时初始化。
     charWidth_->loadSettings();
     punc_->loadSettings();
+    virtualKeyboard_->loadSettings();
 
     updateCandidateAndPreeditToUI();
 }

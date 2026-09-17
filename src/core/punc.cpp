@@ -8,6 +8,7 @@
 #include "idbus.h"
 #include "key.h"
 #include "settings.h"
+#include "vklayouts.h"
 
 namespace freewb
 {
@@ -15,27 +16,6 @@ namespace freewb
 const PuncPairEntry Punc::kAutoPairList[] = {
     {"(", ")", "（", "）"}, {"[", "]", "【", "】"}, {"{", "}", "{", "}"},
     {"<", ">", "《", "》"}, {"\"", "\"", "“", "”"}, {"'", "'", "‘", "’"},
-};
-
-const PuncMapEntry Punc::kPuncMap[] = {
-    {'.', {"。"}, 1},
-    {',', {"，"}, 1},
-    {'?', {"？"}, 1},
-    {':', {"："}, 1},
-    {';', {"；"}, 1},
-    {'\\', {"、"}, 1},
-    {'/', {"、"}, 1},
-    {'<', {"《"}, 1},
-    {'>', {"》"}, 1},
-    {'(', {"（"}, 1},
-    {')', {"）"}, 1},
-    {'[', {"【", "「", "『"}, 3},
-    {']', {"】", "」", "』"}, 3},
-    {'`', {"·"}, 1},
-    {'^', {"……"}, 1},
-    {'_', {"——"}, 1},
-    {'"', {"“"}, 1},
-    {'\'', {"‘"}, 1},
 };
 
 Punc::Punc(Freewb *freewb) : freewb_(freewb)
@@ -59,6 +39,7 @@ void Punc::loadSettings()
 {
     puncAutoPairEnabled_ = settings::instance().get_puncAutoPair();
     autoHalfMarkAfterNum_ = settings::instance().get_autoToHalfPuncAfterNumber();
+    customMark_ = VkLayouts::parse(settings::instance().get_CoustomMark());
 }
 
 const char *Punc::name() const
@@ -120,18 +101,6 @@ bool Punc::isDigitChar(const std::string &textChar)
     }
 
     return false;
-}
-
-const PuncMapEntry *Punc::lookupMap(char ascii)
-{
-    for (const PuncMapEntry &entry : kPuncMap)
-    {
-        if (entry.ascii == ascii)
-        {
-            return &entry;
-        }
-    }
-    return nullptr;
 }
 
 const PuncPairEntry *Punc::lookupPair(FreewbKeySym sym, char pairKey[2])
@@ -210,6 +179,22 @@ PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     const bool useChinesePunc = effectiveChinesePunc();
+    const char ascii = static_cast<char>(sym);
+
+    if (useChinesePunc && autoHalfMarkAfterNum_ && isDigitChar(freewb_->committer()->committedText(1)) &&
+        (sym == FreewbKey_comma || sym == FreewbKey_period || sym == FreewbKey_semicolon))
+    {
+        return {{}, std::string(1, ascii)};
+    }
+
+    if (useChinesePunc)
+    {
+        const std::string mapped = VkLayouts::convertToCustomSymbol(customMark_, static_cast<unsigned char>(ascii));
+        if (!mapped.empty())
+        {
+            return {{}, mapped};
+        }
+    }
 
     char pairKey[2] = {};
     const PuncPairEntry *pair = lookupPair(sym, pairKey);
@@ -217,44 +202,26 @@ PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
     {
         const bool sameKey = std::strcmp(pair->asciiLeft, pair->asciiRight) == 0;
         const bool opening = sameKey || std::strcmp(pairKey, pair->asciiLeft) == 0;
+        const char *left = useChinesePunc ? pair->chineseLeft : pair->asciiLeft;
+        const char *right = useChinesePunc ? pair->chineseRight : pair->asciiRight;
 
-        bool skipPair = false;
-        if (useChinesePunc)
+        if (puncAutoPairEnabled_)
         {
-            const PuncMapEntry *mapEntry = lookupMap(static_cast<char>(sym));
-            skipPair = mapEntry != nullptr && mapEntry->variantCount > 1 && !(puncAutoPairEnabled_ && opening);
+            lastPuncStack_.erase(pairKey[0]);
+            return opening ? PuncPushResult{left, right} : PuncPushResult{{}, right};
         }
 
-        if (!skipPair)
+        if (sameKey)
         {
-            const char *left = useChinesePunc ? pair->chineseLeft : pair->asciiLeft;
-            const char *right = useChinesePunc ? pair->chineseRight : pair->asciiRight;
-
-            if (puncAutoPairEnabled_)
+            if (lastPuncStack_.erase(pairKey[0]) > 0)
             {
-                lastPuncStack_.erase(pairKey[0]);
-                return opening ? PuncPushResult{left, right} : PuncPushResult{{}, right};
+                return {{}, right};
             }
-
-            if (sameKey)
-            {
-                if (lastPuncStack_.erase(pairKey[0]) > 0)
-                {
-                    return {{}, right};
-                }
-                lastPuncStack_[pairKey[0]] = pairKey[0];
-                return {{}, left};
-            }
-
-            return std::strcmp(pairKey, pair->asciiLeft) == 0 ? PuncPushResult{{}, left} : PuncPushResult{{}, right};
+            lastPuncStack_[pairKey[0]] = pairKey[0];
+            return {{}, left};
         }
-    }
 
-    const char ascii = static_cast<char>(sym);
-    if (useChinesePunc && autoHalfMarkAfterNum_ && isDigitChar(freewb_->committer()->committedText(1)) &&
-        (sym == FreewbKey_comma || sym == FreewbKey_period || sym == FreewbKey_semicolon))
-    {
-        return {{}, std::string(1, ascii)};
+        return std::strcmp(pairKey, pair->asciiLeft) == 0 ? PuncPushResult{{}, left} : PuncPushResult{{}, right};
     }
 
     if (sym == FreewbKey_space)
@@ -264,15 +231,6 @@ PuncPushResult Punc::convert(FreewbKeySym keysym, FreewbKeyState state)
             return {{}, " "};
         }
         return {};
-    }
-
-    if (useChinesePunc)
-    {
-        const PuncMapEntry *mapEntry = lookupMap(ascii);
-        if (mapEntry != nullptr && mapEntry->variantCount > 0 && mapEntry->variants[0] != nullptr)
-        {
-            return {{}, mapEntry->variants[0]};
-        }
     }
 
     return {{}, std::string(1, ascii)};
