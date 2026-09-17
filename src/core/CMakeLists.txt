@@ -8,6 +8,7 @@ add_library(${PROJECT_NAME}-core SHARED
     chttrans.cpp
     charwidth.cpp
     punc.cpp
+    virtualkeyboard.cpp
     special.cpp
     state/idle.cpp
     state/adduserphrase.cpp
