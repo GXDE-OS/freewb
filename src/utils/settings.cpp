@@ -82,6 +82,7 @@ Settings::Settings()
 void Settings::load()
 {
     CSimpleIniA ini(true, false, false);
+    ini.SetQuotes(true);
     const SI_Error e = ini.LoadFile(ini_path_.c_str());
     if (e != SI_OK)
         return;
@@ -129,6 +130,7 @@ void Settings::persistEntry(const ConfigEntry &entry)
     }
 
     CSimpleIniA ini(true, false, false);
+    ini.SetQuotes(true);
     const SI_Error err = ini.LoadFile(ini_path_.c_str());
     if (err < 0 && err != SI_FILE)
         return;
@@ -212,6 +214,7 @@ bool Settings::save()
     }
 
     CSimpleIniA ini(true, false, false);
+    ini.SetQuotes(true);
     (void)ini.LoadFile(ini_path_.c_str());
     for (const auto &kv : entries_)
         applyOneEntryToIni(ini, kv.second);
