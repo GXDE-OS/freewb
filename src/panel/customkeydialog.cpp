@@ -77,7 +77,7 @@ void CustomKeyDialog::set_custom_symbol(VirtualKeyboardMode vkm, const QString &
 {
     ui->labelKeyName->setText(keyName);
 
-    if (vkm == VKM_CUSTOM_MARK && keyName.at(0).isDigit())
+    if (vkm == VK_MODE_CUSTOM_MARK && keyName.at(0).isDigit())
     {
         ui->ledtComm->setEnabled(false);
         ui->ledtComm->clear();

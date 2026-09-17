@@ -15,6 +15,8 @@
 #include "ui_toolbarwin.h"
 #include "ukuiwaylandhelper.h"
 
+using namespace freewb;
+
 // 桌面工具条按钮样式表
 #define QSS_BG0 QString("border-image: url(%1);").arg(Skin::instance().toolbar().bg0ImagePath)
 #define QSS_BG1 QString("border-image: url(%1);").arg(Skin::instance().toolbar().bg1ImagePath)
@@ -178,7 +180,7 @@ ToolbarWin::ToolbarWin(QWidget *parent) : QWidget(parent), ui(new Ui::ToolbarWin
     m_kbInputModeAction->addAction(m_kbUserCharInputMode);
 
     m_keyboardMenu.addActions(m_kbInputModeAction->actions());
-    update_vk_mode_ckecked_state(VKM_INPUT_PC);
+    update_vk_mode_ckecked_state(VK_MODE_PC);
     connect(m_kbInputModeAction, SIGNAL(triggered(QAction *)), this, SLOT(slot_vk_mode_triggered(QAction *)));
 
     // 载入配置数据
@@ -765,21 +767,21 @@ void ToolbarWin::update_char_set_ico()
 // 更新虚拟键盘右键菜单中的工作模式选择图标
 void ToolbarWin::update_vk_mode_ckecked_state(VirtualKeyboardMode mode)
 {
-    m_kbPcInputMode->setIcon(QIcon(mode == VKM_INPUT_PC ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
-    m_kbInputGreek->setIcon(QIcon(mode == VKM_INPUT_GREEK ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
-    m_kbInputRussian->setIcon(QIcon(mode == VKM_INPUT_RUSSIAN ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
-    m_kbInputPhonetic->setIcon(QIcon(mode == VKM_INPUT_PHONETIC ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
-    m_kbInputPinyin->setIcon(QIcon(mode == VKM_INPUT_PINYIN ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
-    m_kbInputJapanFlat->setIcon(QIcon(mode == VKM_INPUT_JAPAN_FLAT ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
-    m_kbInputJapanPiece->setIcon(QIcon(mode == VKM_INPUT_JAPAN_PIECE ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
-    m_kbInputPunctuation->setIcon(QIcon(mode == VKM_INPUT_PUNCTUATION ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbPcInputMode->setIcon(QIcon(mode == VK_MODE_PC ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbInputGreek->setIcon(QIcon(mode == VK_MODE_GREEK ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbInputRussian->setIcon(QIcon(mode == VK_MODE_RUSSIAN ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbInputPhonetic->setIcon(QIcon(mode == VK_MODE_PHONETIC ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbInputPinyin->setIcon(QIcon(mode == VK_MODE_PINYIN ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbInputJapanFlat->setIcon(QIcon(mode == VK_MODE_JAPAN_FLAT ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbInputJapanPiece->setIcon(QIcon(mode == VK_MODE_JAPAN_PIECE ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbInputPunctuation->setIcon(QIcon(mode == VK_MODE_PUNCTUATION ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
     m_kbInputDigitalOrder->setIcon(
-        QIcon(mode == VKM_INPUT_DIGITAL_ORDER ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
-    m_kbInputMath->setIcon(QIcon(mode == VKM_INPUT_MATH ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
-    m_kbInputUnit->setIcon(QIcon(mode == VKM_INPUT_UNIT ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
-    m_kbInputTabs->setIcon(QIcon(mode == VKM_INPUT_TABS ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
-    m_kbInputSpecial->setIcon(QIcon(mode == VKM_INPUT_SPECIAL ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
-    m_kbUserCharInputMode->setIcon(QIcon(mode == VKM_INPUT_USER_CHAR ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+        QIcon(mode == VK_MODE_DIGITAL_ORDER ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbInputMath->setIcon(QIcon(mode == VK_MODE_MATH ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbInputUnit->setIcon(QIcon(mode == VK_MODE_UNIT ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbInputTabs->setIcon(QIcon(mode == VK_MODE_TABS ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbInputSpecial->setIcon(QIcon(mode == VK_MODE_SPECIAL ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
+    m_kbUserCharInputMode->setIcon(QIcon(mode == VK_MODE_USER_CHAR ? ICO_KEYBOARD_MODE_CHECKED : ICO_KEYBOARD_MODE_UNCHECKED));
 }
 
 void ToolbarWin::on_btnLogo_clicked()
@@ -1073,63 +1075,63 @@ void ToolbarWin::slot_vk_mode_triggered(QAction *action)
 {
     m_keyboardMenu.close();
 
-    VirtualKeyboardMode vkm = VKM_INPUT_PC;
+    VirtualKeyboardMode vkm = VK_MODE_PC;
 
     if (action == m_kbPcInputMode)
     {
-        vkm = VKM_INPUT_PC;
+        vkm = VK_MODE_PC;
     }
     else if (action == m_kbInputGreek)
     {
-        vkm = VKM_INPUT_GREEK;
+        vkm = VK_MODE_GREEK;
     }
     else if (action == m_kbInputRussian)
     {
-        vkm = VKM_INPUT_RUSSIAN;
+        vkm = VK_MODE_RUSSIAN;
     }
     else if (action == m_kbInputPhonetic)
     {
-        vkm = VKM_INPUT_PHONETIC;
+        vkm = VK_MODE_PHONETIC;
     }
     else if (action == m_kbInputPinyin)
     {
-        vkm = VKM_INPUT_PINYIN;
+        vkm = VK_MODE_PINYIN;
     }
     else if (action == m_kbInputJapanFlat)
     {
-        vkm = VKM_INPUT_JAPAN_FLAT;
+        vkm = VK_MODE_JAPAN_FLAT;
     }
     else if (action == m_kbInputJapanPiece)
     {
-        vkm = VKM_INPUT_JAPAN_PIECE;
+        vkm = VK_MODE_JAPAN_PIECE;
     }
     else if (action == m_kbInputPunctuation)
     {
-        vkm = VKM_INPUT_PUNCTUATION;
+        vkm = VK_MODE_PUNCTUATION;
     }
     else if (action == m_kbInputDigitalOrder)
     {
-        vkm = VKM_INPUT_DIGITAL_ORDER;
+        vkm = VK_MODE_DIGITAL_ORDER;
     }
     else if (action == m_kbInputMath)
     {
-        vkm = VKM_INPUT_MATH;
+        vkm = VK_MODE_MATH;
     }
     else if (action == m_kbInputUnit)
     {
-        vkm = VKM_INPUT_UNIT;
+        vkm = VK_MODE_UNIT;
     }
     else if (action == m_kbInputTabs)
     {
-        vkm = VKM_INPUT_TABS;
+        vkm = VK_MODE_TABS;
     }
     else if (action == m_kbInputSpecial)
     {
-        vkm = VKM_INPUT_SPECIAL;
+        vkm = VK_MODE_SPECIAL;
     }
     else if (action == m_kbUserCharInputMode)
     {
-        vkm = VKM_INPUT_USER_CHAR;
+        vkm = VK_MODE_USER_CHAR;
     }
 
     update_vk_mode_ckecked_state(vkm);

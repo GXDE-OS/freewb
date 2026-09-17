@@ -228,10 +228,13 @@ std::string freewb_flatten_custom_char_value(const std::vector<CustomKeyStrings>
     std::string value;
     for (size_t i = 0; i < table.size(); ++i)
     {
+        if (i != 0)
+        {
+            value += ' ';
+        }
         value += table[i].commChar;
         value += ' ';
         value += table[i].shiftChar;
-        value += ' ';
     }
     return value;
 }
@@ -241,10 +244,13 @@ std::string freewb_flatten_custom_mark_value(const std::vector<CustomKeyStrings>
     std::string value;
     for (size_t i = 0; i < table.size(); ++i)
     {
+        if (i != 0)
+        {
+            value += ' ';
+        }
         value += table[i].commMark;
         value += ' ';
         value += table[i].shiftMark;
-        value += ' ';
     }
     return value;
 }

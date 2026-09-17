@@ -465,17 +465,17 @@ void SettingWin::init_member_data()
     m_defaultPopPosition = QPoint((d->width() - size().width()) / 2, (d->height() - size().height()) / 2);
 
     // 初始化设置界面的软键盘
-    m_kbCustomKeyChar = new VirtualKeyboard(VKM_CUSTOM_CHAR, ui->pageCustomKeyChar);
+    m_kbCustomKeyChar = new VirtualKeyboard(VK_MODE_CUSTOM_CHAR, ui->pageCustomKeyChar);
     m_kbCustomKeyChar->move(40, 36);
 
-    m_kbCustomKeyMark = new VirtualKeyboard(VKM_CUSTOM_MARK, ui->pageCustomKeyMark);
+    m_kbCustomKeyMark = new VirtualKeyboard(VK_MODE_CUSTOM_MARK, ui->pageCustomKeyMark);
     m_kbCustomKeyMark->move(40, 36);
 
     // 自定义软键盘点击
-    connect(m_kbCustomKeyChar, SIGNAL(signal_custom_key_clicked(SymbolKeyIdx, const QString &, const CustomKeyValue &)), this,
-            SLOT(slot_custom_keyboard_char_clicked(SymbolKeyIdx, const QString &, const CustomKeyValue &)));
-    connect(m_kbCustomKeyMark, SIGNAL(signal_custom_key_clicked(SymbolKeyIdx, const QString &, const CustomKeyValue &)), this,
-            SLOT(slot_custom_keyboard_mark_clicked(SymbolKeyIdx, const QString &, const CustomKeyValue &)));
+    connect(m_kbCustomKeyChar, &VirtualKeyboard::signal_custom_key_clicked, this,
+            &SettingWin::slot_custom_keyboard_char_clicked);
+    connect(m_kbCustomKeyMark, &VirtualKeyboard::signal_custom_key_clicked, this,
+            &SettingWin::slot_custom_keyboard_mark_clicked);
 
     m_customKeyDialog = new CustomKeyDialog();
     connect(m_customKeyDialog, SIGNAL(signal_custom_ok_btn_clicked(const QString &, const QString &)), this,
@@ -1605,25 +1605,25 @@ void SettingWin::on_btnRestoreShortcutKey_clicked()
     }
 }
 
-void SettingWin::slot_custom_keyboard_char_clicked(SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue)
+void SettingWin::slot_custom_keyboard_char_clicked(VkKey keyIdx, const QString &keyName, const CustomKeyValue &keyValue)
 {
     m_editingCustomCharKey = true;
     m_curSymbolKeyIdx = keyIdx;
     m_curCustomKeyValue = keyValue;
 
     m_customKeyDialog->setWindowTitle(_("Set keyboard characters"));
-    m_customKeyDialog->set_custom_symbol(VKM_CUSTOM_CHAR, keyName, keyValue.commChar, keyValue.shiftChar);
+    m_customKeyDialog->set_custom_symbol(VK_MODE_CUSTOM_CHAR, keyName, keyValue.commChar, keyValue.shiftChar);
     m_customKeyDialog->exec();
 }
 
-void SettingWin::slot_custom_keyboard_mark_clicked(SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue)
+void SettingWin::slot_custom_keyboard_mark_clicked(VkKey keyIdx, const QString &keyName, const CustomKeyValue &keyValue)
 {
     m_editingCustomCharKey = false;
     m_curSymbolKeyIdx = keyIdx;
     m_curCustomKeyValue = keyValue;
 
     m_customKeyDialog->setWindowTitle(_("Set keyboard punctuation"));
-    m_customKeyDialog->set_custom_symbol(VKM_CUSTOM_MARK, keyName, keyValue.commMark, keyValue.shiftMark);
+    m_customKeyDialog->set_custom_symbol(VK_MODE_CUSTOM_MARK, keyName, keyValue.commMark, keyValue.shiftMark);
     m_customKeyDialog->exec();
 }
 
@@ -1643,11 +1643,12 @@ void SettingWin::slot_custom_btn_ok_clicked(const QString &commSymbol, const QSt
     }
     std::string chars = settings::instance().get_CoustomChar();
     std::string marks = settings::instance().get_CoustomMark();
-    if (freewb_custom_key_info_apply_to_values(chars, marks, static_cast<int>(m_curSymbolKeyIdx), KEY_SYMBOL_NUM,
+    if (freewb_custom_key_info_apply_to_values(chars, marks, static_cast<int>(m_curSymbolKeyIdx), kVkSymbolKeyCount,
                                                customKeyFromQt(m_curCustomKeyValue)))
     {
         settings::instance().set_CoustomChar(chars);
         settings::instance().set_CoustomMark(marks);
+        g_settingsNotifier.notifySettingDataChangedToFcitx();
     }
 }
 
