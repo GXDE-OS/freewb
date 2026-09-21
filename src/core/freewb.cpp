@@ -10,7 +10,8 @@
 #include "settings.h"
 #include "sound.h"
 #include "special.h"
-#include "statemanager.h"
+#include "state/statemanager.h"
+#include "virtualkeyboard.h"
 
 namespace freewb
 {
@@ -24,6 +25,7 @@ Freewb::Freewb(ipc::IDBus *dbusProxy, CommitCallback commitCallback) : log_("/tm
     candidateList_ = new CandidateList(this);
     committer_ = new Committer(std::move(commitCallback), this);
     engineManager_ = new EngineManager(this, candidateList_, committer_);
+    virtualKeyboard_ = new VirtualKeyboard(this);
     stateManager_ = new StateManager(this);
     connectDBusCallback();
 }
@@ -64,6 +66,11 @@ Freewb::~Freewb()
     {
         delete special_;
         special_ = nullptr;
+    }
+    if (virtualKeyboard_ != nullptr)
+    {
+        delete virtualKeyboard_;
+        virtualKeyboard_ = nullptr;
     }
     if (stateManager_ != nullptr)
     {
@@ -126,6 +133,11 @@ Special *Freewb::special() const
     return special_;
 }
 
+VirtualKeyboard *Freewb::virtualKeyboard() const
+{
+    return virtualKeyboard_;
+}
+
 bool Freewb::processKeyPress(FreewbKeySym keysym, FreewbKeyState state)
 {
     FREEWB_DEBUG("keysym: {}, state: {}", static_cast<int>(keysym), static_cast<int>(state));
@@ -147,6 +159,12 @@ bool Freewb::processKeyPress(FreewbKeySym keysym, FreewbKeyState state)
     }
 
     processed = handleComboKey(keysym, state);
+    if (processed)
+    {
+        return true;
+    }
+
+    processed = virtualKeyboard_->processKey(keysym, state);
     if (processed)
     {
         return true;
@@ -242,6 +260,7 @@ void Freewb::reloadConfig()
     // 全半角 / 中英标点为运行态，loadSettings 不覆盖对应开关；简繁仅构造时初始化。
     charWidth_->loadSettings();
     punc_->loadSettings();
+    virtualKeyboard_->loadSettings();
 
     updateCandidateAndPreeditToUI();
 }
@@ -450,23 +469,25 @@ bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
     const FreewbKeySym prevPageKey = Key::keySymFromUniqueName(settings::instance().get_prevPageKey().c_str());
     if (Key::isSameKeySymbol(keysym, prevPageKey))
     {
-        if (!candidateList_->hasPrev())
+        if (candidateList_->hasPrev())
         {
-            return false;
+            candidateList_->prev();
+            return true;
         }
-        candidateList_->prev();
-        return true;
+        // 已在首页：吞掉翻页键，避免落入引擎/标点触发顶字上屏（默认翻页键为 -/=）
+        return candidateList_->totalCandidateCount() > 0 || !candidateList_->preeditText().empty();
     }
 
     const FreewbKeySym nextPageKey = Key::keySymFromUniqueName(settings::instance().get_nextPageKey().c_str());
     if (Key::isSameKeySymbol(keysym, nextPageKey))
     {
-        if (!candidateList_->hasNext())
+        if (candidateList_->hasNext())
         {
-            return false;
+            candidateList_->next();
+            return true;
         }
-        candidateList_->next();
-        return true;
+        // 已在末页：吞掉翻页键，避免落入引擎/标点触发顶字上屏
+        return candidateList_->totalCandidateCount() > 0 || !candidateList_->preeditText().empty();
     }
 
     if (keysym == FreewbKey_BackSpace)
@@ -477,7 +498,7 @@ bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
             return false;
         }
 
-        candidateList_->popPreeditText();
+        candidateList_->popInputCode();
         engineManager_->refreshEngineResult();
         return true;
     }
@@ -489,6 +510,16 @@ bool Freewb::handleSingleKey(FreewbKeySym keysym, FreewbKeyState state)
         {
             const char *const commandPrefix = Key::keySymToName(keysym);
             return stateManager_->enterTempEnglishState(commandPrefix != nullptr ? std::string(commandPrefix) : std::string());
+        }
+    }
+
+    {
+        const char *keyString = Key::readKeyString(settings::instance().get_tempPinyin().c_str());
+        const FreewbKeySym tempPinyinKey = Key::keySymFromUniqueName(keyString);
+        if (tempPinyinKey != FreewbKey_None && Key::isSameKeySymbol(keysym, tempPinyinKey))
+        {
+            const char *const lead = Key::keySymToName(keysym);
+            return stateManager_->enterTempPinyinState(lead != nullptr ? std::string(lead) : std::string());
         }
     }
 
@@ -511,6 +542,7 @@ void Freewb::connectDBusCallback()
             else if (std::strcmp(evt.member, "SelectCandidate") == 0)
             {
                 this->committer_->selectCandidate(evt.index);
+                this->stateManager_->reset();
             }
             else if (std::strcmp(evt.member, "LookupTablePageUp") == 0)
             {

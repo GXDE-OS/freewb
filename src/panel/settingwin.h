@@ -42,8 +42,8 @@ public slots:
     void slot_init_all_setting_page();
     void slot_show_version_info();
 
-    void slot_custom_keyboard_char_clicked(SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue);
-    void slot_custom_keyboard_mark_clicked(SymbolKeyIdx keyIdx, const QString &keyName, const CustomKeyValue &keyValue);
+    void slot_custom_keyboard_char_clicked(VkKey keyIdx, const QString &keyName, const CustomKeyValue &keyValue);
+    void slot_custom_keyboard_mark_clicked(VkKey keyIdx, const QString &keyName, const CustomKeyValue &keyValue);
     void slot_custom_btn_ok_clicked(const QString &commSymbol, const QString &shiftSymbol);
 
 protected:
@@ -192,7 +192,7 @@ private:
     VirtualKeyboard *m_kbCustomKeyMark; // 自定义按键标点设置页面的键盘
     CustomKeyDialog *m_customKeyDialog; // 自定义按键对话框
 
-    SymbolKeyIdx m_curSymbolKeyIdx;     // 当前正在自定义的按键
+    VkKey m_curSymbolKeyIdx; // 当前正在自定义的按键
     CustomKeyValue m_curCustomKeyValue; // 当前正在自定义的按键值
     bool m_editingCustomCharKey = true;
 };

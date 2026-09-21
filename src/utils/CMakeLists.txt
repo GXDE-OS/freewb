@@ -9,6 +9,7 @@ add_library(${PROJECT_NAME}-utils SHARED
     sound.cpp
     log.cpp
     sqlite3.c
+    vklayouts.cpp
 )
 
 target_include_directories(${PROJECT_NAME}-utils PUBLIC ${CMAKE_SOURCE_DIR}/src/utils)

@@ -84,7 +84,7 @@ void UkuiWaylandHelper::disconnectFromWayland()
     }
 
     {
-        std::lock_guard lock(state_mutex_);
+        std::lock_guard<std::mutex> lock(state_mutex_);
         for (auto &window : windows_)
         {
             destroyWindow(window);
@@ -247,7 +247,7 @@ void UkuiWaylandHelper::handleRegistryGlobal(uint32_t name, const char *interfac
             return;
         }
 
-        std::lock_guard lock(state_mutex_);
+        std::lock_guard<std::mutex> lock(state_mutex_);
         outputs_.emplace_back();
         OutputInfo &output = outputs_.back();
         output.device = device;
@@ -258,7 +258,7 @@ void UkuiWaylandHelper::handleRegistryGlobal(uint32_t name, const char *interfac
 
 void UkuiWaylandHelper::handleRegistryGlobalRemove(uint32_t name)
 {
-    std::lock_guard lock(state_mutex_);
+    std::lock_guard<std::mutex> lock(state_mutex_);
     outputs_.erase(std::remove_if(outputs_.begin(), outputs_.end(),
                                   [this, name](OutputInfo &output)
                                   {
@@ -307,7 +307,7 @@ void UkuiWaylandHelper::handleWindowCreated(const char *uuid)
     info.uuid = uuid;
     info.window = window;
 
-    std::lock_guard lock(state_mutex_);
+    std::lock_guard<std::mutex> lock(state_mutex_);
     windows_.push_back(std::move(info));
     setupWindowListeners(windows_.back());
 }
@@ -384,7 +384,7 @@ void UkuiWaylandHelper::outputMode(void *data, struct kde_output_device_v2 *devi
     };
     kde_output_device_mode_v2_add_listener(mode, &modeListener, self);
 
-    std::lock_guard lock(self->state_mutex_);
+    std::lock_guard<std::mutex> lock(self->state_mutex_);
     OutputInfo *entry = self->findOutputByDevice(device);
     if (entry == nullptr)
     {
@@ -397,7 +397,7 @@ void UkuiWaylandHelper::outputMode(void *data, struct kde_output_device_v2 *devi
 void UkuiWaylandHelper::outputScale(void *data, struct kde_output_device_v2 *device, wl_fixed_t factor)
 {
     auto *self = static_cast<UkuiWaylandHelper *>(data);
-    std::lock_guard lock(self->state_mutex_);
+    std::lock_guard<std::mutex> lock(self->state_mutex_);
     OutputInfo *entry = self->findOutputByDevice(device);
     if (entry == nullptr)
     {
@@ -409,7 +409,7 @@ void UkuiWaylandHelper::outputScale(void *data, struct kde_output_device_v2 *dev
 void UkuiWaylandHelper::outputEnabled(void *data, struct kde_output_device_v2 *device, int32_t enabled)
 {
     auto *self = static_cast<UkuiWaylandHelper *>(data);
-    std::lock_guard lock(self->state_mutex_);
+    std::lock_guard<std::mutex> lock(self->state_mutex_);
     OutputInfo *entry = self->findOutputByDevice(device);
     if (entry == nullptr)
     {
@@ -421,7 +421,7 @@ void UkuiWaylandHelper::outputEnabled(void *data, struct kde_output_device_v2 *d
 void UkuiWaylandHelper::modeRemoved(void *data, struct kde_output_device_mode_v2 *mode)
 {
     auto *self = static_cast<UkuiWaylandHelper *>(data);
-    std::lock_guard lock(self->state_mutex_);
+    std::lock_guard<std::mutex> lock(self->state_mutex_);
     for (auto &output : self->outputs_)
     {
         auto it = std::find(output.modes.begin(), output.modes.end(), mode);
@@ -438,7 +438,7 @@ void UkuiWaylandHelper::modeRemoved(void *data, struct kde_output_device_mode_v2
 void UkuiWaylandHelper::windowStateChanged(void *data, struct ukui_window *window, uint32_t flags)
 {
     auto *self = static_cast<UkuiWaylandHelper *>(data);
-    std::lock_guard lock(self->state_mutex_);
+    std::lock_guard<std::mutex> lock(self->state_mutex_);
     WindowInfo *entry = self->findWindow(window);
     if (entry == nullptr)
     {
@@ -456,7 +456,7 @@ void UkuiWaylandHelper::windowGeometry(void *data, struct ukui_window *window, i
                                        uint32_t /*height*/)
 {
     auto *self = static_cast<UkuiWaylandHelper *>(data);
-    std::lock_guard lock(self->state_mutex_);
+    std::lock_guard<std::mutex> lock(self->state_mutex_);
     WindowInfo *entry = self->findWindow(window);
     if (entry == nullptr)
     {
@@ -474,7 +474,7 @@ void UkuiWaylandHelper::windowGeometry(void *data, struct ukui_window *window, i
 void UkuiWaylandHelper::windowUnmapped(void *data, struct ukui_window *window)
 {
     auto *self = static_cast<UkuiWaylandHelper *>(data);
-    std::lock_guard lock(self->state_mutex_);
+    std::lock_guard<std::mutex> lock(self->state_mutex_);
     self->windows_.erase(std::remove_if(self->windows_.begin(), self->windows_.end(),
                                         [self, window](WindowInfo &entry)
                                         {
@@ -541,13 +541,13 @@ OutputInfo *UkuiWaylandHelper::findOutputByDevice(struct kde_output_device_v2 *d
 
 std::array<int32_t, 2> UkuiWaylandHelper::focusWindowPosition() const
 {
-    std::lock_guard lock(state_mutex_);
+    std::lock_guard<std::mutex> lock(state_mutex_);
     return focus_window_position_;
 }
 
 double UkuiWaylandHelper::maxScreenScaleFactor() const
 {
-    std::lock_guard lock(state_mutex_);
+    std::lock_guard<std::mutex> lock(state_mutex_);
     double maxScale = 1.0;
     for (const auto &output : outputs_)
     {

@@ -10,6 +10,7 @@
 #include "log.h"
 #include "punc.h"
 #include "types.h"
+#include "virtualkeyboard.h"
 
 namespace freewb
 {
@@ -39,6 +40,7 @@ public:
     Punc *punc() const;
     CharWidth *charWidth() const;
     Special *special() const;
+    VirtualKeyboard *virtualKeyboard() const;
 
 private:
     // 中英切换键需“单独按下再抬起”才生效，按键按下阶段在此记录是否仍满足条件
@@ -58,6 +60,7 @@ private:
     Punc *punc_ = nullptr;
     CharWidth *charWidth_ = nullptr;
     Special *special_ = nullptr;
+    VirtualKeyboard *virtualKeyboard_ = nullptr;
     StateManager *stateManager_ = nullptr;
     bool cnEnSwitchKeyPending_ = false;
 };
